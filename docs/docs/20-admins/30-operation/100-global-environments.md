@@ -38,7 +38,7 @@ There are a few ways you can customize existing Renku images:
 
 1. Apply buildpacks on the Renku run image.
 The modifications you can do are limited to what is supported by the buildpacks we publish in our
-[buildpack repo](https://github.com/SwissDataScienceCenter/renku-frontend-buildpacks),
+[buildpacks repository](https://github.com/SwissDataScienceCenter/renku-frontend-buildpacks),
 such as installing packages for different programming languages or installing
 extensions for VSCodium or Jupyterlab.
 2. Use the Renku run image as a base for building your own custom image, then apply
@@ -48,7 +48,7 @@ to not modify the configuration we have already set up that makes the images wor
 
 :::info[Cloud Native Buildpacks]
 We make extensive use of Cloud Native Buildpacks in Renku. If you want to learn
-more about them you can consult the documentation [here](https://buildpacks.io/docs/).
+more about them you can consult the [buildpacks documentation](https://buildpacks.io/docs/).
 :::
 
 ### 1. Modifications Supported by the Renku Buildpacks
@@ -56,12 +56,12 @@ more about them you can consult the documentation [here](https://buildpacks.io/d
 This is the easiest way to build custom images, as long as you need to customize aspects
 of the image that are supported by our buildpacks. This is how we build the global environment
 images for [renkulab.io](https://renkulab.io).
-You can see the code for our global images [here](https://github.com/SwissDataScienceCenter/renku/tree/master/global-images)
-and you can find our run image [here](https://github.com/SwissDataScienceCenter/renku-frontend-buildpacks/pkgs/container/renku-frontend-buildpacks%2Frun-image).
+You can see the code for our global images in the [Renku repository](https://github.com/SwissDataScienceCenter/renku/tree/master/global-images)
+and you can find our run image [in our image registry](https://github.com/SwissDataScienceCenter/renku-frontend-buildpacks/pkgs/container/renku-frontend-buildpacks%2Frun-image).
 
 For example if you need a global environment image with custom Python packages,
 then you can specify these with Poetry. Once you have the `pyproject.toml` and
-`poetry.lock` files, you can use the `pack` CLI (found [here](https://github.com/buildpacks/pack))
+`poetry.lock` files, you can use the `pack` [CLI](https://github.com/buildpacks/pack)
 to build the images.
 
 :::note
@@ -73,8 +73,7 @@ Renku deployment you should check and upgrade the global images as well.
 
 ### 2. Modify the Run Image
 
-This option is similar to the one above. However, you would first modify the Renku run image
-you can find [here](https://github.com/SwissDataScienceCenter/renku-frontend-buildpacks/pkgs/container/renku-frontend-buildpacks%2Frun-image).
+This option is similar to the one above. However, you would first modify the [Renku run image](https://github.com/SwissDataScienceCenter/renku-frontend-buildpacks/pkgs/container/renku-frontend-buildpacks%2Frun-image).
 
 ```Dockerfile
 FROM ghcr.io/swissdatasciencecenter/renku/run-image:0.2.0
@@ -89,8 +88,7 @@ the `pack` command, similarly to how we build the global images for Renku.
 
 ### 3. Modify an Existing Renku Image
 
-You can use the images we build for the global environments at [renkulab.io](https://renkulab.io) as a starting point.
-You can find these [here](https://github.com/orgs/SwissDataScienceCenter/packages?repo_name=renku).
+You can use the images we build for the [global environments](https://github.com/orgs/SwissDataScienceCenter/packages?repo_name=renku) at [renkulab.io](https://renkulab.io) as a starting point.
 
 For example, if you decide to use `ghcr.io/swissdatasciencecenter/renku/py-basic-jupyterlab:2.10.3`.
 Then you can structure your `Dockerfile` as follows:
