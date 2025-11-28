@@ -27,7 +27,7 @@ computational sessions. Projects are assembled by piecing together:
   sing.
 
 > [!NOTE]
-> We’re discontinuing Renku Legacy and the RenkuLab GitLab by January 2026
+> We are discontinuing Renku Legacy and the RenkuLab GitLab by January 2026
 > to focus all development efforts on the newly launched version of Renku,
 > [Renku 2.0](https://blog.renkulab.io/launch-renku-2/). To learn more, including how to maintain access to your Renku
 > Legacy projects, see our [transition guide](https://blog.renkulab.io/sunsetting-legacy/#how-to-migrate-projects-from-renku-legacy-to-renku-20).
@@ -37,21 +37,16 @@ computational sessions. Projects are assembled by piecing together:
 A public instance of **RenkuLab** is available at
 https://renkulab.io. To start exploring Renku, feel free to make an
 account and try it out! You can follow the [hands-on
-tutorial](https://renku.notion.site/Hands-On-Tutorial-1a50df2efafc800f8554e30fd7458fa6)
-or visit our [Community
-Portal](https://renku.notion.site/Renku-Community-Portal-2a154d7d30b24ab8a5968c60c2592d87).
+tutorial](https://docs.renkulab.io/en/latest/docs/users/getting-started/)
+or visit our [documentation](https://docs.renkulab.io).
 
 ## Documentation
 
-- [Tutorials](https://renku.notion.site/Renku-2-0-Tutorials-1460df2efafc80c2b27acd221aa34a24):
-  how to get your Renku work off the ground
-- [How-to
-  Guides](https://renku.notion.site/Renku-2-0-How-To-Guides-900f417fc205439789a9fbdc5cadcec8):
-  recipes for common use-cases with Renku for users and administrators
-- [Reference](https://renku.notion.site/Renku-2-0-Reference-874b6f7b83a044598f5bdbf1193cb150):
-  various concepts explained in detail
-- [Renku 2.0 blog](https://blog.renkulab.io/): discover what is new in Renku, for example [How Renku 2.0 is different from Renku Legacy](https://blog.renkulab.io/deep-dive-2-0/)
-- [\"Legacy\" documentation](https://renku.readthedocs.org): the
+- [Documentation for users](https://docs.renkulab.io/en/latest/docs/users/)
+- [Documentation for administrators](https://docs.renkulab.io/en/latest/docs/admins/architecture/services)
+- [Renku blog](https://blog.renkulab.io/): discover what is new in Renku, for example [How Renku 2.0 is different from Renku Legacy](https://blog.renkulab.io/deep-dive-2-0/)
+- [Community portal](https://renku.notion.site/Renku-Community-Portal-2a154d7d30b24ab8a5968c60c2592d87)
+- [\"Legacy\" documentation]([https://renku.readthedocs.org](https://docs.renkulab.io/en/0.70.1/)): the
   documentation pages for the previous version of the platform
 
 ## Contributing
@@ -93,8 +88,8 @@ Renku is built from several sub-repositories:
   a simple API gateway.
 - [amalthea](https://github.com/SwissDataScienceCenter/amalthea): k8s
   operator for user session servers.
-- [renkulab-docker](https://github.com/SwissDataScienceCenter/renkulab-docker):
-  base images for interactive sessions.
+- [renku-frontend-buildpacks](https://github.com/SwissDataScienceCenter/renku-frontend-buildpacks):
+  buildpacks for assembling user image built from code.
 
 ## Citing Renku in research papers
 
