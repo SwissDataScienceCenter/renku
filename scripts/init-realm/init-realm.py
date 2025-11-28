@@ -232,6 +232,7 @@ while not success and n_attempts < 31:
             username=args.admin_user,
             password=keycloak_admin_password,
             verify=True,
+            max_retries=10,
         )
         success = True
     except (KeycloakConnectionError, KeycloakGetError, KeycloakPostError) as error:
