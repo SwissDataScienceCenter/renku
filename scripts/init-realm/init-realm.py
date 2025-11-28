@@ -24,6 +24,8 @@ import logging
 import os
 from typing import Dict, List
 
+import requests
+from requests.exceptions import ConnectionError, SSLError
 from keycloak import KeycloakAdmin
 from keycloak.exceptions import (
     KeycloakConnectionError,
@@ -34,6 +36,7 @@ from keycloak.exceptions import (
 from utils import DemoUserConfig, OIDCClientsConfig, OIDCGitlabClient, OIDCClient, OAuthFlow
 
 logging.basicConfig(level=logging.INFO)
+
 
 def _check_existing(existing_object: Dict, new_object: Dict, case, id_key) -> bool:
     """
@@ -183,6 +186,26 @@ def _check_and_create_user(keycloak_admin, new_user):
         logging.info("done")
 
 
+def _wait_for_tls(url: str, retries=60, wait_secs=2):
+    """Keeps calling the url and waits in between retries until the name resolution and TLS works."""
+    logging.info("Waiting for name resolution and TLS.")
+    cur_retry = 1
+    while True:
+        try:
+            requests.get(url, allow_redirects=True)
+        except (ConnectionError, SSLError) as err:
+            if cur_retry >= retries:
+                raise Exception(
+                    "Timed out trying to wait for name resolution or TLS"
+                ) from err
+            logging.warning("Failed name resolution or TLS, will wait and retry.")
+            time.sleep(wait_secs)
+        else:
+            break
+        finally:
+            cur_retry += 1
+
+
 # The actual script
 
 parser = argparse.ArgumentParser()
@@ -221,6 +244,10 @@ if not keycloak_admin_password:
 n_attempts = 0
 success = False
 
+server_url = args.keycloak_url if args.keycloak_url.endswith("/") else args.keycloak_url + "/"
+
+_wait_for_tls(server_url)
+
 while not success and n_attempts < 31:
     try:
         logging.info("Getting an admin access token for Keycloak...")
@@ -228,7 +255,7 @@ while not success and n_attempts < 31:
         # "http://dev.renku.ch/auth" without the trailing "/" will fail with a 405 whereas
         # "http://dev.renku.ch/auth/" will work without a problem.
         keycloak_admin = KeycloakAdmin(
-            server_url=args.keycloak_url if args.keycloak_url.endswith("/") else args.keycloak_url + "/",
+            server_url=server_url,
             username=args.admin_user,
             password=keycloak_admin_password,
             verify=True,
