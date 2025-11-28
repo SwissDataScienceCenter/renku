@@ -3,6 +3,11 @@
 This guide will explain what migrating a project from Renku Legacy to Renku 2.0 means, and walk you
 through how to migrate your project.
 
+<p class="image-container-l">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/uZZSeS5kVKc?si=R7NbUNon-VJZ4q13" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+*Learn the main steps to successfully migrate your project from Renku Legacy and ensure that your links remain operational.*
+</p>
+
 ## What happens when I migrate a project to Renku 2.0?
 
 **✅ Code Repository**
@@ -149,3 +154,4 @@ If for whatever reason you need to migrate a project manually, you can do so by 
 
     6. Click **Next**
     7. Give your Launcher a **name** that describes what it does
+
