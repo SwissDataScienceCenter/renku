@@ -9,9 +9,9 @@ If your group is only working together on one project, we recommend to create a 
 
 Follow these How-To Guides to get started:
 
-[How to create a new project](../projects/guides/create-a-project)
+- [How to create a new project](../projects/guides/create-a-project)
 
-[How to add people to a project](../collaboration/guides/add-people-to-project)
+- [How to add people to a project](../collaboration/guides/add-people-to-project)
 
 For an overview of the roles you can give people on a project, see [Project Roles](../collaboration/permissions#project-roles).
 
@@ -21,10 +21,10 @@ If you want to use Renku for your group and you will have multiple projects, we 
 
 Follow these How-To Guides to get started:
 
-[How to create a group](../collaboration/guides/create-group)
+- [How to create a group](../collaboration/guides/create-group)
 
-[How to add members to a group](../collaboration/guides/add-members-to-group)
+- [How to add members to a group](../collaboration/guides/add-members-to-group)
 
-For an overview of the roles you can give people on a group, see [Group Permissions](../collaboration/permissions#group-permissions).
+- For an overview of the roles you can give people on a group, see [Group Permissions](../collaboration/permissions#group-permissions).
 
-To understand how group roles are related to project roles, see [Groups and Role Inheritance](https://www.notion.so/Role-Inheritance-b70b2a48d74043ca9b78a5ed1f60ae10?pvs=21).
+- To understand how group roles are related to project roles, see [Group Abilities by Role](../collaboration/permissions#group-abilities-by-role).
