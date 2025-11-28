@@ -24,15 +24,30 @@ Ensure that you select a class within that resource pool as the default resource
 
 # Managing access rights to course project(s)
 
-We recommend you to create a group for your course following the instructions in [How to create a group](https://www.notion.so/How-to-create-a-group-bebe023733aa4ae39a5a164e56f487ac?pvs=21).
+We recommend you to create a group for your course following the instructions in [How to create a group](https://docs.renkulab.io/en/latest/docs/users/collaboration/guides/create-group).
 
 Add the **course participants as** **viewers** of the course group. This will make it so the participants can see all of the projects in the group, but they will not be able to edit them.
 
 We recommend to add **other course instructors as owners** of the group so that they can edit all the projects in the course group.
 
-```mdx-code-block
+# Setting up a course with Renku projects
+
+Depending on the requirements of the course, we propose several modes for setting up the course projects:
+
+1. [**Light Course Mode**](https://docs.renkulab.io/en/latest/docs/users/use-cases/teaching/set-up-course-in-light-mode): Ideal for workshops where participants only need access to a simple compute session with course materials and do not need to collaborate.
+    
+2. [**Classic Course Mode:**](https://docs.renkulab.io/en/latest/docs/users/use-cases/teaching/set-up-course-in-classic-mode) Participants create their own copies of a course template project. Take full advantage of Renku’s collaboration features and integration with other platforms. 
+
+    
+3. [**Advanced Course Mode:**](https://docs.renkulab.io/en/latest/docs/users/use-cases/teaching/set-up-course-in-advanced-mode-using-git) Participants collaborate on code via git.
+
+<!-- ```mdx-code-block
 import DocCardList from '@theme/DocCardList';
 
 <DocCardList />
 
-```
+``` -->
+
+Follow the chart below to decide which mode best suits your course.
+
+![alt text](image.png)
