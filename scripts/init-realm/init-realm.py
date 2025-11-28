@@ -197,8 +197,8 @@ def _check_and_create_client(keycloak_admin, new_client: OIDCClient, force: bool
                     if role["name"] in new_client.service_account_realm_roles
                 ]
                 logging.info(f"Found and assigning matching realm roles: {matching_realm_roles}")
-                keycloak_admin.assign_realm_roles_to_user(
-                    service_account_user["id"], matching_realm_roles
+                keycloak_admin.assign_realm_roles(
+                    user_id=service_account_user["id"], roles=matching_realm_roles
                 )
 
         logging.info("done")
@@ -241,8 +241,8 @@ def _check_and_create_client(keycloak_admin, new_client: OIDCClient, force: bool
                     if role["name"] in new_client.service_account_realm_roles
                 ]
                 logging.info(f"Found and assigning matching realm roles: {matching_realm_roles}")
-                keycloak_admin.assign_realm_roles_to_user(
-                    service_account_user["id"], matching_realm_roles
+                keycloak_admin.assign_realm_roles(
+                    user_id=service_account_user["id"], roles=matching_realm_roles
                 )
 
         logging.info("done")
