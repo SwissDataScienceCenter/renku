@@ -1,88 +1,63 @@
-import { TIMEOUTS } from "../../../config";
-import {
-  getRandomString,
-  getUserData,
-  validateLoginV2,
-} from "../../support/commands/general";
-import { ProjectIdentifierV2 } from "../../support/types/projects";
+import { getRandomString, getUserData } from "../../support/commands/general";
 import { User } from "../../support/types/user";
 import {
   createProjectIfMissingV2,
   deleteProject,
-  getProjectByNamespace,
 } from "../../support/utils/projects";
 import {
-  deleteSessionFromAPI,
+  createSessionLauncher,
+  deleteSession,
+  deleteSessionLauncher,
   getSessions,
+  setSessionLauncherImage,
 } from "../../support/utils/sessions";
+import { login } from "../../support/utils/general";
 
 const sessionId = ["sessions", getRandomString()];
 
-describe("Start a session that consumes project resources", () => {
-  // Define required resources
-  let projectNameRandomPart: string;
-  let projectName;
-  let projectIdentifier: ProjectIdentifierV2;
+describe("Session launcher tests", () => {
+  const projectName = `project-session-tests-${getRandomString()}`;
+  let projectId: string;
+  const sessionImage = "alpine:latest";
+  const sessionUrl = "/test";
+  let sessionLauncherName: string;
 
-  function resetRequiredResources() {
-    projectNameRandomPart = getRandomString();
-    projectName = `session-basics-${projectNameRandomPart}`;
-    projectIdentifier = {
-      slug: projectName,
-      id: null,
-      namespace: null,
-    };
-  }
-  beforeEach(() => {
-    // Restore the session (login)
-    cy.session(
-      sessionId,
-      () => {
-        cy.robustLogin("v2");
-      },
-      validateLoginV2,
-    );
+  before(() => {
+    login(sessionId);
 
     // Create a project
-    resetRequiredResources();
     getUserData().then((user: User) => {
-      projectIdentifier.namespace = user.username;
       createProjectIfMissingV2({
         name: projectName,
         namespace: user.username,
         slug: projectName,
-      }).then((project) => (projectIdentifier.id = project.id));
+      }).then((response) => {
+        projectId = response.body.id;
+      });
     });
   });
 
-  // Cleanup the session and the project after the test
-  after(() => {
-    getProjectByNamespace(projectIdentifier).then((response) => {
-      if (response.status === 200) {
-        projectIdentifier.id = response.body.id;
-        projectIdentifier.namespace = response.body.namespace;
+  beforeEach(() => {
+    login(sessionId);
+    sessionLauncherName = `session-launcher-${getRandomString()}`;
+  });
 
-        getSessions().then((response) => {
-          if (response.status === 200 && response.body.length > 0) {
-            // eslint-disable-next-line max-nested-callbacks
-            response.body.forEach((session) => {
-              if (session.project_id === projectIdentifier.id) {
-                deleteSessionFromAPI(session.name);
-              }
-            });
+  after(() => {
+    // Delete all sessions
+    getSessions().then((response) => {
+      if (response.status === 200 && response.body.length > 0) {
+        response.body.forEach((session) => {
+          if (session.project_id === projectId) {
+            deleteSession(session.name);
           }
         });
-
-        deleteProject(projectIdentifier.id);
       }
     });
+
+    deleteProject(projectId);
   });
 
-  it("Add and modify session environments", () => {
-    const sessionImage = "alpine:latest";
-    const sessionUrl = "/test";
-    const sessionName = `vscode-${getRandomString()}`;
-
+  it("Add and delete a session launcher in the project's sessions list", () => {
     // Add session environment
     cy.visitProjectByName(projectName);
     cy.getDataCy("add-session-launcher").click();
@@ -90,156 +65,223 @@ describe("Start a session that consumes project resources", () => {
     cy.getDataCy("custom-image-input").should("be.empty").type(sessionImage);
     cy.getDataCy("session-launcher-field-default_url").clear().type(sessionUrl);
     cy.getDataCy("next-session-button").click();
-    cy.getDataCy("launcher-name-input").should("be.empty").type(sessionName);
+    cy.getDataCy("launcher-name-input")
+      .should("be.empty")
+      .type(sessionLauncherName);
     cy.getDataCy("add-session-button").click();
     cy.getDataCy("session-launcher-creation-success").should("be.visible");
     cy.getDataCy("close-cancel-button").click();
 
-    // Edit session environment
+    // Verify session launcher was created
+    cy.visitProjectByName(projectName);
     cy.getDataCy("sessions-box")
-      .contains("[data-cy=session-launcher-item]", sessionName)
+      .contains("[data-cy=session-launcher-item]", sessionLauncherName)
+      .should("be.visible");
+
+    // Delete session launcher from the list
+    cy.getDataCy("sessions-box")
+      .contains("[data-cy=session-launcher-item]", sessionLauncherName)
+      .find("[data-cy=button-with-menu-dropdown]")
       .click();
-    cy.getDataCy("session-view-menu-edit").click();
-    cy.getDataCy("edit-session-name")
-      .should("have.value", sessionName)
-      .clear()
-      .type(`${sessionName}-edited`);
-    cy.getDataCy("edit-session-button").click();
-    cy.getDataCy("session-launcher-update-success").should("be.visible");
-    cy.getDataCy("close-cancel-button").click();
-    cy.getDataCy("sessions-box").contains(
-      "[data-cy=session-launcher-item]",
-      sessionName,
-    );
+    cy.getDataCy("session-launcher-menu-delete").click();
+    cy.getDataCy("delete-session-launcher-title").should("be.visible");
+    cy.getDataCy("delete-session-launcher-button").click();
+
+    // Verify session launcher was deleted
+    cy.visitProjectByName(projectName);
+    cy.getDataCy("sessions-box")
+      .contains("[data-cy=session-launcher-item]", sessionLauncherName)
+      .should("not.exist");
   });
 
-  it("Start a session with VSCode and check it has the necessary resources", () => {
-    const dataConnectorName = `giab-${getRandomString()}`;
-    const dataContainerFolder = "data_RNAseq";
-    const repositoryName = "renku-ui";
-    const repositoryFolder = "client";
-    const session = {
-      arguments: '["/entrypoint.sh"]',
-      command: '["bash"]',
-      image: "renku/renkulab-vscodium-python-runimage:ubuntu-59fcea4",
-      mountdir: "/home/ubuntu/work",
-      name: "vscode-launcher",
-      url: "/",
-      workdir: "/home/ubuntu/work",
-    };
-
+  it("And and delete a session launcher in properties view", () => {
+    // Add session environment
     cy.visitProjectByName(projectName);
-
-    cy.getDataCy("add-data-connector").click();
-    cy.getDataCy("project-data-controller-mode-create").click();
-    cy.getDataCy("data-storage-s3").click();
-    cy.getDataCy("data-provider-AWS").click();
-    cy.getDataCy("data-connector-edit-next-button").click();
-    cy.getDataCy("data-connector-source-path").clear().type("giab");
-    cy.getDataCy("test-data-connector-button").click();
-    cy.getDataCy("add-data-connector-continue-button").click();
-    cy.getDataCy("data-connector-name-input").clear().type(dataConnectorName);
-    cy.getDataCy("data-connector-edit-update-button").click();
-    cy.getDataCy("data-connector-edit-success").should("be.visible");
-    cy.getDataCy("data-connector-edit-close-button").click();
-    // ? data connectors don't refresh properly yet so we need to reload the page
-    cy.reload();
-    cy.getDataCy("data-connector-box")
-      .find(`[data-cy=data-connector-name]`)
-      .contains(dataConnectorName);
-
-    cy.getDataCy("add-code-repository").click();
-    cy.getDataCy("project-add-repository-url")
-      .clear()
-      .type("https://github.com/SwissDataScienceCenter/renku-ui.git");
-    cy.getDataCy("add-code-repository-modal-button").click();
-    cy.getDataCy("code-repositories-box")
-      .find("[data-cy=code-repository-item]")
-      .contains(repositoryName);
-    cy.contains("[data-cy=code-repository-item]", repositoryName).contains(
-      "Pull only",
-    );
-
     cy.getDataCy("add-session-launcher").click();
     cy.getDataCy("environment-kind-custom").click();
-    cy.getDataCy("custom-image-input").clear().type(session.image);
-    cy.getDataCy("session-launcher-field-default_url")
-      .clear()
-      .type(session.url);
-    cy.getDataCy("session-launcher-field-mount_directory")
-      .clear()
-      .type(session.mountdir);
-    cy.getDataCy("session-launcher-field-working_directory")
-      .clear()
-      .type(session.workdir);
-    cy.getDataCy("session-launcher-field-command")
-      .clear()
-      .type(session.command);
-    cy.getDataCy("session-launcher-field-args")
-      .clear()
-      .type(session.arguments, { parseSpecialCharSequences: false });
+    cy.getDataCy("custom-image-input").should("be.empty").type(sessionImage);
+    cy.getDataCy("session-launcher-field-default_url").clear().type(sessionUrl);
     cy.getDataCy("next-session-button").click();
-    cy.getDataCy("launcher-name-input").clear().type(session.name);
+    cy.getDataCy("launcher-name-input")
+      .should("be.empty")
+      .type(sessionLauncherName);
     cy.getDataCy("add-session-button").click();
     cy.getDataCy("session-launcher-creation-success").should("be.visible");
     cy.getDataCy("close-cancel-button").click();
 
-    // Start a pristine session
+    // Click on the session launcher to open the properties view
+    cy.visitProjectByName(projectName);
     cy.getDataCy("sessions-box")
-      .contains("[data-cy=session-launcher-item]", session.name)
-      .then(($el) => {
-        const $resume = $el.find("[data-cy=resume-session-button]");
-        const $open = $el.find("[data-cy=open-session]");
-        if ($resume.length > 0 || $open.length > 0) {
-          cy.wrap($el).find("[data-cy=button-with-menu-dropdown]").click();
-          cy.wrap($el).find("[data-cy=delete-session-button]").click();
-          cy.getDataCy("delete-session-modal-button").click();
-        }
-      });
-    cy.getDataCy("sessions-box")
-      .contains("[data-cy=session-launcher-item]", session.name)
-      .find("[data-cy=start-session-button]", {
-        timeout: TIMEOUTS.long,
-      })
+      .contains("[data-cy=session-launcher-item]", sessionLauncherName)
+      .should("be.visible")
       .click();
-    cy.getDataCy("session-status-starting");
-    cy.get("[data-cy=session-status-starting]", {
-      timeout: TIMEOUTS.long,
-    }).should("be.visible");
-    cy.getDataCy("session-header").contains(session.name);
-    cy.get("[data-cy=session-iframe]", { timeout: TIMEOUTS.vlong }).should(
-      "be.visible",
-    );
 
-    // Check the project resources are available in the session.
-    cy.getIframe("[data-cy=session-iframe]").within(() => {
-      // ? Mind the following commands target the VSCode web interface where we have little control.
-      function findAndExpandFolder(name: string, depth: number) {
-        cy.contains(`[role=treeitem][aria-level="${depth}"]`, name).then(
-          ($el) => {
-            if ($el.attr("aria-expanded") === "false") {
-              // ? Forcing clicks is a bad practice but VScode has unpredictable behavior for its popups.
-              // eslint-disable-next-line cypress/no-force
-              cy.wrap($el).click({ force: true });
-            }
-          },
-        );
-      }
-      cy.get("#workbench\\.view\\.explorer", { timeout: TIMEOUTS.long }).within(
-        () => {
-          // Check the repository content
-          findAndExpandFolder(repositoryName, 1);
-          cy.get(
-            `[role="treeitem"][aria-level="2"][aria-label="${repositoryFolder}"]`,
-          ).should("exist");
+    // Delete session launcher from the properties view
+    cy.getDataCy("session-view-title").should("be.visible");
+    cy.getDataCy("session-launcher-menu-dropdown").click();
+    cy.getDataCy("session-view-menu-delete").click();
+    cy.getDataCy("delete-session-launcher-title").should("be.visible");
+    cy.getDataCy("delete-session-launcher-button").click();
 
-          // Check the S3 bucket content
-          findAndExpandFolder(dataConnectorName, 1);
-          cy.get(
-            `[role="treeitem"][aria-level="2"][aria-label="${dataContainerFolder}"]`,
-          ).should("exist");
-        },
+    // Verify session launcher is deleted
+    cy.visitProjectByName(projectName);
+    cy.getDataCy("sessions-box")
+      .contains("[data-cy=session-launcher-item]", sessionLauncherName)
+      .should("not.exist");
+  });
+
+  describe("With an existing session launcher", () => {
+    let sessionLauncherId: string;
+
+    beforeEach(() => {
+      createSessionLauncher(
+        projectId,
+        sessionLauncherName,
+        sessionImage,
+        sessionUrl,
+      ).then((response) => {
+        sessionLauncherId = response.body.id;
+      });
+    });
+
+    afterEach(() => {
+      deleteSessionLauncher(sessionLauncherId);
+    });
+
+    it("Edit session launcher", () => {
+      const newName = `${sessionLauncherName} edited`;
+
+      // Click on the session launcher to open the properties view
+      cy.visitProjectByName(projectName);
+      cy.getDataCy("sessions-box")
+        .contains("[data-cy=session-launcher-item]", sessionLauncherName)
+        .click();
+
+      // Edit session launcher
+      cy.getDataCy("session-view-menu-edit").click();
+      cy.getDataCy("edit-session-name")
+        .should("have.value", sessionLauncherName)
+        .clear()
+        .type(newName);
+      cy.getDataCy("edit-session-button").click();
+      cy.getDataCy("session-launcher-update-success").should("be.visible");
+      cy.getDataCy("close-cancel-button").click();
+
+      // Verify session launcher is edited
+      cy.visitProjectByName(projectName);
+      cy.getDataCy("sessions-box").contains(
+        "[data-cy=session-launcher-item]",
+        newName,
       );
+    });
+
+    it("Edit session launcher container image", () => {
+      const newImage = "ubuntu:latest";
+
+      // Click on the session launcher to open the properties view
+      cy.visitProjectByName(projectName);
+      cy.getDataCy("sessions-box")
+        .contains("[data-cy=session-launcher-item]", sessionLauncherName)
+        .click();
+
+      // Click modify session environment button
+      cy.getDataCy("session-view-modify-session-environment-button").click();
+
+      // Clear and update the container image
+      cy.getDataCy("custom-image-input")
+        .should("have.value", sessionImage)
+        .clear()
+        .type(newImage);
+
+      cy.getDataCy("edit-session-button").click();
+      cy.getDataCy("session-launcher-update-success").should("be.visible");
+      cy.getDataCy("close-cancel-button").click();
+
+      // Verify the image was updated in the properties view
+      cy.visitProjectByName(projectName);
+      cy.getDataCy("sessions-box")
+        .contains("[data-cy=session-launcher-item]", sessionLauncherName)
+        .click();
+
+      // Verify the container image is displayed correctly
+      cy.getDataCy("session-view-session-environment-image").should(
+        "contain",
+        newImage,
+      );
+    });
+
+    it("Edit session launcher resource class", () => {
+      // Click on the session launcher to open the properties view
+      cy.visitProjectByName(projectName);
+      cy.getDataCy("sessions-box")
+        .contains("[data-cy=session-launcher-item]", sessionLauncherName)
+        .click();
+
+      // Open edit resource class dialog
+      cy.getDataCy("session-view-title").should("be.visible");
+      cy.getDataCy("session-view-resource-class-edit-button").click();
+
+      // Wait for the dialog to open
+      cy.getDataCy("set-resource-class-header").should("be.visible");
+
+      // Open the resource class dropdown
+      cy.get("#addSessionResourceClass").click();
+
+      // Select the "medium" resource class option
+      cy.contains("medium").filter(":visible").click();
+
+      // Modify resource class button should be enabled
+      cy.getDataCy("set-resource-class-submit-button")
+        .should("not.be.disabled")
+        .click();
+
+      // Verify success message appears
+      cy.getDataCy("set-resource-class-success-alert").should("be.visible");
+
+      // Close the dialog
+      cy.getDataCy("set-resource-class-cancel-button").click();
+
+      // Click on the session launcher to open the properties view
+      cy.visitProjectByName(projectName);
+      cy.getDataCy("sessions-box")
+        .contains("[data-cy=session-launcher-item]", sessionLauncherName)
+        .click();
+
+      // Scroll to the Default Resource Class section
+      cy.getDataCy("session-view-resource-class-heading")
+        .scrollIntoView()
+        .should("be.visible");
+
+      // Verify the resource class was changed in the session launcher view
+      cy.getDataCy("session-view-resource-class-description")
+        .should("be.visible")
+        .and("contain", "medium class from default pool");
+    });
+
+    it("An error is shown when launching with non-existing image", () => {
+      const nonExistingImage = "non-existent-image:non-existing-tag";
+
+      // Update the session launcher to use a non-existing image
+      setSessionLauncherImage(sessionLauncherId, nonExistingImage);
+
+      // Click the dropdown button to show launch options
+      cy.visitProjectByName(projectName);
+      cy.getDataCy("sessions-box")
+        .contains("[data-cy=session-launcher-item]", sessionLauncherName)
+        .find("[data-cy=button-with-menu-dropdown]")
+        .click();
+
+      // Click "Force launch" option
+      cy.getDataCy("start-session-button").click();
+
+      // Verify error dialog appears
+      cy.getDataCy("session-image-not-accessible-header").should("be.visible");
+
+      // Click Cancel button to close the dialog
+      cy.getDataCy("session-image-not-accessible-cancel-button").click();
+
+      // Verify we're back to the project page
+      cy.getDataCy("project-name").contains(projectName).should("be.visible");
     });
   });
 });

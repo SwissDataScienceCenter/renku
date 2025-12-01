@@ -25,7 +25,7 @@ jobs:
     outputs:
       docs: ${{ steps.filter.outputs.docs }}
     steps:
-    # For pull requests it's not necessary to checkout the code
+    # For pull requests it's not necessary to check out the code
     - uses: dorny/paths-filter@v3
       id: filter
       with:
@@ -238,6 +238,28 @@ jobs:
         if: github.event.action != 'closed' && (needs.check-deploy.outputs.switch-deploy == 'true' || needs.check-deploy.outputs.deploy == 'true') && needs.check-deploy.outputs.test-enabled == 'true'
         with:
           e2e-folder: cypress/e2e/v2/
+          e2e-target: ${{ matrix.tests }}
+          kubernetes-cluster-fqdn: ${{ needs.check-deploy.outputs.deploy == 'true' && 'dev.renku.ch' }}
+          renku-reference: ${{ github.ref }}
+          renku-release: ci-renku-${{ github.event.number }}
+          test-user-password: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
+
+  cypress-acceptance-tests-slow:
+    name: Cypress tests
+    runs-on: ubuntu-24.04
+    needs: [check-deploy, deploy-pr]
+    strategy:
+      fail-fast: false
+      matrix:
+        tests:
+          [
+            sessions,
+          ]
+    steps:
+      - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@v1.19.1
+        if: github.event.action != 'closed' && (needs.check-deploy.outputs.switch-deploy == 'true' || needs.check-deploy.outputs.deploy == 'true') && needs.check-deploy.outputs.test-enabled == 'true'
+        with:
+          e2e-folder: cypress/e2e/slow/
           e2e-target: ${{ matrix.tests }}
           kubernetes-cluster-fqdn: ${{ needs.check-deploy.outputs.deploy == 'true' && 'dev.renku.ch' }}
           renku-reference: ${{ github.ref }}
