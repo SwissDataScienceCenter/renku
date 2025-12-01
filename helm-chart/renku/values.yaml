@@ -1514,13 +1514,13 @@ dataService:
     ## The run image (see https://buildpacks.io/docs/for-platform-operators/concepts/base-images/)
     runImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/base-image:0.1.0"
     ## The name of the BuildStrategy to use for image builds.
-    strategyName: renku-buildpacks-v2
+    strategyName: renku-buildpacks-v3
     ## Configuration overrides for specific target platforms
     platformOverrides: {}
       # linux/arm64:
       #   builderImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/selector:0.1.0"
       #   runImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/base-image:0.1.0"
-      #   strategyName: renku-buildpacks-v2
+      #   strategyName: renku-buildpacks-v3
       #   nodeSelector:
       #     kubernetes.io/arch: arm64
       #     renku.io/node-purpose: image-build
