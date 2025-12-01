@@ -1,3 +1,5 @@
+import { SessionLauncher } from "../types/sessions";
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function getSessions(): Cypress.Chainable<Cypress.Response<any>> {
   return cy.request({
@@ -10,7 +12,7 @@ export function getSessions(): Cypress.Chainable<Cypress.Response<any>> {
 export function deleteSession(
   sessionName: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): Cypress.Chainable<Cypress.Response<any>> {
+): Cypress.Chainable<Cypress.Response<null>> {
   return cy.request({
     failOnStatusCode: false,
     method: "DELETE",
@@ -25,7 +27,7 @@ export function createSessionLauncher(
   defaultUrl = "/lab",
   resourceClassId = 1,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): Cypress.Chainable<Cypress.Response<any>> {
+): Cypress.Chainable<Cypress.Response<SessionLauncher>> {
   return cy.request({
     method: "POST",
     url: "api/data/session_launchers",
@@ -47,7 +49,7 @@ export function createSessionLauncher(
 export function deleteSessionLauncher(
   launcherId: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): Cypress.Chainable<Cypress.Response<any>> {
+): Cypress.Chainable<Cypress.Response<null>> {
   return cy.request({
     failOnStatusCode: false,
     method: "DELETE",
@@ -59,7 +61,7 @@ export function setSessionLauncherImage(
   launcherId: string,
   containerImage: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): Cypress.Chainable<Cypress.Response<any>> {
+): Cypress.Chainable<Cypress.Response<SessionLauncher>> {
   return cy.request({
     method: "PATCH",
     url: `api/data/session_launchers/${launcherId}`,

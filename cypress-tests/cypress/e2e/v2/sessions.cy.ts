@@ -12,6 +12,7 @@ import {
   setSessionLauncherImage,
 } from "../../support/utils/sessions";
 import { login } from "../../support/utils/general";
+import { SessionLauncher } from "../../support/types/sessions";
 
 const sessionId = ["sessions", getRandomString()];
 
@@ -46,7 +47,7 @@ describe("Session launcher tests", () => {
     // Delete all sessions
     getSessions().then((response) => {
       if (response.status === 200 && response.body.length > 0) {
-        response.body.forEach((session) => {
+        response.body.forEach((session: SessionLauncher) => {
           if (session.project_id === projectId) {
             deleteSession(session.name);
           }
