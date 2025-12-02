@@ -1,15 +1,12 @@
-import {
-  getRandomString,
-  validateLoginV2,
-} from "../../support/commands/general";
+import { getRandomString, getUserData } from "../../support/commands/general";
 import { generatorProjectName } from "../../support/commands/projects";
-import { ProjectIdentifierV2 } from "../../support/types/projects";
 import {
   createProjectIfMissingV2,
   deleteProject,
-  getProjectByNamespace,
 } from "../../support/utils/projects";
-import { getUserNamespace } from "../../support/utils/user";
+import { login } from "../../support/utils/general";
+import { User } from "../../support/types/user";
+
 const projectTestConfig = {
   projectAlreadyExists: false,
   projectName: generatorProjectName("dashboardV2"),
@@ -19,45 +16,28 @@ const prefixProjectTitle = "My Renku Project";
 const sessionId = ["dashboard", getRandomString()];
 
 describe("Dashboard v2 - Authenticated user", () => {
-  const projectIdentifier: ProjectIdentifierV2 = {
-    slug: projectTestConfig.projectName,
-    id: null,
-    namespace: null,
-  };
+  const projectSlug = projectTestConfig.projectName;
+  let projectId: string | null = null;
 
   after(() => {
-    if (
-      !projectTestConfig.projectAlreadyExists &&
-      projectIdentifier.id != null
-    ) {
-      deleteProject(projectIdentifier.id);
-      getProjectByNamespace(projectIdentifier).then((response) => {
-        expect(response.status).to.equal(404);
-      });
+    if (!projectTestConfig.projectAlreadyExists) {
+      deleteProject(projectId);
     }
   });
 
   beforeEach(() => {
-    // Restore the session
-    cy.session(
-      sessionId,
-      () => {
-        cy.robustLogin("v2");
-      },
-      validateLoginV2,
-    );
-    getUserNamespace().then((namespace) => {
-      if (namespace) {
-        projectIdentifier.namespace = namespace;
-        createProjectIfMissingV2({
-          visibility: "private",
-          name: `${prefixProjectTitle} ${projectIdentifier.slug}`,
-          namespace,
-          slug: projectIdentifier.slug,
-        }).then((project) => (projectIdentifier.id = project.body.id));
-      } else {
-        cy.log("No user namespace found, project cannot be created.");
-      }
+    login(sessionId);
+
+    getUserData().then((user: User) => {
+      createProjectIfMissingV2({
+        description: "Test project for dashboard tests",
+        name: `${prefixProjectTitle} ${projectSlug}`,
+        namespace: user.username,
+        slug: projectSlug,
+        visibility: "private",
+      }).then((response) => {
+        projectId = response.body.id;
+      });
     });
   });
 
@@ -68,13 +48,10 @@ describe("Dashboard v2 - Authenticated user", () => {
       .should("have.length.at.least", 1);
     cy.getDataCy("dashboard-project-list")
       .find("a")
-      .should(
-        "contain.text",
-        `${prefixProjectTitle} ${projectIdentifier.slug}`,
-      );
+      .should("contain.text", `${prefixProjectTitle} ${projectSlug}`);
     cy.getDataCy("dashboard-project-list")
       .find("a")
-      .should("contain.text", projectIdentifier.slug);
+      .should("contain.text", projectSlug);
   });
 
   it("Can find project in the search results", () => {
@@ -83,7 +60,7 @@ describe("Dashboard v2 - Authenticated user", () => {
     cy.getDataCy("search-card").should("have.length.at.least", 1);
     cy.getDataCy("search-card").should(
       "contain.text",
-      `${prefixProjectTitle} ${projectIdentifier.slug}`,
+      `${prefixProjectTitle} ${projectSlug}`,
     );
   });
 });

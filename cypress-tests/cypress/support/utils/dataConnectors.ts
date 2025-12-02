@@ -1,10 +1,12 @@
 import { DataConnector } from "../types/dataConnectors";
 
-/** Parse a data connector identifier to extract namespace and slug. */
+/** Parse a data connector identifier (e.g. user-namespace/project-slug/slug) to
+ *  extract namespace and slug. */
 function parseDataConnectorIdentifier(identifier: string): {
   namespace: string;
   slug: string;
 } {
+  identifier = identifier.replace(/^\/+|\/+$/g, "");
   const parts = identifier.split("/");
   const slug = parts[parts.length - 1];
   const namespace = parts.slice(0, -1).join("/");
@@ -15,8 +17,7 @@ function parseDataConnectorIdentifier(identifier: string): {
 export function createDataConnector(
   dataConnectorOrIdentifier: DataConnector | string,
   projectId?: string,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): Cypress.Chainable<Cypress.Response<any>> {
+): Cypress.Chainable<Cypress.Response<DataConnector>> {
   let body: DataConnector;
 
   if (typeof dataConnectorOrIdentifier === "string") {
@@ -83,8 +84,9 @@ export function createDataConnector(
 }
 
 /** Get all data connectors. */
-export function getAllDataConnectors(): // eslint-disable-next-line @typescript-eslint/no-explicit-any
-Cypress.Chainable<Cypress.Response<any>> | Cypress.Chainable<null> {
+export function getAllDataConnectors(): Cypress.Chainable<
+  Cypress.Response<DataConnector[]>
+> {
   return cy.request({
     method: "GET",
     url: "api/data/data_connectors?per_page=100",
@@ -94,29 +96,26 @@ Cypress.Chainable<Cypress.Response<any>> | Cypress.Chainable<null> {
 /** Delete a data connector by its identifier (namespace/slug). */
 export function deleteDataConnector(
   dataConnectorIdentifier: string | string[],
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): Cypress.Chainable<Cypress.Response<any>> | Cypress.Chainable<null> {
+): void {
   const identifiers = Array.isArray(dataConnectorIdentifier)
     ? dataConnectorIdentifier
     : [dataConnectorIdentifier];
 
-  return getAllDataConnectors().then((response) => {
+  getAllDataConnectors().then((response) => {
     identifiers.forEach((identifier) => {
       const { namespace, slug } = parseDataConnectorIdentifier(identifier);
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const dataConnector = response.body.find((dc: any) => {
+      const dataConnector = response.body.find((dc: DataConnector) => {
         return dc.namespace === namespace && dc.slug === slug;
       });
 
       if (dataConnector) {
         cy.request({
+          failOnStatusCode: false,
           method: "DELETE",
           url: `api/data/data_connectors/${dataConnector.id}`,
         });
       }
     });
-
-    return null;
   });
 }

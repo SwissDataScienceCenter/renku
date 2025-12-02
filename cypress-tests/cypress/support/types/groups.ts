@@ -1,9 +1,6 @@
-export type GroupIdentifier = {
+export interface Group {
   id?: string;
-  slug: string;
-};
-
-export interface Group extends GroupIdentifier {
-  description?: string;
   name: string;
+  slug: string;
+  description?: string;
 }

@@ -7,7 +7,6 @@ import { User } from "../../support/types/user";
 import {
   createProjectIfMissingV2,
   deleteProject,
-  getProjectByNamespace,
 } from "../../support/utils/projects";
 import { verifySearchIndexing } from "../../support/utils/search";
 
@@ -30,11 +29,15 @@ describe("Anonymous users can only access public resources", () => {
   let randomString: string;
   let privateProjectName: string;
   let publicProjectName: string;
+  let privateProjectId: string | null = null;
+  let publicProjectId: string | null = null;
 
   function resetRequiredResources() {
     randomString = getRandomString();
     privateProjectName = `anon-private-${randomString}`;
     publicProjectName = `anon-public-${randomString}`;
+    privateProjectId = null;
+    publicProjectId = null;
   }
 
   // Restore the session (login) and create the required projects
@@ -45,19 +48,29 @@ describe("Anonymous users can only access public resources", () => {
     // Create projects with new names to be sure re-runs don't break.
     resetRequiredResources();
     getUserData().then((user: User) => {
-      for (const proj of [privateProjectName, publicProjectName]) {
-        createProjectIfMissingV2({
-          name: proj,
-          namespace: user.username,
-          slug: proj,
-          visibility: proj.includes("public") ? "public" : "private",
-        }).then((response) => {
-          // eslint-disable-line max-nested-callbacks
-          if (response.status >= 400) {
-            throw new Error("Failed to create project");
-          }
-        });
-      }
+      createProjectIfMissingV2({
+        name: privateProjectName,
+        namespace: user.username,
+        slug: privateProjectName,
+        visibility: "private",
+      }).then((response) => {
+        if (response.status >= 400) {
+          throw new Error("Failed to create private project");
+        }
+        privateProjectId = response.body.id;
+      });
+
+      createProjectIfMissingV2({
+        name: publicProjectName,
+        namespace: user.username,
+        slug: publicProjectName,
+        visibility: "public",
+      }).then((response) => {
+        if (response.status >= 400) {
+          throw new Error("Failed to create public project");
+        }
+        publicProjectId = response.body.id;
+      });
     });
 
     // Verify the resources are searchable
@@ -70,19 +83,8 @@ describe("Anonymous users can only access public resources", () => {
     cy.session(loggedSession.id, loggedSession.setup, validateLoginV2);
 
     // Delete the projects
-    getUserData().then((user: User) => {
-      [privateProjectName, publicProjectName].forEach((proj) => {
-        getProjectByNamespace({
-          namespace: user.username,
-          slug: proj,
-          // eslint-disable-next-line max-nested-callbacks
-        }).then((response) => {
-          if (response.status === 200) {
-            deleteProject(response.body.id);
-          }
-        });
-      });
-    });
+    deleteProject(privateProjectId);
+    deleteProject(publicProjectId);
   });
 
   it("Navigate to projects and search for them", () => {

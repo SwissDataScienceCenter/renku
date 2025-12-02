@@ -2,8 +2,7 @@ import { Group } from "../types/groups";
 
 export function getGroup(
   slug: string,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): Cypress.Chainable<Cypress.Response<any>> {
+): Cypress.Chainable<Cypress.Response<Group>> {
   return cy.request({
     failOnStatusCode: false,
     method: "GET",
@@ -11,24 +10,21 @@ export function getGroup(
   });
 }
 
-/** Delete a group by using only the API. */
-export function deleteGroup(
-  slug: string,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): Cypress.Chainable<Cypress.Response<any>> {
-  return cy.request({
-    failOnStatusCode: false,
-    method: "DELETE",
-    url: `api/data/groups/${slug}`,
-  });
+export function deleteGroup(slug: string | null): void {
+  if (slug) {
+    cy.request({
+      failOnStatusCode: false,
+      method: "DELETE",
+      url: `api/data/groups/${slug}`,
+    });
+  }
 }
 
 export function createGroupIfMissing(
   group: Group,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): Cypress.Chainable<Cypress.Response<any>> {
+): Cypress.Chainable<Cypress.Response<Group>> {
   return getGroup(group.slug).then((response) => {
-    if (response.status == 200) {
+    if (response.status === 200) {
       return cy.wrap(response);
     }
     return cy.request({
