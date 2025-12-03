@@ -4,13 +4,13 @@ import {
   createProjectIfMissingV2,
   deleteProject,
 } from "../../support/utils/projects";
+import { addCodeRepository } from "../../support/utils/codeRepositories";
 import { login } from "../../support/utils/general";
 
 const sessionId = ["codeRepositories", getRandomString()];
 
 describe("Code repositories", () => {
-  // Define some project details
-  const projectName = `project-${getRandomString()}`;
+  const projectName = `project-code-repository-tests-${getRandomString()}`;
   let projectId: string;
 
   // Create a project and keep that around for the rest of the tests
@@ -38,18 +38,47 @@ describe("Code repositories", () => {
     deleteProject(projectId);
   });
 
-  it("Add and modify code repositories", () => {
-    const repoUrl = "https://github.com/SwissDataScienceCenter/renku-ui.git";
-    const repoName = "renku-ui";
-    const repoUrlEdited =
-      "https://github.com/SwissDataScienceCenter/renku-data-services.git";
-    const repoNameEdited = "renku-data-services";
+  it("Add and delete code repository", () => {
+    const repoUrl = "https://github.com/SwissDataScienceCenter/renku-gateway";
+    const repoName = "renku-gateway";
 
     // Add code repository
     cy.visitProjectByName(projectName);
     cy.getDataCy("add-code-repository").click();
     cy.getDataCy("project-add-repository-url").should("be.empty").type(repoUrl);
     cy.getDataCy("add-code-repository-modal-button").click();
+    cy.getDataCy("code-repositories-box")
+      .find("[data-cy=code-repository-item]")
+      .contains(repoName);
+    cy.contains("[data-cy=code-repository-item]", repoName).contains(
+      "Pull only",
+    );
+
+    // Delete code repository
+    cy.contains("[data-cy=code-repository-item]", repoName)
+      .find("[data-cy=button-with-menu-dropdown]")
+      .click();
+    cy.getDataCy("code-repository-delete").click();
+    cy.getDataCy("delete-code-repository-modal-button").click();
+
+    // Verify the repository is deleted
+    cy.getDataCy("code-repositories-box")
+      .contains("[data-cy=code-repository-item]", repoName)
+      .should("not.exist");
+  });
+
+  it("Edit code repository", () => {
+    const repoUrl = "https://github.com/SwissDataScienceCenter/renku-ui.git";
+    const repoName = "renku-ui";
+
+    const newUrl = repoUrl.replace("renku-ui", "renku-data-services");
+    const newName = "renku-data-services";
+
+    // Add code repository
+    addCodeRepository(projectId, repoUrl);
+
+    // Navigate to project and verify repository was added
+    cy.visitProjectByName(projectName);
     cy.getDataCy("code-repositories-box")
       .find("[data-cy=code-repository-item]")
       .contains(repoName);
@@ -64,12 +93,12 @@ describe("Code repositories", () => {
     cy.getDataCy("project-edit-repository-url")
       .should("have.value", repoUrl)
       .clear()
-      .type(repoUrlEdited);
+      .type(newUrl);
     cy.getDataCy("edit-code-repository-modal-button").click();
     cy.getDataCy("code-repositories-box")
       .find("[data-cy=code-repository-item]")
-      .contains(repoNameEdited);
-    cy.contains("[data-cy=code-repository-item]", repoNameEdited).contains(
+      .contains(newName);
+    cy.contains("[data-cy=code-repository-item]", newName).contains(
       "Pull only",
     );
   });
