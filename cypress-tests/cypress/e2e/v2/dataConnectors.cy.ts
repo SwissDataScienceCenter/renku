@@ -15,8 +15,8 @@ const sessionId = ["dataConnectors", getRandomString()];
 
 describe("Data Connectors", () => {
   const randomString = getRandomString();
-  const projectName = `Project for data connector tests ${randomString}`;
-  const projectSlug = `project-for-data-connector-tests-${randomString}`;
+  const projectName = `Project data connector tests ${randomString}`;
+  const projectSlug = `project-data-connector-tests-${randomString}`;
   let userNamespace: string;
   let dataConnectorName: string;
   let projectId: string;
