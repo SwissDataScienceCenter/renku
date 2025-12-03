@@ -5,14 +5,14 @@ import {
 } from "../../support/commands/general";
 import { User } from "../../support/types/user";
 import {
-  createGroupIfMissingAPI,
-  deleteGroupFromAPI,
-  getGroupFromAPI,
+  createGroupIfMissing,
+  deleteGroup,
+  getGroup,
 } from "../../support/utils/groups";
 import {
-  createProjectIfMissingAPIV2,
-  deleteProjectFromAPIV2,
-  getProjectByNamespaceAPIV2,
+  createProjectIfMissingV2,
+  deleteProject,
+  getProjectByNamespace,
 } from "../../support/utils/projects";
 import { verifySearchIndexing } from "../../support/utils/search";
 
@@ -53,7 +53,7 @@ describe("Search for resources: groups, projects, users", () => {
     getUserData().then((user: User) => {
       userNamespace = user.username;
       for (const proj of [projects.first, projects.second]) {
-        createProjectIfMissingAPIV2({
+        createProjectIfMissingV2({
           name: proj,
           namespace: user.username,
           slug: proj,
@@ -64,7 +64,7 @@ describe("Search for resources: groups, projects, users", () => {
         });
       }
       for (const grp of [groups.first, groups.second]) {
-        createGroupIfMissingAPI({
+        createGroupIfMissing({
           name: grp,
           slug: grp,
         }).then((response) => {
@@ -93,22 +93,19 @@ describe("Search for resources: groups, projects, users", () => {
   // Cleanup the resources after the test
   after(() => {
     [projects.first, projects.second].forEach((proj) => {
-      getProjectByNamespaceAPIV2({
+      getProjectByNamespace({
         slug: proj,
         namespace: userNamespace,
       }).then((response) => {
         if (response.status === 200) {
-          deleteProjectFromAPIV2({
-            id: response.body.id,
-            slug: proj,
-          });
+          deleteProject(response.body.id);
         }
       });
     });
     [groups.first, groups.second].forEach((grp) => {
-      getGroupFromAPI(grp).then((response) => {
+      getGroup(grp).then((response) => {
         if (response.status === 200) {
-          deleteGroupFromAPI(grp);
+          deleteGroup(grp);
         }
       });
     });

@@ -1,86 +1,42 @@
-import {
-  getRandomString,
-  getUserData,
-  validateLoginV2,
-} from "../../support/commands/general";
-import { ProjectIdentifierV2 } from "../../support/types/projects";
+import { getRandomString, getUserData } from "../../support/commands/general";
 import { User } from "../../support/types/user";
 import {
-  createProjectIfMissingAPIV2,
-  deleteProjectFromAPIV2,
-  getProjectByNamespaceAPIV2,
+  createProjectIfMissingV2,
+  deleteProject,
 } from "../../support/utils/projects";
+import { login } from "../../support/utils/general";
 
 const sessionId = ["codeRepositories", getRandomString()];
 
-describe("Code repositories - work with code repositories", () => {
+describe("Code repositories", () => {
   // Define some project details
-  const projectNameRandomPart = getRandomString();
-  const projectName = `project-${projectNameRandomPart}`;
-  const projectDescription =
-    "This is a test project from Cypress to test working with code, data, environments";
-  const projectIdentifier: ProjectIdentifierV2 = {
-    slug: projectName,
-    id: null,
-    namespace: null,
-  };
+  const projectName = `project-${getRandomString()}`;
+  let projectId: string;
 
   // Create a project and keep that around for the rest of the tests
   before(() => {
-    // Login
-    cy.session(
-      sessionId,
-      () => {
-        cy.robustLogin("v2");
-      },
-      validateLoginV2,
-    );
+    login(sessionId);
 
     // Create the project and save its details
     getUserData().then((user: User) => {
-      projectIdentifier.namespace = user.username;
-      createProjectIfMissingAPIV2({
-        description: projectDescription,
+      createProjectIfMissingV2({
+        description: "Test project from Cypress to test code repositories",
         name: projectName,
         namespace: user.username,
         slug: projectName,
-        visibility: "private",
-      }).then((project) => (projectIdentifier.id = project.id));
+      }).then((response) => {
+        projectId = response.body.id;
+      });
     });
   });
 
-  // Restore the session (login)
   beforeEach(() => {
-    cy.session(
-      sessionId,
-      () => {
-        cy.robustLogin("v2");
-      },
-      validateLoginV2,
-    );
+    login(sessionId);
   });
 
-  // Cleanup the project after the test -- useful on failure
   after(() => {
-    getProjectByNamespaceAPIV2(projectIdentifier).then((response) => {
-      if (response.status === 200) {
-        projectIdentifier.id = response.body.id;
-        projectIdentifier.namespace = response.body.namespace;
-        deleteProjectFromAPIV2(projectIdentifier);
-      }
-    });
+    deleteProject(projectId);
   });
-
-  const visitCurrentProject = () => {
-    // There should a link on the dashboard for a newly created project
-    cy.visit("/v2");
-    cy.getDataCy("dashboard-project-list")
-      .get(
-        `a[href*="/${projectIdentifier.namespace}/${projectIdentifier.slug}"]`,
-      )
-      .click();
-    cy.getDataCy("project-name").should("contain", projectName);
-  };
 
   it("Add and modify code repositories", () => {
     const repoUrl = "https://github.com/SwissDataScienceCenter/renku-ui.git";
@@ -90,7 +46,7 @@ describe("Code repositories - work with code repositories", () => {
     const repoNameEdited = "renku-data-services";
 
     // Add code repository
-    visitCurrentProject();
+    cy.visitProjectByName(projectName);
     cy.getDataCy("add-code-repository").click();
     cy.getDataCy("project-add-repository-url").should("be.empty").type(repoUrl);
     cy.getDataCy("add-code-repository-modal-button").click();

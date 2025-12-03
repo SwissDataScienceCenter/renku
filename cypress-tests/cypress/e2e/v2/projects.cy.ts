@@ -6,8 +6,8 @@ import {
 import { ProjectIdentifierV2 } from "../../support/types/projects";
 import { User } from "../../support/types/user";
 import {
-  deleteProjectFromAPIV2,
-  getProjectByNamespaceAPIV2,
+  deleteProject,
+  getProjectByNamespace,
 } from "../../support/utils/projects";
 
 const sessionId = ["projects", getRandomString()];
@@ -47,11 +47,11 @@ describe("Project - create, edit and delete", () => {
 
   // Cleanup the project after the test -- useful on failure
   afterEach(() => {
-    getProjectByNamespaceAPIV2(projectIdentifier).then((response) => {
+    getProjectByNamespace(projectIdentifier).then((response) => {
       if (response.status === 200) {
         projectIdentifier.id = response.body.id;
         projectIdentifier.namespace = response.body.namespace;
-        deleteProjectFromAPIV2(projectIdentifier);
+        deleteProject(projectIdentifier.id);
       }
     });
   });
@@ -132,7 +132,7 @@ describe("Project - create, edit and delete", () => {
       );
       cy.getDataCy("project-delete-button").should("be.enabled").click();
       cy.wait("@deleteProject");
-      getProjectByNamespaceAPIV2(projectIdentifier).then((response) => {
+      getProjectByNamespace(projectIdentifier).then((response) => {
         expect(response.status).to.equal(404);
       });
     });

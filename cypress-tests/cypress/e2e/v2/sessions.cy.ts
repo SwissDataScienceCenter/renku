@@ -7,13 +7,13 @@ import {
 import { ProjectIdentifierV2 } from "../../support/types/projects";
 import { User } from "../../support/types/user";
 import {
-  createProjectIfMissingAPIV2,
-  deleteProjectFromAPIV2,
-  getProjectByNamespaceAPIV2,
+  createProjectIfMissingV2,
+  deleteProject,
+  getProjectByNamespace,
 } from "../../support/utils/projects";
 import {
   deleteSessionFromAPI,
-  getSessionsFromAPI,
+  getSessions,
 } from "../../support/utils/sessions";
 
 const sessionId = ["sessions", getRandomString()];
@@ -33,16 +33,6 @@ describe("Start a session that consumes project resources", () => {
       namespace: null,
     };
   }
-  const visitCurrentProject = () => {
-    // There should a link on the dashboard for a newly created project
-    cy.visit("/v2");
-    cy.getDataCy("dashboard-project-list")
-      .get(
-        `a[href*="/${projectIdentifier.namespace}/${projectIdentifier.slug}"]`,
-      )
-      .click();
-  };
-
   beforeEach(() => {
     // Restore the session (login)
     cy.session(
@@ -57,7 +47,7 @@ describe("Start a session that consumes project resources", () => {
     resetRequiredResources();
     getUserData().then((user: User) => {
       projectIdentifier.namespace = user.username;
-      createProjectIfMissingAPIV2({
+      createProjectIfMissingV2({
         name: projectName,
         namespace: user.username,
         slug: projectName,
@@ -67,12 +57,12 @@ describe("Start a session that consumes project resources", () => {
 
   // Cleanup the session and the project after the test
   after(() => {
-    getProjectByNamespaceAPIV2(projectIdentifier).then((response) => {
+    getProjectByNamespace(projectIdentifier).then((response) => {
       if (response.status === 200) {
         projectIdentifier.id = response.body.id;
         projectIdentifier.namespace = response.body.namespace;
 
-        getSessionsFromAPI().then((response) => {
+        getSessions().then((response) => {
           if (response.status === 200 && response.body.length > 0) {
             // eslint-disable-next-line max-nested-callbacks
             response.body.forEach((session) => {
@@ -83,7 +73,7 @@ describe("Start a session that consumes project resources", () => {
           }
         });
 
-        deleteProjectFromAPIV2(projectIdentifier);
+        deleteProject(projectIdentifier.id);
       }
     });
   });
@@ -94,7 +84,7 @@ describe("Start a session that consumes project resources", () => {
     const sessionName = `vscode-${getRandomString()}`;
 
     // Add session environment
-    visitCurrentProject();
+    cy.visitProjectByName(projectName);
     cy.getDataCy("add-session-launcher").click();
     cy.getDataCy("environment-kind-custom").click();
     cy.getDataCy("custom-image-input").should("be.empty").type(sessionImage);
@@ -138,14 +128,7 @@ describe("Start a session that consumes project resources", () => {
       workdir: "/home/ubuntu/work",
     };
 
-    // Access the project and create some resources.
-    cy.visit("/v2");
-    cy.getDataCy("dashboard-project-list")
-      .get(
-        `a[href*="/${projectIdentifier.namespace}/${projectIdentifier.slug}"]`,
-      )
-      .click();
-    cy.getDataCy("project-name").should("contain", projectName);
+    cy.visitProjectByName(projectName);
 
     cy.getDataCy("add-data-connector").click();
     cy.getDataCy("project-data-controller-mode-create").click();

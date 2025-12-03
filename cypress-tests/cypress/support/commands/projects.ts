@@ -247,6 +247,16 @@ function visitProjectPageLink(identifier: ProjectIdentifier, subpage: string) {
   return cy.visit(url);
 }
 
+function visitProjectByName(projectName: string) {
+  // Navigate to the project from the dashboard
+  cy.visit("/");
+  cy.getDataCy("projects-container")
+    .find('[data-cy="dashboard-project-list"]')
+    .contains(projectName)
+    .click();
+  cy.getDataCy("project-name").should("contain", projectName);
+}
+
 type ProjectSection =
   | "Overview"
   | "Files"
@@ -284,6 +294,7 @@ export default function registerProjectCommands() {
   Cypress.Commands.add("getProjectSection", getProjectSection);
   Cypress.Commands.add("searchForProject", searchForProject);
   Cypress.Commands.add("visitProject", visitProject);
+  Cypress.Commands.add("visitProjectByName", visitProjectByName);
   Cypress.Commands.add("visitProjectPageLink", visitProjectPageLink);
   Cypress.Commands.add("visitAndLoadProject", visitAndLoadProject);
   Cypress.Commands.add("waitMetadataIndexing", waitMetadataIndexing);
@@ -301,6 +312,7 @@ declare global {
       getProjectSection(section: ProjectSection);
       searchForProject(props: ProjectIdentifier, shouldExist?: boolean);
       visitProject(identifier: ProjectIdentifier);
+      visitProjectByName(projectName: string);
       visitProjectPageLink(identifier: ProjectIdentifier, subpage: string);
       visitAndLoadProject(
         identifier: ProjectIdentifier,
