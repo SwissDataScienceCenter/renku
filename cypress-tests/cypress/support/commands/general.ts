@@ -77,9 +77,32 @@ export function getRandomString(length = 8) {
     .substring(2, length + 2);
 }
 
+// Store deferred functions per spec file
+const deferredFunctions: (() => void)[] = [];
+
+function defer(fn: () => void) {
+  deferredFunctions.push(fn);
+}
+
+// Execute all deferred functions
+function executeDeferredFunctions() {
+  while (deferredFunctions.length > 0) {
+    const fn = deferredFunctions.shift();
+    if (fn) {
+      fn();
+    }
+  }
+}
+
 export default function registerGeneralCommands() {
   Cypress.Commands.add("getIframe", getIframe);
   Cypress.Commands.add("getDataCy", getDataCy);
+  Cypress.Commands.add("defer", defer);
+
+  // Register a global after hook to execute deferred functions
+  afterEach(() => {
+    executeDeferredFunctions();
+  });
 }
 
 declare global {
@@ -88,6 +111,7 @@ declare global {
     interface Chainable {
       getDataCy: typeof getDataCy;
       getIframe: typeof getIframe;
+      defer: typeof defer;
     }
   }
 }

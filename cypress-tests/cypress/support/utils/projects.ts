@@ -1,60 +1,58 @@
-import { NewProjectV2Body, ProjectIdentifierV2 } from "../types/projects";
-
-/** Get the namespace of the logged in user from the API. */
-export function getUserNamespaceAPIV2(): Cypress.Chainable<string | null> {
-  return cy
-    .request({
-      failOnStatusCode: false,
-      method: "GET",
-      url: `api/data/namespaces?minimum_role=owner`,
-    })
-    .then((response) => {
-      if (response.status === 200) {
-        const userNamespace = response.body?.filter(
-          (namespace) => namespace.namespace_kind === "user",
-        );
-        return userNamespace && userNamespace.length > 0
-          ? userNamespace[0].slug
-          : null;
-      }
-      return null;
-    });
-}
+import { ProjectV2, ProjectIdentifierV2 } from "../types/projects";
 
 /** Get a project by using only the API. */
-export function getProjectByNamespaceAPIV2(
-  newProjectProps: ProjectIdentifierV2,
+export function getProjectByNamespace(
+  projectIdentifier: ProjectIdentifierV2,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): Cypress.Chainable<any | null> {
+): Cypress.Chainable<Cypress.Response<any>> {
   return cy.request({
     failOnStatusCode: false,
     method: "GET",
-    url: `api/data/namespaces/${newProjectProps.namespace}/projects/${newProjectProps.slug}`,
+    url: `api/data/namespaces/${projectIdentifier.namespace}/projects/${projectIdentifier.slug}`,
   });
 }
 
-/** Create a project (if the project is missing) by using only the API. */
-export function createProjectIfMissingAPIV2(newProjectBody: NewProjectV2Body) {
-  return getProjectByNamespaceAPIV2(newProjectBody).then((response) => {
-    if (response.status != 200) {
-      return cy.request({
-        method: "POST",
-        url: "api/data/projects",
-        body: newProjectBody,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+/** Create a project by using only the API. */
+export function createProjectIfMissingV2(
+  project: ProjectV2,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+): Cypress.Chainable<Cypress.Response<any>> {
+  return getProjectByNamespace(project).then((response) => {
+    if (response.status === 200) {
+      return cy.wrap(response);
     }
-    return response.body;
+    return cy.request({
+      method: "POST",
+      url: "api/data/projects",
+      body: project,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
   });
 }
 
 /** Delete a project by using only the API. */
-export function deleteProjectFromAPIV2(projectIdentifier: ProjectIdentifierV2) {
+export function deleteProject(
+  projectId: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+): Cypress.Chainable<Cypress.Response<any>> {
   return cy.request({
     failOnStatusCode: false,
     method: "DELETE",
-    url: `api/data/projects/${projectIdentifier.id}`,
+    url: `api/data/projects/${projectId}`,
+  });
+}
+
+/** Delete a project by namespace and slug using only the API. */
+export function deleteProjectByNamespace(
+  projectIdentifier: ProjectIdentifierV2,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+): Cypress.Chainable<Cypress.Response<any>> {
+  return getProjectByNamespace(projectIdentifier).then((response) => {
+    if (response.status === 200) {
+      return deleteProject(response.body.id);
+    }
+    return cy.wrap(response);
   });
 }

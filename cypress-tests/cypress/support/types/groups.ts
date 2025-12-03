@@ -3,7 +3,7 @@ export type GroupIdentifier = {
   slug: string;
 };
 
-export interface NewGroupBody extends GroupIdentifier {
+export interface Group extends GroupIdentifier {
   description?: string;
   name: string;
 }
