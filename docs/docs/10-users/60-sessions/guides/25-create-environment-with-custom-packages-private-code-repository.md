@@ -4,7 +4,7 @@ Would you like Renku to create an environment for you with the packages you need
 
 If your code repository is public, you can have Renku build this image directly as part of your project! See [How to create an environment with custom packages installed](create-environment-with-custom-packages-installed).
 
-If your code repository is private, follow the instructions below.
+If your code repository is private, follow the instructions below or check out the [example repository](https://github.com/SwissDataScienceCenter/renku-custom-vscodium-image-template).
 
 ## Create a GitHub action to build a docker image
 
