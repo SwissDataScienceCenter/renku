@@ -5,6 +5,13 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
+## Upgrading to Renku 2.11.0
+
+* EDIT `enableV1Services` is now set to `false` by default.
+  Legacy (v1) services are now deprecated in Renku and version 2.11 is the last Renku
+  release where legacy services can be enabled. In the next Renku release (2.12),
+  the `enableV1Services` chart value will be removed.
+
 ## Upgrading to Renku 2.9.0
 
 * NEW `notebooks.sessionIngress.ingressClassName`, set to `nginx` by default. Replaces the deprecated `kubernetes.io/ingress.class` annotation.
