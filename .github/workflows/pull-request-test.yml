@@ -168,6 +168,7 @@ jobs:
             groups,
             projects,
             search,
+            sessionLaunchers,
             sessions,
           ]
         slow-tests: [sessions]
@@ -183,9 +184,9 @@ jobs:
           test-user-password: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
 
       - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@v1.19.1
-        if: github.event.action != 'closed' && needs.check-deploy.outputs.deploy == 'true' && needs.check-deploy.outputs.test-enabled == 'true' && needs.check-deploy.outputs.test-slow-enabled == 'true'
+        if: github.event.action != 'closed' && needs.check-deploy.outputs.deploy == 'true' && needs.check-deploy.outputs.test-enabled == 'true' && needs.check-deploy.outputs.test-slow-enabled == 'true' && matrix.tests == 'sessions'
         with:
-          e2e-folder: cypress/e2e/v2/slow/
+          e2e-folder: cypress/e2e/slow/
           e2e-target: ${{ matrix.slow-tests }}
           kubernetes-cluster-fqdn: ${{ needs.check-deploy.outputs.deploy == 'true' && 'dev.renku.ch' }}
           renku-reference: ${{ github.ref }}

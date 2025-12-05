@@ -6,22 +6,22 @@ import {
 } from "../../support/utils/projects";
 import {
   createSessionLauncher,
-  deleteSession,
-  deleteSessionLauncher,
-  getSessions,
-  setSessionLauncherImage,
+  deleteSessionsForProject,
+  getEnvironmentByName,
+  setSessionLauncherEnvironment,
 } from "../../support/utils/sessions";
 import { login } from "../../support/utils/general";
-import { SessionLauncher } from "../../support/types/sessions";
+import { Environment } from "../../support/types/sessions";
+import { TIMEOUTS } from "../../../config";
 
 const sessionId = ["sessions", getRandomString()];
 
-describe("Session launcher tests", () => {
+describe("Session tests with an existing session launcher", () => {
   const projectName = `project-session-tests-${getRandomString()}`;
   let projectId: string;
-  const sessionImage = "alpine:latest";
-  const sessionUrl = "/test";
+  let sessionLauncherId: string;
   let sessionLauncherName: string;
+  const sessionLauncherImage = "alpine:latest";
 
   before(() => {
     login(sessionId);
@@ -41,248 +41,90 @@ describe("Session launcher tests", () => {
   beforeEach(() => {
     login(sessionId);
     sessionLauncherName = `session-launcher-${getRandomString()}`;
+    createSessionLauncher(projectId, sessionLauncherName, {
+      container_image: sessionLauncherImage,
+    }).then((response) => {
+      sessionLauncherId = response.body.id;
+    });
   });
 
   after(() => {
-    // Delete all sessions
-    getSessions().then((response) => {
-      if (response.status === 200 && response.body.length > 0) {
-        response.body.forEach((session: SessionLauncher) => {
-          if (session.project_id === projectId) {
-            deleteSession(session.name);
-          }
-        });
-      }
-    });
-
+    // Delete all project's sessions
+    deleteSessionsForProject(projectId);
     deleteProject(projectId);
   });
 
-  it("Add and delete a session launcher in the project's sessions list", () => {
-    // Add session environment
-    cy.visitProjectByName(projectName);
-    cy.getDataCy("add-session-launcher").click();
-    cy.getDataCy("environment-kind-custom").click();
-    cy.getDataCy("custom-image-input").should("be.empty").type(sessionImage);
-    cy.getDataCy("session-launcher-field-default_url").clear().type(sessionUrl);
-    cy.getDataCy("next-session-button").click();
-    cy.getDataCy("launcher-name-input")
-      .should("be.empty")
-      .type(sessionLauncherName);
-    cy.getDataCy("add-session-button").click();
-    cy.getDataCy("session-launcher-creation-success").should("be.visible");
-    cy.getDataCy("close-cancel-button").click();
+  it("An error is shown when launching with non-existing image", () => {
+    // Update the session launcher to use a non-existing image
+    setSessionLauncherEnvironment(sessionLauncherId, {
+      container_image: "non-existent-image:non-existing-tag",
+    });
 
-    // Verify session launcher was created
+    // Verify "Image inaccessible" message is displayed
     cy.visitProjectByName(projectName);
     cy.getDataCy("sessions-box")
       .contains("[data-cy=session-launcher-item]", sessionLauncherName)
-      .should("be.visible");
+      .should("contain", "Image inaccessible");
 
-    // Delete session launcher from the list
+    // Click the dropdown button to show launch options
+    cy.visitProjectByName(projectName);
     cy.getDataCy("sessions-box")
       .contains("[data-cy=session-launcher-item]", sessionLauncherName)
       .find("[data-cy=button-with-menu-dropdown]")
       .click();
-    cy.getDataCy("session-launcher-menu-delete").click();
-    cy.getDataCy("delete-session-launcher-title").should("be.visible");
-    cy.getDataCy("delete-session-launcher-button").click();
 
-    // Verify session launcher was deleted
-    cy.visitProjectByName(projectName);
+    // Click "Force launch" option for that session launcher
     cy.getDataCy("sessions-box")
       .contains("[data-cy=session-launcher-item]", sessionLauncherName)
-      .should("not.exist");
-  });
-
-  it("And and delete a session launcher in properties view", () => {
-    // Add session environment
-    cy.visitProjectByName(projectName);
-    cy.getDataCy("add-session-launcher").click();
-    cy.getDataCy("environment-kind-custom").click();
-    cy.getDataCy("custom-image-input").should("be.empty").type(sessionImage);
-    cy.getDataCy("session-launcher-field-default_url").clear().type(sessionUrl);
-    cy.getDataCy("next-session-button").click();
-    cy.getDataCy("launcher-name-input")
-      .should("be.empty")
-      .type(sessionLauncherName);
-    cy.getDataCy("add-session-button").click();
-    cy.getDataCy("session-launcher-creation-success").should("be.visible");
-    cy.getDataCy("close-cancel-button").click();
-
-    // Click on the session launcher to open the properties view
-    cy.visitProjectByName(projectName);
-    cy.getDataCy("sessions-box")
-      .contains("[data-cy=session-launcher-item]", sessionLauncherName)
+      .find("[data-cy=start-session-button]")
       .should("be.visible")
       .click();
 
-    // Delete session launcher from the properties view
-    cy.getDataCy("session-view-title").should("be.visible");
-    cy.getDataCy("session-launcher-menu-dropdown").click();
-    cy.getDataCy("session-view-menu-delete").click();
-    cy.getDataCy("delete-session-launcher-title").should("be.visible");
-    cy.getDataCy("delete-session-launcher-button").click();
+    // Verify error dialog appears
+    cy.getDataCy("session-image-not-accessible-header").should("be.visible");
 
-    // Verify session launcher is deleted
+    // Click Cancel button to close the dialog
+    cy.getDataCy("session-image-not-accessible-cancel-button").click();
+
+    // Verify we're back to the project page
+    cy.getDataCy("project-name").contains(projectName).should("be.visible");
+
+    // Set the correct image
+    setSessionLauncherEnvironment(sessionLauncherId, {
+      container_image: sessionLauncherImage,
+    });
+
+    // Verify "Image inaccessible" message is not displayed
     cy.visitProjectByName(projectName);
     cy.getDataCy("sessions-box")
       .contains("[data-cy=session-launcher-item]", sessionLauncherName)
-      .should("not.exist");
+      .should("not.contain", "Image inaccessible");
   });
 
-  describe("With an existing session launcher", () => {
-    let sessionLauncherId: string;
-
-    beforeEach(() => {
-      createSessionLauncher(
-        projectId,
-        sessionLauncherName,
-        sessionImage,
-        sessionUrl,
-      ).then((response) => {
-        sessionLauncherId = response.body.id;
+  it("Can launch a session with a global Python environment", () => {
+    // Set the session to use a Python global environment
+    getEnvironmentByName("python").then((environment: Environment) => {
+      setSessionLauncherEnvironment(sessionLauncherId, {
+        id: environment.id,
       });
-    });
 
-    afterEach(() => {
-      deleteSessionLauncher(sessionLauncherId);
-    });
-
-    it("Edit session launcher", () => {
-      const newName = `${sessionLauncherName} edited`;
-
-      // Click on the session launcher to open the properties view
+      // Find the session launcher and click the launch button
       cy.visitProjectByName(projectName);
       cy.getDataCy("sessions-box")
         .contains("[data-cy=session-launcher-item]", sessionLauncherName)
+        .find("[data-cy=start-session-button]")
         .click();
 
-      // Edit session launcher
-      cy.getDataCy("session-view-menu-edit").click();
-      cy.getDataCy("edit-session-name")
-        .should("have.value", sessionLauncherName)
-        .clear()
-        .type(newName);
-      cy.getDataCy("edit-session-button").click();
-      cy.getDataCy("session-launcher-update-success").should("be.visible");
-      cy.getDataCy("close-cancel-button").click();
+      // Verify the session progress page is shown
+      cy.get("[data-cy=session-status-starting]", {
+        timeout: TIMEOUTS.long,
+      }).should("be.visible");
 
-      // Verify session launcher is edited
-      cy.visitProjectByName(projectName);
-      cy.getDataCy("sessions-box").contains(
-        "[data-cy=session-launcher-item]",
-        newName,
+      // Verify the session is shown
+      cy.getDataCy("session-header").contains(sessionLauncherName);
+      cy.get("[data-cy=session-iframe]", { timeout: TIMEOUTS.vvlong }).should(
+        "be.visible",
       );
-    });
-
-    it("Edit session launcher container image", () => {
-      const newImage = "ubuntu:latest";
-
-      // Click on the session launcher to open the properties view
-      cy.visitProjectByName(projectName);
-      cy.getDataCy("sessions-box")
-        .contains("[data-cy=session-launcher-item]", sessionLauncherName)
-        .click();
-
-      // Click modify session environment button
-      cy.getDataCy("session-view-modify-session-environment-button").click();
-
-      // Clear and update the container image
-      cy.getDataCy("custom-image-input")
-        .should("have.value", sessionImage)
-        .clear()
-        .type(newImage);
-
-      cy.getDataCy("edit-session-button").click();
-      cy.getDataCy("session-launcher-update-success").should("be.visible");
-      cy.getDataCy("close-cancel-button").click();
-
-      // Verify the image was updated in the properties view
-      cy.visitProjectByName(projectName);
-      cy.getDataCy("sessions-box")
-        .contains("[data-cy=session-launcher-item]", sessionLauncherName)
-        .click();
-
-      // Verify the container image is displayed correctly
-      cy.getDataCy("session-view-session-environment-image").should(
-        "contain",
-        newImage,
-      );
-    });
-
-    it("Edit session launcher resource class", () => {
-      // Click on the session launcher to open the properties view
-      cy.visitProjectByName(projectName);
-      cy.getDataCy("sessions-box")
-        .contains("[data-cy=session-launcher-item]", sessionLauncherName)
-        .click();
-
-      // Open edit resource class dialog
-      cy.getDataCy("session-view-title").should("be.visible");
-      cy.getDataCy("session-view-resource-class-edit-button").click();
-
-      // Wait for the dialog to open
-      cy.getDataCy("set-resource-class-header").should("be.visible");
-
-      // Open the resource class dropdown
-      cy.get("#addSessionResourceClass").click();
-
-      // Select the "medium" resource class option
-      cy.contains("medium").filter(":visible").click();
-
-      // Modify resource class button should be enabled
-      cy.getDataCy("set-resource-class-submit-button")
-        .should("not.be.disabled")
-        .click();
-
-      // Verify success message appears
-      cy.getDataCy("set-resource-class-success-alert").should("be.visible");
-
-      // Close the dialog
-      cy.getDataCy("set-resource-class-cancel-button").click();
-
-      // Click on the session launcher to open the properties view
-      cy.visitProjectByName(projectName);
-      cy.getDataCy("sessions-box")
-        .contains("[data-cy=session-launcher-item]", sessionLauncherName)
-        .click();
-
-      // Scroll to the Default Resource Class section
-      cy.getDataCy("session-view-resource-class-heading")
-        .scrollIntoView()
-        .should("be.visible");
-
-      // Verify the resource class was changed in the session launcher view
-      cy.getDataCy("session-view-resource-class-description")
-        .should("be.visible")
-        .and("contain", "medium class from default pool");
-    });
-
-    it("An error is shown when launching with non-existing image", () => {
-      const nonExistingImage = "non-existent-image:non-existing-tag";
-
-      // Update the session launcher to use a non-existing image
-      setSessionLauncherImage(sessionLauncherId, nonExistingImage);
-
-      // Click the dropdown button to show launch options
-      cy.visitProjectByName(projectName);
-      cy.getDataCy("sessions-box")
-        .contains("[data-cy=session-launcher-item]", sessionLauncherName)
-        .find("[data-cy=button-with-menu-dropdown]")
-        .click();
-
-      // Click "Force launch" option
-      cy.getDataCy("start-session-button").click();
-
-      // Verify error dialog appears
-      cy.getDataCy("session-image-not-accessible-header").should("be.visible");
-
-      // Click Cancel button to close the dialog
-      cy.getDataCy("session-image-not-accessible-cancel-button").click();
-
-      // Verify we're back to the project page
-      cy.getDataCy("project-name").contains(projectName).should("be.visible");
     });
   });
 });
