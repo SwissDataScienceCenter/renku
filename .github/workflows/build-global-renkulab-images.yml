@@ -167,6 +167,7 @@ jobs:
             echo "Skipping"
             exit 0
           fi
+          set -x
           docker buildx imagetools create \
             "${TAG_ARGS[@]}" \
             "${ANNOTATION_ARGS[@]}" \
