@@ -100,11 +100,11 @@ jobs:
       matrix:
         FLAVOR:
           - basic
-          # - datascience
+          - datascience
         FRONTEND:
           - jupyterlab
-          # - vscodium
-          # - ttyd
+          - vscodium
+          - ttyd
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
