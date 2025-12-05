@@ -121,6 +121,9 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.DOCKER_PREFIX }}/py-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}
+          annotations: |
+            org.opencontainers.image.title=renku/py-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}
+            org.opencontainers.image.description=An image for renku sessions, with ${{ matrix.FLAVOR }} Python packages and a ${{ matrix.FRONTEND }} frontend.
           tags: |
             type=sha,prefix=
             type=raw,value=latest,enable=${{ github.ref == 'refs/heads/master' }}
@@ -141,8 +144,10 @@ jobs:
             type=sha,prefix=arm64-
       - name: Combine images
         run: |
-          TAG_ARGS=$(echo '${{ steps.meta.outputs.json }}' | jq -cr '.tags | map("--tag " + .) | join(" ")')
-          echo "TAG_ARGS=${TAG_ARGS}"
+          readarray -t TAG_ARGS<<<$(echo '${{ steps.meta.outputs.json }}' | jq -cr '.tags | map("--tag\n" + .) | join("\n")')
+          echo "TAG_ARGS=${TAG_ARGS[@]}"
+          readarray -t ANNOTATION_ARGS<<<$(echo '${{ steps.meta.outputs.json }}' | jq -cr '.annotations | map("--annotation\n" + .) | join("\n")')
+          echo "ANNOTATION_ARGS=${ANNOTATION_ARGS[@]}"
           LINUX_AMD64_IMAGE=$(echo '${{ steps.meta_amd64.outputs.json }}' | jq -cr '.tags[0]')
           echo "LINUX_AMD64_IMAGE=${LINUX_AMD64_IMAGE}"
           LINUX_ARM64_IMAGE=$(echo '${{ steps.meta_arm64.outputs.json }}' | jq -cr '.tags[0]')
@@ -161,6 +166,7 @@ jobs:
             exit 0
           fi
           docker buildx imagetools create \
-            ${TAG_ARGS} \
+            "${TAG_ARGS[@]}" \
+            "${ANNOTATION_ARGS[@]}" \
             "${LINUX_AMD64_IMAGE}" \
             "${LINUX_ARM64_IMAGE}"
