@@ -6,9 +6,9 @@ Would you prefer to work on your Renku project from the comfort of your local VS
 
 VSCode tunnels are supported in the following Renku session environments:
 
-- **Most Renku [global environments](/docs/users/sessions/guides/add-session-launcher-to-project)** ≥ version `2.7.0`.
+- **Most Renku [global environments](add-session-launcher-to-project)** ≥ version `2.7.0`.
     - Global environments where VSCode tunneling is *not* supported include: the RStudio environment.
-- **All Renku [code based environments](/docs/users/sessions/guides/create-environment-with-custom-packages-installed)** that were built (or rebuilt) after September 2, 2025  (release 2.7.0)
+- **All Renku [code based environments](create-environment-with-custom-packages-installed)** that were built (or rebuilt) after September 2, 2025  (release 2.7.0)
 
 :::
 
@@ -36,7 +36,7 @@ VSCode tunnels are supported in the following Renku session environments:
     <p class="image-container-s">
     ![The ‘Open a Remote Window’ button](./connect-to-renku-session-from-your-local-vscode-20.png)
     </p>
-    
+
     The ‘Open a Remote Window’ button
 3. Pick **Connect to Tunnel...**
 4. If you’re not signed in, you’ll be asked to sign in. Sign into the same account you did when running the `start_tunnel` script
@@ -55,11 +55,11 @@ VSCode tunnels are supported in the following Renku session environments:
     ```
 
     :::
-    
+
 6. If no files show up at first, click the **Open…** shortcut and enter `/home/renku/work/`
-    
+
     ![image.png](./connect-to-renku-session-from-your-local-vscode-40.png)
-    
+
 7. You should now see the same files you see in your RenkuLab session, and you can do work exactly like you are in a RenkuLab session!
 
 ### Done with your session?

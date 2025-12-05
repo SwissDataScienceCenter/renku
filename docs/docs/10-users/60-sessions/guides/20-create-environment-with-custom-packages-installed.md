@@ -19,7 +19,7 @@ RenkuLab’s code-based environments currently supports creating **Python** envi
 
 Are you working in R? Support for R is coming soon. For now, for working with R please see
 [installing packages on the fly in your
-session](/docs/users/sessions/guides/install-packages-on-the-fly-in-your-session).
+session](install-packages-on-the-fly-in-your-session).
 
 :::
 
@@ -42,7 +42,8 @@ out [Paketo Buildpacks](https://paketo.io/docs/howto/python/#use-a-package-manag
 
 Include an `environment.yml` file located at the root (top level) of the code repository.
 
-- Here’s an example `environment.yml`:
+<details>
+<summary>Here’s an example `environment.yml`:</summary>
 
     ```yaml
     # Note: name can be changed
@@ -69,7 +70,7 @@ Include an `environment.yml` file located at the root (top level) of the code re
     # Note: prefix can be changed
     prefix: "/opt/conda"
     ```
-
+</details>
 
 Important usage notes:
 
@@ -91,13 +92,15 @@ python version `3.10`. It is not currently possible to specify a different pytho
 
 :::
 
-- Here is an example `requirements.txt`:
+<details>
+<summary>Here is an example `requirements.txt`:</summary>
 
     ```
     numpy==2.2.2
     pandas==2.2.3
     jupyterlab==4.3.5
     ```
+</details>
 
 #### Poetry (`pyproject.toml`)
 
@@ -105,7 +108,8 @@ Including a `pyproject.toml` file at the root of your code repository triggers t
 
 Note that poetry version `1.8.3` will be used.
 
-- Here is an example `pyproject.toml`:
+<details>
+<summary>Here is an example `pyproject.toml`:</summary>
 
     ```toml
     [tool.poetry]
@@ -117,7 +121,7 @@ Note that poetry version `1.8.3` will be used.
     # Important: use `package-mode = false` if the repository
     # is not an installable package.
     package-mode = false
-    
+
     [tool.poetry.dependencies]
     python = "^3.12"
     numpy = "^2.2.2"
@@ -126,11 +130,20 @@ Note that poetry version `1.8.3` will be used.
     scipy = "^1.15.1"
     torch = "^2.6.0"
     pytorch-lightning = "^2.5.0.post0"
-    
+
     [build-system]
     requires = ["poetry-core"]
     build-backend = "poetry.core.masonry.api"
     ```
+</details>
+
+## Defining an R Environment
+
+:::info
+
+This feature is coming soon. For now, please see [R](./30-install-packages-on-the-fly-in-your-session.md). ).
+
+:::
 
 ## How to create a code-based environment for your Renku session
 
@@ -138,7 +151,7 @@ Note that poetry version `1.8.3` will be used.
 
 This functionality only works with **public code repositories**. If your code repository is
 private, please see [Creating a custom environment from a private code
-repository](/docs/users/sessions/guides/create-environment-with-custom-packages-private-code-repository).
+repository](create-environment-with-custom-packages-private-code-repository).
 
 :::
 
@@ -154,7 +167,7 @@ repository](/docs/users/sessions/guides/create-environment-with-custom-packages-
 
     Note: The code repository must be public. If your code repository is private, please see
     [Creating a custom environment from a private code
-    repository](/docs/users/sessions/guides/create-environment-with-custom-packages-private-code-repository)
+    repository](create-environment-with-custom-packages-private-code-repository)
 
     :::
 
@@ -204,7 +217,7 @@ To set up a dashboard with an environment built from your repository, you can fo
 
 1. Follow the steps for creating a [code-based environment](#how-to-create-a-code-based-environment-for-your-renku-session) above.
 2. Once the image is done building, edit the environment and change it to a “Custom Environment”
-3. Edit the `Command` to be `["bash", "-c"]` and `Args` to correspond to your app - see common examples [here](/docs/users/sessions/guides/use-your-own-docker-image-for-renku-session).
+3. Edit the `Command` to be `["bash", "-c"]` and `Args` to correspond to your app - see common examples [here](use-your-own-docker-image-for-renku-session).
 
 Once you are done, your environment configuration should look something like this:
 
@@ -219,4 +232,4 @@ And your launcher set up could be, for example:
 ## Creating a code-based environment from a private code repository
 
 Please see [Creating a custom environment from a private code
-repository](/docs/users/sessions/guides/create-environment-with-custom-packages-private-code-repository).
+repository](create-environment-with-custom-packages-private-code-repository).

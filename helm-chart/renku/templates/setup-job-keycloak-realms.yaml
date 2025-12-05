@@ -11,6 +11,7 @@ metadata:
     release: {{ .Release.Name }}
     chart: {{ template "renku.chart" . }}
 spec:
+  backoffLimit: 12
   template:
     metadata:
       name: "{{.Release.Name}}-init-keycloak-realms"
