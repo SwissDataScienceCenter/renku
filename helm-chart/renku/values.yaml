@@ -10,7 +10,7 @@
 ## Shared values/secrets
 global:
   ## YAML string that contains all application level Renku configuration options.
-  platformConfig: |
+  platformConfig: ""
   # secretServicePrivateKey: ... RSA Private Key in PKCS8 PEM format (`ssh-keygen -m PKCS8 -t rsa -b 4096`)
   # secretServicePreviousPrivateKey: ... Previous Private key in PEM format, only set this when rotating keys
   # dataServiceEncryptionKey: 32 byte random string
@@ -142,7 +142,6 @@ global:
   # Globally available solr (TBD)
   solr:
     port: 8983
-
   # Connection details for a globally used redis instance for the
   # entire platform. For specifying an actual instance as part of
   # this chart, check out the non-global "redis" section.
@@ -234,35 +233,35 @@ networkPolicies:
   allowAllIngressFromNamespaces: []
   sessions:
     egress:
-      # NOTE: These prevent user sessions from accessing other services running in your cluster.
-      # In some cases these may need to be modified because you are using a specific K8s deployment
-      # or when all Renku services and Keycloak are accessible only internally in your network.
-      # The default setup here assumes that you have standard Kubernetes and that Renku is exposed
-      # to the internet.
-      - to:
-        # DNS resolution
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: kube-system
-          podSelector:
-            matchLabels:
-              k8s-app: kube-dns
+      - # NOTE: These prevent user sessions from accessing other services running in your cluster.
+        # In some cases these may need to be modified because you are using a specific K8s deployment
+        # or when all Renku services and Keycloak are accessible only internally in your network.
+        # The default setup here assumes that you have standard Kubernetes and that Renku is exposed
+        # to the internet.
+        to:
+          - # DNS resolution
+            namespaceSelector:
+              matchLabels:
+                kubernetes.io/metadata.name: kube-system
+            podSelector:
+              matchLabels:
+                k8s-app: kube-dns
         ports:
-        - port: 53
-          protocol: UDP
-        - port: 53
-          protocol: TCP
+          - port: 53
+            protocol: UDP
+          - port: 53
+            protocol: TCP
       - to:
-        # Allow access to any port/protocol as long as it is directed
-        # outside of the cluster. This is done by excluding
-        # IP ranges which are reserved for private networking from
-        # the allowed range.
-        - ipBlock:
-            cidr: 0.0.0.0/0
-            except:
-            - 10.0.0.0/8
-            - 172.16.0.0/12
-            - 192.168.0.0/16
+          - # Allow access to any port/protocol as long as it is directed
+            # outside of the cluster. This is done by excluding
+            # IP ranges which are reserved for private networking from
+            # the allowed range.
+            ipBlock:
+              cidr: 0.0.0.0/0
+              except:
+                - 10.0.0.0/8
+                - 172.16.0.0/12
+                - 192.168.0.0/16
 ## Keycloak configuration
 keycloakx:
   ## Spawn a keycloak instance
@@ -392,9 +391,6 @@ keycloakx:
 # For production deployments check out
 # https://github.com/bitnami/charts/blob/master/bitnami/postgresql/values-production.yaml
 postgresql:
-  ## We use the defaults here. Note that these basic configs could also be set as
-  ## global values such that sub-charts can access them too.
-
   auth:
     username: postgres
     database: postgres
@@ -402,20 +398,18 @@ postgresql:
     ## created. Alternatively an existing secret can be provided. Note that postgres
     ## DOES NOT tolerate a change of the admin password when upgrading.
     # postgresqlPassword:
+  ## Use an existing secret instead of creating a new one. It must have a
+  ## postgresql-password key containing the password for the postgres user.
+  # existingSecret:
 
-    ## Use an existing secret instead of creating a new one. It must have a
-    ## postgresql-password key containing the password for the postgres user.
-    # existingSecret:
-
-    # Consider replication. These are the defaults for the basic settings.
-    # replicationUsername: repl_user
-    # replicationPassword: repl_password # generate a random password `openssl rand -hex 32`
+  # Consider replication. These are the defaults for the basic settings.
+  # replicationUsername: repl_user
+  # replicationPassword: repl_password # generate a random password `openssl rand -hex 32`
 
   ## Use Bitnami's PostgreSQL image from Renkulab Harbor registry
   image:
     registry: harbor.renkulab.io
     repository: bitnami-mirror/postgresql
-
   primary:
     persistence:
       ## We use the defaults here, but they will probably be modified for most deployments.
@@ -423,7 +417,6 @@ postgresql:
       size: 8Gi
       ## Provide an existing PersistentVolumeClaim to be reused.
       # existingClaim:
-
     # Consider replication. These are the defaults for the basic settings.
     readReplicas:
       enabled: false
@@ -432,7 +425,6 @@ postgresql:
       requests:
         cpu: 100m
         memory: 300Mi
-
 redis:
   # If set to true, a HA redis will be included in the Renku release.
   install: true
@@ -581,7 +573,7 @@ ui:
     replicaCount: 1
     image:
       repository: renku/renku-ui
-      tag: "4.11.1"
+      tag: "4.13.0"
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
       ## Secrets must be manually created in the namespace.
@@ -765,7 +757,7 @@ ui:
     keepCookies: []
     image:
       repository: renku/renku-ui-server
-      tag: "4.11.1"
+      tag: "4.13.0"
       pullPolicy: IfNotPresent
     imagePullSecrets: []
     nameOverride: ""
@@ -847,17 +839,16 @@ dlf-chart:
     enabled: false
   dataset-operator-chart:
     enabled: true
-csi-rclone:
-  {}
-  # This section is only relevant if you are installing csi-rclone as part of Renku
-  ## Name of the csi storage class to use for RClone/Cloudstorage. Should be unique per cluster.
-  # storageClassName: csi-rclone
-  # csiNodepluginRclone:
-  #   nodeSelector: {}
-  # Set tolerations if you have taints on your user session nodes. The csi has to run on every node
-  # where it is used.
-  #   tolerations: []
-  #   affinity: {}
+csi-rclone: {}
+# This section is only relevant if you are installing csi-rclone as part of Renku
+## Name of the csi storage class to use for RClone/Cloudstorage. Should be unique per cluster.
+# storageClassName: csi-rclone
+# csiNodepluginRclone:
+#   nodeSelector: {}
+# Set tolerations if you have taints on your user session nodes. The csi has to run on every node
+# where it is used.
+#   tolerations: []
+#   affinity: {}
 notebooks:
   cloudstorage:
     ## If enabled this will allow mounting of rclone cloudstorage
@@ -875,7 +866,6 @@ notebooks:
     ## immediate eviction of the user session. EmptyDirs are used when the enabled flag
     ## above is set to false.
     useEmptyDirSizeLimit: false
-
   ## For sending exceptions to Sentry, specify the DSN to use
   sentry:
     enabled: false
@@ -1024,7 +1014,6 @@ notebooks:
   rbac:
     serviceAccountName: default
     create: true
-
   culling:
     # How long before an idle session is removed from the cluster.
     # Setting a value of zero below makes it so that a session is never culled.
@@ -1152,7 +1141,6 @@ gateway:
       memory: 64Mi
     limits:
       memory: 64Mi
-
   # GitLab has introduced a new logout behavior in 12.7.0
   # which was initially broken and fixed in 12.9.0.
   # Set this to 'true' for versions < 12.7.0, leave it to
@@ -1565,7 +1553,6 @@ authz:
   metrics:
     enabled: true
     addPrometheusAnnotations: true
-
 secretsStorage:
   image:
     repository: renku/secrets-storage
@@ -1587,11 +1574,9 @@ secretsStorage:
   nodeSelector: {}
   tolerations: []
   affinity: {}
-
 # This is used to indicate whether services needed exclusively for Renku V1 are deployed or not.
 # The support for this feature is experimental and it should not be set to false in production at all.
 enableV1Services: true
-
 # When this is set to false the gateway and data service will ignore the Gitlab
 # that can be integrated with Renku and will not ask users to log into this Gitlab.
 # NOTE: This flag has no effect on the core service and knowledge graph. Therefore
@@ -1603,7 +1588,6 @@ enableV1Services: true
 # to false and keep operating with an internal Gitlab you should create an Integration
 # with the internal Gitlab and ask users to activate the connection.
 enableInternalGitlab: true
-
 podSecurityContext: {}
 securityContext:
   runAsUser: 1000
