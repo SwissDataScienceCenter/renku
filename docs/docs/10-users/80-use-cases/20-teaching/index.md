@@ -73,5 +73,9 @@ We hereby share with you some sample projects that may inspire you for setting u
     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
     allowfullscreen>
   </iframe>
-  *Bring your RenkuLab GitLab project to the public GitLab instance with the import feature.*
+  This webinar introduces instructors to Renku 2.0 and presents how to setup and create interactive, reproducible learning environments. After this webinar, you will be able to:
+
+<p>✨ Understand Renku's core features for educational purposes </p>
+<p> 🧑🏼‍🏫 Create and manage teaching materials in Renku </p>
+<p> 📝 Set up collaborative student projects including reproducible assignments </p>
 </p>
