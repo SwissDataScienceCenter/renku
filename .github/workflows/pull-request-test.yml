@@ -25,13 +25,13 @@ jobs:
     outputs:
       docs: ${{ steps.filter.outputs.docs }}
     steps:
-    # For pull requests it's not necessary to checkout the code
-    - uses: dorny/paths-filter@v3
-      id: filter
-      with:
-        filters: |
-          docs:
-            - 'docs/**'
+      # For pull requests it's not necessary to check out the code
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            docs:
+              - 'docs/**'
 
   test-docs:
     needs: changes
@@ -69,11 +69,12 @@ jobs:
       amalthea: ${{ steps.deploy-comment.outputs.amalthea }}
       amalthea-sessions: ${{ steps.deploy-comment.outputs.amalthea-sessions }}
       test-enabled: ${{ steps.deploy-comment.outputs.test-enabled == 'true' }}
-      test-legacy-enabled: ${{ steps.deploy-comment.outputs.test-legacy-enabled == 'true' }}
+      test-slow-enabled: ${{ steps.deploy-comment.outputs.test-slow-enabled == 'true' }}
       extra-values: ${{ steps.deploy-comment.outputs.extra-values }}
     steps:
       - id: deploy-comment
-        uses: SwissDataScienceCenter/renku-actions/check-pr-description@v1.19.1
+        # TODO: Use proper renku-actions release instead of branch
+        uses: SwissDataScienceCenter/renku-actions/check-pr-description@master
         with:
           pr_ref: ${{ github.event.number }}
 
@@ -151,70 +152,6 @@ jobs:
           amalthea_sessions: "${{ needs.check-deploy.outputs.amalthea-sessions }}"
           extra_values: "${{ needs.check-deploy.outputs.extra-values }}"
 
-  legacy-scala-tests:
-    name: Legacy Scala tests
-    runs-on: ubuntu-24.04
-    needs: [check-deploy, deploy-pr]
-    if: github.event.action != 'closed' && (needs.check-deploy.outputs.switch-deploy == 'true' || needs.check-deploy.outputs.deploy == 'true') && needs.check-deploy.outputs.test-legacy-enabled == 'true'
-    permissions:
-      id-token: write
-    steps:
-      - name: Azure login
-        if: needs.check-deploy.outputs.deploy == 'true'
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.CI_RENKU_AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.CI_RENKU_AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.CI_RENKU_AZURE_SUBSCRIPTION_ID }}
-
-      - uses: azure/aks-set-context@v4
-        if: needs.check-deploy.outputs.deploy == 'true'
-        with:
-          resource-group: "renku-dev"
-          cluster-name: "aks-switzerlandnorth-renku-dev"
-
-      - name: Get AKS credentials
-        if: needs.check-deploy.outputs.deploy == 'true'
-        run: |
-          az aks get-credentials --resource-group renku-dev --name aks-switzerlandnorth-renku-dev --file "${{ github.workspace }}/renkubot-kube.config"
-          chmod 400 "${{ github.workspace }}/renkubot-kube.config"
-
-      - uses: SwissDataScienceCenter/renku-actions/test-renku@v1.19.1
-        with:
-          kubeconfig: "${{ github.workspace }}/renkubot-kube.config"
-          renku-release: ci-renku-${{ github.event.number }}
-          gitlab-token: ${{ secrets.DEV_GITLAB_TOKEN }}
-          s3-results-access-key: ${{ secrets.ACCEPTANCE_TESTS_BUCKET_ACCESS_KEY }}
-          s3-results-secret-key: ${{ secrets.ACCEPTANCE_TESTS_BUCKET_SECRET_KEY }}
-          test-timeout-mins: "60"
-
-  legacy-cypress-acceptance-tests:
-    name: Legacy Cypress tests
-    runs-on: ubuntu-24.04
-    needs: [check-deploy, deploy-pr]
-    strategy:
-      fail-fast: false
-      matrix:
-        tests:
-          [
-            publicProject,
-            privateProject,
-            updateProjects,
-            testDatasets,
-            useSession,
-            checkWorkflows,
-            rstudioSession,
-          ]
-    steps:
-      - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@v1.19.1
-        if: github.event.action != 'closed' && (needs.check-deploy.outputs.switch-deploy == 'true' || needs.check-deploy.outputs.deploy == 'true') && needs.check-deploy.outputs.test-legacy-enabled == 'true'
-        with:
-          e2e-target: ${{ matrix.tests }}
-          renku-reference: ${{ github.ref }}
-          renku-release: ci-renku-${{ github.event.number }}
-          test-user-password: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
-          kubernetes-cluster-fqdn: ${{ needs.check-deploy.outputs.deploy == 'true' && 'dev.renku.ch' }}
-
   cypress-acceptance-tests:
     name: Cypress tests
     runs-on: ubuntu-24.04
@@ -231,14 +168,26 @@ jobs:
             groups,
             projects,
             search,
+            sessionLaunchers,
             sessions,
           ]
+        slow-tests: [sessions]
     steps:
       - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@v1.19.1
-        if: github.event.action != 'closed' && (needs.check-deploy.outputs.switch-deploy == 'true' || needs.check-deploy.outputs.deploy == 'true') && needs.check-deploy.outputs.test-enabled == 'true'
+        if: github.event.action != 'closed' && needs.check-deploy.outputs.deploy == 'true' && needs.check-deploy.outputs.test-enabled == 'true'
         with:
           e2e-folder: cypress/e2e/v2/
           e2e-target: ${{ matrix.tests }}
+          kubernetes-cluster-fqdn: ${{ needs.check-deploy.outputs.deploy == 'true' && 'dev.renku.ch' }}
+          renku-reference: ${{ github.ref }}
+          renku-release: ci-renku-${{ github.event.number }}
+          test-user-password: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
+
+      - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@v1.19.1
+        if: github.event.action != 'closed' && needs.check-deploy.outputs.deploy == 'true' && needs.check-deploy.outputs.test-enabled == 'true' && needs.check-deploy.outputs.test-slow-enabled == 'true' && matrix.tests == 'sessions'
+        with:
+          e2e-folder: cypress/e2e/slow/
+          e2e-target: ${{ matrix.slow-tests }}
           kubernetes-cluster-fqdn: ${{ needs.check-deploy.outputs.deploy == 'true' && 'dev.renku.ch' }}
           renku-reference: ${{ github.ref }}
           renku-release: ci-renku-${{ github.event.number }}
@@ -251,7 +200,7 @@ jobs:
     steps:
       - name: Check deploy string
         if: ${{
-          needs.check-deploy.outputs.switch-deploy == 'true'
+          needs.check-deploy.outputs.deploy == 'true'
           && startsWith(github.base_ref, 'release-')
           && (
           needs.check-deploy.outputs.renku-core != null
@@ -270,7 +219,7 @@ jobs:
     name: Cleanup
     runs-on: ubuntu-24.04
     needs: [check-deploy]
-    if: github.event.action == 'closed' && (needs.check-deploy.outputs.switch-deploy == 'true' || needs.check-deploy.outputs.deploy == 'true')
+    if: github.event.action == 'closed' && needs.check-deploy.outputs.deploy == 'true'
     permissions:
       pull-requests: write
       id-token: write
