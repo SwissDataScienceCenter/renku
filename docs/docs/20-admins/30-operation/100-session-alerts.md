@@ -4,6 +4,8 @@ title: Session Alerts
 
 Renku can receive alerts and display them to users within the Renku session interface. This allows users to be alerted to issues with their active sessions, such as high memory usage, low disk space, or out-of-memory kills.
 
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M1 3a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h4.586a1 1 0 0 0 .707-.293l.353-.353a.5.5 0 0 1 .708 0l.353.353a1 1 0 0 0 .707.293H15a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1zm.5 1h3a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-4a.5.5 0 0 1 .5-.5m5 0h3a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-4a.5.5 0 0 1 .5-.5m4.5.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5zM2 10v2H1v-2zm2 0v2H3v-2zm2 0v2H5v-2zm3 0v2H8v-2zm2 0v2h-1v-2zm2 0v2h-1v-2zm2 0v2h-1v-2z"/></svg>
+
 ## Overview
 
 In addition to dedicated endpoints for creating, listing, and resolving alerts, Renku has built-in support for handling alerts sent from Prometheus Alertmanager via a webhook integration. Support for other alerting systems may be added in the future.
@@ -49,7 +51,8 @@ The integration works as follows:
 ## Setting up Alertmanager Webhook Integration
 
 The following steps configure Alertmanager to send session-related alerts to Renku.
-OAuth2 Authentication
+
+### OAuth2 Authentication
 
 The Alertmanager webhook endpoint requires authentication using OAuth2 client credentials. An initialization script has already created:
 

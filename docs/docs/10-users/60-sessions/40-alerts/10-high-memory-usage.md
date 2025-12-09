@@ -37,8 +37,9 @@ When memory usage is this high, your session is at risk of:
    - Use memory-efficient data types and libraries
 
 2. Request more memory:
-   - Stop your current session
-   - When starting a new session, select a resource class with more memory, if available
+   - Pause your current session
+   - Modify the session resources to use a resource class with more memory, if available
+   - Resume your session
    - See [Resource Pools and Classes](../30-resource-pools-and-classes.md) for more information
 
 3. Profile memory usage:

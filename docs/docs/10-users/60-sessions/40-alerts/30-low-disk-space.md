@@ -26,8 +26,8 @@ When disk space is this low:
 
 2. Identify large files:
    ```bash
-   # Find the largest files in your home directory
-   du -h ~ | sort -h | tail -20
+   # Find the largest files in your Renku volume
+   du -h $RENKU_MOUNT_DIR | sort -h | tail -20
    ```
 
 3. Free up space:
@@ -42,8 +42,9 @@ When disk space is this low:
    - Clean up output files regularly
 
 2. Request more disk space:
-   - Stop your current session
-   - When starting a new session, if available, select a resource class with more storage. You will need to manually transfer any necessary files from your old session to the new one.
+   - Save any unsaved work, push all data you wish to keep to your code repositories and/or data connectors and shut down your current session
+   - Increase the disk storage by editing the session launcher. This will only be possible if the maximum disk storage for the selected resource class size has not already been met. If it has, you may be able to switch to a different resource class with a larger maximum disk size.
+   - Restart your session.
    - See [Resource Pools and Classes](../30-resource-pools-and-classes.md) for more information
 
 3. Optimise your workflow:
@@ -53,7 +54,7 @@ When disk space is this low:
 
 ## Prevention
 
-- Monitor disk usage regularly: `df -h ~`
+- Monitor disk usage regularly: `df -h $RENKU_MOUNT_DIR`
 - Set up your code to clean up temporary files automatically
 - Choose an appropriate resource class with sufficient storage when starting sessions
 - Keep only necessary files in your session workspace

@@ -42,8 +42,10 @@ When a session is restarted:
    - Use generators or iterators for large datasets
 
 2. Request more memory:
-   - If your workload needs more memory, stop your session and restart with a larger resource class, if available
-   - See [Resource Pools and Classes](../30-resource-pools-and-classes.md) for information
+   - Pause your current session
+   - Modify the session resources to use a resource class with more memory, if available
+   - Resume your session
+   - See [Resource Pools and Classes](../30-resource-pools-and-classes.md) for more information
 
 3. Monitor memory usage:
    - Add memory profiling to your code
