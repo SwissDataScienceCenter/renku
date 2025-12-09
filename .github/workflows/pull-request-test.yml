@@ -74,7 +74,7 @@ jobs:
     steps:
       - id: deploy-comment
         # TODO: Use proper renku-actions release instead of branch
-        uses: SwissDataScienceCenter/renku-actions/check-pr-description@github-actions-for-acceptance-tests
+        uses: SwissDataScienceCenter/renku-actions/check-pr-description@master
         with:
           pr_ref: ${{ github.event.number }}
 
