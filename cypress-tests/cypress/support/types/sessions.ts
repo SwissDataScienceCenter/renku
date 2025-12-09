@@ -20,3 +20,11 @@ export interface SessionLauncher {
   environment: Environment;
   resource_class_id: number;
 }
+
+export interface Session {
+  name: string;
+  image: string;
+  project_id: string;
+  launcher_id: string;
+  resource_class_id: string;
+}

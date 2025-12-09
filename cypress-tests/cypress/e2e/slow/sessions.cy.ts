@@ -1,17 +1,12 @@
 import { TIMEOUTS } from "../../../config";
-import {
-  getRandomString,
-  getUserData,
-  validateLoginV2,
-} from "../../support/commands/general";
-import { ProjectIdentifierV2 } from "../../support/types/projects";
+import { getRandomString, getUserData } from "../../support/commands/general";
 import { User } from "../../support/types/user";
 import {
   createProjectIfMissingV2,
   deleteProject,
-  getProjectByNamespace,
 } from "../../support/utils/projects";
-import { deleteSession, getSessions } from "../../support/utils/sessions";
+import { deleteSessionsForProject } from "../../support/utils/sessions";
+import { login } from "../../support/utils/general";
 
 const sessionId = ["sessions", getRandomString()];
 
@@ -19,60 +14,32 @@ describe("Start a session that consumes project resources", () => {
   // Define required resources
   let projectNameRandomPart: string;
   let projectName: string;
-  let projectIdentifier: ProjectIdentifierV2;
+  let projectId: string | null = null;
 
   function resetRequiredResources() {
     projectNameRandomPart = getRandomString();
     projectName = `session-basics-${projectNameRandomPart}`;
-    projectIdentifier = {
-      slug: projectName,
-      id: null,
-      namespace: null,
-    };
+    projectId = null;
   }
   beforeEach(() => {
     // Restore the session (login)
-    cy.session(
-      sessionId,
-      () => {
-        cy.robustLogin("v2");
-      },
-      validateLoginV2,
-    );
+    login(sessionId);
 
     // Create a project
     resetRequiredResources();
     getUserData().then((user: User) => {
-      projectIdentifier.namespace = user.username;
       createProjectIfMissingV2({
         name: projectName,
         namespace: user.username,
         slug: projectName,
-      }).then((response) => (projectIdentifier.id = response.body.id));
+      }).then((response) => (projectId = response.body.id));
     });
   });
 
   // Cleanup the session and the project after the test
   after(() => {
-    getProjectByNamespace(projectIdentifier).then((response) => {
-      if (response.status === 200) {
-        projectIdentifier.id = response.body.id;
-        projectIdentifier.namespace = response.body.namespace;
-
-        getSessions().then((response) => {
-          if (response.status === 200 && response.body.length > 0) {
-            // eslint-disable-next-line max-nested-callbacks
-            response.body.forEach((session) => {
-              if (session.project_id === projectIdentifier.id) {
-                deleteSession(session.name);
-              }
-            });
-          }
-        });
-
-        deleteProject(projectIdentifier.id);
-      }
-    });
+    deleteSessionsForProject(projectId);
+    deleteProject(projectId);
   });
 
   it("Start a session with VSCode and check it has the necessary resources", () => {

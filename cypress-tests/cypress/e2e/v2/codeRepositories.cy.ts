@@ -4,7 +4,7 @@ import {
   createProjectIfMissingV2,
   deleteProject,
 } from "../../support/utils/projects";
-import { addCodeRepository } from "../../support/utils/codeRepositories";
+import { createCodeRepository } from "../../support/utils/codeRepositories";
 import { login } from "../../support/utils/general";
 
 const sessionId = ["codeRepositories", getRandomString()];
@@ -71,11 +71,11 @@ describe("Code repositories", () => {
     const repoUrl = "https://github.com/SwissDataScienceCenter/renku-ui.git";
     const repoName = "renku-ui";
 
-    const newUrl = repoUrl.replace("renku-ui", "renku-data-services");
     const newName = "renku-data-services";
+    const newUrl = repoUrl.replace("renku-ui", newName);
 
     // Add code repository
-    addCodeRepository(projectId, repoUrl);
+    createCodeRepository(repoUrl, projectId);
 
     // Navigate to project and verify repository was added
     cy.visitProjectByName(projectName);
