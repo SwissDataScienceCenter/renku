@@ -16,7 +16,7 @@ session environment is right for you and how to migrate, answer the following qu
 
 ### → My code repository is public
 
-That’s great! Please continue to the next question, [2. What language does your project use?](https://www.notion.so/2-What-language-does-your-project-use-26c0df2efafc80a6b777ce1b4d4b048b?pvs=21) 
+That’s great! Please continue to the next question, [2. What language does your project use?](#2-what-language-does-your-project-use) 
 
 ### → My code repository is private
 
