@@ -51,3 +51,27 @@ import DocCardList from '@theme/DocCardList';
 Follow the chart below to decide which mode best suits your course.
 
 ![alt text](image.png)
+
+Sample Renku course project set-ups
+
+We hereby share with you some sample projects that may inspire you for setting up your course:
+
+- **Pluto/Julia -**  [**Computational Thinking in Julia/Pluto MIT Course**](https://renkulab.io/v2/projects/teaching-with-renku/demo-project-pluto)
+- **RStudio -** [**ML regression for wine quality**](https://renkulab.io/v2/projects/teaching-with-renku/ml-regression-for-wine-quality)
+- **Python/Jupyter/VS Code** -  [Object Oriented Programming in Python](https://renkulab.io/v2/projects/teaching-with-renku/object-oriented-programming)
+- **Matlab** - [Numerical Methods with Applications](https://renkulab.io/v2/projects/teaching-with-renku/numerical-methods-with-applications)
+
+# Watch an introductory session
+
+<p class="image-container-l">
+  <iframe
+    width="560"
+    height="315"
+    src="https://www.youtube.com/embed/023Ou1wTI5s"
+    title="YouTube video player"
+    frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowfullscreen>
+  </iframe>
+  *Bring your RenkuLab GitLab project to the public GitLab instance with the import feature.*
+</p>
