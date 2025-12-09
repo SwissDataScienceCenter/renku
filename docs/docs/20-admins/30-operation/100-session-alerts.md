@@ -4,8 +4,6 @@ title: Session Alerts
 
 Renku can receive alerts and display them to users within the Renku session interface. This allows users to be alerted to issues with their active sessions, such as high memory usage, low disk space, or out-of-memory kills.
 
-<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M1 3a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h4.586a1 1 0 0 0 .707-.293l.353-.353a.5.5 0 0 1 .708 0l.353.353a1 1 0 0 0 .707.293H15a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1zm.5 1h3a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-4a.5.5 0 0 1 .5-.5m5 0h3a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-4a.5.5 0 0 1 .5-.5m4.5.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5zM2 10v2H1v-2zm2 0v2H3v-2zm2 0v2H5v-2zm3 0v2H8v-2zm2 0v2h-1v-2zm2 0v2h-1v-2zm2 0v2h-1v-2z"/></svg>
-
 ## Overview
 
 In addition to dedicated endpoints for creating, listing, and resolving alerts, Renku has built-in support for handling alerts sent from Prometheus Alertmanager via a webhook integration. Support for other alerting systems may be added in the future.
@@ -45,8 +43,8 @@ The integration works as follows:
 
 ## Prerequisites
 
-    Prometheus and Alertmanager deployed in your cluster
-    Renku Data Services with the alerts feature enabled
+    - [Prometheus](https://prometheus.io/) with [Prometheus Alertmanager](https://prometheus.io/docs/alerting/latest/alertmanager/) and [kube-state-metrics](https://github.com/kubernetes/kube-state-metrics) deployed in your cluster
+    - Renku deployed in your cluster with the `alerts.alertmanager.enabled=true` Helm value set
 
 ## Setting up Alertmanager Webhook Integration
 
@@ -54,17 +52,17 @@ The following steps configure Alertmanager to send session-related alerts to Ren
 
 ### OAuth2 Authentication
 
-The Alertmanager webhook endpoint requires authentication using OAuth2 client credentials. An initialization script has already created:
+The Alertmanager webhook endpoint requires authentication using OAuth2 client credentials. An initialization script has already created the following Keycloak resources in the `Renku` realm:
 
-    - alertmanager OAuth2 client: Enables Alertmanager to authenticate webhook requests to Renku Data Services
-    - alertmanager-webhook realm role: Assigned to the client's service account to control access to the webhook endpoint
-    - Token audience configuration: The client is configured to include "renku" in the token audience claim, as required by Renku Data Services
+    - `alertmanager-webhook` OAuth2 client: Enables Alertmanager to authenticate webhook requests to Renku Data Services
+    - `alertmanager-webhook` realm role: Assigned to the client's service account to control access to the webhook endpoint
+    - Token audience configuration: The client is configured to include `renku` in the token audience claim
 
 You will need the client secret from this client to proceed.
 
 ## Step 1: Store the Client Secret in Kubernetes
 
-Create a Kubernetes secret for the OAuth2 client secret:
+Create a Kubernetes secret for the OAuth2 client secret in the namespace where Prometheus Alertmanager is deployed (e.g., `monitoring`):
 
 ```bash
 kubectl create secret generic alertmanager-oauth2-secret \
@@ -76,7 +74,7 @@ kubectl create secret generic alertmanager-oauth2-secret \
 
 ### Mount the Secret
 
-Add the secret mount to your Prometheus Helm values:
+Add the secret mount for the secret you created in step 1 to your Prometheus Helm values:
 
 ```yaml
 alertmanager:
@@ -105,7 +103,7 @@ alertmanager:
             max_alerts: 1
             http_config:
               oauth2:
-                client_id: 'alertmanager'
+                client_id: 'alertmanager-webhook'
                 client_secret_file: '/etc/alertmanager/secrets/oauth2-client-secret'
                 token_url: 'https://your-renku-instance.com/auth/realms/Renku/protocol/openid-connect/token'
 
@@ -153,14 +151,16 @@ Alert rules must include specific labels and annotations for Renku to process th
 
 ### Required Labels
 
-- `safe_username`: Keycloak user ID of the user to notify (required)
-- `statefulset`: Session name (required)
+- `safe_username`: Keycloak user ID of the alert recipient
+- `statefulset`: Name of the AmaltheaSession statefulset in question
 - `purpose: renku-session`: Identifies this as a session alert (optional, used for alert routing)
 
 ### Required Annotations
 
 - `title`: Alert title displayed to users (required)
 - `description`: Alert message body (required)
+
+Descriptions can include markdown formatting.
 
 ### Example Alert Rules
 
@@ -258,7 +258,7 @@ Test the integration by sending a test alert:
 TOKEN=$(curl -X POST \
   "https://your-renku-instance.com/auth/realms/Renku/protocol/openid-connect/token" \
   -d "grant_type=client_credentials" \
-  -d "client_id=alertmanager" \
+  -d "client_id=alertmanager-webhook" \
   -d "client_secret=YOUR_CLIENT_SECRET" \
   | jq -r '.access_token')
 
@@ -275,7 +275,7 @@ curl -X POST \
       "status": "firing",
       "labels": {
         "safe_username": "KEYCLOAK_USER_ID",
-        "statefulset": "test-session"
+        "statefulset": "SESSION_STATEFULSET_NAME",
       },
       "annotations": {
         "title": "Test Alert",
