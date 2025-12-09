@@ -1,11 +1,8 @@
-export type ProjectIdentifierV2 = {
+export interface Project {
   id?: string;
-  namespace?: string;
-  slug: string;
-};
-
-export interface ProjectV2 extends ProjectIdentifierV2 {
-  description?: string;
   name: string;
+  namespace: string;
+  slug: string;
+  description?: string;
   visibility?: "public" | "private";
 }

@@ -23,7 +23,6 @@ describe("Session launcher tests", () => {
   before(() => {
     login(sessionId);
 
-    // Create a project
     getUserData().then((user: User) => {
       createProjectIfMissingV2({
         name: projectName,

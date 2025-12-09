@@ -7,7 +7,7 @@ import {
 import { User } from "../../support/types/user";
 import {
   createProjectIfMissingV2,
-  deleteProjectByNamespace,
+  deleteProjectByNamespaceSlug,
 } from "../../support/utils/projects";
 import { verifySearchIndexing } from "../../support/utils/search";
 import { createDataConnector } from "../../support/utils/dataConnectors";
@@ -274,7 +274,7 @@ describe("Groups", () => {
       // cy.contains(projectDataConnectorName).should("not.exist"); // FIXME: Create a bug report
 
       // Cleanup
-      deleteProjectByNamespace({ namespace: userNamespace, slug: projectName });
+      deleteProjectByNamespaceSlug(userNamespace, projectName);
     });
   });
 });

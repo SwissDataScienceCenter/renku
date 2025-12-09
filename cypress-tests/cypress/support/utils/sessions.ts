@@ -1,7 +1,6 @@
-import { Environment, SessionLauncher } from "../types/sessions";
+import { Environment, Session, SessionLauncher } from "../types/sessions";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function getSessions(): Cypress.Chainable<Cypress.Response<any>> {
+export function getSessions(): Cypress.Chainable<Cypress.Response<Session[]>> {
   return cy.request({
     failOnStatusCode: false,
     method: "GET",
@@ -48,7 +47,7 @@ export function deleteSession(sessionName: string): void {
 export function deleteSessionsForProject(projectId: string): void {
   getSessions().then((response) => {
     if (response.status === 200 && response.body.length > 0) {
-      response.body.forEach((session: SessionLauncher) => {
+      response.body.forEach((session: Session) => {
         if (session.project_id === projectId) {
           deleteSession(session.name);
         }

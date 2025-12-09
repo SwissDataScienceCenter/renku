@@ -1,7 +1,8 @@
 export interface DataConnector {
-  description?: string;
+  id?: string;
   name?: string;
   namespace: string;
   slug: string;
+  description?: string;
   visibility?: "private" | "public";
 }

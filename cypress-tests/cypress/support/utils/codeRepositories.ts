@@ -1,20 +1,17 @@
-/** Add a code repository to a project by using only the API. */
-export function addCodeRepository(
-  projectId: string,
+import { Project } from "../types/projects";
+
+/** Add a code repository to a project. */
+export function createCodeRepository(
   repositoryUrl: string,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): Cypress.Chainable<Cypress.Response<any>> {
+  projectId: string,
+): Cypress.Chainable<Cypress.Response<Project>> {
   // First get the project to get current repositories and etag
   return cy
     .request({
-      failOnStatusCode: false,
       method: "GET",
       url: `api/data/projects/${projectId}`,
     })
     .then((response) => {
-      if (response.status !== 200) {
-        return cy.wrap(response);
-      }
       const currentRepositories = response.body.repositories || [];
       const repositories = [...currentRepositories, repositoryUrl];
       return cy.request({

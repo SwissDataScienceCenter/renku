@@ -1,6 +1,6 @@
 import { validateLoginV2 } from "../commands/general";
 
-/** Login using cy.session with the provided session ID. */
+/** Login using `cy.session` with the provided session ID. */
 export function login(sessionId: string | string[]) {
   cy.session(
     sessionId,

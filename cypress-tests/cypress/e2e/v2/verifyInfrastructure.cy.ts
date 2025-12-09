@@ -4,6 +4,7 @@
  * @param service - name of the tested service
  * @param limit - maximum attempts before failing
  * @param delaySeconds - delay between attempts
+ * @param retries - number of attempts so far
  * @returns response body from the request or `null`
  */
 function retryRequest(
