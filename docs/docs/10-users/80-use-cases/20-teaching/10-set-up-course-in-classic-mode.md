@@ -6,7 +6,7 @@ If course participants need to save their work during the course and they are no
 
 This guide will walk you through how to create a project, mark that project as a template, and how to instruct your students to copy the template.
 
-For alternative workflows for using Renku in your course, see [Renku for Teaching](https://www.notion.so/Renku-for-Teaching-1460df2efafc809cb134d2a4e32ed90e?pvs=21).
+For alternative workflows for using Renku in your course, see [Renku for Teaching](./index.md).
 
 **First, create the course project:**
 
@@ -63,7 +63,7 @@ You can only view copies of projects that you have access to. If someone makes a
 
 **Here’s what to instruct your students to do:**
 
-1. Go to [insert template project link here](/)
+1. Go to "insert template project link here"
 2. Make a copy of the project using the banner in the button
    
     ![image.png](./set-up-course-in-classic-mode-50.png)
