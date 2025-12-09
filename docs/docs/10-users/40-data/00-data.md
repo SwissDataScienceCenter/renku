@@ -2,6 +2,11 @@
 
 A data connector is a connection to a cloud data resource outside of RenkuLab.
 
+<p class="image-container-l">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/LS-GVUofxVM?si=XJKDZv7ktQy0ATfY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+*Learn how to connect data to a Renku project and how to link and trace data among multiple projects.*
+</p>
+
 # Data in Renku
 
 RenkuLab interactive sessions can connect with data hosted in cloud storage systems. Once you add the data connector to the project, the storage is simply mounted as another folder in your session. You can concentrate on developing your code to analyze your data, rather than worrying about moving data around!
@@ -38,7 +43,7 @@ You can enter or modify the saved credentials for a data connector, and also del
 
 ## Share, reuse, and trace your data
 
-Data connectors can be shared among projects. You do not need to create the same data connector for multiple projects. Check [How to link a data connector to your project](/docs/users/data/guides/link-data-connector-to-project)!
+Data connectors can be shared among projects. You do not need to create the same data connector for multiple projects. Check [How to link a data connector to your project](/docs/10-users/40-data/guides/10-link-data-connector-to-project.md)!
 
 ### Track projects linked to your data connector
 

@@ -12,19 +12,19 @@ In your project’s dashboard:
 1. Under **Data** section, click on  **+** button
     1. Click on **+ Create a data connector**
     2. Select **WebDAV**
-    
+
     <p class="image-container-l">
     ![image.png](./add-dataset-from-eth-research-collection-10.png)
     </p>
-    
+
 2. Use the following settings:
     - **URL:**  https://libdrive.ethz.ch/public.php/webdav
     - **Username:** #id,  where #id is the identifier of your data (e.g. #id = i974KegIjhJJxkK for the last part of the URL of your data, as you can read in the URL [here](https://libdrive.ethz.ch/index.php/s/i974KegIjhJJxkK) in this example)
-        
+
         <p class="image-container-l">
         ![image.png](./add-dataset-from-eth-research-collection-20.png)
         </p>
-        
+
 3. Click on **Test connection.**
 4. A message in green “The connection to the storage works correctly.” should appear. Click on **Continue**.
 5. Specify the final details of the data connector, namely:

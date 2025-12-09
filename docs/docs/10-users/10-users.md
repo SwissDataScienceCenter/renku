@@ -1,44 +1,71 @@
 # Renku Users Documentation
 
-Renku is an open-source platform that connects the ecosystem of data, code, and compute to empower researchers to build collaborative communities.
+Renku is an open-source platform for researchers and scientists to connect data, code and compute seamlessly, thus enabling collaborative communities, reproducibility, transparency and results outreach. Stop juggling multiple platforms and scattered resources: in Renku all your components work together in a project. Let's get started!
 
-Our mission is to enable the Swiss National Open Research Data (ORD) Strategy, supporting the accessibility and reuse of research data across Switzerland.
+<p class="image-container-l">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/FXgXzBuqJnk?si=HGIZ5mQbz0MrChGF" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+*Learn what Renku is, how to log in into Renku and how your dashboard looks like.*
+</p>
 
-## Connecting data, code, compute, and *people*.
+## How to use Renku docs
 
-Stop juggling multiple platforms and scattered resources. Renku provides a seamless environment
-where all your project components work together.
 
-## Renku empowers collaboration by reducing friction
+<p class="text-align: center">
+![image.png](./rocket_40px.png)
+[**First Steps Tutorial**](/docs/users/getting-started/): Want to try it out? [Create your account](/docs/users/getting-started/tutorial-start) and follow our hands-on tutorial!
+</p>
+  ___
 
-### Findability
+<p class="text-align: center">
+![image.png](./project_40px.png)
+[**Projects**](/docs/users/projects/projects/) in Renku may contain [Data](/docs/users/data/data/), [Code](/docs/users/code/code-repository) and [Sessions](/docs/users/sessions/environment/) to foster [Collaboration](/docs/users/collaboration/). Check each individual building block for understanding the possibilities that Renku offers.
+</p>
 
-**On Renku, your project doesn’t exist in isolation.** The connections to other research activities are preserved, powering discovery and understanding.
+  ___
 
-### Accessibility
+<p class="text-align: center">
+![image.png](./use-cases_40px.png)
+[**Use Cases**](/docs/users/use-cases/) Learn more about how Renku is used in the broader community.
+</p>
 
-**Collaborate on your Renku project with anyone,** across specialties and skill levels.
+  ___
 
-### Interoperability
+<p class="text-align: center">
+![image.png](./use-cases_40px.png)
+[**Knowledge Base**](/docs/users/knowledge-base/fair-open-science/) Curiosity about how it works? [Any doubts](/docs/users/knowledge-base/faq/)? Join our channels to keep in touch with us.
+</p>
 
-**Connect, Share, Launch!** It just works.
+  ___
 
-### Reusability
+<p class="text-align: center">
+![image.png](./sunset_40px.png)
+[**Renku Legacy:**](/docs/users/migrate-v1-v2/) Guidelines on how to migrate your code repositories from Legacy Renkulab Gitlab to your own code repository provider, and keep
+</p>
 
-**Publishing your project is as easy as flipping a toggle from private to public.** Offering your work for discovery and reuse is automatic, not added work.
 
-# How Renku works
+## Use cases
 
-Renku is a platform for collaborative data science developed at the [Swiss Data Science Center](https://www.datascience.ch). It enables researchers to build collaborative projects that bring together [data](/docs/users/data/data), [code](/docs/users/code/code-repository), and [compute resources](/docs/users/sessions/session-launcher) from a variety of sources. 
+| Researchers    | Educators    | Event organizers  |
+| :-------------: |:-------------:| :-----:|
+| ![image.jpg](https://renkulab.io/assets/researcherIcon-DFFtd-Xp.svg) | ![image.jpg](https://renkulab.io/assets/educatorIcon-8mTN9nT-.svg) | ![image.jpg](https://renkulab.io/assets/organizerIcon-CcAdtX3S.svg) |
+| **Unified Research**  <p>Connect your entire research workflow in one place, and collaborate across specialties without technical barriers.</p> | **Computing Courses made easy** <p>Help your students focus on the material, not getting lost during setup. Ideal for project-based coursework and time-sensitive workshops.</p> | **Seamless Events** <p>Focus on innovation, not setup and infrastructure. Provide a consistent environment for all teams, and get participants coding and collaborating right away.</p> |
 
-Rather than hosting all these resources itself, Renku is a connecting hub that provides the means to bring them all together. For example, a project might use a published dataset from [Zenodo](https://www.notion.so/How-to-connect-data-from-data-repositories-such-as-Zenodo-or-Dataverse-1eb0df2efafc802ab3bef1c47c8c45b4?pvs=21), raw data from a shared [cloud storage resource](/docs/users/data/data) and code from a [GitHub repository](/docs/users/code/guides/add-code-repository-to-project). These are then made seamlessly available in containerized browser-based compute [sessions](/docs/users/sessions/session). Renku sessions can run on Renku servers or on an external computational resources such as a local cloud provider or - coming soon! - an HPC cluster. The sessions can be used for development with [environments](/docs/users/sessions/guides/add-session-launcher-to-project) like VSCode, Jupyter, or RStudio, or they can be used to display dashboards with Streamlit or Shiny. To promote sustainable computational research, Renku also makes it straightforward to build Docker images based on users' [software requirements](/docs/users/sessions/guides/create-environment-with-custom-packages-installed), ensuring that everyone using a project does so with the right software stack.
 
-Collaborate on a fully reproducible Renku project by adding project [members](/docs/users/collaboration/guides/add-people-to-project), and showcase interactive demos and apps with anyone via [public session launch links](/docs/users/sessions/guides/share-session-launch-link). For larger collaborations, users can organize projects and other assets under [groups](/docs/users/use-cases/groups), which helps streamline collaboration.
+## What's new - Check out our latest blog posts:
 
-Renku is developed under the Apache 2.0 license and can be deployed on a variety of cloud infrastructures offering Kubernetes. The flagship instance operated by the Swiss Data Science Center is available under [https://renkulab.io](https://renkulab.io/) and is open to everyone with a publicly-accessible free resource tier.
+      <p class="image-container-s">
+      [![Renku Release Octubre 2025](https://blog.renkulab.io/assets/images/cscs-cover-90cd8e2dbe514501f43d26ed2c6b2a45.png)](https://blog.renkulab.io/release-2025-10/)
 
-:::tip
+    **Renku Release • October 2025**
+     We've combined Renku's super-simple sessions with the power of supercomputing!
 
-Want to try it out? [Get started with Renku](/docs/users/getting-started/)! 
+    </p>
+  ___
 
-:::
+    <p class="image-container-s">
+    [![AiiDA Success Story](https://blog.renkulab.io/assets/images/intro-image-f9ca2c80c6b9ad273b0d8750b112dab7.png)](https://blog.renkulab.io/aiida-success-story/)
+
+    **AiiDA Success Story • October 2025**
+    How PSI's Materials Software and Data group uses Renku to facilitate access to research data.
+
+    </p>

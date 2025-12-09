@@ -1,4 +1,4 @@
-# Frequently Asked Questions
+# FAQ
 
 ## Data
 
@@ -34,5 +34,5 @@ shut-down.
 
 Everyone is welcome to use RenkuLab and run sessions in our free tier resource pool. If you need
 more computational resources than are available in our free tier,
-[Contact](/docs/users/community) us to set up a
+[Contact](../community) us to set up a
 contract for a custom resource pool on RenkuLab.
