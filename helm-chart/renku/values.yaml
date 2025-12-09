@@ -1482,6 +1482,11 @@ dataService:
       tag: "0.62.0"
       pullPolicy: IfNotPresent
     resources: {}
+    sentry:
+      enabled: false
+      dsn:
+      environment:
+      sampleRate: 0.1
   dataTasks:
     image:
       repository: renku/data-service-data-tasks
