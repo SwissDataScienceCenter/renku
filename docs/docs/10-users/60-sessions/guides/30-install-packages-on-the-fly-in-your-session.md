@@ -6,7 +6,7 @@
 
 Renku can build an environment based on a Python dependencies file for you (no knowledge of Docker required)!
 
-To get started, see [How to create an environment with custom packages installed](/docs/users/sessions/guides/create-environment-with-custom-packages-installed).
+To get started, see [How to create an environment with custom packages installed](create-environment-with-custom-packages-installed).
 
 ## R {#r}
 

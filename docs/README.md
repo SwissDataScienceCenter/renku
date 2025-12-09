@@ -18,7 +18,7 @@ npm run start
 
 This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
 
-Another useful command is `npm run clear` (accompanied by a server restart) which purges the locally 
+Another useful command is `npm run clear` (accompanied by a server restart) which purges the locally
 cached and built static files when significant changes are made, but they do not
 show up on the development server.
 
@@ -79,4 +79,7 @@ builds and deploys when changes are made in the repo.
 
     <video controls width="100%" src={video10} />
     ```
-* When linking to other documentation pages, always use absolute links (e.g. `/docs/users/sessions/guides/create-environment-with-custom-packages-installed`) instead of relative links (e.g. `../sessions/guides/create-environment-with-custom-packages-installed`) or relative paths (e.g. `../60-sessions/guides/20-create-environment-with-custom-packages-installed.md`). Never use file paths for links. Absolute links are more robust to changes in the folder structure and easier to modify when necessary. You can easily get the absolute link of a page by browsing to it in your browser and copying the URL's path from the browser's address bar.
+* When linking to other documentation pages, always use relative URL links (e.g. `../sessions/guides/create-environment-with-custom-packages-installed`) instead of absolute links (e.g. `/docs/users/sessions/guides/create-environment-with-custom-packages-installed`) or relative file paths (e.g. `../60-sessions/guides/20-create-environment-with-custom-packages-installed.md`).
+Always use URL links instead of file paths for links. Docusaurus converts file paths into URL links by removing number prefixes and the .md extension. To find the correct URL link, open the corresponding page in your browser, copy the path from the address bar, and adjust it to be relative to the current page.
+
+* If you add an `index.md` file to a directory, never add a prefix to it (e.g. `10-index.md`). Docusaurus treats `index.md` file specially, so it shouldn't have any prefix in its name. Prefixes are only used for other files in the directory to control their order.

@@ -5,7 +5,7 @@ Renku allows you to connect to several external service providers, including Git
 :::tip
 
 If your institution has a dedicated GitLab instance you would like to integrate with Renku, do not
-hesitate to [Contact](/docs/users/community)  us, and we will be happy to add it to Renku's integrations.
+hesitate to [Contact](../../community)  us, and we will be happy to add it to Renku's integrations.
 
 :::
 
@@ -13,13 +13,13 @@ hesitate to [Contact](/docs/users/community)  us, and we will be happy to add it
 2. For the desired services, click on **Connect.**
     1. Approve the steps. After that, the service status will turn into connected.
 
-    ![image.png](./connect-your-renku-account-to-your-github-or-gitlab-account-10.png)
+    ![image.png](./connect-your-renku-account-to-your-github-or-gitlab-account-10.jpg)
 
 3. (GitHub only) Follow the prompts to install the Renku app in the namespace(s) where you want to
    use repositories in Renku.
 
 Now you can [add code repositories to your
-projects](/docs/users/code/guides/add-code-repository-to-project) and read & write them in sessions!
+projects](add-code-repository-to-project) and read & write them in sessions!
 
 import connectAccountsVideo from './connect-your-renku-account-to-your-github-or-gitlab-account-10.mov';
 

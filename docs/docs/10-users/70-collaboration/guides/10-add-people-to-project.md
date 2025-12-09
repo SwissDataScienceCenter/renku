@@ -9,7 +9,7 @@ In the project page:
 - Click  ➕  **(c)**
 - Look up the user’s name
 - Assign the role
-    - For more information about roles, see [Permissions, Roles, and Access Rights](/docs/users/collaboration/permissions)
+    - For more information about roles, see [Permissions, Roles, and Access Rights](../permissions)
 - Repeat for as many new members as you wish
 
 :::info

@@ -1,14 +1,14 @@
-# Create an environment with custom packages from a private code repository
+# Create an environment with custom packages from a private code repository (GitHub Actions)
 
 Would you like Renku to create an environment for you with the packages you need pre-installed? Renku can create a docker image for your Renku session for you based on a environment definition file in a code repository, such as a `environment.yml`, `requirements.txt`, or `pyproject.toml`.
 
-If your code repository is public, you can have Renku build this image directly as part of your project! See [How to create an environment with custom packages installed](/docs/users/sessions/guides/create-environment-with-custom-packages-installed).
+If your code repository is public, you can have Renku build this image directly as part of your project! See [How to create an environment with custom packages installed](create-environment-with-custom-packages-installed).
 
 If your code repository is private, follow the instructions below.
 
 ## Create a GitHub action to build a docker image
 
-1. First, make sure your code repository meets the requirements for Renku to build an image for you. See [What kinds of environment definitions are supported?](/docs/users/sessions/guides/create-environment-with-custom-packages-installed)
+1. First, make sure your code repository meets the requirements for Renku to build an image for you. See [What kinds of environment definitions are supported?](create-environment-with-custom-packages-installed)
 2. In your GitHub code repository, in the upper menu, click on **Actions**.
 
     <p class="image-container-l">
@@ -31,10 +31,10 @@ If your code repository is private, follow the instructions below.
 
     ```yaml
     name: build image
-    
+
     on:
       push:
-    
+
     jobs:
       build-image:
         runs-on: ubuntu-24.04
@@ -94,6 +94,10 @@ If your code repository is private, follow the instructions below.
 6. Enter the image URL you copied into the **Container Image** field
 
     ![image.png](./create-environment-with-custom-packages-private-code-repository-60.png)
+
+   :::tip
+   Would you like your launcher environment to update automatically everytime you push? Replace the very last part of the image URL after the `:` with `latest`, as in the image above.
+   :::
 
 7. In the advanced settings, set the following fields:
     1. Working directory: `/home/ubuntu/work`

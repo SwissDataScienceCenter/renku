@@ -47,7 +47,7 @@ In the project page:
 
         The only additional parameter you have to provide in the session launcher creation dialog is the `Default URL` and this should be set to `/lab`.
 
-        ![image.png](./use-your-own-docker-image-for-renku-session-20.png)
+        ![image.png](./use-your-own-docker-image-for-renku-session-30.png)
 
     - I’m using an image created by **Renku** and that is **older** than version 0.24.0 (the version number is in the image tag).
 
@@ -83,7 +83,7 @@ In the project page:
 
     :::tip
 
-    If the available resource classes are too small for your compute requirements, we can create a custom resource pool for you! See [Request a Custom Resource Pool](/docs/users/sessions/resource-pools-and-classes#request-custom-resource-pool).
+    If the available resource classes are too small for your compute requirements, we can create a custom resource pool for you! See [Request a Custom Resource Pool](../resource-pools-and-classes#request-custom-resource-pool).
 
     :::
 
@@ -95,7 +95,7 @@ In the project page:
 Note that you can always **modify your session launcher** by clicking on top of it on the project’s page, and using the menu on the right:
 
 <p class="image-container-l">
-![image.png](./use-your-own-docker-image-for-renku-session-30.png)
+![image.png](./edit-session-launcher.png)
 </p>
 
 :::
@@ -121,7 +121,7 @@ In this section, you can see example configurations for commonly used images. If
 ["sh", "-c"]
 ```
 
-- Command Arguments CMD ([learn more](/docs/users/sessions/guides/use-your-own-docker-image-for-renku-session#about-renku-session-urls)):
+- Command Arguments CMD ([learn more](#about-renku-session-urls)):
 
 ```json
 ["jupyter server --ServerApp.ip=0.0.0.0 --ServerApp.port=8888 --ServerApp.base_url=$RENKU_BASE_URL_PATH --ServerApp.token=\"\" --ServerApp.password=\"\" --ServerApp.allow_remote_access=true --ContentsManager.allow_hidden=true --ServerApp.allow_origin=*"]
@@ -140,7 +140,7 @@ In this section, you can see example configurations for commonly used images. If
 ["sh", "-c"]
 ```
 
-- Command Arguments CMD ([learn more](/docs/users/sessions/guides/use-your-own-docker-image-for-renku-session#about-renku-session-urls)):
+- Command Arguments CMD ([learn more](#about-renku-session-urls)):
 
 ```json
 ["jupyter server --ServerApp.ip=0.0.0.0 --ServerApp.port=8888 --ServerApp.base_url=$RENKU_BASE_URL_PATH --ServerApp.token=\"\" --ServerApp.password=\"\" --ServerApp.allow_remote_access=true --ContentsManager.allow_hidden=true --ServerApp.allow_origin=*"]
@@ -164,7 +164,7 @@ In this section, you can see example configurations for commonly used images. If
 ["sh", "-c"]
 ```
 
-- Command Arguments CMD ([learn more](/docs/users/sessions/guides/use-your-own-docker-image-for-renku-session#about-renku-session-urls)):
+- Command Arguments CMD ([learn more](#about-renku-session-urls)):
 
 ```json
 ["code serve-web --server-base-path $RENKU_BASE_URL_PATH/ --without-connection-token --host 0.0.0.0 --port 8888"]
@@ -180,7 +180,7 @@ In this section, you can see example configurations for commonly used images. If
 ["sh", "-c"]
 ```
 
-- Command Arguments CMD (fill in `<your-repo-name>/<your-app>`) ([learn more](/docs/users/sessions/guides/use-your-own-docker-image-for-renku-session#about-renku-session-urls)):
+- Command Arguments CMD (fill in `<your-repo-name>/<your-app>`) ([learn more](#about-renku-session-urls)):
 
 ```json
 ["streamlit run $RENKU_WORKING_DIR/<your-repo-name>/<your-app>.py --server.port=8888 --server.address=0.0.0.0 --server.baseUrlPath=$RENKU_BASE_URL_PATH"]
@@ -196,7 +196,7 @@ In this section, you can see example configurations for commonly used images. If
 ["sh", "-c"]
 ```
 
-- Command Arguments CMD (fill in `<your-repo-name>/<your-app>`!) ([learn more](/docs/users/sessions/guides/use-your-own-docker-image-for-renku-session#about-renku-session-urls)):
+- Command Arguments CMD (fill in `<your-repo-name>/<your-app>`!) ([learn more](#about-renku-session-urls)):
 
 ```json
 ["DASH_URL_BASE_PATHNAME=$RENKU_BASE_URL_PATH/ HOST=0.0.0.0 PORT=8888 python $RENKU_WORKING_DIR/<your-repo-name>/<your-app>.py"]
@@ -212,7 +212,7 @@ In this section, you can see example configurations for commonly used images. If
 ["sh", "-c"]
 ```
 
-- Command Arguments CMD (fill in `<your-repo-name>/<your-app>`!)([learn more](/docs/users/sessions/guides/use-your-own-docker-image-for-renku-session#about-renku-session-urls)):
+- Command Arguments CMD (fill in `<your-repo-name>/<your-app>`!)([learn more](#about-renku-session-urls)):
 
 ```json
 ["python $RENKU_WORKING_DIR/<your-repo-name>/<your-app>.py --server_port=8888 --server_name=0.0.0.0 --root_path=$RENKU_BASE_URL_PATH"]

@@ -2,8 +2,8 @@
 
 This tutorial will walk you through creating and sharing a dataset index on Renku to showcase the data outputs of your group.
 
-1. First, [create a group](/docs/users/collaboration/guides/create-group). The group page will be the base page for your dataset index.
-2. Then, populate your page with data connectors. Set the data connectors’ visibility to public so that they are publicly visible. See our collection of [How To Guides](/docs/users/data/guides/connect-data/) for options for creating data connectors.
+1. First, [create a group](../collaboration/guides/create-group). The group page will be the base page for your dataset index.
+2. Then, populate your page with data connectors. Set the data connectors’ visibility to public so that they are publicly visible. See our collection of [How To Guides](../data/guides/connect-data) for options for creating data connectors.
 
     :::info
 

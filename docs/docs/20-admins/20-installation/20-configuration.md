@@ -194,7 +194,7 @@ for some time you can look at trends and modify things accordingly.
 
 ## Harbor and Shipwright
 
-As stated in the [Requirements section](/docs/admins/installation/requirements) both of these need to be installed
+As stated in the [Requirements section](requirements) both of these need to be installed
 separately from Renku prior to installing Renku. You may also deploy Renku without Harbor and Shipwright
 but then your users will not have the ability to build images from a code repository automatically.
 

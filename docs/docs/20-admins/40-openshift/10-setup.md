@@ -223,7 +223,7 @@ Any Renku user can be made a Renku administrator. This is useful for setting up
 different global environments, resource pools or integrations. In addition,
 Renku administrators can access the projects and similar resources of any user
 in the platform. The documentation for assigning the Renku administrator role
-can be found [here](/docs/admins/operation/user-management).
+can be found [here](../operation/user-management).
 
 :::
 

@@ -15,7 +15,7 @@ Therefore, for every integration there are 2 steps:
 :::note
 
 You need to be a Renku administrator in order to add integrations. You can assign
-the administrator role by following the steps [here](/docs/admins/operation/user-management).
+the administrator role by following the steps [here](user-management).
 
 :::
 
