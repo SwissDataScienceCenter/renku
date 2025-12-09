@@ -581,7 +581,7 @@ ui:
     replicaCount: 1
     image:
       repository: renku/renku-ui
-      tag: "4.11.1"
+      tag: "4.13.0"
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
       ## Secrets must be manually created in the namespace.
@@ -765,7 +765,7 @@ ui:
     keepCookies: []
     image:
       repository: renku/renku-ui-server
-      tag: "4.11.1"
+      tag: "4.13.0"
       pullPolicy: IfNotPresent
     imagePullSecrets: []
     nameOverride: ""
@@ -1474,12 +1474,12 @@ dataService:
     create: true
   image:
     repository: renku/renku-data-service
-    tag: "0.60.5"
+    tag: "0.62.0"
     pullPolicy: IfNotPresent
   k8sWatcher:
     image:
       repository: renku/data-service-k8s-watcher
-      tag: "0.60.5"
+      tag: "0.62.0"
       pullPolicy: IfNotPresent
     resources: {}
     sentry:
@@ -1490,7 +1490,7 @@ dataService:
   dataTasks:
     image:
       repository: renku/data-service-data-tasks
-      tag: "0.60.5"
+      tag: "0.62.0"
       pullPolicy: IfNotPresent
     resources: {}
   service:
@@ -1528,10 +1528,30 @@ dataService:
     enabled: false
     ## The container image prefix for images built from code
     outputImagePrefix: harbor.dev.renku.ch/renku-build/
-    ## The run image used for Python + VSCodium images
-    vscodiumPythonRunImage: renku/renkulab-vscodium-python-runimage:ubuntu-59fcea4
+    ## The builder image (see https://buildpacks.io/docs/for-platform-operators/concepts/builder/)
+    builderImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/selector:0.2.2"
+    ## The run image (see https://buildpacks.io/docs/for-platform-operators/concepts/base-images/)
+    runImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/run-image:0.2.2"
     ## The name of the BuildStrategy to use for image builds.
-    strategyName: renku-buildpacks
+    strategyName: renku-buildpacks-v3
+    ## Configuration overrides for specific target platforms
+    platformOverrides: {}
+      # linux/arm64:
+      #   builderImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/cuda-selector:0.2.2"
+      #   runImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/cuda-run-image:0.2.2"
+      #   strategyName: renku-buildpacks-v3
+      #   nodeSelector:
+      #     kubernetes.io/arch: arm64
+      #     renku.io/node-purpose: image-build
+      #   tolerations:
+      #     - effect: NoSchedule
+      #       key: renku.io/dedicated
+      #       operator: Equal
+      #       value: image-build
+      #     - effect: NoSchedule
+      #       key: renku.io/arch
+      #       operator: Equal
+      #       value: arm64
     ## The name of the secret used to push images built from code.
     pushSecretName: renku-build-docker-secret
     ## The TTL for BuildRuns
@@ -1588,7 +1608,7 @@ authz:
 secretsStorage:
   image:
     repository: renku/secrets-storage
-    tag: "0.60.5"
+    tag: "0.62.0"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
