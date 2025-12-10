@@ -11,10 +11,10 @@ import {
 } from "../../support/utils/sessions";
 import { login } from "../../support/utils/general";
 
-const sessionId = ["sessions", getRandomString()];
+const sessionId = ["session-launchers", getRandomString()];
 
-describe("Session launcher tests", () => {
-  const projectName = `project-session-tests-${getRandomString()}`;
+describe("Session Launchers", () => {
+  const projectName = `project-for-session-launcher-tests-${getRandomString()}`;
   let projectId: string;
   const sessionImage = "alpine:latest";
   const sessionUrl = "/test";
@@ -46,12 +46,35 @@ describe("Session launcher tests", () => {
   });
 
   it("Add and delete a session launcher in the project's sessions list", () => {
+    const sessionArgs = '["/entrypoint.sh"]';
+    const sessionCommand = '["bash"]';
+    const sessionGid = "100";
+    const sessionMountDirectory = "/home/ubuntu/work";
+    const sessionPort = "8888";
+    const sessionUid = "1000";
+    const sessionWorkingDirectory = "/home/ubuntu/work";
+
     // Add session environment
     cy.visitProjectByName(projectName);
     cy.getDataCy("add-session-launcher").click();
     cy.getDataCy("environment-kind-custom").click();
     cy.getDataCy("custom-image-input").should("be.empty").type(sessionImage);
+
+    cy.getDataCy("session-launcher-field-args")
+      .clear()
+      .type(sessionArgs, { parseSpecialCharSequences: false });
+    cy.getDataCy("session-launcher-field-command").clear().type(sessionCommand);
     cy.getDataCy("session-launcher-field-default_url").clear().type(sessionUrl);
+    cy.getDataCy("session-launcher-field-gid").clear().type(sessionGid);
+    cy.getDataCy("session-launcher-field-mount_directory")
+      .clear()
+      .type(sessionMountDirectory);
+    cy.getDataCy("session-launcher-field-port").clear().type(sessionPort);
+    cy.getDataCy("session-launcher-field-uid").clear().type(sessionUid);
+    cy.getDataCy("session-launcher-field-working_directory")
+      .clear()
+      .type(sessionWorkingDirectory);
+
     cy.getDataCy("next-session-button").click();
     cy.getDataCy("launcher-name-input")
       .should("be.empty")
@@ -66,7 +89,28 @@ describe("Session launcher tests", () => {
       .contains("[data-cy=session-launcher-item]", sessionLauncherName)
       .should("be.visible");
 
+    // Click on the session launcher to open the properties view
+    cy.getDataCy("sessions-box")
+      .contains("[data-cy=session-launcher-item]", sessionLauncherName)
+      .click();
+
+    // Verify the session launcher properties are displayed correctly
+    cy.getDataCy("session-view-args").contains(sessionArgs);
+    cy.getDataCy("session-view-command").contains(sessionCommand);
+    cy.getDataCy("session-view-default-url").contains(sessionUrl);
+    cy.getDataCy("session-view-gid").contains(sessionGid);
+    cy.getDataCy("session-view-mount-directory").contains(
+      sessionMountDirectory,
+    );
+    cy.getDataCy("session-view-port").contains(sessionPort);
+    cy.getDataCy("session-view-title").should("be.visible");
+    cy.getDataCy("session-view-uid").contains(sessionUid);
+    cy.getDataCy("session-view-working-directory").contains(
+      sessionWorkingDirectory,
+    );
+
     // Delete session launcher from the list
+    cy.visitProjectByName(projectName);
     cy.getDataCy("sessions-box")
       .contains("[data-cy=session-launcher-item]", sessionLauncherName)
       .find("[data-cy=button-with-menu-dropdown]")

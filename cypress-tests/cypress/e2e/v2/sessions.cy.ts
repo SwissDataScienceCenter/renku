@@ -17,7 +17,7 @@ import { TIMEOUTS } from "../../../config";
 const sessionId = ["sessions", getRandomString()];
 
 describe("Session tests with an existing session launcher", () => {
-  const projectName = `project-session-tests-${getRandomString()}`;
+  const projectName = `project-for-session-tests-${getRandomString()}`;
   let projectId: string;
   let sessionLauncherId: string;
   let sessionLauncherName: string;

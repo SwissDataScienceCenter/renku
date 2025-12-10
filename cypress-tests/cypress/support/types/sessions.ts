@@ -4,13 +4,15 @@ export interface Environment {
   description?: string;
   container_image?: string;
   default_url?: string;
+  mount_directory?: string;
+  environment_kind?: string;
+  environment_image_source?: string;
   uid?: number;
   gid?: number;
   working_directory?: string;
-  mount_directory?: string;
   port?: number;
-  environment_kind?: string;
-  environment_image_source?: string;
+  command?: string[];
+  args?: string[];
 }
 
 export interface SessionLauncher {
@@ -27,4 +29,12 @@ export interface Session {
   project_id: string;
   launcher_id: string;
   resource_class_id: string;
+}
+
+export interface SessionSecretSlot {
+  id?: string;
+  name: string;
+  filename: string;
+  description?: string;
+  project_id: string;
 }
