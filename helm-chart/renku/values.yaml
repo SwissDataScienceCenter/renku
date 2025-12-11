@@ -1477,6 +1477,14 @@ platformInit:
 dataService:
   rbac:
     create: true
+    # Resource pools allow Renkulab administrators to define pools of compute resources
+    # that can be used for user sessions. This allows to separate resources for different
+    # user groups, e.g. students vs researchers.
+    # The feature is based on Kubernetes PriorityClasses, which are non-namespaced, therefore to access that resource
+    # the data-service service account needs a ClusterRole and the corresponding ClusterRoleBinding.
+    # If you are not allowed to create ClusterRoles in your cluster, you can disable the feature by setting
+    # `enableResourcePool` to false.
+    enableResourcePool: true
   image:
     repository: renku/renku-data-service
     tag: "0.65.1"
