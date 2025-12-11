@@ -51,35 +51,6 @@ spec:
                   name: {{ .Values.global.externalServices.postgresql.existingSecret }}
                   key: postgres-password
             {{- end }}
-            {{- if .Values.enableV1Services }}
-            - name: EVENTLOG_DB_USERNAME
-              value: {{ .Values.global.graph.dbEventLog.postgresUser | quote }}
-            - name: EVENTLOG_DB_NAME
-              value: event_log
-            - name: EVENTLOG_DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "renku.fullname" . }}-graph-db-postgres
-                  key: graph-dbEventLog-postgresPassword
-            - name: TG_DB_USERNAME
-              value: {{ .Values.global.graph.triplesGenerator.postgresUser | quote }}
-            - name: TG_DB_NAME
-              value: triples_generator
-            - name: TG_DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "renku.fullname" . }}-graph-tg-postgres
-                  key: graph-triplesGenerator-postgresPassword
-            - name: TOKENREPO_DB_USERNAME
-              value: {{ .Values.global.graph.tokenRepository.postgresUser | quote }}
-            - name: TOKENREPO_DB_NAME
-              value: projects_tokens
-            - name: TOKENREPO_DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "renku.fullname" . }}-graph-token-postgres
-                  key: graph-tokenRepository-postgresPassword
-            {{- end }}
             - name: RENKU_DB_USERNAME
               value: {{ .Values.global.db.common.username | quote }}
             - name: RENKU_DB_NAME

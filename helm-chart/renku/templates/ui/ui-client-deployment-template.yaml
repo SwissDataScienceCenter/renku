@@ -103,8 +103,6 @@ spec:
               value: {{ toJson .Values.ui.client.sessionClassEmailUs | quote }}
             - name: IMAGE_BUILDERS_ENABLED
               value: {{ .Values.dataService.imageBuilders.enabled | quote }}
-            - name: LEGACY_SUPPORT
-              value: {{ dict "enabled" .Values.enableV1Services "supportLegacySessions" .Values.ui.client.supportLegacySessions | toJson | quote }}
             - name: METRICS_ENABLED
               value: {{ .Values.ui.client.prometheus.enabled | quote }}
           livenessProbe:

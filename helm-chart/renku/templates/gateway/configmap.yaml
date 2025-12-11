@@ -36,7 +36,6 @@ data:
           audience: renku
           authorizedParty: renku-cli
     revproxy:
-      enableV1Services: {{ .Values.enableV1Services | default false }}
       enableInternalGitlab: {{ .Values.enableInternalGitlab | default false }}
       renkuBaseUrl: {{ include "renku.baseUrl" . | quote }}
       externalGitlabUrl: {{ .Values.global.gitlab.url | default "" | quote }}
@@ -56,7 +55,6 @@ data:
         uiserver: {{ printf "http://%s" (include "ui-server.fullname" .) | quote }} 
         search: {{ printf "http://%s-search-api" .Release.Name | quote }}
     login:
-      enableV1Services: {{ .Values.enableV1Services | default false }}
       enableInternalGitlab: {{ .Values.enableInternalGitlab | default false }}
       renkuBaseUrl: {{ include "renku.baseUrl" . | quote }}
       loginRoutesBasePath: "/api/auth"
