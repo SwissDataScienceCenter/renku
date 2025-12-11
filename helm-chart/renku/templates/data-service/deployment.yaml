@@ -132,8 +132,10 @@ spec:
               value: {{ .Values.dataService.imageBuilders.enabled | quote }}
             - name: BUILD_OUTPUT_IMAGE_PREFIX
               value: {{ .Values.dataService.imageBuilders.outputImagePrefix | default "" | quote }}
-            - name: BUILD_VSCODIUM_PYTHON_RUN_IMAGE
-              value: {{ .Values.dataService.imageBuilders.vscodiumPythonRunImage | default "" | quote }}
+            - name: BUILD_BUILDER_IMAGE
+              value: {{ .Values.dataService.imageBuilders.builderImage | default "" | quote }}
+            - name: BUILD_RUN_IMAGE
+              value: {{ .Values.dataService.imageBuilders.runImage | default "" | quote }}
             - name: BUILD_STRATEGY_NAME
               value: {{ .Values.dataService.imageBuilders.strategyName | default "" | quote }}
             - name: BUILD_PUSH_SECRET_NAME
@@ -150,6 +152,10 @@ spec:
             {{- end }}
             {{- with .Values.dataService.imageBuilders.tolerations }}
             - name: BUILD_NODE_TOLERATIONS
+              value: {{ toJson . | quote }}
+            {{- end }}
+            {{- with .Values.dataService.imageBuilders.platformOverrides }}
+            - name: BUILD_PLATFORM_OVERRIDES
               value: {{ toJson . | quote }}
             {{- end }}
             - name: V1_SESSIONS_ENABLED
