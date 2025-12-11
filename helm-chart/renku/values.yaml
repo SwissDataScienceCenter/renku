@@ -1376,10 +1376,6 @@ secretsStorage:
   tolerations: []
   affinity: {}
 
-# This is used to indicate whether services needed exclusively for Renku V1 are deployed or not.
-# The support for this feature is experimental and it should not be set to false in production at all.
-enableV1Services: true
-
 # When this is set to false the gateway and data service will ignore the Gitlab
 # that can be integrated with Renku and will not ask users to log into this Gitlab.
 # NOTE: This flag has no effect on the core service and knowledge graph. Therefore
