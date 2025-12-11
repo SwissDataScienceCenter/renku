@@ -13,6 +13,7 @@ Please follow this convention when adding a new row
   the `enableV1Services` chart value will be removed.
 * NEW `dataService.imageBuilders.builderImage`, sets the builder image used for Renku builds.
 * NEW `dataService.imageBuilders.runImage`, sets the run image used for Renku builds.
+* NEW `dataService.imageBuilders.platformOverrides`, overrides for image builds, keyed by platform. See commented values for a working example for `linux/arm64`.
 * DELETE `dataService.imageBuilders.vscodiumPythonRunImage`, as it is replaced by `dataService.imageBuilders.runImage`.
 
 ## Upgrading to Renku 2.9.0
