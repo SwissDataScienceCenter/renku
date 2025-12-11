@@ -27,11 +27,10 @@ export function verifySearchIndexing(
       } else if (tries <= maxAttempts) {
         cy.wait(loopDelay).then(() => attempt(tries + 1));
       } else {
-        cy.log(
-          `Expected ${matcher === "gte" ? "at least " : ""}${expectedItems} items but found ${response.body.items ? response.body.items.length : "none"}.`,
-        );
+        const message = `Expected ${matcher === "gte" ? "at least " : ""}${expectedItems} items but found ${response.body.items ? response.body.items.length : "none"}.`;
+        cy.log(message);
         throw new Error(
-          `Search indexing faild after ${maxAttempts} attempts every ${Math.floor(loopDelay / 1_000)} seconds.`,
+          `Search indexing failed after ${maxAttempts} attempts every ${Math.floor(loopDelay / 1_000)} seconds. ${message}`,
         );
       }
     });

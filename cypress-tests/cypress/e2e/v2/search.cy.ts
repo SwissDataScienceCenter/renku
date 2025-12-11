@@ -1,27 +1,19 @@
+import { getRandomString, getUserData } from "../../support/commands/general";
+import { User } from "../../support/types/user";
+import { createGroupIfMissing, deleteGroup } from "../../support/utils/groups";
 import {
-  getRandomString,
-  getUserData,
-  validateLoginV2,
-} from "../../support/commands/general";
-import { User } from "../../support/types/user.types";
-import {
-  createGroupIfMissingAPI,
-  deleteGroupFromAPI,
-  getGroupFromAPI,
-} from "../../support/utils/group.utils";
-import {
-  createProjectIfMissingAPIV2,
-  deleteProjectFromAPIV2,
-  getProjectByNamespaceAPIV2,
-} from "../../support/utils/projectsV2.utils";
-import { verifySearchIndexing } from "../../support/utils/search.utils";
+  createProjectIfMissingV2,
+  deleteProject,
+} from "../../support/utils/projects";
+import { verifySearchIndexing } from "../../support/utils/search";
+import { login } from "../../support/utils/general";
 
-const sessionId = ["searchEntities", getRandomString()];
+const sessionId = ["search", getRandomString()];
 
 describe("Search for resources: groups, projects, users", () => {
   // Define projects and groups details
   // ? Random string is currently the only way to get good results from search
-  // ? since searching for multiple words may return a bunch a unexpected results.
+  // ? since searching for multiple words may return a bunch an unexpected results.
   const stringRandomOne = getRandomString();
   const stringRandomTwo = getRandomString();
   const stringFirst = "first";
@@ -36,35 +28,39 @@ describe("Search for resources: groups, projects, users", () => {
     first: `${stringGroup}-${stringFirst}-${stringRandomTwo}`,
     second: `${stringGroup}-${stringSecond}-${stringRandomOne}`,
   };
-  let userNamespace: string;
+  let projectIdFirst: string | null = null;
+  let projectIdSecond: string | null = null;
 
-  // Create the requires resources
+  // Create the required resources
   before(() => {
-    // Login
-    cy.session(
-      sessionId,
-      () => {
-        cy.robustLogin("v2");
-      },
-      validateLoginV2,
-    );
+    login(sessionId);
 
     // Create groups and projects -- fail early if any of the resources are not created
     getUserData().then((user: User) => {
-      userNamespace = user.username;
-      for (const proj of [projects.first, projects.second]) {
-        createProjectIfMissingAPIV2({
-          name: proj,
-          namespace: user.username,
-          slug: proj,
-        }).then((response) => {
-          if (response.status >= 400) {
-            throw new Error("Failed to create project");
-          }
-        });
-      }
+      createProjectIfMissingV2({
+        name: projects.first,
+        namespace: user.username,
+        slug: projects.first,
+      }).then((response) => {
+        if (response.status >= 400) {
+          throw new Error("Failed to create first project");
+        }
+        projectIdFirst = response.body.id;
+      });
+
+      createProjectIfMissingV2({
+        name: projects.second,
+        namespace: user.username,
+        slug: projects.second,
+      }).then((response) => {
+        if (response.status >= 400) {
+          throw new Error("Failed to create second project");
+        }
+        projectIdSecond = response.body.id;
+      });
+
       for (const grp of [groups.first, groups.second]) {
-        createGroupIfMissingAPI({
+        createGroupIfMissing({
           name: grp,
           slug: grp,
         }).then((response) => {
@@ -81,37 +77,15 @@ describe("Search for resources: groups, projects, users", () => {
 
   // Restore the session (login)
   beforeEach(() => {
-    cy.session(
-      sessionId,
-      () => {
-        cy.robustLogin("v2");
-      },
-      validateLoginV2,
-    );
+    login(sessionId);
   });
 
   // Cleanup the resources after the test
   after(() => {
-    [projects.first, projects.second].forEach((proj) => {
-      getProjectByNamespaceAPIV2({
-        slug: proj,
-        namespace: userNamespace,
-      }).then((response) => {
-        if (response.status === 200) {
-          deleteProjectFromAPIV2({
-            id: response.body.id,
-            slug: proj,
-          });
-        }
-      });
-    });
-    [groups.first, groups.second].forEach((grp) => {
-      getGroupFromAPI(grp).then((response) => {
-        if (response.status === 200) {
-          deleteGroupFromAPI(grp);
-        }
-      });
-    });
+    deleteProject(projectIdFirst);
+    deleteProject(projectIdSecond);
+    deleteGroup(groups.first);
+    deleteGroup(groups.second);
   });
 
   it("Can search for entities and filter works", () => {
@@ -119,9 +93,7 @@ describe("Search for resources: groups, projects, users", () => {
 
     // Search for string
     cy.getDataCy("navbar-link-search").click();
-    cy.intercept(new RegExp(`/api/data/search/query.*`)).as(
-      "searchQuery",
-    );
+    cy.intercept(new RegExp(`/api/data/search/query.*`)).as("searchQuery");
     cy.getDataCy("search-input").clear().type(stringRandomOne);
     cy.getDataCy("search-button").click();
     cy.wait("@searchQuery");

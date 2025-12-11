@@ -1,82 +1,45 @@
 import { TIMEOUTS } from "../../../config";
+import { getRandomString, getUserData } from "../../support/commands/general";
+import { User } from "../../support/types/user";
 import {
-  getRandomString,
-  getUserData,
-  validateLoginV2,
-} from "../../support/commands/general";
-import { ProjectIdentifierV2 } from "../../support/types/project.types";
-import { User } from "../../support/types/user.types";
-import {
-  createProjectIfMissingAPIV2,
-  deleteProjectFromAPIV2,
-  getProjectByNamespaceAPIV2,
-} from "../../support/utils/projectsV2.utils";
-import {
-  deleteSessionFromAPI,
-  getSessionsFromAPI,
-} from "../../support/utils/sessions.utils";
+  createProjectIfMissingV2,
+  deleteProject,
+} from "../../support/utils/projects";
+import { deleteSessionsForProject } from "../../support/utils/sessions";
+import { login } from "../../support/utils/general";
 
-const sessionId = ["sessionBasics", getRandomString()];
+const sessionId = ["sessions", getRandomString()];
 
 describe("Start a session that consumes project resources", () => {
   // Define required resources
   let projectNameRandomPart: string;
-  let projectName;
-  let projectIdentifier: ProjectIdentifierV2;
+  let projectName: string;
+  let projectId: string | null = null;
 
   function resetRequiredResources() {
     projectNameRandomPart = getRandomString();
     projectName = `session-basics-${projectNameRandomPart}`;
-    projectIdentifier = {
-      slug: projectName,
-      id: null,
-      namespace: null,
-    };
+    projectId = null;
   }
-
   beforeEach(() => {
     // Restore the session (login)
-    cy.session(
-      sessionId,
-      () => {
-        cy.robustLogin("v2");
-      },
-      validateLoginV2,
-    );
+    login(sessionId);
 
     // Create a project
     resetRequiredResources();
     getUserData().then((user: User) => {
-      projectIdentifier.namespace = user.username;
-      createProjectIfMissingAPIV2({
+      createProjectIfMissingV2({
         name: projectName,
         namespace: user.username,
         slug: projectName,
-      }).then((project) => (projectIdentifier.id = project.id));
+      }).then((response) => (projectId = response.body.id));
     });
   });
 
   // Cleanup the session and the project after the test
   after(() => {
-    getProjectByNamespaceAPIV2(projectIdentifier).then((response) => {
-      if (response.status === 200) {
-        projectIdentifier.id = response.body.id;
-        projectIdentifier.namespace = response.body.namespace;
-
-        getSessionsFromAPI().then((response) => {
-          if (response.status === 200 && response.body.length > 0) {
-            // eslint-disable-next-line max-nested-callbacks
-            response.body.forEach((session) => {
-              if (session.project_id === projectIdentifier.id) {
-                deleteSessionFromAPI(session.name);
-              }
-            });
-          }
-        });
-
-        deleteProjectFromAPIV2(projectIdentifier);
-      }
-    });
+    deleteSessionsForProject(projectId);
+    deleteProject(projectId);
   });
 
   it("Start a session with VSCode and check it has the necessary resources", () => {
@@ -94,14 +57,7 @@ describe("Start a session that consumes project resources", () => {
       workdir: "/home/ubuntu/work",
     };
 
-    // Access the project and create some resources.
-    cy.visit("/v2");
-    cy.getDataCy("dashboard-project-list")
-      .get(
-        `a[href*="/${projectIdentifier.namespace}/${projectIdentifier.slug}"]`,
-      )
-      .click();
-    cy.getDataCy("project-name").should("contain", projectName);
+    cy.visitProjectByName(projectName);
 
     cy.getDataCy("add-data-connector").click();
     cy.getDataCy("project-data-controller-mode-create").click();
