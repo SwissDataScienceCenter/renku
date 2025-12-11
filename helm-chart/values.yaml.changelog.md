@@ -5,6 +5,10 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
+## Upgrading to Renku 2.12.0
+
+* DELETE `enableV1Services` as detailed in the 2.11.0 release.
+
 ## Upgrading to Renku 2.11.0
 
 * EDIT `enableV1Services` is now set to `false` by default.

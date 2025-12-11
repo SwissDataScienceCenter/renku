@@ -1633,10 +1633,6 @@ secretsStorage:
   tolerations: []
   affinity: {}
 
-# Important note: running legacy (v1) services is deprecated and this chart value will be removed
-# in the next Renku release.
-enableV1Services: false
-
 # When this is set to false the gateway and data service will ignore the Gitlab
 # that can be integrated with Renku and will not ask users to log into this Gitlab.
 # NOTE: This flag has no effect on the core service and knowledge graph. Therefore
