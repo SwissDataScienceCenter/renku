@@ -21,7 +21,7 @@ function HomepageHeader() {
           <Link
             className="button button--secondary button--lg"
             to="/docs/users">
-            I am a Renku user ?
+            I am a Renku user
           </Link>
         </div>
         <br />
