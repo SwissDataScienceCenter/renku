@@ -3,7 +3,7 @@ import { Columns, Column } from '@theme/MDXComponents';
 # RenkuLab: CSCS integration
 
 :::info
-The RenkuLab:CSCS integration allows users to start interactive Renku sessions running as HPC jobs at CSCS.
+The RenkuLab: CSCS integration allows users to start interactive Renku sessions running as HPC jobs at CSCS.
 
 RenkuLab accesses compute and storage resources on the behalf of the user, using existing permissions and resource allocation. Running Renku sessions at CSCS will consume compute credits from your CSCS account(s) and may affect other resources you have at CSCS (e.g. storage).
 
