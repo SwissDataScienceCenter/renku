@@ -6,8 +6,7 @@ Creating a group allows you to gather all the information and resources (data, p
 
 :::
 
-1. Click ➕ at the top right corner of [renkulab.io](http://renkulab.io) after logging in.
-    1. Click on **Group**.
+1. Click ➕ at the top right corner of the dashboard and select Group.
     
     ![image.png](./create-group-10.png)
     
@@ -16,7 +15,8 @@ Creating a group allows you to gather all the information and resources (data, p
     - **Description (Optional)**: add the description of your group.
     - Click on the **Create** button.
     
-    <p class="image-container-l">
+    <br/>
+    <p class="image-container-m">
     ![image.png](./create-group-20.png)
     </p>
     

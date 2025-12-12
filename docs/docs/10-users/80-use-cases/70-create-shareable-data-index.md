@@ -8,7 +8,11 @@ This tutorial will walk you through creating and sharing a dataset index on Renk
     :::info
 
     The above how-to guides instruct you to create a data connector in the context of a project. For this tutorial, instead create the data connectors on the group page directly by clicking the ➕ button in the **Data** section of the group page.
+    
+    <p class="image-container-l">
+    ![image.png](./data-index.png)
+    </p>
 
     :::
 
-3. To share your Renku data index, copy the URL of the group page and share it!
+3. To share your Renku data index, **copy the URL of the group page** and share it!
