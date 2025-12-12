@@ -4,13 +4,16 @@ import {
   createProjectIfMissingV2,
   deleteProject,
 } from "../../support/utils/projects";
-import { createCodeRepository } from "../../support/utils/codeRepositories";
+import {
+  createCodeRepository,
+  deleteCodeRepositoriesForProject,
+} from "../../support/utils/codeRepositories";
 import { login } from "../../support/utils/general";
 
 const sessionId = ["codeRepositories", getRandomString()];
 
 describe("Code repositories", () => {
-  const projectName = `project-code-repository-tests-${getRandomString()}`;
+  const projectName = `project-for-code-repository-tests-${getRandomString()}`;
   let projectId: string;
 
   // Create a project and keep that around for the rest of the tests
@@ -32,6 +35,8 @@ describe("Code repositories", () => {
 
   beforeEach(() => {
     login(sessionId);
+
+    deleteCodeRepositoriesForProject(projectId);
   });
 
   after(() => {

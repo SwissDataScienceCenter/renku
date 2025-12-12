@@ -1,4 +1,10 @@
-import { Environment, Session, SessionLauncher } from "../types/sessions";
+import { TIMEOUTS } from "../../../config";
+import {
+  Environment,
+  Session,
+  SessionLauncher,
+  SessionSecretSlot,
+} from "../types/sessions";
 
 export function getSessions(): Cypress.Chainable<Cypress.Response<Session[]>> {
   return cy.request({
@@ -18,21 +24,21 @@ export function getEnvironments(): Cypress.Chainable<
   });
 }
 
-/** Get a global environment by a part of its name. */
+/** Get a global environment by a part of its name (case-insensitive). */
 export function getEnvironmentByName(
   name: string,
 ): Cypress.Chainable<Environment> {
   return getEnvironments().then((response) => {
     expect(response.status).to.equal(200);
-    const env = response.body.find((e) =>
+    const environment = response.body.find((e) =>
       e.name.toLowerCase().includes(name.toLowerCase()),
     );
-    if (!env) {
+    if (!environment) {
       throw new Error(
         `No global environment found with name containing "${name}"`,
       );
     }
-    return env;
+    return environment;
   });
 }
 
@@ -66,11 +72,19 @@ export function createSessionLauncher(
     environment = { id: environment.id };
   } else if ("container_image" in environment) {
     environment = {
-      name: `${name}-env`,
+      args: environment.args,
+      command: environment.command,
       container_image: environment.container_image,
       default_url: environment.default_url ?? "/lab",
-      environment_kind: "CUSTOM",
+      description: environment.description,
       environment_image_source: "image",
+      environment_kind: "CUSTOM",
+      gid: environment.gid,
+      mount_directory: environment.mount_directory,
+      name: `${name}-environment`,
+      port: environment.port,
+      uid: environment.uid,
+      working_directory: environment.working_directory,
     };
   } else {
     throw new Error(
@@ -123,4 +137,51 @@ export function setSessionLauncherEnvironment(
       environment: environment,
     },
   });
+}
+
+export function createSessionSecretSlot(
+  projectId: string,
+  name: string,
+  filename?: string,
+  description?: string,
+): Cypress.Chainable<Cypress.Response<SessionSecretSlot>> {
+  return cy.request({
+    method: "POST",
+    url: "api/data/session_secret_slots",
+    body: {
+      project_id: projectId,
+      name: name,
+      filename: filename || name,
+      description: description,
+    },
+  });
+}
+
+/** Extract the namespace from a session URL. */
+export function getNamespace(url: string): string {
+  // URL format: https://{namespace}.dev.renku.ch/p/{userNamespace}/{projectSlug}/sessions/show/{sessionName}
+  return new URL(url).hostname.split(".")[0];
+}
+
+/** Extract the pod name from a session URL. */
+export function getPodName(url: string): string {
+  // URL format: https://{namespace}.dev.renku.ch/p/{userNamespace}/{projectSlug}/sessions/show/{sessionName}
+  const sessionName = url.split("/sessions/show/")[1];
+  // Pod name format: {sessionName}-0
+  return `${sessionName}-0`;
+}
+
+/** Execute a command in a running session pod using kubectl. */
+export function executeInSession(
+  url: string,
+  command: string,
+): Cypress.Chainable<string> {
+  const namespace = getNamespace(url);
+  const podName = getPodName(url);
+
+  return cy
+    .exec(`kubectl exec --namespace ${namespace} ${podName} -- ${command}`, {
+      timeout: TIMEOUTS.long,
+    })
+    .then((result) => result.stdout.trim());
 }
