@@ -1,3 +1,7 @@
+import Tabs from '@theme/Tabs';
+
+import TabItem from '@theme/TabItem';
+
 # How to set up a course in “Classic mode”
 
 ## Running a course in Classic Mode
@@ -63,6 +67,10 @@ You can only view copies of projects that you have access to. If someone makes a
 
 **Here’s what to instruct your students to do:**
 
+
+
+:::copy
+
 1. Go to "insert template project link here"
 2. Make a copy of the project using the banner in the button
    
@@ -77,3 +85,6 @@ If you (the instructor) need to see your students’ projects, instruct them to 
 
 - Make the copy of the template project public
 - Add the course instructor(s) as a member to their project (as a viewer)
+
+:::
+
