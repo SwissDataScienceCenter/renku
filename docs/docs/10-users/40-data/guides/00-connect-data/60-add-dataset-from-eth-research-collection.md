@@ -36,6 +36,6 @@ In your project’s dashboard:
 
 :::note
 
-For examples of data from the ETH Research Collection to add to your project, see [Data & Code for Workshop Challenge](https://www.notion.so/Data-Code-for-Workshop-Challenge-01c5c6a5e8ba49f0aa840a31c474fec8?pvs=21).
+For examples of data from the ETH Research Collection to add to your project, see [Data & Code for Reproducibility](/docs/users/use-cases/Demo-Workshop-Material).
 
 :::
