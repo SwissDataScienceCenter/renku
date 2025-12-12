@@ -9,3 +9,8 @@
 - name: GRPC_DEFAULT_SSL_ROOTS_FILE_PATH
   value: /etc/ssl/certs/ca-certificates.crt
 {{- end -}}
+
+{{- define "certificates.env.nodejs" -}}
+- name: NODE_EXTRA_CA_CERTS
+  value: /etc/ssl/certs/ca-certificates.crt
+{{- end -}}
