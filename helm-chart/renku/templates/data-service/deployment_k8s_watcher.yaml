@@ -61,6 +61,14 @@ spec:
                 fieldRef:
                   apiVersion: v1
                   fieldPath: metadata.namespace
+            - name: SENTRY_ENABLED
+              value: {{ .Values.dataService.k8sWatcher.sentry.enabled | quote }}
+            - name: SENTRY_DSN
+              value: {{ .Values.dataService.k8sWatcher.sentry.dsn | quote }}
+            - name: SENTRY_ENVIRONMENT
+              value: {{ .Values.dataService.k8sWatcher.sentry.environment | quote }}
+            - name: SENTRY_SAMPLE_RATE
+              value: {{ .Values.dataService.k8sWatcher.sentry.sampleRate | quote }}
             {{- if .Values.dataService.remoteClustersKubeconfigSecretName }}
             - name: K8S_CONFIGS_ROOT
               value: "/secrets/kube_configs"

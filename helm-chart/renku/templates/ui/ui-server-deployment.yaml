@@ -96,6 +96,7 @@ spec:
                   key: {{ .Values.global.redis.existingSecretPasswordKey }}
             - name: PROMETHEUS_ENABLED
               value: {{ .Values.ui.server.prometheus.enabled | quote }}
+            {{- include "certificates.env.nodejs" . | nindent 12 }}
           livenessProbe:
             httpGet:
               path: /liveness
