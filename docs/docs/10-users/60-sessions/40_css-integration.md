@@ -92,21 +92,21 @@ Fill in the form so that a RenkuLab admin can let you launch sessions with the C
 
 ------
 
-<div style={{ display: "flex", gap: "30px", paddingLeft: "20px" }}>
+<div style={{ display: "flex", gap: "30px", paddingLeft: "20px", }}>
 ## What works & What doesn’t work yet
 </div>
 
 <div style={{ display: "flex", gap: "30px", paddingLeft: "20px" }}>
-  <div style={{ flex: 1, backgroundColor: "#f1faebff", padding: "20px" }}>
+  <div style={{ flex: 1, padding: "20px", border: '1px solid #ccc' }}>
 
     **Currently working**
     
-    - Launch interactive Renku sessions at CSCS on: `Eiger` and `Bristen`
+    :white_check_mark: Launch interactive Renku sessions at CSCS on: `Eiger` and `Bristen`
         - Sessions on `Daint` , `Clariden` work, but only with special images created by the Renku team. Simplified integration with ARM clusters is coming soon. Please [Contact us](/docs/users/community) for more info.
 
-    - Access data from scratch, store and home
+    :white_check_mark: Access data from scratch, store and home
 
-    - By default, the job is submitted against your default CSCS account
+   :white_check_mark: By default, the job is submitted against your default CSCS account
 
                     <details>
                     <summary>*If you’d like the job go to a different account...*</summary>
@@ -120,7 +120,7 @@ Fill in the form so that a RenkuLab admin can let you launch sessions with the C
                     ![image.png](./env-var.png)     
                     </details>
 
-    - “Create from code” environments and Global environments work (on Eiger only)
+    :white_check_mark: “Create from code” environments and Global environments work (on Eiger only)
 
                     <details>
                     <summary>*If you’d like to test Daint outside of the pre-prepared project...*</summary>
@@ -137,7 +137,7 @@ Fill in the form so that a RenkuLab admin can let you launch sessions with the C
 
   </div>
 
-  <div style={{ flex: 1, backgroundColor: "#faededff", padding: "20px" }}>
+  <div style={{ flex: 1, padding: "20px", border: '1px solid #ccc' }}>
     **Not working at the moment**
 
     <p>:x: Renku data connectors</p>
