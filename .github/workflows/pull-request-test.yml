@@ -130,6 +130,7 @@ jobs:
       - name: renku build and deploy
         if: needs.check-deploy.outputs.deploy == 'true'
         uses: SwissDataScienceCenter/renku-actions/deploy-renku@v1.19.1
+        continue-on-error: true
         env:
           DOCKER_PASSWORD: ${{ secrets.RENKU_DOCKER_PASSWORD }}
           DOCKER_USERNAME: ${{ secrets.RENKU_DOCKER_USERNAME }}
