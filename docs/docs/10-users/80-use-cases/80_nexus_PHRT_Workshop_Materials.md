@@ -13,9 +13,9 @@ title: Nexus PHRT Workshop Materials
 <details>
 <summary>**Data for Publication "Assessing different NGS sequencing technologies for wastewater-based epidemiology**</summary>
 
-**Contact person:** [Beerenwinkel, Niko](https://www.research-collection.ethz.ch/discover?filtertype_1=contributors&filter_relational_operator_1=authority&filter_1=1f9d5c460060a574203833418c318fdf) \
-**Data collector:**[Kang, Seju](https://www.research-collection.ethz.ch/discover?filtertype_1=contributors&filter_relational_operator_1=authority&filter_1=f90596b9823a4db1d80ddd657c27bbb9) \
-**Producer:** [John, Anika](https://www.research-collection.ethz.ch/discover?filtertype_1=contributors&filter_relational_operator_1=authority&filter_1=29b35da74edc0617d7dbd239c146f50b) \
+**Contact person:** [Beerenwinkel, Niko](https://www.research-collection.ethz.ch/search?query=Kang,%20Seju&spc.page=1&f.author=virtual::be1d76a1-0541-4174-a854-ad5e8d013865,authority) \
+**Data collector:**[Kang, Seju](https://www.research-collection.ethz.ch/search?query=Kang,%20Seju&spc.page=1&f.author=Kang,%20Seju,equals) \
+**Producer:** [John, Anika](https://www.research-collection.ethz.ch/search?query=Kang,%20Seju&spc.page=1&f.author=John,%20Anika,equals) \
 **Reference:** https://www.research-collection.ethz.ch/handle/20.500.11850/663827 \
 **Libdrive**: https://libdrive.ethz.ch/index.php/s/gFIVvAYfXIds5J9
 
@@ -25,9 +25,9 @@ title: Nexus PHRT Workshop Materials
 <details>
 <summary>**Genomes used for the generation of the mOTUs3 database**</summary>
 
-**Project leader:** [Ruscheweyh, Hans-Joachim](https://www.research-collection.ethz.ch/discover?filtertype_1=contributors&filter_relational_operator_1=authority&filter_1=66f85bf1a240acf7982d912590cd27df) \
-**Project leader:**[Milanese, Alessio](https://www.research-collection.ethz.ch/discover?filtertype_1=contributors&filter_relational_operator_1=authority&filter_1=a0a820d0493d2873ef0eb305c6f55231) \
-**Research group:** [Sunagawa, Shinichi](https://www.research-collection.ethz.ch/discover?filtertype_1=contributors&filter_relational_operator_1=authority&filter_1=a503d3646341400c7e0de18fa60c1776) \
+**Project leader:** Ruscheweyh, Hans-Joachim \
+**Project leader:** Milanese, Alessio \
+**Research group:** Sunagawa, Shinichi \
 **Reference:** https://www.research-collection.ethz.ch/handle/20.500.11850/563099 \
 **Libdrive:** https://libdrive.ethz.ch/index.php/s/AovZ7KpStxfGdhs
 
@@ -37,7 +37,7 @@ title: Nexus PHRT Workshop Materials
 <details>
 <summary>**The 100-protein NMR spectra dataset: A resource for biomolecular NMR data analysis (Dataset)**</summary>
 
-**Creators:** [Klukowski, Piotr](https://www.research-collection.ethz.ch/discover?filtertype_1=contributors&filter_relational_operator_1=authority&filter_1=4cd9dce21bc4b31a83fd58dd9390bcfd), [Riek, Roland](https://www.research-collection.ethz.ch/discover?filtertype_1=contributors&filter_relational_operator_1=authority&filter_1=6a522fe3ae15d058d8d88e61f0d80057), [Güntert, Peter](https://www.research-collection.ethz.ch/discover?filtertype_1=contributors&filter_relational_operator_1=authority&filter_1=fade47960d8a3d867758decb45837e1a) \
+**Creators:** Klukowski, Piotr, Riek, Roland, Güntert, Peter\
 **Reference:** https://www.research-collection.ethz.ch/handle/20.500.11850/630211 \
 **Libdrive:** https://libdrive.ethz.ch/index.php/s/WDrjQ55spUnf6Kj
 
@@ -46,7 +46,7 @@ title: Nexus PHRT Workshop Materials
 <details>
 <summary>**aiSEGcell_supplement: analyses, software, and data sets**</summary>
 
-**Creator:** [Schirmacher, Danie](https://www.research-collection.ethz.ch/discover?filtertype_1=contributors&filter_relational_operator_1=authority&filter_1=6fee824a25ad1ef7470053201449cfda)l \
+**Creator:** Schirmacher, Daniel \
 **Reference:** https://www.research-collection.ethz.ch/handle/20.500.11850/679085 \
 **Libdrive:** https://libdrive.ethz.ch/index.php/s/VoF2SYkbLY8izjh
 
