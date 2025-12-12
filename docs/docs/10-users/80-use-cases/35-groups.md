@@ -3,6 +3,10 @@
 Renku offers two ways to collaborate as a group: together on a single project, or as a group working
 on multiple projects.
 
+<p>
+![image.png](./collaborate-2.png)
+</p>
+
 ## Collaborating on a single project
 
 If your group is only working together on one project, we recommend to create a project and add all group members to that project.

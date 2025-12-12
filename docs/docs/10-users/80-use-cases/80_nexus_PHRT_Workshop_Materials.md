@@ -4,6 +4,10 @@ title: Nexus PHRT Workshop Materials
 
 # Data & Code for Workshop Challenge
 
+<p class="image-container-m">
+![image.png](./collaborate.png)
+</p>
+
 # Examples - Datasets published at ETH Library
 
 <details>
