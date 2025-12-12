@@ -1,8 +1,8 @@
 ---
-title: Nexus PHRT Workshop Materials
+title: Demo Workshop Material
 ---
 
-# Data & Code for Workshop Challenge
+# Data & Code for Reproducibility
 
 <p class="image-container-m">
 ![image.png](./collaborate.png)

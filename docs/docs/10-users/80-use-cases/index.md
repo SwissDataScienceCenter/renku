@@ -14,5 +14,3 @@ import DocCardList from '@theme/DocCardList';
 ```
 
 
-<!-- Renku is an open-source platform that **connects the ecosystem of data, code, and compute** to empower researchers to **build collaborative communities.**  -->
-
