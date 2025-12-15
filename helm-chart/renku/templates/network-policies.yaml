@@ -121,40 +121,6 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: {{ template "renku.notebooks.fullname" . }}-sessions
-  labels:
-    app: {{ template "renku.name" . }}
-    chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-spec:
-  podSelector:
-    matchLabels:
-      app.kubernetes.io/component: jupyterserver
-      app.kubernetes.io/instance: {{ .Release.Name }}
-      app.kubernetes.io/name: amalthea
-  policyTypes:
-    - Ingress
-  ingress:
-    - from:
-      # Allow ssh ingress to sessions only for the ssh jump host
-        - podSelector:
-            matchLabels:
-              app: {{ template "renku.notebooks.name" . }}-ssh
-      ports:
-        - port: ssh
-          protocol: TCP
-    - from:
-      # Allow ingress to the oauth2proxy for anyone
-        - ipBlock:
-            cidr: 0.0.0.0/0
-      ports:
-        - protocol: TCP
-          port: 4180
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
   name: {{ template "renku.notebooks.fullname" . }}-sessions-v2
   labels:
     app: {{ template "renku.name" . }}
