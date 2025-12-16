@@ -26,3 +26,22 @@ export function createCodeRepository(
       });
     });
 }
+
+/** Delete all code repositories from a project. */
+export function deleteCodeRepositoriesForProject(projectId: string): void {
+  cy.request({
+    method: "GET",
+    url: `api/data/projects/${projectId}`,
+  }).then((response) => {
+    cy.request({
+      failOnStatusCode: false,
+      method: "PATCH",
+      url: `api/data/projects/${projectId}`,
+      body: { repositories: [] },
+      headers: {
+        "Content-Type": "application/json",
+        "If-Match": response.body.etag || "",
+      },
+    });
+  });
+}

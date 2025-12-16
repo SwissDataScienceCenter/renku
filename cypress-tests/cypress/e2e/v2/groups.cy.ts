@@ -271,7 +271,6 @@ describe("Groups", () => {
 
       // Verify the project's data connectors no longer appears in group search
       cy.contains(dataConnectorName).should("be.visible");
-      // cy.contains(projectDataConnectorName).should("not.exist"); // FIXME: Create a bug report
 
       // Cleanup
       deleteProjectByNamespaceSlug(userNamespace, projectName);

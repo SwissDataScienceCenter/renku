@@ -73,8 +73,7 @@ jobs:
       extra-values: ${{ steps.deploy-comment.outputs.extra-values }}
     steps:
       - id: deploy-comment
-        # TODO: Use proper renku-actions release instead of branch
-        uses: SwissDataScienceCenter/renku-actions/check-pr-description@master
+        uses: SwissDataScienceCenter/renku-actions/check-pr-description@v1.20.0
         with:
           pr_ref: ${{ github.event.number }}
 
@@ -129,7 +128,7 @@ jobs:
 
       - name: renku build and deploy
         if: needs.check-deploy.outputs.deploy == 'true'
-        uses: SwissDataScienceCenter/renku-actions/deploy-renku@v1.19.1
+        uses: SwissDataScienceCenter/renku-actions/deploy-renku@v1.20.0
         env:
           DOCKER_PASSWORD: ${{ secrets.RENKU_DOCKER_PASSWORD }}
           DOCKER_USERNAME: ${{ secrets.RENKU_DOCKER_USERNAME }}
@@ -153,7 +152,7 @@ jobs:
           extra_values: "${{ needs.check-deploy.outputs.extra-values }}"
 
   cypress-acceptance-tests:
-    name: Cypress tests
+    name: Cypress acceptance tests
     runs-on: ubuntu-24.04
     needs: [check-deploy, deploy-pr]
     strategy:
@@ -171,9 +170,8 @@ jobs:
             sessionLaunchers,
             sessions,
           ]
-        slow-tests: [sessions]
     steps:
-      - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@v1.19.1
+      - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@v1.20.0
         if: github.event.action != 'closed' && needs.check-deploy.outputs.deploy == 'true' && needs.check-deploy.outputs.test-enabled == 'true'
         with:
           e2e-folder: cypress/e2e/v2/
@@ -183,11 +181,56 @@ jobs:
           renku-release: ci-renku-${{ github.event.number }}
           test-user-password: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
 
-      - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@v1.19.1
-        if: github.event.action != 'closed' && needs.check-deploy.outputs.deploy == 'true' && needs.check-deploy.outputs.test-enabled == 'true' && needs.check-deploy.outputs.test-slow-enabled == 'true' && matrix.tests == 'sessions'
+  cypress-acceptance-tests-slow:
+    name: Cypress slow acceptance tests
+    if: github.event.action != 'closed' && needs.check-deploy.outputs.deploy == 'true' && needs.check-deploy.outputs.test-enabled == 'true' && needs.check-deploy.outputs.test-slow-enabled == 'true'
+    runs-on: ubuntu-24.04
+    needs: [check-deploy, deploy-pr]
+    permissions:
+      pull-requests: write
+      id-token: write
+    env:
+      KUBECONFIG: "${{ github.workspace }}/renkubot-kube.config"
+    strategy:
+      fail-fast: false
+      matrix:
+        tests:
+          [
+            sessions,
+            sessionSecrets,
+          ]
+    steps:
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.CI_RENKU_AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.CI_RENKU_AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.CI_RENKU_AZURE_SUBSCRIPTION_ID }}
+
+      - name: Set AKS context
+        uses: azure/aks-set-context@v4
+        with:
+          resource-group: "renku-dev"
+          cluster-name: "aks-switzerlandnorth-renku-dev"
+
+      - name: Get AKS credentials
+        run: |
+          az aks get-credentials --resource-group renku-dev --name aks-switzerlandnorth-renku-dev --file "${{ github.workspace }}/renkubot-kube.config"
+          chmod 400 "${{ github.workspace }}/renkubot-kube.config"
+
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v4
+        with:
+          version: 'latest'
+
+      - name: Check kubectl config and access to cluster
+        run: kubectl get pods -A
+
+      - name: Run Cypress slow tests
+        uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@v1.20.0
         with:
           e2e-folder: cypress/e2e/slow/
-          e2e-target: ${{ matrix.slow-tests }}
+          e2e-target: ${{ matrix.tests }}
           kubernetes-cluster-fqdn: ${{ needs.check-deploy.outputs.deploy == 'true' && 'dev.renku.ch' }}
           renku-reference: ${{ github.ref }}
           renku-release: ci-renku-${{ github.event.number }}
@@ -263,7 +306,7 @@ jobs:
 
       # Cleanup Azure deployments
       - name: renku teardown
-        uses: SwissDataScienceCenter/renku-actions/cleanup-renku-ci-deployments@v1.19.1
+        uses: SwissDataScienceCenter/renku-actions/cleanup-renku-ci-deployments@v1.20.0
         env:
           HELM_RELEASE_REGEX: "^ci-renku-${{ github.event.number }}$"
           GITLAB_TOKEN: ${{ secrets.DEV_GITLAB_TOKEN }}
