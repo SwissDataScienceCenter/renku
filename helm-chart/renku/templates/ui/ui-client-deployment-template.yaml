@@ -34,6 +34,11 @@ spec:
             - name: http
               containerPort: 8080
               protocol: TCP
+            {{- if .Values.ui.client.prometheus.enabled }}
+            - name: metrics
+              containerPort: 9090
+              protocol: TCP
+            {{- end }}
           env:
             - name: BASE_URL
               value: {{ (include "renku.baseUrl" .) | quote }}
@@ -100,6 +105,8 @@ spec:
               value: {{ .Values.dataService.imageBuilders.enabled | quote }}
             - name: LEGACY_SUPPORT
               value: {{ dict "enabled" .Values.enableV1Services "supportLegacySessions" .Values.ui.client.supportLegacySessions | toJson | quote }}
+            - name: METRICS_ENABLED
+              value: {{ .Values.ui.client.prometheus.enabled | quote }}
           livenessProbe:
             httpGet:
               path: /
