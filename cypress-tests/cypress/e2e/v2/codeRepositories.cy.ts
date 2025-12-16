@@ -56,7 +56,7 @@ describe("Code repositories", () => {
       .find("[data-cy=code-repository-item]")
       .contains(repoName);
     cy.contains("[data-cy=code-repository-item]", repoName).contains(
-      "Pull only",
+      /Integration recommended|Request integration/,
     );
 
     // Delete code repository
@@ -88,7 +88,7 @@ describe("Code repositories", () => {
       .find("[data-cy=code-repository-item]")
       .contains(repoName);
     cy.contains("[data-cy=code-repository-item]", repoName).contains(
-      "Pull only",
+      /Integration recommended|Request integration/,
     );
 
     // Edit code repository
@@ -104,7 +104,7 @@ describe("Code repositories", () => {
       .find("[data-cy=code-repository-item]")
       .contains(newName);
     cy.contains("[data-cy=code-repository-item]", newName).contains(
-      "Pull only",
+      /Integration recommended|Request integration/,
     );
   });
 });
