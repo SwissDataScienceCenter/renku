@@ -157,10 +157,19 @@ export function createSessionSecretSlot(
   });
 }
 
-/** Extract the namespace from a session URL. */
-export function getNamespace(url: string): string {
+/** Get the Kubernetes namespace for sessions. */
+export function getK8sNamespace(url: string): string {
+  const envNamespace = Cypress.env("RENKU_NAMESPACE");
+  if (envNamespace) {
+    return envNamespace;
+  }
+
+  // Fall back to extracting from URL.
   // URL format: https://{namespace}.dev.renku.ch/p/{userNamespace}/{projectSlug}/sessions/show/{sessionName}
-  return new URL(url).hostname.split(".")[0];
+  const urlNamespace = new URL(url).hostname.split(".")[0];
+
+  // If empty, use "renku" as default
+  return urlNamespace || "renku";
 }
 
 /** Extract the pod name from a session URL. */
@@ -176,7 +185,7 @@ export function executeInSession(
   url: string,
   command: string,
 ): Cypress.Chainable<string> {
-  const namespace = getNamespace(url);
+  const namespace = getK8sNamespace(url);
   const podName = getPodName(url);
 
   return cy
