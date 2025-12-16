@@ -42,14 +42,7 @@ data:
       k8sNamespace: {{ .Release.Namespace }}
       renkuServices:
         notebooks: {{ printf "http://%s-notebooks" .Release.Name | quote }}
-        kg: {{ printf "http://%s-knowledge-graph" .Release.Name | quote }}
         webhook: {{ printf "http://%s-webhook-service" .Release.Name | quote }}
-        core:
-          serviceNames: 
-            {{- include "gateway.core.serviceNamesYaml" . | nindent 12 }}
-          servicePaths: 
-            {{- include "gateway.core.pathsYaml" . | nindent 12 }}
-          sticky: true 
         dataService: {{ printf "http://%s-data-service" (include "renku.fullname" .) | quote }}
         keycloak: {{ include "renku.keycloakUrl" . | quote }} 
         uiserver: {{ printf "http://%s" (include "ui-server.fullname" .) | quote }} 
