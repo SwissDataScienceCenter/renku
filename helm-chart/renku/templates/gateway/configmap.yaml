@@ -42,11 +42,12 @@ data:
       k8sNamespace: {{ .Release.Namespace }}
       renkuServices:
         notebooks: {{ printf "http://%s-notebooks" .Release.Name | quote }}
-        webhook: {{ printf "http://%s-webhook-service" .Release.Name | quote }}
         dataService: {{ printf "http://%s-data-service" (include "renku.fullname" .) | quote }}
         keycloak: {{ include "renku.keycloakUrl" . | quote }} 
         uiserver: {{ printf "http://%s" (include "ui-server.fullname" .) | quote }} 
         search: {{ printf "http://%s-search-api" .Release.Name | quote }}
+        kg: "http://to-be-removed"
+        webhook: "http://to-be-removed"
     login:
       enableInternalGitlab: {{ .Values.enableInternalGitlab | default false }}
       renkuBaseUrl: {{ include "renku.baseUrl" . | quote }}
