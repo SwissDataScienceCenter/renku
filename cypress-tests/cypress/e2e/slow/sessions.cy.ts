@@ -104,6 +104,12 @@ describe("Slow Sessions", () => {
       .find("[data-cy=start-session-button]")
       .click();
 
+    // Skip "Session repositories not accessible" warning modal
+    cy.get("[data-cy=session-repositories-modal]", {
+      timeout: TIMEOUTS.long,
+    }).should("be.visible");
+    cy.getDataCy("session-repositories-modal-continue").click();
+
     // Verify the session progress page is shown
     cy.get("[data-cy=session-status-starting]", {
       timeout: TIMEOUTS.long,
