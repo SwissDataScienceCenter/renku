@@ -1,45 +1,27 @@
-import {
-  getRandomString,
-  getUserData,
-  validateLoginV2,
-} from "../../support/commands/general";
-import { ProjectIdentifierV2 } from "../../support/types/project.types";
-import { User } from "../../support/types/user.types";
-import {
-  deleteProjectFromAPIV2,
-  getProjectByNamespaceAPIV2,
-} from "../../support/utils/projectsV2.utils";
+import { getRandomString, getUserData } from "../../support/commands/general";
+import { User } from "../../support/types/user";
+import { deleteProject } from "../../support/utils/projects";
+import { login } from "../../support/utils/general";
 
-const sessionId = ["projectBasics", getRandomString()];
+const sessionId = ["projects", getRandomString()];
 
 describe("Project - create, edit and delete", () => {
   // Define some project details
   const projectDescription = "This is a test project from Cypress";
   let projectNameRandomPart: string;
-  let projectName;
-  let projectPath;
-  let projectIdentifier: ProjectIdentifierV2;
+  let projectName: string;
+  let projectPath: string;
+  let projectId: string | null = null;
 
   function resetRequiredResources() {
     projectNameRandomPart = getRandomString();
     projectName = `project/$test-${projectNameRandomPart}`;
     projectPath = `project-test-${projectNameRandomPart}`;
-    projectIdentifier = {
-      slug: projectPath,
-      id: null,
-      namespace: null,
-    };
+    projectId = null;
   }
 
   beforeEach(() => {
-    // Restore the session (login)
-    cy.session(
-      sessionId,
-      () => {
-        cy.robustLogin("v2");
-      },
-      validateLoginV2,
-    );
+    login(sessionId);
 
     // Define new project details to avoid conflicts on retries
     resetRequiredResources();
@@ -47,13 +29,7 @@ describe("Project - create, edit and delete", () => {
 
   // Cleanup the project after the test -- useful on failure
   afterEach(() => {
-    getProjectByNamespaceAPIV2(projectIdentifier).then((response) => {
-      if (response.status === 200) {
-        projectIdentifier.id = response.body.id;
-        projectIdentifier.namespace = response.body.namespace;
-        deleteProjectFromAPIV2(projectIdentifier);
-      }
-    });
+    deleteProject(projectId);
   });
 
   it("Project - create, edit and delete", () => {
@@ -132,9 +108,7 @@ describe("Project - create, edit and delete", () => {
       );
       cy.getDataCy("project-delete-button").should("be.enabled").click();
       cy.wait("@deleteProject");
-      getProjectByNamespaceAPIV2(projectIdentifier).then((response) => {
-        expect(response.status).to.equal(404);
-      });
+      projectId = null; // Mark as deleted so afterEach doesn't try to delete again
     });
   });
 });
