@@ -240,29 +240,29 @@ networkPolicies:
       # The default setup here assumes that you have standard Kubernetes and that Renku is exposed
       # to the internet.
       - to:
-        # DNS resolution
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: kube-system
-          podSelector:
-            matchLabels:
-              k8s-app: kube-dns
+          # DNS resolution
+          - namespaceSelector:
+              matchLabels:
+                kubernetes.io/metadata.name: kube-system
+            podSelector:
+              matchLabels:
+                k8s-app: kube-dns
         ports:
-        - port: 53
-          protocol: UDP
-        - port: 53
-          protocol: TCP
+          - port: 53
+            protocol: UDP
+          - port: 53
+            protocol: TCP
       - to:
-        # Allow access to any port/protocol as long as it is directed
-        # outside of the cluster. This is done by excluding
-        # IP ranges which are reserved for private networking from
-        # the allowed range.
-        - ipBlock:
-            cidr: 0.0.0.0/0
-            except:
-            - 10.0.0.0/8
-            - 172.16.0.0/12
-            - 192.168.0.0/16
+          # Allow access to any port/protocol as long as it is directed
+          # outside of the cluster. This is done by excluding
+          # IP ranges which are reserved for private networking from
+          # the allowed range.
+          - ipBlock:
+              cidr: 0.0.0.0/0
+              except:
+                - 10.0.0.0/8
+                - 172.16.0.0/12
+                - 192.168.0.0/16
 ## Keycloak configuration
 keycloakx:
   ## Spawn a keycloak instance
@@ -581,7 +581,7 @@ ui:
     replicaCount: 1
     image:
       repository: renku/renku-ui
-      tag: "4.14.0"
+      tag: "4.14.1"
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
       ## Secrets must be manually created in the namespace.
@@ -771,7 +771,7 @@ ui:
     keepCookies: []
     image:
       repository: renku/renku-ui-server
-      tag: "4.14.0"
+      tag: "4.14.1"
       pullPolicy: IfNotPresent
     imagePullSecrets: []
     nameOverride: ""
@@ -1541,7 +1541,8 @@ dataService:
     ## The name of the BuildStrategy to use for image builds.
     strategyName: renku-buildpacks-v3
     ## Configuration overrides for specific target platforms
-    platformOverrides: {}
+    platformOverrides:
+      {}
       # linux/arm64:
       #   builderImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/cuda-selector:0.2.2"
       #   runImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/cuda-run-image:0.2.2"
