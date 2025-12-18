@@ -76,7 +76,10 @@ type RegisterAndVerifyProps = {
   lastName?: string;
 };
 
-function registerAndVerify(renkuVersion : 'v1' | 'v2', props: RegisterAndVerifyProps) {
+function registerAndVerify(
+  renkuVersion: "v1" | "v2",
+  props: RegisterAndVerifyProps,
+) {
   // Register with the CI deployment
   const { email, password, firstName, lastName } = props;
   cy.register(email, password, firstName, lastName);
@@ -108,13 +111,14 @@ function registerAndVerify(renkuVersion : 'v1' | 'v2', props: RegisterAndVerifyP
   // eslint-disable-next-line cypress/no-unnecessary-waiting
   cy.wait(TIMEOUTS.short);
   cy.request("/api/data/user").its("status").should("eq", 200);
-  if (renkuVersion === 'v1') {
-  cy.request("/api/user").then((response) => {
-    expect(response.status).to.eq(200);
-    expect(response.body).property("username").to.not.be.empty;
-    expect(response.body).property("username").to.not.be.null;
-    expect(response.body).property("state").to.equal("active");
-  });}
+  if (renkuVersion === "v1") {
+    cy.request("/api/user").then((response) => {
+      expect(response.status).to.eq(200);
+      expect(response.body).property("username").to.not.be.empty;
+      expect(response.body).property("username").to.not.be.null;
+      expect(response.body).property("state").to.equal("active");
+    });
+  }
 }
 
 type RobustLoginProps = {
@@ -122,10 +126,9 @@ type RobustLoginProps = {
   password: string;
   firstName?: string;
   lastName?: string;
-  
 };
 
-function robustLogin(renkuVersion: 'v1' | 'v2',props?: RobustLoginProps) {
+function robustLogin(renkuVersion: "v1" | "v2", props?: RobustLoginProps) {
   // Check if we are already logged in
   cy.request({ failOnStatusCode: false, url: "/api/data/user" }).then(
     (resp) => {
@@ -164,8 +167,11 @@ declare global {
         firstName?: string,
         lastName?: string,
       );
-      registerAndVerify(renkuVersion: 'v1' | 'v2', props: RegisterAndVerifyProps);
-      robustLogin(renkuVersion: 'v1' | 'v2', props?: RobustLoginProps);
+      registerAndVerify(
+        renkuVersion: "v1" | "v2",
+        props: RegisterAndVerifyProps,
+      );
+      robustLogin(renkuVersion: "v1" | "v2", props?: RobustLoginProps);
     }
   }
 }
