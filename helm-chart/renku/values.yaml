@@ -240,29 +240,29 @@ networkPolicies:
       # The default setup here assumes that you have standard Kubernetes and that Renku is exposed
       # to the internet.
       - to:
-        # DNS resolution
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: kube-system
-          podSelector:
-            matchLabels:
-              k8s-app: kube-dns
+          # DNS resolution
+          - namespaceSelector:
+              matchLabels:
+                kubernetes.io/metadata.name: kube-system
+            podSelector:
+              matchLabels:
+                k8s-app: kube-dns
         ports:
-        - port: 53
-          protocol: UDP
-        - port: 53
-          protocol: TCP
+          - port: 53
+            protocol: UDP
+          - port: 53
+            protocol: TCP
       - to:
-        # Allow access to any port/protocol as long as it is directed
-        # outside of the cluster. This is done by excluding
-        # IP ranges which are reserved for private networking from
-        # the allowed range.
-        - ipBlock:
-            cidr: 0.0.0.0/0
-            except:
-            - 10.0.0.0/8
-            - 172.16.0.0/12
-            - 192.168.0.0/16
+          # Allow access to any port/protocol as long as it is directed
+          # outside of the cluster. This is done by excluding
+          # IP ranges which are reserved for private networking from
+          # the allowed range.
+          - ipBlock:
+              cidr: 0.0.0.0/0
+              except:
+                - 10.0.0.0/8
+                - 172.16.0.0/12
+                - 192.168.0.0/16
 ## Keycloak configuration
 keycloakx:
   ## Spawn a keycloak instance
@@ -581,7 +581,7 @@ ui:
     replicaCount: 1
     image:
       repository: renku/renku-ui
-      tag: "4.13.0"
+      tag: "4.15.0"
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
       ## Secrets must be manually created in the namespace.
@@ -771,7 +771,7 @@ ui:
     keepCookies: []
     image:
       repository: renku/renku-ui-server
-      tag: "4.13.0"
+      tag: "4.15.0"
       pullPolicy: IfNotPresent
     imagePullSecrets: []
     nameOverride: ""
@@ -853,8 +853,7 @@ dlf-chart:
     enabled: false
   dataset-operator-chart:
     enabled: true
-csi-rclone:
-  {}
+csi-rclone: {}
   # This section is only relevant if you are installing csi-rclone as part of Renku
   ## Name of the csi storage class to use for RClone/Cloudstorage. Should be unique per cluster.
   # storageClassName: csi-rclone
@@ -1480,12 +1479,12 @@ dataService:
     create: true
   image:
     repository: renku/renku-data-service
-    tag: "0.62.0"
+    tag: "0.65.0"
     pullPolicy: IfNotPresent
   k8sWatcher:
     image:
       repository: renku/data-service-k8s-watcher
-      tag: "0.62.0"
+      tag: "0.65.0"
       pullPolicy: IfNotPresent
     resources: {}
     sentry:
@@ -1496,7 +1495,7 @@ dataService:
   dataTasks:
     image:
       repository: renku/data-service-data-tasks
-      tag: "0.62.0"
+      tag: "0.65.0"
       pullPolicy: IfNotPresent
     resources: {}
   service:
@@ -1614,7 +1613,7 @@ authz:
 secretsStorage:
   image:
     repository: renku/secrets-storage
-    tag: "0.62.0"
+    tag: "0.65.0"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
