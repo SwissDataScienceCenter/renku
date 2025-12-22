@@ -3,11 +3,18 @@ title: Data Repositories
 description: Zenodo, Dataverse, etc.
 ---
 
-# How to connect data from data repositories (such as Zenodo or Dataverse)
+# How to connect data from via DOI
 
 ## Which data repositories are supported?
 
-We support connecting with data repositories that have as their backend either InvenioRDM and Dataverse.
+There are different "backends" that are used by many different data repositories.
+We support several such common backends:
+- [Invenio](https://inveniosoftware.org/)
+- [Dataverse](https://dataverse.org/)
+
+In addition to the above we support other data repositories that have custom backends
+or other less-common backends:
+- [EnviDat](https://envidat.ch)
 
 **Examples of Invenio data repositories:**
 
@@ -67,6 +74,15 @@ The DOI should appear in the citation box of a dataset:
 The DOI is also shown on the “Metadata” tab:
 
 ![Screenshot 2025-05-06 at 14.24.20.png](./connect-data-from-data-repositories-60.png)
+
+## How to find the DOI on EnviDat
+
+1. Navigate to [EnviDat](https://envidat.ch).
+2. Search for the specific dataset or simply click "Explore All" on the home page.
+3. Copy the value next to the fingerprint icon near the top of the page, that is the DOI.
+  In the example below this would be `10.16904/envidat.722`.
+
+![EnviDat dataset screenshot](./envidat-doi.png)
 
 ## Example project
 
