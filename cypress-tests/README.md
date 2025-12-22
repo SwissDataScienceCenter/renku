@@ -41,7 +41,7 @@ Here is a list of the environment variables that you should set in the
 | TEST_LAST_NAME  | Last name.                                            |
 | TEST_USERNAME   | Username. Usually, it's the email without the domain. |
 
-> Tip: you might prefer _not_ to save you password in plain text in the `cypress.env.json`
+> Tip: you might prefer _not_ to save your password in plain text in the `cypress.env.json`
 > file.
 
 ## Integration with CI pipeline
