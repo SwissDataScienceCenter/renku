@@ -48,6 +48,8 @@ global:
     url:
     ## Explicitly set another realm than "renku" here
     realm:
+    ## Secure the Keycloak admin console by limiting access to localhost. We recommend enabling this. The admin console can still be accessed by port-forwarding the pod on port 8080.
+    secureAdminConsole: false
   gateway:
     ## Client secret of the renku client application registered in keycloak.
     ## Should be set to a proper value (i.e. by using openssl rand -hex 32) for production.
@@ -305,6 +307,8 @@ keycloakx:
         name: renku-keycloak-postgres
     - secretRef:
         name: keycloak-password-secret
+    - configMapRef:
+        name: keycloak-admin-console
   extraVolumeMounts: |
     - name: theme
       mountPath: /opt/keycloak/themes/renku-theme
