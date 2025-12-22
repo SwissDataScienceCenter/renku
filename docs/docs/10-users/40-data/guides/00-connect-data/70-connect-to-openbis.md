@@ -26,3 +26,15 @@ Starting from your Renku project page, you can do the following:
 8. If the configuration and credentials are correct the test will succeed
   and you can save the data connector along with the session token.
 9. Start a new session and browse the contents of your openBIS projects.
+
+:::info
+
+Many openBIS deployments are behind a VPN or firewall and they may not
+be publicly accessible from your Renku instance. In this case testing the
+connection to the data will persistently fail. If this is the case, in order to see
+openBIS data in Renku you need to contact your openBIS administrators
+and ask them to allow access to openBIS from your Renku instance.
+The administrators of your Renku instance can provide the IP addresses that 
+should be whitelisted in the openBIS VPN or firewall.
+
+:::
