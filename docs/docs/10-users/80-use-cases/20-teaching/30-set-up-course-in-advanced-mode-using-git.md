@@ -6,7 +6,7 @@ If course participants need to be able to save their work during the course and 
 
 For creating the project:
 
-1. Follow the steps in [Renku for Teaching](/docs/docs/users/use-cases/teaching/index.md) page to set up the course project.
+1. Follow the steps in [Renku for Teaching](index.md) page to set up the course project.
 2. Add the course participants to your Git code repository, so they can create their own branch.
 
     :::info
