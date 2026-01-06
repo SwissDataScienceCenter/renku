@@ -149,3 +149,15 @@ If for whatever reason you need to migrate a project manually, you can do so by 
 
     6. Click **Next**
     7. Give your Launcher a **name** that describes what it does
+  
+## Renku Legacy Migration Blog and Youtube videos
+
+Time is running short! Renku Legacy will be discontinued in January 2026, Make a smooth transition with our detailed migration guides:https://blog.renkulab.io/sunsetting-legacy/ and watch our videos.
+
+<iframe width="560" height="315" src="[https://youtube.com/playlist?list=PLagSzgm6aERkLQ8LINw8luZKdv9ru7aHh&si=cA5Z8joDqdprVt0g](https://youtube.com/playlist?list=PLagSzgm6aERkLQ8LINw8luZKdv9ru7aHh&si=cA5Z8joDqdprVt0g)" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe> *Learn the main steps to successfully migrate your project from Renku Legacy*
+
+:::tip  
+⚠️ If you have moved a repository to a new home (like GitHub or our new GitLab instance) and want to ensure old links, such as those in published papers, don't break, we have a solution. Simply [**fill out this form**](https://www.notion.so/2540df2efafc80a2bee5f1b7d247c28e?pvs=21) with your new repository location, and we will automatically redirect visitors from the old URL to the new one.
+
+:::
+
