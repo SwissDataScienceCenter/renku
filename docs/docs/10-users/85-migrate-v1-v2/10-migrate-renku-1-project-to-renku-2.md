@@ -2,7 +2,12 @@
 
 Time is running short! Renku Legacy was discontinued in October 2025, and you still have access to your Renkulab Gitlab projects until end of January 2026. Hence, move your code repositories as explained in our [detailed migration guides]([https://blog.renkulab.io/sunsetting-legacy/](https://blog.renkulab.io/sunsetting-legacy/#how-to-move-a-code-repository-to-an-external-provider) and in our dedicated videos.
 
-<iframe width="560" height="315" src="[https://youtube.com/playlist?list=PLagSzgm6aERkLQ8LINw8luZKdv9ru7aHh&si=cA5Z8joDqdprVt0g](https://youtube.com/playlist?list=PLagSzgm6aERkLQ8LINw8luZKdv9ru7aHh&si=cA5Z8joDqdprVt0g)" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe> *Learn the main steps to successfully migrate your project from Renku Legacy*
+<div style={{textAlign: "center"}}>
+
+    <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/videoseries?si=sT-HeSUMib4O3d7b&amp;list=PLagSzgm6aERkLQ8LINw8luZKdv9ru7aHh" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+    *Learn the main steps to successfully migrate your project from Renku Legacy*
+</div>
 
 The rest of this guide will explain you how migrating a project from Renku Legacy to Renku 2.0 manually means, and walk you through the process.
 
