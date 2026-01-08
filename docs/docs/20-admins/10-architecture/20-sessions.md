@@ -19,6 +19,28 @@ List of containers and a short explanation for each for user sessions.
 ### Registered user
 
 ```mermaid
+---
+config:
+  layout: elk
+---
+flowchart LR
+    Ingress
+    subgraph Session
+        User[amalthea-session]
+        AP[authproxy]
+        OP[oauth2-proxy]
+        GP[git-proxy]
+    end
+    Ingress --/sessions/unique-session-id--> OP
+    OP --> AP
+    AP --> User
+    OP -.- KC(Keycloak)
+```
+```mermaid
+---
+config:
+  #layout: elk
+---
 flowchart LR
     Ingress
     subgraph Session
@@ -36,6 +58,26 @@ flowchart LR
 ### Anonymous user
 
 ```mermaid
+---
+config:
+  layout: elk
+---
+flowchart LR
+    Ingress
+    subgraph Session
+        User[amalthea-session]
+        AP[authproxy]
+        GP[git-proxy]
+    end
+    Ingress --/sessions/unique-session-id--> AP
+    AP --> User
+```
+
+```mermaid
+---
+config:
+  #layout: elk
+---
 flowchart LR
     Ingress
     subgraph Session
@@ -50,6 +92,26 @@ flowchart LR
 ### Git access
 
 ```mermaid
+---
+config:
+  layout: elk
+---
+flowchart LR
+    subgraph Session
+        User[amalthea-session]
+        AP[authproxy]
+        OP[oauth2-proxy]
+        GP[git-proxy]
+    end
+    User --push, pull, fetch--> GP
+    GP --> Git[Gitlab, Github, etc.]
+```
+
+```mermaid
+---
+config:
+  #layout: elk
+---
 flowchart LR
     subgraph Session
         User[amalthea-session]

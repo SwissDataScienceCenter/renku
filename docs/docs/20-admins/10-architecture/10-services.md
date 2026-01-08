@@ -41,6 +41,42 @@ This is a summary and not an exhaustive list. For more information refer to the 
 policies and ingress manifests in the Helm chart.
 
 ```mermaid
+---
+config:
+  layout: elk
+---
+flowchart LR
+    Ingress
+    subgraph GW[Gateway]
+        Proxy
+        Login
+    end
+    DS[Data services]
+    PG[(Postgres)]
+    Redis[(Redis)]
+    Solr(Solr)
+    Ingress --/api/*--> Proxy
+    Proxy --/api/data/*--> DS
+    Proxy --/api/auth/*--> Login
+    DS -.- PG
+    DS -.- Solr
+    DS -.- Authzed(Authzed)
+    DS -.- Shipwright(Shipwright)
+    DS -.- Harbor(Harbor)
+    DS -.- K8s(Kubernetes API)
+    Solr -.- SolrDB[(Postgres)]
+    Authzed -.- AuthzedDB[(Postgres)]
+    Login -.- Redis
+    Ingress --/auth/*--> Keycloak(Keycloak)
+    Keycloak -.- KeycloakDB[(Postgres)]
+    Ingress --/*--> UI
+```
+
+```mermaid
+---
+config:
+  #layout: elk
+---
 flowchart LR
     Ingress
     subgraph GW[Gateway]
