@@ -1,6 +1,6 @@
 # Renku Users Documentation
 
-Renku is an open-source platform for researchers and scientists to connect data, code and compute seamlessly, thus enabling collaborative communities, reproducibility, transparency and results outreach. Stop juggling multiple platforms and scattered resources: in Renku all your components work together in a project. Let's get started!
+Renku is an **open-source platform for researchers and scientists to connect data, code and compute seamlessly**, thus enabling collaborative communities, reproducibility, transparency and results outreach. Stop juggling multiple platforms and scattered resources: in Renku all your components work together in a project. Let's get started!
 
 <p class="image-container-l">
 <iframe width="560" height="315" src="https://www.youtube.com/embed/FXgXzBuqJnk?si=HGIZ5mQbz0MrChGF" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
@@ -12,13 +12,13 @@ Renku is an open-source platform for researchers and scientists to connect data,
 
 <p class="text-align: center">
 ![image.png](./rocket_40px.png)
-[**First Steps Tutorial**](/docs/users/getting-started/): Want to try it out? [Create your account](/docs/users/getting-started/tutorial-start) and follow our hands-on tutorial!
+[**First Steps Tutorial**](/docs/users/getting-started/): Want to try it out? [**Create your account**](/docs/users/getting-started/tutorial-start) and follow our hands-on tutorial!
 </p>
   ___
 
 <p class="text-align: center">
 ![image.png](./project_40px.png)
-[**Projects**](/docs/users/projects/projects/) in Renku may contain [Data](/docs/users/data/data/), [Code](/docs/users/code/code-repository) and [Sessions](/docs/users/sessions/environment/) to foster [Collaboration](/docs/users/collaboration/). Check each individual building block for understanding the possibilities that Renku offers.
+[**Projects**](/docs/users/projects/projects/) in Renku may contain [**Data**](/docs/users/data/data/), [**Code**](/docs/users/code/code-repository) and [**Sessions**](/docs/users/sessions/environment/) to foster [**Collaboration**](/docs/users/collaboration/). Check each individual building block for understanding the possibilities that Renku offers.
 </p>
 
   ___
@@ -57,7 +57,7 @@ Renku is an open-source platform for researchers and scientists to connect data,
       [![Renku Release Octubre 2025](https://blog.renkulab.io/assets/images/cscs-cover-90cd8e2dbe514501f43d26ed2c6b2a45.png)](https://blog.renkulab.io/release-2025-10/)
 
     **Renku Release • October 2025**
-     We've combined Renku's super-simple sessions with the power of supercomputing!
+     <p>We've combined Renku's super-simple sessions with the power of supercomputing!</p>
 
     </p>
   ___
@@ -66,6 +66,6 @@ Renku is an open-source platform for researchers and scientists to connect data,
     [![AiiDA Success Story](https://blog.renkulab.io/assets/images/intro-image-f9ca2c80c6b9ad273b0d8750b112dab7.png)](https://blog.renkulab.io/aiida-success-story/)
 
     **AiiDA Success Story • October 2025**
-    How PSI's Materials Software and Data group uses Renku to facilitate access to research data.
+    <p>How PSI's Materials Software and Data group uses Renku to facilitate access to research data.</p>
 
     </p>
