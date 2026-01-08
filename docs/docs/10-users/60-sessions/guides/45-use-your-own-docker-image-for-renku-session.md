@@ -34,6 +34,9 @@ In the project page:
             - `continuumio/anaconda3:2024.06-1`
         - if the image is hosted on gitlab.renkulab.io:
             - `registry.renkulab.io/laura.kinkead1/n2o-pathway-analysis:980f4a3`
+		- if you want to use a custom image built with Github Actions:
+    		- `ghcr.io/<username>/<projectname>:sha-<hash>`
+			- You can follow the documentation how to [Use Your Own Docker Image For Renku Sessions](use-your-own-docker-image-for-renku-session)
     - The image identifier should be in the format that works with `docker pull`
 4. Depending on the image you’re using, you’ll need to fill in the **Advanced settings**. See the information below for how to fill it in:
 
