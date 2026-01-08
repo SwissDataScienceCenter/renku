@@ -18,6 +18,8 @@ For creating the project:
         
         :::info
 
-        In order to ensure adequate resources for running the project and to control the consumption of the sessions, remember to assign to the session launcher with the adequate resource class when adding the session launcher to your project. Learn more about custom resource pools for courses: [Request a Custom Resource Pool](../../sessions/resource-pools-and-classes#request-custom-resource-pool).
+        In order to ensure adequate resources for running the project and to control the consumption of the sessions, remember to assign to the session launcher with the adequate resource class when adding the session launcher to your project. 
+        
+        Learn more about custom resource pools for courses: [Request a Custom Resource Pool](../../sessions/resource-pools-and-classes#request-custom-resource-pool).
         
         :::
