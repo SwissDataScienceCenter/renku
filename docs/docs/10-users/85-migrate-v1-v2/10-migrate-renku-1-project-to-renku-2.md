@@ -1,6 +1,6 @@
 # Migrate a Renku Legacy project to Renku 2.0
 
-Time is running short! Renku Legacy was discontinued in October 2025, and you still have access to your Renkulab Gitlab projects until end of January 2026. Hence, move your code repositories as explained in our [detailed migration guides]([https://blog.renkulab.io/sunsetting-legacy/](https://blog.renkulab.io/sunsetting-legacy/#how-to-move-a-code-repository-to-an-external-provider) and in our dedicated videos.
+Time is running short! Renku Legacy was discontinued in October 2025, and you still have access to your Renkulab Gitlab projects until end of January 2026. Hence, move your code repositories as explained in our [detailed migration guides](https://blog.renkulab.io/sunsetting-legacy/#how-to-move-a-code-repository-to-an-external-provider) and in our dedicated videos.
 
 <div style={{textAlign: "center"}}>
 
