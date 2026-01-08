@@ -210,10 +210,10 @@ global:
 ingress:
   ## Enables the creation of an ingress
   enabled: false
-  className: "" # nginx
+  ## The ingress class, e.g. "nginx"
+  className: ""
   ## Annotations for the created ingress
   annotations:
-    ## The ingress class
     cert-manager.io/cluster-issuer: letsencrypt-production # Use null as value if not using cert-manager to remove this entry
     nginx.ingress.kubernetes.io/proxy-body-size: "0" # Adjust to a reasonable value for production to avoid DOS attacks.
     nginx.ingress.kubernetes.io/proxy-request-buffering: "off" # Needed if GitLab is behind this ingress
@@ -911,6 +911,8 @@ notebooks:
     authUrl:
     allowUnverifiedEmail: false
   sessionIngress:
+    ## The ingress class, e.g. "nginx"
+    className: ""
     host:
     tlsSecret:
     className: "nginx"
