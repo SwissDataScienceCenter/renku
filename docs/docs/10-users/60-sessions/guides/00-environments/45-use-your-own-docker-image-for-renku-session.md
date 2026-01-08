@@ -83,7 +83,7 @@ In the project page:
 
     :::tip
 
-    If the available resource classes are too small for your compute requirements, we can create a custom resource pool for you! See [Request a Custom Resource Pool](../resource-pools-and-classes#request-custom-resource-pool).
+    If the available resource classes are too small for your compute requirements, we can create a custom resource pool for you! See [Request a Custom Resource Pool](../../resource-pools-and-classes#request-custom-resource-pool).
 
     :::
 

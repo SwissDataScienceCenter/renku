@@ -4,8 +4,8 @@
 
 You can connect code repositories from [GitHub](https://github.com) and [GitLab.com](https://about.gitlab.com/) to RenkuLab, too!
 
-Check out the **Integrations** page (accessible via the 👤 user menu in the top right) to connect your accounts and sync access to repositories. For more information, see [How to connect your Renku account to your GitHub or GitLab account](../50-code/guides/20-connect-renku-account-to-github-or-gitlab-account.md).
-And, if your institution has a dedicated GitLab instance you would like to integrate with Renku, do not hesitate to [Contact us](../99-community.md), and we will be happy to add it to RenkuLab’s Integrations!
+Check out the **Integrations** page (accessible via the 👤 user menu in the top right) to connect your accounts and sync access to repositories. For more information, see [How to connect your Renku account to your GitHub or GitLab account](../code/guides/connect-renku-account-to-github-or-gitlab-account).
+And, if your institution has a dedicated GitLab instance you would like to integrate with Renku, do not hesitate to [Contact us](../community), and we will be happy to add it to RenkuLab’s Integrations!
 
 :::
 
@@ -23,4 +23,4 @@ In this case, we already provide you with the code here:
     https://gitlab.com/renku/air-quality-analysis
     ```
 
-For more information about working with code repositories on Renku, check out the **code** section in the [How To Guides](../50-code/00-code-repository.md).
+For more information about working with code repositories on Renku, check out the **code** section in the [How To Guides](../code/code-repository).
