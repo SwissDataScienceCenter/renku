@@ -8,7 +8,7 @@ You can mount your openBIS storage into a Renku session starting
 with Renku version `2.12.0`.
 
 Starting from your Renku project page, you can do the following:
-1. Click the `+` sign in the `Data` section on the bottom left.
+1. Click the **+** sign in the `Data` section on the bottom left.
 2. Select the `Create a data connector` option.
 3. Select the `openBIS` storage type.
 4. Click `Next`.
