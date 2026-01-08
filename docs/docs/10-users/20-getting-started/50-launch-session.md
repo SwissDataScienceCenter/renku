@@ -9,6 +9,9 @@ To run your code and analyze data on RenkuLab, first decide what kind of session
 3. Click **Next**.
 4. Choose the compute resources for your session based on your project’s needs in the drop-down menu, and select the amount of disk space.
 
+
+![image.png](./add-session-launcher.png)
+
 :::info
 You can have multiple Session Launchers in your project that run different kinds of sessions. Check out [How to guides to add a session launcher to your project](../60-sessions/guides/10-add-session-launcher-to-project.md)
 :::
@@ -21,6 +24,8 @@ Do you need more resources than those available in RenkuLab’s public resource 
 Click on the **Launch** button in your new Session Launcher to start a session.
 
 Once your session has launched, you will see the data and code that you linked to your project inside your session ready to use. The data and code each show up in the file system as folders. Open them up and take a look around!
+
+![image.png](./launch_session.png)
 
 ## Add a second Session Launcher (optional)
 
