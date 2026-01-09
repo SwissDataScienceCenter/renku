@@ -93,7 +93,7 @@ global:
       ## DOES NOT tolerate a change of the admin password when upgrading.
       # password:
   ## Use an existing secret instead of creating a new one. It must have a
-  ## postgresql-password key containing the password for the posgres user.
+  ## postgres-password key containing the password for the posgres user.
   # existingSecret:
 
   # Globally available solr (TBD)
@@ -361,7 +361,7 @@ postgresql:
     # postgresqlPassword:
 
     ## Use an existing secret instead of creating a new one. It must have a
-    ## postgresql-password key containing the password for the postgres user.
+    ## postgres-password key containing the password for the postgres user.
     # existingSecret:
 
     # Consider replication. These are the defaults for the basic settings.
