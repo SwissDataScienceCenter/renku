@@ -14,7 +14,7 @@ In order to assure that sufficient resources are available for your course, plea
 
 # Onboarding course participants in Renku
 
-In order to manage rights of the course participants into Renku projects associated to your course, they need to be registered in Renku. Therefore, ask them to create an account in Renku, as described in [How to create your Renku account](https://docs.renkulab.io/en/latest/docs/users/getting-started/tutorial-start),  in advance before starting the course.
+In order to give course participants access to the Renku projects associated with your course, they need to be registered in Renku. Therefore, ask them to create an account in Renku, as described in [How to create your Renku account](https://docs.renkulab.io/en/latest/docs/users/getting-started/tutorial-start), in advance of starting the course.
 
 # Compute resources for your course
 
