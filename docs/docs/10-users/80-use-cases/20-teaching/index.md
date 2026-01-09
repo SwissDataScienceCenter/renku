@@ -20,7 +20,7 @@ In order to give course participants access to the Renku projects associated wit
 
 After you register your course, the Renku team will create a dedicated resource pool for your course based on the requirements that you have specified. The team will reach out to you for the list of course participants in order to add them to the course resource pool. 
 
-Ensure that you select a class within that resource pool as the default resource for your course project(s). As a result, course participants will be able to use that resource pool during the course, if you set the session launcher to use the resources assigned in your resource pool.
+Ensure that you select a resource class within that resource pool as the default for any session launchers you create for the course.
 
 # Managing access rights to course project(s)
 
