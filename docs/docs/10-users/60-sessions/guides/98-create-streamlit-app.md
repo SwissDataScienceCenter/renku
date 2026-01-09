@@ -2,7 +2,7 @@
 
 :::info 
 
-Renku 2.0 will allow Docker images with user-specific entry points soon. This feature  will make it easier the creation of user-specific environments, including setting up Streamlit apps. 
+This documentation is out-of-date and will be updated soon!
 
 :::
 
