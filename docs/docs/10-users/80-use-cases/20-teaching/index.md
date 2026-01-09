@@ -26,7 +26,7 @@ Ensure that you select a class within that resource pool as the default resource
 
 We recommend you to create a group for your course following the instructions in [How to create a group](https://docs.renkulab.io/en/latest/docs/users/collaboration/guides/create-group).
 
-Add the **course participants as** **viewers** of the course group. This will make it so the participants can see all of the projects in the group, but they will not be able to edit them.
+Add the **course participants** as **viewers** of the course group. This will make it so the participants can see all of the projects in the group, but they will not be able to edit them.
 
 We recommend to add **other course instructors as owners** of the group so that they can edit all the projects in the course group.
 
