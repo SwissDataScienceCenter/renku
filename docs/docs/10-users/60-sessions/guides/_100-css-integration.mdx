@@ -16,7 +16,7 @@ RenkuLab accesses compute and storage resources on behalf of the user, using exi
 1. You need to have an account at [CSCS](https://cscs.ch) which can launch jobs on the [HPC platform](https://docs.cscs.ch/platforms/hpcp/) or the [ML platform](https://docs.cscs.ch/platforms/mlp/).
 2. You need to have a [RenkuLab.io](https://renkulab.io) account.
 
-### Step 1: Connect your CSCS from RenkuLab
+### Step 1: Connect to the CSCS integration in RenkuLab
 
 Go to the [integrations page](https://renkulab.io/integrations?targetProvider=cscs.ch) and connect with the CSCS integration. 
 
