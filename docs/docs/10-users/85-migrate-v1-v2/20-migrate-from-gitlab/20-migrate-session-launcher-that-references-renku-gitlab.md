@@ -41,7 +41,7 @@ If you do need custom packages installed in your R session, see [How to migrate 
 
 In Renku 2.0, you can also have Renku build session environment (docker image) from a code definition file. In Renku 2.0, this is called **code based environments**. See the following guide to set up a new code based environment from your code repository. 
 
-[How to create an environment with custom packages installed](../sessions/guides/create-environment-with-custom-packages-installed) 
+[How to create an environment with custom packages installed](../../sessions/guides/environments/create-environment-with-custom-packages-installed) 
 
 :::info
 
