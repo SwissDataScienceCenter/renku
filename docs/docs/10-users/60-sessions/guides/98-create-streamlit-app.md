@@ -24,7 +24,7 @@ As of now, it is still possible to launch your Streamlit app on top of your Renk
 ![image.png](./jupiter-notebook.png)
 </p>
 
-3. Add all the package dependencies you will need to run your Renku 2.0 project in the requirements.txt file or in the environment.yml , as explained [here](/docs/users/sessions/guides/install-packages-on-the-fly-in-your-session).
+3. Add all the package dependencies you will need to run your Renku 2.0 project in the requirements.txt file or in the environment.yml , as explained [here](../sessions/guides/install-packages-on-the-fly-in-your-session).
 
 <p class="image-container-l">
 ![image.png](./required-files.png)
@@ -44,7 +44,7 @@ As of now, it is still possible to launch your Streamlit app on top of your Renk
 ![image.png](./dashboard.png)
 </p>
 
-8. Add a session launcher to your Renku 2.0 project the following **Custom Environment** set-up ****as described in [How to use your own docker image for a Renku session](/docs/users/sessions/guides/use-your-own-docker-image-for-renku-session). Consider the following two parameters:
+8. Add a session launcher to your Renku 2.0 project the following **Custom Environment** set-up ****as described in [How to use your own docker image for a Renku session](../sessions/guides/use-your-own-docker-image-for-renku-session). Consider the following two parameters:
     1. **Container Image:** `*registry_link*`
     2. **Default URL:** `/streamlit`
 9. [Optional] If the entry point for your streamlit app will be hosted in *project-fork,* add *project-fork* code repository to your Renku 2.0 project.
