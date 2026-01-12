@@ -1,6 +1,6 @@
-<!-- Highlight available globally <Highlight color="#c6d000ff">Docusaurus green</Highlight> -->
-
 # Code repository
+
+<!-- Highlight available globally <Highlight color="#c6d000ff">Docusaurus green</Highlight> -->
 
 For the purposes of Renku, a code repository is a git-based collection of code files, hosted at
 [GitHub.com](http://github.com), [GitLab.com](http://gitLab.com), or similar.

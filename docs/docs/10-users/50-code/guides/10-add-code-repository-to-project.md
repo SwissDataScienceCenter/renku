@@ -1,5 +1,3 @@
-<!-- Highlight available globally -->
-
 # Add a code repository to your project
 
 :::info
