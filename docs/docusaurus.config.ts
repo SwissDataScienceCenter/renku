@@ -134,11 +134,28 @@ const config: Config = {
           ],
         },
         {
-          title: 'More',
+          title: 'Follow us',
           items: [
             {
-              label: 'Renkulab',
+              label: 'Youtube',
+              href: 'https://www.youtube.com/@renkuio1503',
+            },
+            {
+              label: 'Mastodon',
+              href: 'https://fosstodon.org/@renku',
+            },
+          ],
+        },
+        {
+          title: 'About',
+          items: [
+            {
+              label: 'Renkulab.io',
               href: 'https://renkulab.io',
+            },
+            {
+              label: 'Roadmap',
+              href: 'https://renku.notion.site/Roadmap-b1342b798b0141399dc39cb12afc60c9',
             },
             {
               label: 'GitHub',

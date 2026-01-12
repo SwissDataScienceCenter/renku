@@ -15,6 +15,10 @@ needs to be migrated out of the RenkuLab GitLab before GitLab is shut down in Ja
 don’t migrate before the shutdown, you will lose access to your code repository and/or docker
 image.**
 
+<p class="image-container-l">
+![image.png](./modal.png)
+</p>
+
 To determine what resources in your project need to be migrated, look for the **Migration needed**
 badge on code repositories and session launchers in your project:
 
