@@ -1,12 +1,12 @@
 # How to create a Dashboard (Streamlit, Plotly Dash)
 
-Renku allows Docker images with user-specific entry points. This feature makes it easy the creation of user-specific environments, including setting up Streamlit apps. Check [How to use your own docker image for a Renku session](/docs/users/sessions/guides/use-your-own-docker-image-for-renku-session)  for the full list of details and options.
+Renku allows Docker images with user-specific entry points. This feature makes it easy the creation of user-specific environments, including setting up Streamlit apps. Check [How to use your own docker image for a Renku session](/docs/users/sessions/guides/environments/use-your-own-docker-image-for-renku-session)  for the full list of details and options.
 
 There are mainly two options two have your own Streamlit app served in Renku, either without access to the codebase or with access to the code.
 
 # Create an app with a code-based environment
 
-Check [How to create an environment with custom packages installed](/docs/users/sessions/guides/create-environment-with-custom-packages-installed)  for the full list of details.
+Check [How to create an environment with custom packages installed](/docs/users/sessions/guides/environments/create-environment-with-custom-packages-installed)  for the full list of details.
 
 :::note
 
@@ -18,9 +18,9 @@ Your project might have a nice dashboard inside, which you would want others to 
 
 To set up a dashboard with an environment built from your repository, you can follow these steps:
 
-1. Follow the steps for creating a [code-based environment](/docs/users/sessions/guides/create-environment-with-custom-packages-installed) above.
+1. Follow the steps for creating a [code-based environment](/docs/users/sessions/guides/environments/create-environment-with-custom-packages-installed) above.
 2. Once the image is done building, edit the environment and change it to a “Custom Environment”
-3. Edit the `Command` to be `["bash", "-c"]` and `Args` to correspond to your app - see common examples [here](/docs/users/sessions/guides/use-your-own-docker-image-for-renku-session).
+3. Edit the `Command` to be `["bash", "-c"]` and `Args` to correspond to your app - see common examples [here](/docs/users/sessions/guides/environments/use-your-own-docker-image-for-renku-session).
 
 Once you are done, your environment configuration should look something like this:
 
@@ -46,7 +46,7 @@ Create a session launcher using the **Custom Image** option, and provide the fol
 ["sh", "-c"]
 ```
 
-- Command Arguments CMD (fill in `<your-repo-name>/<your-app>`) ([learn more](/docs/users/sessions/guides/use-your-own-docker-image-for-renku-session)):
+- Command Arguments CMD (fill in `<your-repo-name>/<your-app>`) ([learn more](/docs/users/sessions/guides/environments/use-your-own-docker-image-for-renku-session)):
 
 ```json
 ["streamlit run $RENKU_WORKING_DIR/<your-repo-name>/<your-app>.py --server.port=8888 --server.address=0.0.0.0 --server.baseUrlPath=$RENKU_BASE_URL_PATH"]

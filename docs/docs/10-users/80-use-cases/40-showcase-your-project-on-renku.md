@@ -17,8 +17,8 @@ Renku allows you to have multiple session launchers in the same project. For exa
 1. Add a dedicated launcher for your Streamlit or Shiny app
     2. [How to create a custom environment and launcher for a Shiny app](/docs/users/sessions/guides/create-custom-environment-and-launcher-for-shiny-app)
 2. If you’d also like to have a space for regular development work on your Renku project (for example an RStudio environment), create a session launcher via one of the following options:
-    1. [How to add a session launcher to your project](../sessions/guides/add-session-launcher-to-project)
-    2. [How to use your own docker image for a Renku session](../sessions/guides/use-your-own-docker-image-for-renku-session)
+    1. [How to add a session launcher to your project](../sessions/guides/environments/)
+    2. [How to use your own docker image for a Renku session](../sessions/guides/environments/use-your-own-docker-image-for-renku-session)
 
 ## Part 3: Share your project
 

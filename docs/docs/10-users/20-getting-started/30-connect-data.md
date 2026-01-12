@@ -23,6 +23,6 @@ The data connector in the previous step is read only. If you would like to be ab
 
 :::info
 
-Check out our guides for creating different types of [data connectors](../40-data/guides/00-connect-data/index.md)
+Check out our guides for creating different types of [data connectors](../data/guides/connect-data/)
 
 :::

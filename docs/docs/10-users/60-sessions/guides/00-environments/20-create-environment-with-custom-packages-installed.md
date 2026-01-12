@@ -145,7 +145,7 @@ Note that poetry version `1.8.3` will be used.
 
 :::info
 
-This feature is coming soon. For now, please see [R](./30-install-packages-on-the-fly-in-your-session.md). ).
+This feature is coming soon. For now, please see [R](./install-packages-on-the-fly-in-your-session). ).
 
 :::
 
