@@ -100,7 +100,7 @@ spec:
             - name: USER_PREFERENCES_MAX_PINNED_PROJECTS
               value: {{ .Values.dataService.maxPinnedProjects | quote }}
             - name: CONTACT_EMAIL
-              value: {{ toJson .Values.ui.client.contactEmail | quote }}
+              value: {{ .Values.ui.client.contactEmail | default "" | quote }}
             - name: SESSION_CLASS_EMAIL_US
               value: {{ toJson .Values.ui.client.sessionClassEmailUs | quote }}
             - name: IMAGE_BUILDERS_ENABLED
