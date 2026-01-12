@@ -41,13 +41,6 @@ Depending on the requirements of the course, we propose several modes for settin
     
 3. [**Advanced Course Mode:**](https://docs.renkulab.io/en/latest/docs/users/use-cases/teaching/set-up-course-in-advanced-mode-using-git) Participants collaborate on code via git.
 
-<!-- ```mdx-code-block
-import DocCardList from '@theme/DocCardList';
-
-<DocCardList />
-
-``` -->
-
 Follow the chart below to decide which mode best suits your course.
 
 ![alt text](image.png)
