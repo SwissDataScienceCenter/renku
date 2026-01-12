@@ -782,7 +782,7 @@ ui:
     keepCookies: []
     image:
       repository: renku/renku-ui-server
-      tag: "4.15.0"
+      tag: "4.16.0"
       pullPolicy: IfNotPresent
     imagePullSecrets: []
     nameOverride: ""
