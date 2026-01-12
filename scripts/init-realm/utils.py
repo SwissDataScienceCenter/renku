@@ -15,12 +15,15 @@ class DemoUserConfig:
 
     def __post_init__(self):
         if self.create_demo_user and not self.demo_user_password:
-            raise ValueError("A demo user is required to be created but its password is not defined.")
+            raise ValueError(
+                "A demo user is required to be created but its password is not defined."
+            )
 
     @classmethod
     def from_env(cls) -> "DemoUserConfig":
         return cls(
-            create_demo_user=os.environ.get("CREATE_DEMO_USER", "false").lower() == "true",
+            create_demo_user=os.environ.get("CREATE_DEMO_USER", "false").lower()
+            == "true",
             demo_user_password=os.environ.get("DEMO_USER_PASSWORD"),
         )
 
@@ -46,7 +49,7 @@ class OAuthFlow(Enum):
     def get_keycloak_payload(
         self,
         existing_payload: Dict[str, Any] | None = None,
-        disable_other_flows: bool = True
+        disable_other_flows: bool = True,
     ) -> Dict[str, Any]:
         output = deepcopy(existing_payload) if existing_payload else {}
         if disable_other_flows:
@@ -59,9 +62,13 @@ class OAuthFlow(Enum):
                 output["standardFlowEnabled"] = True
             case OAuthFlow.device:
                 if isinstance(output.get("attributes"), dict):
-                    output["attributes"]["oauth2.device.authorization.grant.enabled"] = True
+                    output["attributes"][
+                        "oauth2.device.authorization.grant.enabled"
+                    ] = True
                 else:
-                    output["attributes"] = {"oauth2.device.authorization.grant.enabled": True}
+                    output["attributes"] = {
+                        "oauth2.device.authorization.grant.enabled": True
+                    }
             case OAuthFlow.client_credentials:
                 output["serviceAccountsEnabled"] = True
         return output
@@ -84,6 +91,7 @@ class OIDCClient:
     secret: Optional[str] = field(default=None, repr=False)
     attributes: Dict[str, Any] = field(default_factory=lambda: {})
     service_account_roles: List[str] = field(default_factory=list)
+    service_account_realm_roles: List[str] = field(default_factory=list)
     public_client: bool = False
 
     def __post_init__(self):
@@ -93,7 +101,10 @@ class OIDCClient:
                 f"The OIDC client configuration for client {self.id} is not valid, "
                 "the client is marked as not public but a secret is not provided."
             )
-        if self.oauth_flow != OAuthFlow.client_credentials and len(self.service_account_roles) > 0:
+        if (
+            self.oauth_flow != OAuthFlow.client_credentials
+            and (len(self.service_account_roles) > 0 or len(self.service_account_realm_roles) > 0)
+        ):
             raise ValueError(
                 f"Service account roles can only be specified for the {OAuthFlow.client_credentials.value} flow"
             )
@@ -101,50 +112,52 @@ class OIDCClient:
     def to_dict(self) -> Dict[str, Any]:
         default_protocol_mappers = []
         if self.oauth_flow == OAuthFlow.client_credentials:
-            default_protocol_mappers.extend([
-                {
-                    "name": "Client ID",
-                    "protocol": "openid-connect",
-                    "protocolMapper": "oidc-usersessionmodel-note-mapper",
-                    "consentRequired": False,
-                    "config": {
-                        "user.session.note": "clientId",
-                        "id.token.claim": True,
-                        "access.token.claim": True,
-                        "userinfo.token.claim": True,
-                        "claim.name": "clientId",
-                        "jsonType.label": "String"
-                    }
-                },
-                {
-                    "name": "Client Host",
-                    "protocol": "openid-connect",
-                    "protocolMapper": "oidc-usersessionmodel-note-mapper",
-                    "consentRequired": False,
-                    "config": {
-                        "user.session.note": "clientHost",
-                        "id.token.claim": True,
-                        "access.token.claim": True,
-                        "userinfo.token.claim": True,
-                        "claim.name": "clientHost",
-                        "jsonType.label": "String"
-                    }
-                },
-                {
-                    "name": "Client IP Address",
-                    "protocol": "openid-connect",
-                    "protocolMapper": "oidc-usersessionmodel-note-mapper",
-                    "consentRequired": False,
-                    "config": {
-                        "user.session.note": "clientAddress",
-                        "id.token.claim": True,
-                        "access.token.claim": True,
-                        "userinfo.token.claim": True,
-                        "claim.name": "clientAddress",
-                        "jsonType.label": "String"
-                    }
-                }
-            ])
+            default_protocol_mappers.extend(
+                [
+                    {
+                        "name": "Client ID",
+                        "protocol": "openid-connect",
+                        "protocolMapper": "oidc-usersessionmodel-note-mapper",
+                        "consentRequired": False,
+                        "config": {
+                            "user.session.note": "clientId",
+                            "id.token.claim": True,
+                            "access.token.claim": True,
+                            "userinfo.token.claim": True,
+                            "claim.name": "clientId",
+                            "jsonType.label": "String",
+                        },
+                    },
+                    {
+                        "name": "Client Host",
+                        "protocol": "openid-connect",
+                        "protocolMapper": "oidc-usersessionmodel-note-mapper",
+                        "consentRequired": False,
+                        "config": {
+                            "user.session.note": "clientHost",
+                            "id.token.claim": True,
+                            "access.token.claim": True,
+                            "userinfo.token.claim": True,
+                            "claim.name": "clientHost",
+                            "jsonType.label": "String",
+                        },
+                    },
+                    {
+                        "name": "Client IP Address",
+                        "protocol": "openid-connect",
+                        "protocolMapper": "oidc-usersessionmodel-note-mapper",
+                        "consentRequired": False,
+                        "config": {
+                            "user.session.note": "clientAddress",
+                            "id.token.claim": True,
+                            "access.token.claim": True,
+                            "userinfo.token.claim": True,
+                            "claim.name": "clientAddress",
+                            "jsonType.label": "String",
+                        },
+                    },
+                ]
+            )
         output = {
             "clientId": self.id,
             "baseUrl": self.base_url,
@@ -152,7 +165,8 @@ class OIDCClient:
             "attributes": self.attributes,
             "redirectUris": [self.base_url + "/*"],
             "webOrigins": [self.base_url + "/*"],
-            "protocolMappers": default_protocol_mappers + [
+            "protocolMappers": default_protocol_mappers
+            + [
                 {
                     "name": "renku audience for renku cli",
                     "protocol": "openid-connect",
@@ -169,7 +183,9 @@ class OIDCClient:
         }
         if self.secret is not None:
             output["secret"] = self.secret
-        output = self.oauth_flow.get_keycloak_payload(output, self.disable_other_oauth_flows)
+        output = self.oauth_flow.get_keycloak_payload(
+            output, self.disable_other_oauth_flows
+        )
         return output
 
     @classmethod
@@ -183,8 +199,14 @@ class OIDCClient:
             oauth_flow=OAuthFlow.from_env(prefix),
             disable_other_oauth_flows=os.environ.get(
                 f"{prefix}DISABLE_OTHER_OAUTH_FLOWS", "true"
-            ).lower() == "true",
-            service_account_roles=json.loads(os.environ.get(f"{prefix}SERVICE_ACCOUNT_ROLES", "[]")),
+            ).lower()
+            == "true",
+            service_account_roles=json.loads(
+                os.environ.get(f"{prefix}SERVICE_ACCOUNT_ROLES", "[]")
+            ),
+            service_account_realm_roles=json.loads(
+                os.environ.get(f"{prefix}SERVICE_ACCOUNT_REALM_ROLES", "[]")
+            ),
         )
 
 
@@ -211,6 +233,24 @@ class OIDCGitlabClient(OIDCClient):
             ],
             "webOrigins": [],
         }
+
+
+@dataclass
+class OIDCAlertmanagerWebhookClient(OIDCClient):
+    """A Keycloak OIDC client used by Prometheus Alertmanager to authenticate with Keycloak and send alerts to Renku."""
+
+    @classmethod
+    def from_env(cls, prefix: str = "ALERTMANAGER_WEBHOOK_") -> "OIDCAlertmanagerWebhookClient":
+        return cls(
+            secret=os.environ.get(f"{prefix}OIDC_CLIENT_SECRET"),
+            id=os.environ.get(f"{prefix}OIDC_CLIENT_ID", "alertmanager-webhook"),
+            base_url=os.environ.get("RENKU_BASE_URL"),
+            oauth_flow=OAuthFlow.client_credentials,
+            service_account_realm_roles=["alertmanager-webhook"],
+        )
+
+    def to_dict(self) -> Optional[Dict[str, Any]]:
+        return super().to_dict()
 
 
 @dataclass
