@@ -220,6 +220,17 @@ networkPolicies:
                 - 10.0.0.0/8
                 - 172.16.0.0/12
                 - 192.168.0.0/16
+## Alerts configuration
+alerts:
+  ## Alertmanager webhook authentication
+  ## Create an OIDC client for authenticating webhooks sent by Alertmanager to Renku
+  alertmanager:
+    enabled: false
+    ## Client ID for the Alertmanager webhook OIDC client (defaults to "alertmanager-webhook")
+    # clientId: alertmanager-webhook
+    ## Client secret for the Alertmanager webhook OIDC client
+    ## Will be auto-generated if not provided
+    clientSecret:
 ## Keycloak configuration
 keycloakx:
   ## Spawn a keycloak instance
@@ -538,7 +549,7 @@ ui:
     replicaCount: 1
     image:
       repository: renku/renku-ui
-      tag: "4.15.0"
+      tag: "4.16.0"
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
       ## Secrets must be manually created in the namespace.
@@ -728,7 +739,7 @@ ui:
     keepCookies: []
     image:
       repository: renku/renku-ui-server
-      tag: "4.15.0"
+      tag: "4.16.0"
       pullPolicy: IfNotPresent
     imagePullSecrets: []
     nameOverride: ""
