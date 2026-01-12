@@ -50,7 +50,6 @@ Renku is an open-source platform for researchers and scientists to connect data,
 | ![image.jpg](https://renkulab.io/assets/researcherIcon-DFFtd-Xp.svg) | ![image.jpg](https://renkulab.io/assets/educatorIcon-8mTN9nT-.svg) | ![image.jpg](https://renkulab.io/assets/organizerIcon-CcAdtX3S.svg) |
 | **Unified Research**  <p>Connect your entire research workflow in one place, and collaborate across specialties without technical barriers.</p> | **Computing Courses made easy** <p>Help your students focus on the material, not getting lost during setup. Ideal for project-based coursework and time-sensitive workshops.</p> | **Seamless Events** <p>Focus on innovation, not setup and infrastructure. Provide a consistent environment for all teams, and get participants coding and collaborating right away.</p> |
 
-
 ## What's new - Check out our latest blog posts:
 
       <p class="image-container-s">

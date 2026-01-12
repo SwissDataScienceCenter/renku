@@ -263,6 +263,17 @@ networkPolicies:
                 - 10.0.0.0/8
                 - 172.16.0.0/12
                 - 192.168.0.0/16
+## Alerts configuration
+alerts:
+  ## Alertmanager webhook authentication
+  ## Create an OIDC client for authenticating webhooks sent by Alertmanager to Renku
+  alertmanager:
+    enabled: false
+    ## Client ID for the Alertmanager webhook OIDC client (defaults to "alertmanager-webhook")
+    # clientId: alertmanager-webhook
+    ## Client secret for the Alertmanager webhook OIDC client
+    ## Will be auto-generated if not provided
+    clientSecret:
 ## Keycloak configuration
 keycloakx:
   ## Spawn a keycloak instance
@@ -581,7 +592,7 @@ ui:
     replicaCount: 1
     image:
       repository: renku/renku-ui
-      tag: "4.15.0"
+      tag: "4.16.0"
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
       ## Secrets must be manually created in the namespace.
@@ -771,7 +782,7 @@ ui:
     keepCookies: []
     image:
       repository: renku/renku-ui-server
-      tag: "4.15.0"
+      tag: "4.16.0"
       pullPolicy: IfNotPresent
     imagePullSecrets: []
     nameOverride: ""
@@ -1477,6 +1488,14 @@ platformInit:
 dataService:
   rbac:
     create: true
+    # Resource pools allow Renkulab administrators to define pools of compute resources
+    # that can be used for user sessions. This allows to separate resources for different
+    # user groups, e.g. students vs researchers.
+    # The feature is based on Kubernetes PriorityClasses, which are non-namespaced, therefore to access that resource
+    # the data-service service account needs a ClusterRole and the corresponding ClusterRoleBinding.
+    # If you are not allowed to create ClusterRoles in your cluster, you can disable the feature by setting
+    # `enableResourcePool` to false.
+    enableResourcePool: true
   image:
     repository: renku/renku-data-service
     tag: "0.65.0"

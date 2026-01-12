@@ -253,7 +253,17 @@ function visitProjectByName(projectName: string) {
   cy.getDataCy("projects-container")
     .find('[data-cy="dashboard-project-list"]')
     .contains(projectName)
-    .click();
+    .then(($el) => {
+      if ($el.length === 1) {
+        $el[0].click();
+        return;
+      }
+      // If not found on dashboard, search for it
+      cy.getDataCy("navbar-link-search").click();
+      cy.getDataCy("search-input").clear().type(`slug:"${projectName}"`);
+      cy.getDataCy("search-button").click();
+      cy.getDataCy("search-results").contains(projectName).click();
+    });
   cy.getDataCy("project-name").should("contain", projectName);
 }
 
