@@ -68,9 +68,6 @@ You can only view copies of projects that you have access to. If someone makes a
 **Here’s what to instruct your students to do:**
 
 
-
-:::copy
-
 1. Go to "insert template project link here"
 2. Make a copy of the project using the banner in the button
    
