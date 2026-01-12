@@ -20,6 +20,10 @@
   }
 }
 
+.heroBanner :global(.hero__title), .heroBanner :global(.hero__subtitle) {
+  color: var(--ifm-color-gray-0);
+}
+
 .buttons {
   display: flex;
   align-items: center;
