@@ -83,5 +83,3 @@ If you (the instructor) need to see your students’ projects, instruct them to 
 - Make the copy of the template project public
 - Add the course instructor(s) as a member to their project (as a viewer)
 
-:::
-
