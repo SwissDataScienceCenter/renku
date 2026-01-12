@@ -74,6 +74,10 @@ Include an `environment.yml` file located at the root (top level) of the code re
 
 Important usage notes:
 
+- Regarding the Python version: specify your Python version with `=` and not `==`! Using `==` will
+  result in the lowest version being used, without bug fixes and security updates, e.g. using
+  `python==3.10` will install `3.10.0` while using `python=3.10` will install `3.10.19` or a
+  newer release. You can also use a version string similar to `python>=3.12,<3.13` (will install latest `3.12.x`).
 - Regarding conda channels:
     - `nodefaults` must be included. See example above.
     - We recommend using the `conda-forge` channel or other non-anaconda channels.
@@ -141,7 +145,7 @@ Note that poetry version `1.8.3` will be used.
 
 :::info
 
-This feature is coming soon. For now, please see [R](./30-install-packages-on-the-fly-in-your-session.md). ).
+This feature is coming soon. For now, please see [R](./install-packages-on-the-fly-in-your-session). ).
 
 :::
 
