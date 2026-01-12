@@ -38,7 +38,7 @@ Fill in the form so that a RenkuLab admin can let you launch sessions with the C
 1. Create a **new Renku project**
 2. Add a new **session launcher** 
 3. For the launcher’s environment:
-    1. If you want to **Create from Code**, please note that only Python environments work on CSCS. If you’re unfamiliar with creating a code-based environment on Renku, see [How to create an environment with custom packages installed](/docs/users/sessions/guides/environment/create-environment-with-custom-packages-installed)
+    1. If you want to **Create from Code**, please note that only Python environments work on CSCS. If you’re unfamiliar with creating a code-based environment on Renku, see [How to create an environment with custom packages installed](./guides/environments/create-environment-with-custom-packages-installed)
     2. If you want to use the Renku **Global Environments**, select **Python Basic** or **Python Datascience**
         
         
