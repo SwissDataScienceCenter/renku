@@ -691,7 +691,7 @@ ui:
       #   9: "/"
       #   10: "/"
     # Email for contact us links
-    contactEmail: ""
+    contactEmail: "hello@renku.io"
     # Configuration to display the "email us" message on the session class selector.
     sessionClassEmailUs:
       # Set this to "true" to enable the "Need more compute resources? Email us!" message
