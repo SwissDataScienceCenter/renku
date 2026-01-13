@@ -27,10 +27,6 @@ spec:
               value: >
                 [
                   {"url": "/api/data/spec.json", "name": "data service"},
-                  {{- if .Values.enableV1Services }}
-                  {"url": "/api/renku/spec.json", "name": "core service"},
-                  {"url": "/api/kg/spec.json", "name": "knowledge graph"},
-                  {{- end }}
                 ]
             - name: OAUTH2_REDIRECT_URL
               value: https://{{ .Values.global.renku.domain }}/swagger/oauth2-redirect.html
