@@ -289,19 +289,11 @@ specific fields, which are:
 - score
 
 Sorting by a field is defined by writing the field name, followed by a
-dash and the sort direction. Multiple such definitions can be
-specified, using a comma separated list. Alternatively, multiple
-`sort:…` terms will be combined into a single one in the order they
-appear.
+dash and the sort direction. Multiple such definitions are not yet
+supported.
 
 Example:
 
 ```
-sort:score-desc,created-asc
-```
-
-is equivalent to
-
-```
-sort:score-desc sort:created-asc
+sort:score-desc
 ```
