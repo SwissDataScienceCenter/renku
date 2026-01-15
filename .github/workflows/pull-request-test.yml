@@ -137,7 +137,7 @@ jobs:
           DOCKER_PASSWORD: ${{ secrets.RENKU_DOCKER_PASSWORD }}
           DOCKER_USERNAME: ${{ secrets.RENKU_DOCKER_USERNAME }}
           KUBECONFIG: "${{ github.workspace }}/renkubot-kube.config"
-          RENKU_RELEASE: ci-renku-${{ github.event.number }}
+          RENKU_RELEASE: flora
           RENKU_VALUES_FILE: "${{ github.workspace }}/values.yaml"
           RENKU_VALUES: minimal-deployment/minimal-deployment-values.yaml
           TEST_ARTIFACTS_PATH: "tests-artifacts-${{ github.sha }}"
@@ -181,7 +181,7 @@ jobs:
           e2e-target: ${{ matrix.tests }}
           kubernetes-cluster-fqdn: ${{ needs.check-deploy.outputs.deploy == 'true' && 'dev.renku.ch' }}
           renku-reference: ${{ github.ref }}
-          renku-release: ci-renku-${{ github.event.number }}
+          renku-release: flora
           test-user-password: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
 
   cypress-acceptance-tests-slow:
@@ -232,7 +232,7 @@ jobs:
           e2e-target: ${{ matrix.tests }}
           kubernetes-cluster-fqdn: ${{ needs.check-deploy.outputs.deploy == 'true' && 'dev.renku.ch' }}
           renku-reference: ${{ github.ref }}
-          renku-release: ci-renku-${{ github.event.number }}
+          renku-release: flora
           test-user-password: ${{ secrets.RENKU_BOT_DEV_PASSWORD }}
 
   deploy-string-no-custom-version:
