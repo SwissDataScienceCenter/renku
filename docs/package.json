@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "3.8.1",
-    "@docusaurus/tsconfig": "3.8.1",
+    "@docusaurus/tsconfig": "3.9.2",
     "@docusaurus/types": "3.8.1",
     "dictionary-en": "^4.0.0",
     "remark-parse": "^11.0.0",
