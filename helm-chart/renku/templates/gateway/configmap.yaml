@@ -36,27 +36,19 @@ data:
           audience: renku
           authorizedParty: renku-cli
     revproxy:
-      enableV1Services: {{ .Values.enableV1Services | default false }}
       enableInternalGitlab: {{ .Values.enableInternalGitlab | default false }}
       renkuBaseUrl: {{ include "renku.baseUrl" . | quote }}
       externalGitlabUrl: {{ .Values.global.gitlab.url | default "" | quote }}
       k8sNamespace: {{ .Release.Namespace }}
       renkuServices:
         notebooks: {{ printf "http://%s-notebooks" .Release.Name | quote }}
-        kg: {{ printf "http://%s-knowledge-graph" .Release.Name | quote }}
-        webhook: {{ printf "http://%s-webhook-service" .Release.Name | quote }}
-        core:
-          serviceNames: 
-            {{- include "gateway.core.serviceNamesYaml" . | nindent 12 }}
-          servicePaths: 
-            {{- include "gateway.core.pathsYaml" . | nindent 12 }}
-          sticky: true 
         dataService: {{ printf "http://%s-data-service" (include "renku.fullname" .) | quote }}
         keycloak: {{ include "renku.keycloakUrl" . | quote }} 
         uiserver: {{ printf "http://%s" (include "ui-server.fullname" .) | quote }} 
         search: {{ printf "http://%s-search-api" .Release.Name | quote }}
+        kg: "http://to-be-removed"
+        webhook: "http://to-be-removed"
     login:
-      enableV1Services: {{ .Values.enableV1Services | default false }}
       enableInternalGitlab: {{ .Values.enableInternalGitlab | default false }}
       renkuBaseUrl: {{ include "renku.baseUrl" . | quote }}
       loginRoutesBasePath: "/api/auth"
