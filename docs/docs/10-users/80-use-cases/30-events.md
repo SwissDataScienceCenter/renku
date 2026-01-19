@@ -30,7 +30,12 @@ Depending on the requirements of the event, we propose two modes for setting up 
 2. **Template Mode:** Participants create their own copies of an event template project. Sharing visibility across participants projects is part of the dynamics and participants are comfortable setting up some basic resources on their projects. 
     
     →
-![alt text](image.png)
+    
+flowchart TD
+    A[Do participants need to have the projects completely set-up when the event happens?]
+    A -->|Yes| B[<b>End-to-end Mode:</b><br>Participants have their own group with the required connectors, e.g. data, code.]
+    A -->|No| C[<b>Template Mode:</b><br>Participants can copy the event template project and add their own connectors.]
+  
 
 ### Quick-Reference Guides
 
