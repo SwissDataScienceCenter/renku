@@ -4,25 +4,16 @@ dependencies:
     repository: "oci://harbor.renkulab.io/bitnami-mirror"
     condition: postgresql.enabled
   - name: keycloakx
-    version: 2.2.2
+    version: 2.3.0
     repository: "https://codecentric.github.io/helm-charts"
     condition: keycloakx.enabled
   - name: redis
     repository: "oci://harbor.renkulab.io/bitnami-mirror"
     version: 20.3.0
     condition: redis.install
-  - name: renku-jena
-    version: "0.0.25"
-    repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-    alias: jena
-    condition: enableV1Services
-  - name: amalthea
-    repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-    version: "0.22.1"
-    condition: enableV1Services
   - name: amalthea-sessions
     repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-    version: "0.22.1"
+    version: "0.23.0"
   - name: dlf-chart
     repository: "https://swissdatasciencecenter.github.io/datashim/"
     version: "0.3.9-renku-2"

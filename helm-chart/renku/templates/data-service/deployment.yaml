@@ -25,7 +25,7 @@ spec:
         {{ .Values.global.redis.clientLabel | toYaml | nindent 8 }}
       annotations:
         # NOTE: Without this the pod will not restart when the secret values change.
-        checksum/config: {{ include (print $.Template.BasePath "/notebooks/env-secret.yaml") . | sha256sum }}
+        checksum/config: {{ include (print $.Template.BasePath "/data-service/session-env-secret.yaml") . | sha256sum }}
       {{- with .Values.dataService.podAnnotations }}
         {{- toYaml . | nindent 8 }}
       {{- end }}

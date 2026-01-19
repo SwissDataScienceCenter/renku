@@ -25,6 +25,9 @@ _sidebar.rst.inc
 # The requirements lockfile is generated when packaging the chart
 helm-chart/renku/requirements.lock
 
+# Charts dependencies downloads
+helm-chart/renku/charts
+
 # Created by https://www.gitignore.io/api/vim,macos,linux,emacs,scala,python,visualstudiocode,helm
 # Edit at https://www.gitignore.io/?templates=vim,macos,linux,emacs,scala,python,visualstudiocode,helm
 
