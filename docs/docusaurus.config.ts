@@ -8,6 +8,8 @@ const url = new URL(
   process.env.READTHEDOCS_CANONICAL_URL || "https://renku.readthedocs.io",
 );
 
+const rtdVersion = process.env.READTHEDOCS_VERSION || 'local';
+
 const algoliaConfig = process.env.ALGOLIA_APP_ID
   ? ({
       // The application ID provided by Algolia
@@ -208,6 +210,10 @@ const config: Config = {
       darkTheme: prismThemes.dracula,
     },
     ...(algoliaConfig ? { algolia: algoliaConfig } : {}),
+    metadata: [
+      { name: 'docsearch:version', content: rtdVersion },
+      { name: 'docsearch:docusaurus_tag', content: `docs-default-${rtdVersion}` },
+    ],
   } satisfies Preset.ThemeConfig,
 };
 
