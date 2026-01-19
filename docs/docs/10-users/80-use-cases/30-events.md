@@ -1,6 +1,6 @@
 # Renku for Events
 
-Renku is a great choice **for computing events** like **hackathons** and **workshops**. Take full advantage of Renku’s **collaboration features and integration with other platforms.** Focus on innovation, learning and skilling up, not on setup and infrastructure. Provide a consisten
+Renku is a great choice **for computing events** like **hackathons** and **workshops**. Take full advantage of Renku’s **collaboration features and integration with other platforms.** Focus on innovation, learning and skilling up, not on setup and infrastructure. Provide a consistent environment for all teams, and get participants coding and collaborating right away. 
 
 # Register your event
 
