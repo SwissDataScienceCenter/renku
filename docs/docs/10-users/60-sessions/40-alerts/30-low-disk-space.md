@@ -25,6 +25,7 @@ When disk space is this low:
 1. Push any important changes to your Git repository or external storage to avoid data loss.
 
 2. Identify large files:
+
    ```bash
    # Find the largest files in your Renku volume
    du -h $RENKU_MOUNT_DIR | sort -h | tail -20
@@ -59,4 +60,3 @@ When disk space is this low:
 - Choose an appropriate resource class with sufficient storage when starting sessions
 - Keep only necessary files in your session workspace
 - Use a [Data Connector](../../40-data/00-data.md) to store and access large datasets from external storage instead of keeping them on your session disk
-

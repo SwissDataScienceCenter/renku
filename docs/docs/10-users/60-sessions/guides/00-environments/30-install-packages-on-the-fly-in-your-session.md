@@ -53,8 +53,8 @@ To add your project’s dependencies to `environment.yml`, specify an environmen
 ```yaml
 name: stats
 dependencies:
-- numpy
-- pandas
+  - numpy
+  - pandas
 ```
 
 For more details, see [conda’s documentation](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#create-env-file-manually).

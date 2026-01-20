@@ -2,7 +2,6 @@
 
 Our mission is to enable the Swiss National Open Research Data (ORD) Strategy, supporting the accessibility and reuse of research data across Switzerland.
 
-
 # Renku empowers collaboration by reducing friction
 
 import Admonition from '@theme/Admonition';

@@ -3,7 +3,7 @@
 If you have multiple options to sign up into your Renku account, you can define all your log in providers in the same Renku account. We hereby explain you the process step-by-step.
 
 1. Sign up into Renku normally.
-2. Click on the top right menu in the drop-down under the user icon and select **Account**. 
+2. Click on the top right menu in the drop-down under the user icon and select **Account**.
 3. In the **Account security** card, click on **Linked accounts**.
 
 <p class="image-container-l">
@@ -16,4 +16,4 @@ If you have multiple options to sign up into your Renku account, you can define 
 ![image.jpg](./account_access_2.png)
 </p>
 
- If you find any trouble when completing the process, [contact us](mailto:hello@renku.io)!
+If you find any trouble when completing the process, [contact us](mailto:hello@renku.io)!

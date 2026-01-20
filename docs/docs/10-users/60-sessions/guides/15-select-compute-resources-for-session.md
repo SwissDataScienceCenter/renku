@@ -5,12 +5,9 @@ To change which resource class your project’s session launcher uses, you can e
 1. Click on the session launcher in your project
 2. Navigate to “Default Resource Class” and click the pencil icon to change the resource class.
 
-
-
 <!-- <video controls width="100%" src={selectResourceVideo} /> -->
 
 ![image.png](./use-your-own-docker-image-for-renku-session-20.png)
-
 
 :::tip
 
