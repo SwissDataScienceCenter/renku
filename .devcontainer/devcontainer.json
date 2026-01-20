@@ -1,7 +1,7 @@
 // See devcontainer docs: https://code.visualstudio.com/docs/devcontainers/containers
 {
 	"name": "renku",
-	"image": "mcr.microsoft.com/devcontainers/base:bullseye",
+	"image": "mcr.microsoft.com/devcontainers/javascript-node:3-22-bookworm",
 	"customizations": {
 		"vscode": {
 			// Set *default* container specific settings.json values on container create.
@@ -26,8 +26,7 @@
 			]
 		}
 	},
-	"postCreateCommand": "git config --global --add safe.directory /workspaces/renku && git submodule update --init && pip3 install --user -r docs/requirements.txt",
-	"remoteUser": "vscode",
+	"postCreateCommand": "git config --global --add safe.directory /workspaces/renku",
 	"features": {
 		"ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {},
 		"ghcr.io/devcontainers/features/docker-in-docker:2": {},
@@ -36,7 +35,6 @@
 		},
 		"ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {
             "packages": ["libenchant-2-2", "graphviz"]
-        }, 
-		"ghcr.io/devcontainers/features/java:1": {}
+        }
 	}
 }

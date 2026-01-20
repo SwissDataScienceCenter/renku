@@ -1,3 +1,7 @@
+import Tabs from '@theme/Tabs';
+
+import TabItem from '@theme/TabItem';
+
 # How to set up a course in “Classic mode”
 
 ## Running a course in Classic Mode
@@ -6,24 +10,24 @@ If course participants need to save their work during the course and they are no
 
 This guide will walk you through how to create a project, mark that project as a template, and how to instruct your students to copy the template.
 
-For alternative workflows for using Renku in your course, see [Renku for Teaching](https://www.notion.so/Renku-for-Teaching-1460df2efafc809cb134d2a4e32ed90e?pvs=21).
+For alternative workflows for using Renku in your course, see [Renku for Teaching](./index.md).
 
 **First, create the course project:**
 
 1. Create a Renku project as explained in [How to create a new project](../../projects/guides/create-a-project)
 2. Add a code repository as explained in [How to add a code repository to your project](../../code/guides/add-code-repository-to-project) with the course tasks
-3. Add data, if needed. See our collection of How To Guides for options for creating data connectors.
-    
+3. Add data, if needed. See our collection of [How To Guides for options for creating data connectors](https://docs.renkulab.io/en/latest/docs/users/data/guides/connect-data/).
+ 
     :::info
     
-    If you add data connectors to your template project, you must make the data connectors public in order for students to be able to create copies that include the data connector. For more information, see [Data Connectors Permissions](../../collaboration/permissions#data-connector-permissions.
+    If you add data connectors to your template project, you must make the data connectors public in order for students to be able to create copies that include the data connector. For more information, see [Data Connectors Permissions](../../collaboration/permissions#data-connector-permissions).
     
     :::
     
 4. Create a session launcher for working in your project:
     1. Select an environment:
-        1. Check out the environments available in Renku via [How to add a session launcher to your project](/docs/users/sessions/guides/add-session-launcher-to-project). If these are sufficient for your course, use them!
-        2. If you need to customize the environment for your course, you can create a custom environment yourself via [How to use your own docker image for a Renku session](../../sessions/guides/use-your-own-docker-image-for-renku-session), or  [Contact](../../community) us and we can create a custom environment for your course!
+        1. Check out the environments available in Renku via [How to add a session launcher to your project](../../sessions/guides/environments/). If these are sufficient for your course, use them!
+        2. If you need to customize the environment for your course, you can create a custom environment yourself via [How to use your own docker image for a Renku session](../../sessions/guides/environments/use-your-own-docker-image-for-renku-session), or  [Contact](../../community) us and we can create a custom environment for your course!
     2. Set the session launcher’s **default resource class** to your **course’s resource pool**, as described in [How to select compute resources for your session](../../sessions/guides/select-compute-resources-for-session).
         
         :::info
@@ -31,8 +35,6 @@ For alternative workflows for using Renku in your course, see [Renku for Teachin
         In order to ensure adequate resources for running the project and to control the consumption of the sessions, remember to assign to the session launcher with the adequate resource class when adding the session launcher to your project. Learn more about custom resource pools for courses: [Request a Custom Resource Pool](../../sessions/resource-pools-and-classes#request-custom-resource-pool).
         
         :::
-        
-
 **Then, mark your project to a template project:**
 
 1. In the project **Settings**, turn on the toggle to mark your project as a Template project.
@@ -65,7 +67,8 @@ You can only view copies of projects that you have access to. If someone makes a
 
 **Here’s what to instruct your students to do:**
 
-1. Go to [insert template project link here](/)
+
+1. Go to "insert template project link here"
 2. Make a copy of the project using the banner in the button
    
     ![image.png](./set-up-course-in-classic-mode-50.png)
@@ -79,3 +82,4 @@ If you (the instructor) need to see your students’ projects, instruct them to 
 
 - Make the copy of the template project public
 - Add the course instructor(s) as a member to their project (as a viewer)
+

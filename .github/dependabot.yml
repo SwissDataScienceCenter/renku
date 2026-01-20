@@ -2,7 +2,7 @@ version: 2
 updates:
   - package-ecosystem: "pip"
     directories:
-      - "docs/"
+      - "docs-legacy/"
       - "scripts/init-realm"
       - "acceptance-tests/"
       - "global-images/**"
@@ -26,3 +26,7 @@ updates:
       gh-actions:
         patterns:
           - "*"
+  - package-ecosystem: "npm"
+    directory: "docs/"
+    schedule:
+      interval: "weekly"

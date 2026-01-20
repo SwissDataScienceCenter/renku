@@ -50,14 +50,13 @@ Renku is an **open-source platform for researchers and scientists to connect dat
 | ![image.jpg](https://renkulab.io/assets/researcherIcon-DFFtd-Xp.svg) | ![image.jpg](https://renkulab.io/assets/educatorIcon-8mTN9nT-.svg) | ![image.jpg](https://renkulab.io/assets/organizerIcon-CcAdtX3S.svg) |
 | **Unified Research**  <p>Connect your entire research workflow in one place, and collaborate across specialties without technical barriers.</p> | **Computing Courses made easy** <p>Help your students focus on the material, not getting lost during setup. Ideal for project-based coursework and time-sensitive workshops.</p> | **Seamless Events** <p>Focus on innovation, not setup and infrastructure. Provide a consistent environment for all teams, and get participants coding and collaborating right away.</p> |
 
-
 ## What's new - Check out our latest blog posts:
 
       <p class="image-container-s">
       [![Renku Release Octubre 2025](https://blog.renkulab.io/assets/images/cscs-cover-90cd8e2dbe514501f43d26ed2c6b2a45.png)](https://blog.renkulab.io/release-2025-10/)
 
     **Renku Release • October 2025**
-     <p>We've combined Renku's super-simple sessions with the power of supercomputing!</p>
+    <p>We've combined Renku's super-simple sessions with the power of supercomputing!</p>
 
     </p>
   ___
@@ -66,6 +65,6 @@ Renku is an **open-source platform for researchers and scientists to connect dat
     [![AiiDA Success Story](https://blog.renkulab.io/assets/images/intro-image-f9ca2c80c6b9ad273b0d8750b112dab7.png)](https://blog.renkulab.io/aiida-success-story/)
 
     **AiiDA Success Story • October 2025**
-    <p>How PSI's Materials Software and Data group uses Renku to facilitate access to research data.</p>
+     <p>How PSI's Materials Software and Data group uses Renku to facilitate access to research data.</p>
 
     </p>
