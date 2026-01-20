@@ -17,11 +17,11 @@ folder.
 In Switchdrive/PolyBox:
 
 1. From the folder containing the data you want to mount (not the data file itself!), click on the **three dots**
-2. Click on ‘**Public links**’
-3. Click ‘**Create public link**’
+2. Click on **Public links**
+3. Click **Create public link**
     1. Select the read + write settings you want - probably view only since it’s public!
     2. If you want to restrict who can access this shared folder, set a password
-4. Click the ‘**Copy to Clipboard**’ 📋 button. The link will look something like this:
+4. Click the **Copy to Clipboard** 📋 button. The link will look something like this:
     1. [https://polybox.ethz.ch/index.php/s/8NffJ3rFyHaVjgR](https://polybox.ethz.ch/index.php/s/8NffJ3rFyHaVjgR)
 
 ### Add the folder to your Renku project
