@@ -27,16 +27,22 @@ different version of Renku than what you have or will install.
 
 ### RBAC
 
-Generate the RBAC for renku-data-services:
+The admin here needs to decide if the ["Resource Pool" feature](../operation/rps) will be used or not. If
+it is to be used, then the RBAC for resource pool management must also be
+generated and applied by an admin that has access to ClusterRole and
+ClusterRoleBinding.
+If resource pools are not to be used, then the feature can be disabled in the values
+file by setting `dataService.rbac.resourcePools` to `false` (and being admin in the namespace
+where Renku is installed should be sufficient).
+
+#### Enabling Resource Pools
+
+To have the ["Resource Pool" feature](../operation/rps) enabled, some ClusterRoles and ClusterRoleBindings are needed, to generate them
+run:
 
 ```bash
  helm template --namespace renku renku renku/renku -f renku-values.yaml --set amalthea.deployCrd=true --set amalthea-session.deployCrd=true --set dataService.rbac.create=true| yq e '. | select(.kind == "*Role*" and (.metadata.name == "renku-data-service" or .metadata.name == "renku-k8s-watcher"))' > data-services-rbac.yaml
 ```
-
-This is because renku-data-services requires ClusterRole and ClusterRoleBinding.
-In this case, the Role and RoleBinding will also be handled by the admin as
-making the distinction in the charts starts to make it overly complicated for
-not much benefits.
 
 :::warning
 The above command will give you the RBAC from the latest version of Renku. But

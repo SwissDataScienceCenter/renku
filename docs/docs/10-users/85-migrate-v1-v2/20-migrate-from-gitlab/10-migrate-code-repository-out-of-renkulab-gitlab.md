@@ -18,6 +18,22 @@ work.
 
 :::
 
+<p class="image-container-l">
+<iframe
+  width="560"
+  height="315"
+  src="https://www.youtube.com/embed/TTRfg9XBfqQ?list=PLagSzgm6aERkLQ8LINw8luZKdv9ru7aHh"
+  title="YouTube video player"
+  frameborder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+  referrerpolicy="strict-origin-when-cross-origin"
+  allowfullscreen>
+</iframe>
+*Bring your RenkuLab GitLab project to the public GitLab instance with the import feature.*
+</p>
+
+
+
 ## 1. Move a code repository to an external provider
 
 1. **Clone your repository** from the RenkuLab GitLab to your local machine

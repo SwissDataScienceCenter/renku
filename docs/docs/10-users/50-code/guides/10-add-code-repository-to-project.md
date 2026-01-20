@@ -1,5 +1,3 @@
-<!-- Highlight available globally -->
-
 # Add a code repository to your project
 
 :::info
@@ -12,21 +10,15 @@ with GitHub/GitLab](connect-renku-account-to-github-or-gitlab-account).
 In the project page:
 
 1. Click on ➕ in the Code Repositories section.
-    <p class="image-container-s">
+    <p class="image-container-m">
     ![image.png](./add-code-repository-to-project-10.png)
     </p>
 
 
-2. Click on **Connect an existing repository** button
+2. Fill in the URL of the code repository you want to add to your project. You can copy this URL from the browser page of your code repository.
 
-    <p class="image-container-s">
+    <p class="image-container-m">
     ![image.png](./add-code-repository-to-project-20.png)
-    </p>
-
-3. Fill in the URL of the code repository you want to add to your project. You can copy this URL from the browser page of your code repository.
-
-    <p class="image-container-s">
-    ![image.png](./add-code-repository-to-project-30.png)
     </p>
 
     :::note
@@ -35,8 +27,8 @@ In the project page:
 
     :::
 
-4. Click on **Add code repository** button
-5. Check that the **access badge** indicates the access level you expect to have for this code repository. If you do not have the access you are expecting, see [How to connect your Renku account to your GitHub or GitLab account](connect-renku-account-to-github-or-gitlab-account).
+3. Click on **Add code repository** button
+4. Check that the **access badge** indicates the access level you expect to have for this code repository. If you do not have the access you are expecting, see [How to connect your Renku account to your GitHub or GitLab account](connect-renku-account-to-github-or-gitlab-account).
 
     :::note
 

@@ -4,6 +4,22 @@ For changes that require manual steps other than changing values, please check o
 
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
+## Upgrading to Renku 2.12.0
+
+* DELETE all `enableV1Services` related resources. These resources were already
+  disabled by default. They are now fully removed from the deployment process.
+  So with this version of Renku all V1 services will be fully deleted from the cluster.
+
+## Upgrading to Renku 2.11.0
+
+* EDIT `enableV1Services` is now set to `false` by default.
+  Legacy (v1) services are now deprecated in Renku and version 2.11 is the last Renku
+  release where legacy services can be enabled. In the next Renku release (2.12),
+  the `enableV1Services` chart value will be removed.
+* NEW `dataService.imageBuilders.builderImage`, sets the builder image used for Renku builds.
+* NEW `dataService.imageBuilders.runImage`, sets the run image used for Renku builds.
+* NEW `dataService.imageBuilders.platformOverrides`, overrides for image builds, keyed by platform. See commented values for a working example for `linux/arm64`.
+* DELETE `dataService.imageBuilders.vscodiumPythonRunImage`, as it is replaced by `dataService.imageBuilders.runImage`.
 
 ## Upgrading to Renku 2.9.0
 

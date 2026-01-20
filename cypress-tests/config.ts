@@ -1,4 +1,4 @@
-// Timeouts for cypesss in miliseconds
+// Timeouts for Cypress in milliseconds
 export const TIMEOUTS = {
   minimal: 1_000,
   shorter: 2_000,
