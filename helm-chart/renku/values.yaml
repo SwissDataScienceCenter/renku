@@ -581,7 +581,7 @@ ui:
     replicaCount: 1
     image:
       repository: renku/renku-ui
-      tag: "4.15.0"
+      tag: "4.17.1"
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
       ## Secrets must be manually created in the namespace.
@@ -722,6 +722,8 @@ ui:
       # overrides:
       #   9: "/"
       #   10: "/"
+    # Email for contact us links
+    contactEmail: "hello@renku.io"
     # Configuration to display the "email us" message on the session class selector.
     sessionClassEmailUs:
       # Set this to "true" to enable the "Need more compute resources? Email us!" message
@@ -771,7 +773,7 @@ ui:
     keepCookies: []
     image:
       repository: renku/renku-ui-server
-      tag: "4.15.0"
+      tag: "4.17.1"
       pullPolicy: IfNotPresent
     imagePullSecrets: []
     nameOverride: ""
