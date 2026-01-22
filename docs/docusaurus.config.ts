@@ -213,6 +213,7 @@ const config: Config = {
     metadata: [
       { name: 'docsearch:version', content: rtdVersion },
       { name: 'docsearch:docusaurus_tag', content: `docs-default-${rtdVersion}` },
+      { name: 'docusaurus_tag', content: `docs-default-${rtdVersion}` },
     ],
   } satisfies Preset.ThemeConfig,
 };
