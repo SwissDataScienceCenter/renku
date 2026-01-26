@@ -1,6 +1,5 @@
 # Next Steps
 
-
 🎉 Congratulations! You have successfully created a Renku project, connected data and code, launched a session, and shared your project with collaborators.
 
 ![image.png](./congratulations.png)

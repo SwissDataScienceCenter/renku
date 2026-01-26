@@ -6,10 +6,11 @@ In the project page:
 
 1. Click on the **Settings** tab **(a)**
 2. Edit the **Members of the projec**t section **(b)**
-- Click  ➕  **(c)**
+
+- Click ➕ **(c)**
 - Look up the user’s name
 - Assign the role
-    - For more information about roles, see [Permissions, Roles, and Access Rights](../permissions)
+  - For more information about roles, see [Permissions, Roles, and Access Rights](../permissions)
 - Repeat for as many new members as you wish
 
 :::info

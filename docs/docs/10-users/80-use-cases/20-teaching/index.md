@@ -1,5 +1,3 @@
-
-
 # Renku for Teaching
 
 Renku simplifies teaching, giving students seamless access to course materials and interactive sessions directly in their browser—no installation required. Renku lets students focus on mastering the course material, without getting lost in setup. Renku’s focus on collaboration means it’s a great choice for courses with group work, too.
@@ -18,7 +16,7 @@ In order to give course participants access to the Renku projects associated wit
 
 # Compute resources for your course
 
-After you register your course, the Renku team will create a dedicated resource pool for your course based on the requirements that you have specified. The team will reach out to you for the list of course participants in order to add them to the course resource pool. 
+After you register your course, the Renku team will create a dedicated resource pool for your course based on the requirements that you have specified. The team will reach out to you for the list of course participants in order to add them to the course resource pool.
 
 Ensure that you select a resource class within that resource pool as the default for any session launchers you create for the course.
 
@@ -35,10 +33,7 @@ We recommend to add **other course instructors as owners** of the group so that 
 Depending on the requirements of the course, we propose several modes for setting up the course projects:
 
 1. [**Light Course Mode**](https://docs.renkulab.io/en/latest/docs/users/use-cases/teaching/set-up-course-in-light-mode): Ideal for workshops where participants only need access to a simple compute session with course materials and do not need to collaborate.
-    
-2. [**Classic Course Mode:**](https://docs.renkulab.io/en/latest/docs/users/use-cases/teaching/set-up-course-in-classic-mode) Participants create their own copies of a course template project. Take full advantage of Renku’s collaboration features and integration with other platforms. 
-
-    
+2. [**Classic Course Mode:**](https://docs.renkulab.io/en/latest/docs/users/use-cases/teaching/set-up-course-in-classic-mode) Participants create their own copies of a course template project. Take full advantage of Renku’s collaboration features and integration with other platforms.
 3. [**Advanced Course Mode:**](https://docs.renkulab.io/en/latest/docs/users/use-cases/teaching/set-up-course-in-advanced-mode-using-git) Participants collaborate on code via git.
 
 Follow the chart below to decide which mode best suits your course.
@@ -49,9 +44,9 @@ Sample Renku course project set-ups
 
 We hereby share with you some sample projects that may inspire you for setting up your course:
 
-- **Pluto/Julia -**  [**Computational Thinking in Julia/Pluto MIT Course**](https://renkulab.io/v2/projects/teaching-with-renku/demo-project-pluto)
+- **Pluto/Julia -** [**Computational Thinking in Julia/Pluto MIT Course**](https://renkulab.io/v2/projects/teaching-with-renku/demo-project-pluto)
 - **RStudio -** [**ML regression for wine quality**](https://renkulab.io/v2/projects/teaching-with-renku/ml-regression-for-wine-quality)
-- **Python/Jupyter/VS Code** -  [Object Oriented Programming in Python](https://renkulab.io/v2/projects/teaching-with-renku/object-oriented-programming)
+- **Python/Jupyter/VS Code** - [Object Oriented Programming in Python](https://renkulab.io/v2/projects/teaching-with-renku/object-oriented-programming)
 - **Matlab** - [Numerical Methods with Applications](https://renkulab.io/v2/projects/teaching-with-renku/numerical-methods-with-applications)
 
 # Watch an introductory session

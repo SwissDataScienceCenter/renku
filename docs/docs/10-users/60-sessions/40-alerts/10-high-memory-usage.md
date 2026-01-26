@@ -51,4 +51,3 @@ When memory usage is this high, your session is at risk of:
 
 - Choose an appropriate resource class when starting sessions based on your expected workload
 - Test code with small datasets first to estimate memory requirements
-

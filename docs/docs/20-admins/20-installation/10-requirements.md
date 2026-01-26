@@ -5,7 +5,7 @@ title: Requirements
 ## Kubernetes or Openshift
 
 It is recommended to have a maintained version that is either actively
-supported or has maintenance support. Older versions may work but 
+supported or has maintenance support. Older versions may work but
 it is not safe operating Kubernetes versions that are unsupported.
 
 You can check active releases [here](https://kubernetes.io/releases/).
@@ -20,6 +20,7 @@ useful feature therefore it is strongly recommended that you install
 both of these projects in your cluster before installing Renku.
 
 Links to each project:
+
 - [Harbor](https://goharbor.io/)
 - [Shipwright](https://shipwright.io/)
 
@@ -64,7 +65,7 @@ in production without any problems. But there are many others in addition to ing
 
 ## TLS certificates
 
-We use [cert-manager](https://cert-manager.io/) in production combined with 
+We use [cert-manager](https://cert-manager.io/) in production combined with
 [Let's Encrypt/ACME](https://cert-manager.io/docs/configuration/acme/) which allows us to
 get TLS certificates provisioned and renewed automatically.
 
@@ -80,8 +81,8 @@ In addition to this we strongly recommend a Gitops approach to managing Renku in
 We use [flux](https://fluxcd.io/) in production for this purpose but there are several other alternatives.
 
 Other tools for operation and monitoring that are not mandatory but really useful:
+
 - [k9s](https://k9scli.io/) and/or [headlamp](https://headlamp.dev/)
 - [kubens and kubectx](https://github.com/ahmetb/kubectx)
 - Shell prompt that shows the currently active Kubernetes context and namespace,
   for example there is [starship](https://starship.rs/) but there are also many others.
-

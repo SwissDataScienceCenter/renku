@@ -21,7 +21,7 @@ in Kubernetes.
 
 - Platform initialization
 - Postgres initialization for Keycloak
-- Postgres initialization for Authzed 
+- Postgres initialization for Authzed
 - Postgres initialization for Renku data service
 - Data tasks: Various tasks that perform periodic updates like updating the Solr documents and updating the list of users from Keycloak.
 
