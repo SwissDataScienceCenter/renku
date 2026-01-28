@@ -46,8 +46,6 @@ data:
         keycloak: {{ include "renku.keycloakUrl" . | quote }} 
         uiserver: {{ printf "http://%s" (include "ui-server.fullname" .) | quote }} 
         search: {{ printf "http://%s-search-api" .Release.Name | quote }}
-        kg: "http://to-be-removed"
-        webhook: "http://to-be-removed"
     login:
       enableInternalGitlab: {{ .Values.enableInternalGitlab | default false }}
       renkuBaseUrl: {{ include "renku.baseUrl" . | quote }}
