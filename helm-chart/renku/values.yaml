@@ -549,7 +549,7 @@ ui:
     replicaCount: 1
     image:
       repository: renku/renku-ui
-      tag: "4.17.0"
+      tag: "4.17.1"
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
       ## Secrets must be manually created in the namespace.
@@ -690,6 +690,8 @@ ui:
       # overrides:
       #   9: "/"
       #   10: "/"
+    # Email for contact us links
+    contactEmail: "hello@renku.io"
     # Configuration to display the "email us" message on the session class selector.
     sessionClassEmailUs:
       # Set this to "true" to enable the "Need more compute resources? Email us!" message
@@ -739,7 +741,7 @@ ui:
     keepCookies: []
     image:
       repository: renku/renku-ui-server
-      tag: "4.17.0"
+      tag: "4.17.1"
       pullPolicy: IfNotPresent
     imagePullSecrets: []
     nameOverride: ""
@@ -880,6 +882,12 @@ notebooks:
     allowUnverifiedEmail: false
   sessionIngress:
     host:
+    ## If you want to use the default cluster tls cert, set the flag below to true.
+    ## In this case you do not need to define a tlsSecret. When the flag is set to true
+    ## the tls section of the ingress for sessions gets templated with '{}' which indicates
+    ## to ingress controllers to use the default TLS cert. Note that it could be that some
+    ## ingress contrllers do not support this option.
+    useDefaultClusterTlsCert: false
     tlsSecret:
     className: "nginx"
     annotations:
@@ -1199,12 +1207,12 @@ dataService:
     enableResourcePool: true
   image:
     repository: renku/renku-data-service
-    tag: "0.67.2"
+    tag: "0.68.1"
     pullPolicy: IfNotPresent
   k8sWatcher:
     image:
       repository: renku/data-service-k8s-watcher
-      tag: "0.67.2"
+      tag: "0.68.1"
       pullPolicy: IfNotPresent
     resources: {}
     sentry:
@@ -1215,7 +1223,7 @@ dataService:
   dataTasks:
     image:
       repository: renku/data-service-data-tasks
-      tag: "0.67.2"
+      tag: "0.68.1"
       pullPolicy: IfNotPresent
     resources: {}
   service:
@@ -1333,7 +1341,7 @@ authz:
 secretsStorage:
   image:
     repository: renku/secrets-storage
-    tag: "0.67.2"
+    tag: "0.68.1"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
