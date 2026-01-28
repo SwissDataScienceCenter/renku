@@ -5,6 +5,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const url = new URL(process.env.READTHEDOCS_CANONICAL_URL || "https://renku.readthedocs.io");
+const versionSlug = process.env.READTHEDOCS_VERSION;
 
 const config: Config = {
   title: 'Renku',
@@ -65,6 +66,12 @@ const config: Config = {
   themeConfig: {
     // Replace with your project's social card
     image: 'img/docusaurus-social-card.jpg',
+    metadata: [
+      ...(versionSlug ? [
+        { name: 'docusaurus_tag', content: versionSlug },
+        { name: 'docsearch:docusaurus_tag', content: versionSlug }
+      ] : [])
+    ],
     navbar: {
       title: 'Docs',
       logo: {
