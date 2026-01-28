@@ -5,6 +5,49 @@ import type * as Preset from '@docusaurus/preset-classic';
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const url = new URL(process.env.READTHEDOCS_CANONICAL_URL || "https://renku.readthedocs.io");
+const versionSlug = process.env.READTHEDOCS_VERSION;
+
+const algoliaConfig = process.env.ALGOLIA_APP_ID
+  ? ({
+      // The application ID provided by Algolia
+      appId: process.env.ALGOLIA_APP_ID,
+
+      // Public API key: it is safe to commit it
+      apiKey: process.env.ALGOLIA_API_KEY,
+
+      indexName: "renkulab docs",
+
+      // Optional: see doc section below
+      contextualSearch: !versionSlug,
+
+      // Optional: Specify domains where the navigation should occur through window.location instead on history.push. Useful when our Algolia config crawls multiple documentation sites and we want to navigate with window.location.href to them.
+      // externalUrlRegex: 'external\\.com|domain\\.com',
+
+      // Optional: Replace parts of the item URLs from Algolia. Useful when using the same search index for multiple deployments using a different baseUrl. You can use regexp or string in the `from` param. For example: localhost:3000 vs myCompany.com/docs
+      replaceSearchResultPathname: {
+        from: "/en/[a-zA-Z0-9_-]+/",
+        to: "/",
+      },
+
+      // Optional: Algolia search parameters
+      searchParameters: {
+        ...(versionSlug ? {
+        facetFilters: ["language:en", `rtd_tag:${versionSlug}`],
+        } : {})
+      },
+
+      // Optional: path for search page that enabled by default (`false` to disable it)
+      // searchPagePath: 'search',
+
+      // Optional: whether the insights feature is enabled or not on Docsearch (`false` by default)
+      insights: false,
+
+      // Optional: whether you want to use the new Ask AI feature (undefined by default)
+      // askAi: 'YOUR_ALGOLIA_ASK_AI_ASSISTANT_ID',
+
+      //... other Algolia params
+    } satisfies Preset.ThemeConfig["algolia"])
+  : undefined;
 
 const config: Config = {
   title: 'Renku',
@@ -52,8 +95,7 @@ const config: Config = {
           sidebarPath: './sidebars.ts',
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/SwissDataScienceCenter/renku/docs',
+          editUrl: 'https://github.com/SwissDataScienceCenter/renku/tree/master/docs',
         },
         theme: {
           customCss: './src/css/custom.css',
@@ -65,6 +107,12 @@ const config: Config = {
   themeConfig: {
     // Replace with your project's social card
     image: 'img/docusaurus-social-card.jpg',
+    metadata: [
+      ...(versionSlug ? [
+        { name: 'rtd_tag', content: versionSlug },
+        { name: 'docsearch:rtd_tag', content: versionSlug }
+      ] : [])
+    ],
     navbar: {
       title: 'Docs',
       logo: {
@@ -170,6 +218,7 @@ const config: Config = {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
     },
+    ...(algoliaConfig ? { algolia: algoliaConfig } : {}),
   } satisfies Preset.ThemeConfig,
 };
 
