@@ -4,6 +4,11 @@ For changes that require manual steps other than changing values, please check o
 
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
+## Upgrading to Renku 2.12.0
+
+* DELETE all `enableV1Services` related resources. These resources were already
+  disabled by default. They are now fully removed from the deployment process.
+  So with this version of Renku all V1 services will be fully deleted from the cluster.
 
 ## Upgrading to Renku 2.11.0
 
