@@ -882,6 +882,12 @@ notebooks:
     allowUnverifiedEmail: false
   sessionIngress:
     host:
+    ## If you want to use the default cluster tls cert, set the flag below to true.
+    ## In this case you do not need to define a tlsSecret. When the flag is set to true
+    ## the tls section of the ingress for sessions gets templated with '{}' which indicates
+    ## to ingress controllers to use the default TLS cert. Note that it could be that some
+    ## ingress contrllers do not support this option.
+    useDefaultClusterTlsCert: false
     tlsSecret:
     className: "nginx"
     annotations:
