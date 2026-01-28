@@ -31,7 +31,6 @@ dataService:
       cpu: 50m
       memory: 750Mi
   replicaCount: 1
-enableV1Services: false
 gateway:
   replicaCount: 1
 gitlab:
