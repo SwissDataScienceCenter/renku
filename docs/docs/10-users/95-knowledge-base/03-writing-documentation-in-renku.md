@@ -10,10 +10,10 @@ We support basic markdown, like headings, bullets, etc…
 
 A paragraph is one or more lines of text followed by at least one blank line.
 
-*Single asterisks represent italics*, _as do underlines_; 
+*Single asterisks represent italics*, _as do underlines_;
 **Text in double asterisks is rendered in bold**
 
-> Lines beginning with 'greater than' are shown as blockquotes. 
+> Lines beginning with 'greater than' are shown as blockquotes.
 
 * bullet
 * list

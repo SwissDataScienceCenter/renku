@@ -6,12 +6,12 @@ A session launcher defines the environment and compute resources for a Renku ses
 2. Choose and configure an **environment** (see [Creating an environment for your session](#creating-an-environment-for-your-session) below).
 3. Select the **Resource class** that best fits your expected computational needs.
 
-    :::tip
+   :::tip
 
-    Do you need more resources than are available in RenkuLab’s public resource classes? [Contact
-    us!](../../../community) We can configure a custom resource pool for your needs upon demand.
+   Do you need more resources than are available in RenkuLab’s public resource classes? [Contact
+   us!](../../../community) We can configure a custom resource pool for your needs upon demand.
 
-    :::
+   :::
 
 ## Creating an environment for your session
 

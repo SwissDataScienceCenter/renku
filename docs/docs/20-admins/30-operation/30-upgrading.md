@@ -4,8 +4,8 @@ title: Upgrading Renku
 
 We release new minor versions of Renku roughly every month. Bug fixes and patch
 releases may happen at a higher frequency. Nevertheless, we recommend for administrators
-who deploy and operate Renku to keep their deployments up to date and to check the 
-[Renku releases page](https://github.com/SwissDataScienceCenter/renku/releases) 
+who deploy and operate Renku to keep their deployments up to date and to check the
+[Renku releases page](https://github.com/SwissDataScienceCenter/renku/releases)
 on our Github repository at least every 2 weeks.
 
 Regardless of the type of the release (major, minor or patch) administrators should read the release
@@ -26,4 +26,3 @@ And planing and potentially downtime may be required in order for the upgrade to
 When you are behind more than one minor version on your upgrades, we recommend upgrading to each
 minor version one-by-one rather than skipping over several minor versions at once.
 :::
-

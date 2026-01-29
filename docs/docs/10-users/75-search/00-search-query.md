@@ -12,7 +12,6 @@ from inside renku-data-services repository via this python script:
 The search accepts queries as a query string. A query may contain
 specific and unspecific search terms.
 
-
 ## Query String
 
 A query is a sequence of words. All words that are not recognized as
@@ -21,6 +20,7 @@ properties, such as `name` or `description`. Specific search terms are
 matched against a certain field. Terms are separated by whitespace.
 
 Example:
+
 ```
 numpy flight visibility:public
 ```
@@ -37,6 +37,7 @@ provided for each field by using a comma separated list. The values
 are treated as alternatives, so any such value would yield a result.
 
 Example:
+
 ```
 numpy flight visibility:public,private
 ```
@@ -83,7 +84,6 @@ Example:
 type:Project
 ```
 
-
 ## Roles
 
 The field `role` allows to search for projects the current user has
@@ -92,7 +92,6 @@ the given role. Other entities are excluded from the results.
 - owner
 - viewer
 - editor
-
 
 ## Visibility
 
@@ -103,7 +102,6 @@ Possible values are:
 - public
 - private
 
-
 ## Created By
 
 Selects entities that were created by a specific user.
@@ -112,20 +110,19 @@ Selects entities that were created by a specific user.
 createdby:abc-id-123
 ```
 
-
 Note that this field only accepts user-ids! I cannot (yet) resolve usernames.
 
 ## Keywords
 
 Entities with certain keywords can be searched, where multiple keywords given
-in one field term are combined via *OR* and multiple field-terms are combined
-via *AND*. Keywords have to match exactly (no typos allowed).
+in one field term are combined via _OR_ and multiple field-terms are combined
+via _AND_. Keywords have to match exactly (no typos allowed).
 
 ```
 keyword:data,ml keyword:health,disease
 ```
 
-Searches for entities that have either `data` or `ml` *and* either `health` or
+Searches for entities that have either `data` or `ml` _and_ either `health` or
 `disease` as keywords. If keywords contain whitespace or a comma, they must be
 quoted as written above. If a keyword contains a quote character (`"`), it must
 be prefixed by a backslash (`\`) to escape from interpreting it as an
@@ -134,7 +131,6 @@ end-of-value symbol.
 ```
 keyword:"data science",ml,"tl,dr","\"well\" said"
 ```
-
 
 ## Members
 
@@ -162,7 +158,7 @@ Examples:
 - `inherited_member:abc-123-xyz`
 
 Multiple members can be specified, they will then match entities where
-*all* these users are members. For these fields, specifying multiple
+_all_ these users are members. For these fields, specifying multiple
 members in one field or multiple fields is equivalent.
 
 `direct_member:@john.doe,abc-123`
@@ -174,7 +170,6 @@ silently ignored.
 
 Currently this limit is 4.
 
-
 ## DOIs
 
 These are applicable only for data connectors created from DOIs.
@@ -184,7 +179,6 @@ Note that we store all DOI values not as full URLs
 only as the value (i.e. `10.16904/envidat.714`). Future improvements
 will probably remove these limitations and handle full URLs transparently.
 The search will look up this term in a case-insensitive manner.
-
 
 ```
 doi:10.16904/envidat.714
@@ -211,14 +205,12 @@ accept date strings which can be specified in various ways. There are
 - partial timestamps: `2023-05`, `2023-11-12T10`
 - calculations based on the above: `today-5d`, `2023-10-15/10d`
 
-
 ### Relative dates
 
 There are the following keywords for relative dates:
 
 - today
 - yesterday
-
 
 ### Partial Timestamps
 
@@ -240,7 +232,6 @@ Example:
 - `created>2023-03` will turn into `created>2023-03-31T23:59:59`
 - `created<2023-03` will turn into `created<2023-03-01T00:00:00`
 
-
 ### Date calculations
 
 At last, a date can be specified by adding or subtracting days from a
@@ -256,14 +247,13 @@ Example:
 - `created>today-14d` things created from 14 days ago
 - `created<2023-05/14d` things created from last two weeks of April and first two weeks of May
 
-
 ### Date Comparison
 
 Comparing dates with `>` and `<` is done as expected. More interesting
 is to specify more than one date and the use of the `:` comparison.
 
 The `:` can be used to specify ranges more succinctly. For a full
-timestamp, it means *equals*. With partial timestamps it searches
+timestamp, it means _equals_. With partial timestamps it searches
 within the minimum and maximum possible date for that partial
 timestamp.
 
@@ -275,7 +265,6 @@ Example:
 ```
 created:2023-03,2023-06
 ```
-
 
 The above means to match entities created in March 2023 or June 2023.
 

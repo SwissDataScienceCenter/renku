@@ -16,12 +16,12 @@ We need to connect this git repository to the Renku project in order to access i
 
 Here's how to add the code repository to your project:
 
-1. Click on **+** under the Code Repositories section.
-2. Copy and paste the link to **Clone with HTTPS** from your git project.
-In this case, we already provide you with the code here:
+1.  Click on **+** under the Code Repositories section.
+2.  Copy and paste the link to **Clone with HTTPS** from your git project.
+    In this case, we already provide you with the code here:
 
-    ```
-    https://gitlab.com/renku/air-quality-analysis
-    ```
+        ```
+        https://gitlab.com/renku/air-quality-analysis
+        ```
 
 For more information about working with code repositories on Renku, check out the **code** section in the [How To Guides](../code/code-repository).

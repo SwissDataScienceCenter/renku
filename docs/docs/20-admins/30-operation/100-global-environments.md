@@ -13,17 +13,17 @@ The Docker images used for global environments have to be public.
 
 1. Sign in as a Renku administrator
 2. Navigate to the Renku administrator panel, you should have a link to it in
-the menu that shows up when you click on your profile icon in the upper right
-corner of the Renku dashboard.
+   the menu that shows up when you click on your profile icon in the upper right
+   corner of the Renku dashboard.
 3. Click on "Add Session Environment".
 4. Enter the docker image you want to use for the environment, the name and description.
 5. If you are using a Renku image as your base then you need to modify the following options
-  in the advanced settings section:
-    - Default URL: `/`
-    - Mount directory: `/home/renku/work`
-    - Work directory: `/home/renku/work`
-5. *Optional:* If the docker image will not run a preconfigured Renku frontend,
-then you should modify the the `UID`, `GID`, `CMD` and `ENTRYPOINT` as well.
+   in the advanced settings section:
+   - Default URL: `/`
+   - Mount directory: `/home/renku/work`
+   - Work directory: `/home/renku/work`
+6. _Optional:_ If the docker image will not run a preconfigured Renku frontend,
+   then you should modify the the `UID`, `GID`, `CMD` and `ENTRYPOINT` as well.
 
 :::info[Using images built by Renku]
 If you use [images published by Renku](https://github.com/orgs/SwissDataScienceCenter/packages?repo_name=renku)
@@ -37,14 +37,14 @@ then you only need to specify the url, mount and work directory in the advanced 
 There are a few ways you can customize existing Renku images:
 
 1. Apply buildpacks on the Renku run image.
-The modifications you can do are limited to what is supported by the buildpacks we publish in our
-[buildpacks repository](https://github.com/SwissDataScienceCenter/renku-frontend-buildpacks),
-such as installing packages for different programming languages or installing
-extensions for VSCodium or Jupyterlab.
+   The modifications you can do are limited to what is supported by the buildpacks we publish in our
+   [buildpacks repository](https://github.com/SwissDataScienceCenter/renku-frontend-buildpacks),
+   such as installing packages for different programming languages or installing
+   extensions for VSCodium or Jupyterlab.
 2. Use the Renku run image as a base for building your own custom image, then apply
-one of the Renku frontend buildpacks.
+   one of the Renku frontend buildpacks.
 3. Take an existing Renku image that is ready-to-use and modify it. In this case you have to be careful
-to not modify the configuration we have already set up that makes the images work on Renku.
+   to not modify the configuration we have already set up that makes the images work on Renku.
 
 :::info[Cloud Native Buildpacks]
 We make extensive use of Cloud Native Buildpacks in Renku. If you want to learn
@@ -121,10 +121,11 @@ This is the most challenging way to create images for Renku. You should make sur
 try the other alternatives outlined above and only if none of them are suitable proceed with this option.
 
 There are some general guidelines we can offer for this:
+
 - Use a Debian or Ubuntu base image.
 - Use a non-root user to run the image (we use uid/gid of 1000 and a user called `renku` in our images).
 - Consider what should be the working and mount directory and configure accordingly in the global environment.
 - Remember that everything that is not inside the mount directory will be removed when a session is paused and resumed. It is especially easy for users to forget this limitation.
 - The Kubernetes liveness checks that Renku adds to every session should be compatible
-with whatever you will be launching in the image. If the liveness checks are not working properly
-then the sessions with your new image will not be accessible and will constantly restart.
+  with whatever you will be launching in the image. If the liveness checks are not working properly
+  then the sessions with your new image will not be accessible and will constantly restart.

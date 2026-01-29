@@ -21,7 +21,6 @@ title: Demo Workshop Material
 
 </details>
 
-
 <details>
 <summary>**Genomes used for the generation of the mOTUs3 database**</summary>
 
@@ -32,7 +31,6 @@ title: Demo Workshop Material
 **Libdrive:** https://libdrive.ethz.ch/index.php/s/AovZ7KpStxfGdhs
 
 </details>
-
 
 <details>
 <summary>**The 100-protein NMR spectra dataset: A resource for biomolecular NMR data analysis (Dataset)**</summary>

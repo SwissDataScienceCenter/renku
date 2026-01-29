@@ -1,10 +1,12 @@
-import { themes as prismThemes } from 'prism-react-renderer';
-import type { Config } from '@docusaurus/types';
-import type * as Preset from '@docusaurus/preset-classic';
+import { themes as prismThemes } from "prism-react-renderer";
+import type { Config } from "@docusaurus/types";
+import type * as Preset from "@docusaurus/preset-classic";
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
-const url = new URL(process.env.READTHEDOCS_CANONICAL_URL || "https://renku.readthedocs.io");
+const url = new URL(
+  process.env.READTHEDOCS_CANONICAL_URL || "https://renku.readthedocs.io",
+);
 const versionSlug = process.env.READTHEDOCS_VERSION;
 
 const algoliaConfig = process.env.ALGOLIA_APP_ID
@@ -31,9 +33,11 @@ const algoliaConfig = process.env.ALGOLIA_APP_ID
 
       // Optional: Algolia search parameters
       searchParameters: {
-        ...(versionSlug ? {
-        facetFilters: ["language:en", `rtd_tag:${versionSlug}`],
-        } : {})
+        ...(versionSlug
+          ? {
+              facetFilters: ["language:en", `rtd_tag:${versionSlug}`],
+            }
+          : {}),
       },
 
       // Optional: path for search page that enabled by default (`false` to disable it)
@@ -50,9 +54,9 @@ const algoliaConfig = process.env.ALGOLIA_APP_ID
   : undefined;
 
 const config: Config = {
-  title: 'Renku',
-  tagline: 'Connecting data, code, compute, and people.',
-  favicon: 'img/favicon.ico',
+  title: "Renku",
+  tagline: "Connecting data, code, compute, and people.",
+  favicon: "img/favicon.ico",
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
   future: {
@@ -67,38 +71,37 @@ const config: Config = {
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'SwissDataScienceCenter', // Usually your GitHub org/user name.
-  projectName: 'renku', // Usually your repo name.
+  organizationName: "SwissDataScienceCenter", // Usually your GitHub org/user name.
+  projectName: "renku", // Usually your repo name.
 
-  onBrokenLinks: 'throw',
-  onBrokenMarkdownLinks: 'warn',
+  onBrokenLinks: "throw",
+  onBrokenMarkdownLinks: "warn",
 
   markdown: { mermaid: true },
 
-  themes: [
-    '@docusaurus/theme-mermaid',
-  ],
+  themes: ["@docusaurus/theme-mermaid"],
 
   // Even if you don't use internationalization, you can use this field to set
   // useful metadata like html lang. For example, if your site is Chinese, you
   // may want to replace "en" with "zh-Hans".
   i18n: {
-    defaultLocale: 'en',
-    locales: ['en'],
+    defaultLocale: "en",
+    locales: ["en"],
   },
 
   presets: [
     [
-      'classic',
+      "classic",
       {
         docs: {
-          sidebarPath: './sidebars.ts',
+          sidebarPath: "./sidebars.ts",
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
-          editUrl: 'https://github.com/SwissDataScienceCenter/renku/tree/master/docs',
+          editUrl:
+            "https://github.com/SwissDataScienceCenter/renku/tree/master/docs",
         },
         theme: {
-          customCss: './src/css/custom.css',
+          customCss: "./src/css/custom.css",
         },
       } satisfies Preset.Options,
     ],
@@ -106,108 +109,110 @@ const config: Config = {
 
   themeConfig: {
     // Replace with your project's social card
-    image: 'img/docusaurus-social-card.jpg',
+    image: "img/docusaurus-social-card.jpg",
     metadata: [
-      ...(versionSlug ? [
-        { name: 'rtd_tag', content: versionSlug },
-        { name: 'docsearch:rtd_tag', content: versionSlug }
-      ] : [])
+      ...(versionSlug
+        ? [
+            { name: "rtd_tag", content: versionSlug },
+            { name: "docsearch:rtd_tag", content: versionSlug },
+          ]
+        : []),
     ],
     navbar: {
-      title: 'Docs',
+      title: "Docs",
       logo: {
-        alt: 'My Site Logo',
-        src: 'img/logo.svg',
+        alt: "My Site Logo",
+        src: "img/logo.svg",
       },
       items: [
         {
-          type: 'docSidebar',
-          sidebarId: 'users',
-          position: 'left',
-          label: 'For users',
+          type: "docSidebar",
+          sidebarId: "users",
+          position: "left",
+          label: "For users",
         },
         {
-          type: 'docSidebar',
-          sidebarId: 'admins',
-          position: 'left',
-          label: 'For admins',
+          type: "docSidebar",
+          sidebarId: "admins",
+          position: "left",
+          label: "For admins",
         },
         {
-          href: 'https://renkulab.io',
-          label: 'Renkulab',
-          position: 'right',
+          href: "https://renkulab.io",
+          label: "Renkulab",
+          position: "right",
         },
         {
-          href: 'https://github.com/SwissDataScienceCenter/renku',
-          label: 'GitHub',
-          position: 'right',
+          href: "https://github.com/SwissDataScienceCenter/renku",
+          label: "GitHub",
+          position: "right",
         },
       ],
     },
     footer: {
-      style: 'dark',
+      style: "dark",
       links: [
         {
-          title: 'Docs',
+          title: "Docs",
           items: [
             {
-              label: 'For users',
-              to: '/docs/users',
+              label: "For users",
+              to: "/docs/users",
             },
             {
-              label: 'For admins',
-              to: '/docs/admins/architecture/services',
+              label: "For admins",
+              to: "/docs/admins/architecture/services",
             },
           ],
         },
         {
-          title: 'Community',
+          title: "Community",
           items: [
             {
-              label: 'Forum',
-              href: 'https://renku.discourse.group',
+              label: "Forum",
+              href: "https://renku.discourse.group",
             },
             {
-              label: 'Chat (Gitter)',
-              href: 'https://gitter.im/SwissDataScienceCenter/renku',
+              label: "Chat (Gitter)",
+              href: "https://gitter.im/SwissDataScienceCenter/renku",
             },
             {
-              label: 'Blog',
-              href: 'https://blog.renkulab.io',
+              label: "Blog",
+              href: "https://blog.renkulab.io",
             },
             {
-              label: 'Email',
-              href: 'mailto:hello@renku.io',
+              label: "Email",
+              href: "mailto:hello@renku.io",
             },
           ],
         },
         {
-          title: 'Follow us',
+          title: "Follow us",
           items: [
             {
-              label: 'Youtube',
-              href: 'https://www.youtube.com/@renkuio1503',
+              label: "Youtube",
+              href: "https://www.youtube.com/@renkuio1503",
             },
             {
-              label: 'Mastodon',
-              href: 'https://fosstodon.org/@renku',
+              label: "Mastodon",
+              href: "https://fosstodon.org/@renku",
             },
           ],
         },
         {
-          title: 'About',
+          title: "About",
           items: [
             {
-              label: 'Renkulab.io',
-              href: 'https://renkulab.io',
+              label: "Renkulab.io",
+              href: "https://renkulab.io",
             },
             {
-              label: 'Roadmap',
-              href: 'https://renku.notion.site/Roadmap-b1342b798b0141399dc39cb12afc60c9',
+              label: "Roadmap",
+              href: "https://renku.notion.site/Roadmap-b1342b798b0141399dc39cb12afc60c9",
             },
             {
-              label: 'GitHub',
-              href: 'https://github.com/SwissDataScienceCenter/renku',
+              label: "GitHub",
+              href: "https://github.com/SwissDataScienceCenter/renku",
             },
           ],
         },

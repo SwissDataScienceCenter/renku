@@ -9,23 +9,25 @@ description: Zenodo, Dataverse, etc.
 
 There are different "backends" that are used by many different data repositories.
 We support several such common backends:
+
 - [Invenio](https://inveniosoftware.org/)
 - [Dataverse](https://dataverse.org/)
 
 In addition to the above we support other data repositories that have custom backends
 or other less-common backends:
+
 - [EnviDat](https://envidat.ch)
 
 **Examples of Invenio data repositories:**
 
- [Zenodo](https://zenodo.org)
-*/* [CaltechDATA](https://data.caltech.edu)
-*/* [See all](https://inveniosoftware.org/showcase/)
+[Zenodo](https://zenodo.org)
+_/_ [CaltechDATA](https://data.caltech.edu)
+_/_ [See all](https://inveniosoftware.org/showcase/)
 
 **Examples of Dataverse data repositories:**
 
 [Harvard Dataverse](https://dataverse.harvard.edu)
-*/* [See all](https://dataverse.org)
+_/_ [See all](https://dataverse.org)
 
 :::info
 
@@ -39,7 +41,7 @@ Integrations with more data repositories, including ones in the ETH Domain, will
 2. On the Renku project page, click the ➕ button in the data section to add a new data connector
 3. Select the **Import data by DOI** mode
 
-    ![image-10](./connect-data-from-data-repositories-10.png)
+   ![image-10](./connect-data-from-data-repositories-10.png)
 
 4. Paste the DOI and click **Import**
 
@@ -47,13 +49,13 @@ Integrations with more data repositories, including ones in the ETH Domain, will
 
 1. Find the DOI badge box
 
-    <p class="image-container-s">
-    ![image-20](./connect-data-from-data-repositories-20.png)
-    </p>
+<p class="image-container-s">
+![image-20](./connect-data-from-data-repositories-20.png)
+</p>
 
 2. Click the badge and copy the DOI
 
-    ![image-30](./connect-data-from-data-repositories-30.png)
+   ![image-30](./connect-data-from-data-repositories-30.png)
 
 :::note
 
@@ -80,7 +82,7 @@ The DOI is also shown on the “Metadata” tab:
 1. Navigate to [EnviDat](https://envidat.ch).
 2. Search for the specific dataset or simply click "Explore All" on the home page.
 3. Copy the value next to the fingerprint icon near the top of the page, that is the DOI.
-  In the example below this would be `10.16904/envidat.722`.
+   In the example below this would be `10.16904/envidat.722`.
 
 ![EnviDat dataset screenshot](./envidat-doi.png)
 

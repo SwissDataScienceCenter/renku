@@ -70,6 +70,7 @@ Include an `environment.yml` file located at the root (top level) of the code re
     # Note: prefix can be changed
     prefix: "/opt/conda"
     ```
+
 </details>
 
 Important usage notes:
@@ -79,9 +80,9 @@ Important usage notes:
   `python==3.10` will install `3.10.0` while using `python=3.10` will install `3.10.19` or a
   newer release. You can also use a version string similar to `python>=3.12,<3.13` (will install latest `3.12.x`).
 - Regarding conda channels:
-    - `nodefaults` must be included. See example above.
-    - We recommend using the `conda-forge` channel or other non-anaconda channels.
-    - The `defaults` channel is not recommended and often results in failed builds (due to rate limits imposed by Anaconda).
+  - `nodefaults` must be included. See example above.
+  - We recommend using the `conda-forge` channel or other non-anaconda channels.
+  - The `defaults` channel is not recommended and often results in failed builds (due to rate limits imposed by Anaconda).
 - Please note that miniconda can only be used at this time to create Python environments, not R environments.
 - Environments defined with one of these files will be created via miniconda. Configuring a version of miniconda is not supported.
 
@@ -104,6 +105,7 @@ python version `3.10`. It is not currently possible to specify a different pytho
     pandas==2.2.3
     jupyterlab==4.3.5
     ```
+
 </details>
 
 #### Poetry (`pyproject.toml`)
@@ -139,6 +141,7 @@ Note that poetry version `1.8.3` will be used.
     requires = ["poetry-core"]
     build-backend = "poetry.core.masonry.api"
     ```
+
 </details>
 
 ## Defining an R Environment
@@ -161,28 +164,28 @@ repository](create-environment-with-custom-packages-private-code-repository).
 
 1. Make sure the code repository that contains your environment definition file is added to your Renku project.
 2. Create a **new session launcher**
-3. Select the  **Create from code** option
+3. Select the **Create from code** option
 
-    ![image.png](./create-environment-with-custom-packages-installed-10.png)
+   ![image.png](./create-environment-with-custom-packages-installed-10.png)
 
 4. Select the **Code repository**
 
-    :::info
+   :::info
 
-    Note: The code repository must be public. If your code repository is private, please see
-    [Creating a custom environment from a private code
-    repository](create-environment-with-custom-packages-private-code-repository)
+   Note: The code repository must be public. If your code repository is private, please see
+   [Creating a custom environment from a private code
+   repository](create-environment-with-custom-packages-private-code-repository)
 
-    :::
+   :::
 
-    :::info
+   :::info
 
-    Note: The code repository must be already linked to the Renku project
+   Note: The code repository must be already linked to the Renku project
 
-    :::
+   :::
 
-5. Select the **Environment** **type** (Python, *more coming soon*)
-6. Select the **User interface** you’d like your session to have (VSCodium or Jupyterlab, *more coming soon*).
+5. Select the **Environment** **type** (Python, _more coming soon_)
+6. Select the **User interface** you’d like your session to have (VSCodium or Jupyterlab, _more coming soon_).
 7. Click **Next**
 8. Define the **name** of the Session Launcher
 9. Select the default **compute resources**
@@ -198,9 +201,9 @@ When the environment is built, you can launch your session.
 
 1. When you want to make changes to your environment (add new packages), first update the environment definition file in the code repository where the environment is defined.
 2. Then, rebuild the environment in RenkuLab:
-    1. Click on the session launcher to open the session launcher side panel.
-    2. Navigate to the **Session Environment** section.
-    3. Click on **Rebuild**.
+   1. Click on the session launcher to open the session launcher side panel.
+   2. Navigate to the **Session Environment** section.
+   3. Click on **Rebuild**.
 
 ## [experimental] Using a dashboard with a code-based environment
 
