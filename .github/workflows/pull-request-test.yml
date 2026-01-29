@@ -42,17 +42,21 @@ jobs:
       run:
         working-directory: docs/
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v4
+      - name: Checkout repository
+        uses: actions/checkout@v5
+      - name: Setup node
+        uses: actions/setup-node@v4
         with:
           node-version: "22"
           cache: npm
           cache-dependency-path: docs/package-lock.json
-      - name: install dependencies
-        run: npm install
-      - name: test docs spelling
+      - name: Install dependencies
+        run: npm clean-install
+      - name: Check docs formatting
+        run: npm run format:check
+      - name: Test docs spelling
         run: npm run spell-check
-      - name: test the docs build
+      - name: Test the docs build
         run: npm run build
 
   check-deploy:

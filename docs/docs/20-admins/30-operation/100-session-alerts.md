@@ -35,6 +35,7 @@ graph TB
 ```
 
 The integration works as follows:
+
 1. Prometheus monitors your cluster and evaluates alert rules for Renku sessions
 2. When an alert fires (or resolves), Alertmanager sends a webhook to Renku Data Services
 3. Renku authenticates the webhook request using OAuth2 client credentials
@@ -98,14 +99,14 @@ alertmanager:
     receivers:
       - name: "renku-webhook"
         webhook_configs:
-          - url: 'https://your-renku-instance.com/api/data/webhooks/alertmanager'
+          - url: "https://your-renku-instance.com/api/data/webhooks/alertmanager"
             send_resolved: true
             max_alerts: 1
             http_config:
               oauth2:
-                client_id: 'alertmanager-webhook'
-                client_secret_file: '/etc/alertmanager/secrets/oauth2-client-secret'
-                token_url: 'https://your-renku-instance.com/auth/realms/Renku/protocol/openid-connect/token'
+                client_id: "alertmanager-webhook"
+                client_secret_file: "/etc/alertmanager/secrets/oauth2-client-secret"
+                token_url: "https://your-renku-instance.com/auth/realms/Renku/protocol/openid-connect/token"
 
     route:
       receiver: "default"
@@ -198,55 +199,55 @@ groups:
 #### Low Disk Space
 
 ```yaml
-      - alert: RenkuSessionHighDiskUsage
-        expr: >
-          sum by (persistentvolumeclaim, namespace, statefulset, safe_username) (
-            label_replace(
-              (kubelet_volume_stats_available_bytes / kubelet_volume_stats_capacity_bytes * 100)
-              * on(persistentvolumeclaim, namespace) group_left(label_app_kubernetes_io_instance)
-              kube_persistentvolumeclaim_labels{label_app_kubernetes_io_name="AmaltheaSession"},
-              "statefulset", "$1", "label_app_kubernetes_io_instance", "(.+)"
-            )
-            * on(statefulset, namespace) group_left(safe_username)
-            label_replace(
-              kube_customresource_amaltheasession_info,
-              "statefulset", "$1", "name", "(.+)"
-            )
-          ) < 10
-        labels:
-          severity: warning
-          purpose: renku-session
-        annotations:
-          title: "Low disk space"
-          description: "Disk space usage over 90% of capacity"
+- alert: RenkuSessionHighDiskUsage
+  expr: >
+    sum by (persistentvolumeclaim, namespace, statefulset, safe_username) (
+      label_replace(
+        (kubelet_volume_stats_available_bytes / kubelet_volume_stats_capacity_bytes * 100)
+        * on(persistentvolumeclaim, namespace) group_left(label_app_kubernetes_io_instance)
+        kube_persistentvolumeclaim_labels{label_app_kubernetes_io_name="AmaltheaSession"},
+        "statefulset", "$1", "label_app_kubernetes_io_instance", "(.+)"
+      )
+      * on(statefulset, namespace) group_left(safe_username)
+      label_replace(
+        kube_customresource_amaltheasession_info,
+        "statefulset", "$1", "name", "(.+)"
+      )
+    ) < 10
+  labels:
+    severity: warning
+    purpose: renku-session
+  annotations:
+    title: "Low disk space"
+    description: "Disk space usage over 90% of capacity"
 ```
 
 #### OOM Killed
 
 ```yaml
-      - alert: RenkuSessionOOMKilled
-        expr: >
-          sum by(statefulset, safe_username, namespace) (
-            label_replace(
-              (
-                delta(kube_pod_container_status_restarts_total{container="amalthea-session"}[5m])
-                * on(namespace, pod, container) group_left(reason)
-                kube_pod_container_status_last_terminated_reason{reason="OOMKilled", container="amalthea-session"}
-              ) > 0,
-              "statefulset", "$1", "pod", "^(.*)-[0-9]+$"
-            )
-            * on(statefulset) group_left(safe_username)
-            label_replace(
-              kube_customresource_amaltheasession_info,
-              "statefulset", "$1", "name", "(.*)"
-            )
-          ) > 0
-        labels:
-          severity: warning
-          purpose: renku-session
-        annotations:
-          title: "Session restarted"
-          description: "This session ran out of memory and has been restarted"
+- alert: RenkuSessionOOMKilled
+  expr: >
+    sum by(statefulset, safe_username, namespace) (
+      label_replace(
+        (
+          delta(kube_pod_container_status_restarts_total{container="amalthea-session"}[5m])
+          * on(namespace, pod, container) group_left(reason)
+          kube_pod_container_status_last_terminated_reason{reason="OOMKilled", container="amalthea-session"}
+        ) > 0,
+        "statefulset", "$1", "pod", "^(.*)-[0-9]+$"
+      )
+      * on(statefulset) group_left(safe_username)
+      label_replace(
+        kube_customresource_amaltheasession_info,
+        "statefulset", "$1", "name", "(.*)"
+      )
+    ) > 0
+  labels:
+    severity: warning
+    purpose: renku-session
+  annotations:
+    title: "Session restarted"
+    description: "This session ran out of memory and has been restarted"
 ```
 
 ## Verification

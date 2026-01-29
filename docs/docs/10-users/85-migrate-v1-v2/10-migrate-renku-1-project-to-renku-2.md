@@ -6,6 +6,7 @@ Time is running short! Renku Legacy was discontinued in October 2025, and you st
     <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/videoseries?si=sT-HeSUMib4O3d7b&amp;list=PLagSzgm6aERkLQ8LINw8luZKdv9ru7aHh" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen />
 
     *Learn the main steps to successfully migrate your project from Renku Legacy*
+
 </div>
 
 The rest of this guide will explain to you how migrating a project from Renku Legacy to Renku 2.0 manually means, and walk you through the process.
@@ -23,16 +24,16 @@ As of October 2025, Renku Legacy projects are not available anymore. Hence, you 
 
 1. Create a new project in Renku 2.0
 2. **Code:** Add the new home of your Renku Legacy code repository to the Code section in your Renku 2.0 project
-    1. See [How to add a code repository to your project](../code/guides/add-code-repository-to-project)
+   1. See [How to add a code repository to your project](../code/guides/add-code-repository-to-project)
 3. **Data**: If you use cloud storage in your project, create a data connector for the cloud storage object.
-4. **Session:** Add one session launcher or multiple session launchers according to the language you would like to work in your project. 
-    1. See [Create an environment for your session](../sessions/guides/environments)
+4. **Session:** Add one session launcher or multiple session launchers according to the language you would like to work in your project.
+   1. See [Create an environment for your session](../sessions/guides/environments)
 
 ## What happens to my Renku Legacy project assets?
 
 **✅ Code Repository**
 
-Your project code repositories need to be migrated manually. 
+Your project code repositories need to be migrated manually.
 
 **✅ ✳️ Datasets & Git LFS Data**
 
@@ -77,6 +78,6 @@ One exception is the project image, which is not supported at this time.
 Please add members directly to your Renku 2.0 project after creating your new project.
 
 :::tip
- If you would like to share a set of projects with a group, you can create a Renku 2.0
+If you would like to share a set of projects with a group, you can create a Renku 2.0
 group! See [How to create a group](../collaboration/guides/create-group).
 :::

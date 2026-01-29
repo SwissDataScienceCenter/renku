@@ -16,33 +16,33 @@ You will land in your Renku dashboard. From here, you can create a new project:
 
 1. In the **My projects** section of the dashboard, click on **+** to create a new project
 2. For project **Name**, enter **Zurich Air Quality Analysis**
-    - (Leave **Owner, Visibility**, and **Description** unchanged)
+   - (Leave **Owner, Visibility**, and **Description** unchanged)
 3. Click **Create**.
 
 ## Step 2: Connect Data
 
-The data for this project comes from Open Data Zurich and is titled *“Daily updated air quality measurements, since 1983”*.
+The data for this project comes from Open Data Zurich and is titled _“Daily updated air quality measurements, since 1983”_.
 
 [Open Data Zürich - Stadt Zürich](https://data.stadt-zuerich.ch/dataset/ugz_luftschadstoffmessung_tageswerte)
 
-The data is hosted on the Open Data Zurich website. For this project, we have stored a copy of the data in a publicly accessible folder that you can link to your Renku project. 
+The data is hosted on the Open Data Zurich website. For this project, we have stored a copy of the data in a publicly accessible folder that you can link to your Renku project.
 
 Here's how to connect this dataset to your Renku project:
 
 1. On the project page, click on **+** in the **Data** section
 2. Click on **+ Create a Data Connector**
-3. Choose **PolyBox**, select **Shared Folder** and click on **Next**. 
-4. Paste this **public link**: https://polybox.ethz.ch/index.php/s/6EsHI6MF83mg52o 
+3. Choose **PolyBox**, select **Shared Folder** and click on **Next**.
+4. Paste this **public link**: https://polybox.ethz.ch/index.php/s/6EsHI6MF83mg52o
 5. Click **Test connection**, and then **Continue**.
 6. Fill in the final details:
-    1. For **Name**: enter **Zurich Air Quality Data**
-    2. Leave **Owner**, **Visibility**, **Mounting point** unchanged
-    3. Check the **Read-Only checkbox**, because the data is read-only.
+   1. For **Name**: enter **Zurich Air Quality Data**
+   2. Leave **Owner**, **Visibility**, **Mounting point** unchanged
+   3. Check the **Read-Only checkbox**, because the data is read-only.
 7. Click **+ Add Connector**
 
 ## 2.1 (optional) Connect a storage space to save your work
 
-The data connector we added in the previous step is for an existing dataset, and that storage is read-only. If you would like to be able to save the work you do in your Renku session, add a data connector for a storage where you'd like to save that work. For example, you might use a Switchdrive or PolyBox folder, or an S3 bucket. 
+The data connector we added in the previous step is for an existing dataset, and that storage is read-only. If you would like to be able to save the work you do in your Renku session, add a data connector for a storage where you'd like to save that work. For example, you might use a Switchdrive or PolyBox folder, or an S3 bucket.
 
 :::info
 
@@ -63,8 +63,8 @@ Code on GitLab: https://gitlab.renkulab.io/learn-renku/air-quality-analysis
 Here's how to add the code repository to your project:
 
 1. Click on **+** under the Code Repositories section.
-2. Copy and paste the link to Clone with HTTPS from your git project. 
-In this case, we already provide you with the code here: 
+2. Copy and paste the link to Clone with HTTPS from your git project.
+   In this case, we already provide you with the code here:
 
 ```
 [https://gitlab.renkulab.io/learn-renku/air-quality-analysis.git](https://gitlab.renkulab.io/learn-renku/air-quality-analysis)
@@ -73,7 +73,7 @@ In this case, we already provide you with the code here:
 :::info
 
 You can connect code repositories on GitHub and GitLab.com, too. Check out the **Integrations** page (accessible via the 👤 user menu in the top right) to connect your accounts and sync access to repositories. For more information, see [How to connect your Renku account to your GitHub or GitLab account](/docs/users/code/guides/connect-renku-account-to-github-or-gitlab-account).
-And, if your institution has a dedicated GitLab instance you would like to integrate with Renku, do not hesitate to [Contact](/docs/users/community)  us, and we will be happy to add it to the list.
+And, if your institution has a dedicated GitLab instance you would like to integrate with Renku, do not hesitate to [Contact](/docs/users/community) us, and we will be happy to add it to the list.
 
 :::
 
@@ -86,7 +86,7 @@ For more information about working with code repositories on Renku, check out th
 To run your code and analyze data on RenkuLab, first decide what kind of session environment you would like by creating a session launcher.
 
 1. In the **Sessions** section of your project page, click on **+**.
-2. Select the **Python/Jupyter/VSCode for Data Science** environment. This will give you a pre-configured environment with python and data science packages pre-installed. 
+2. Select the **Python/Jupyter/VSCode for Data Science** environment. This will give you a pre-configured environment with python and data science packages pre-installed.
 3. Click **Next**.
 4. Choose the compute resources for your session based on your project’s needs in the drop-down menu, and select the amount of disk space.
 
@@ -105,7 +105,7 @@ Do you need more resources than are available in RenkuLab’s public resource cl
 
 ### 4.2 Launch a Session
 
-1. Click on the **Launch** button in your new Session Launcher to start a session. 
+1. Click on the **Launch** button in your new Session Launcher to start a session.
 
 Once your session has launched, you will see the data and code that you linked to your project inside your session ready to use. The data and code each show up in the file system as folders. Open them up and take a look around!
 
@@ -123,7 +123,7 @@ For a detailed guide for how to install packages, see [How to install packages i
 
 Open the notebook `air-quality-analysis/notebooks/exploratory_analysis.ipynb` in the repository. Run the full notebook.
 
-In the final cell, modify plotting part in the for loop, namely the `plt.show()`, to save your figures in the local disk. You can use the following snippets as a reference. 
+In the final cell, modify plotting part in the for loop, namely the `plt.show()`, to save your figures in the local disk. You can use the following snippets as a reference.
 
 This code will save the figures in the working directory of the session (2 directories up from the notebook).
 
@@ -162,17 +162,17 @@ In your project page:
 
 1. Open the **Settings** tab.
 2. Go to **Project Members** and click on **+**
-3. Search for  the people you want to invite by name or username and set their role. 
+3. Search for the people you want to invite by name or username and set their role.
 
 :::info
 
-Note that in order to add people to your Renku project, they need to already have a Renku account. 
+Note that in order to add people to your Renku project, they need to already have a Renku account.
 
 :::
 
 ### 5.2 Make Your Project Public (optional)
 
-If you want to share your project with a wider audience, you can make it public. 
+If you want to share your project with a wider audience, you can make it public.
 
 1. In your project page, open the **Settings** tab.
 2. Change the project visibility settings and select **Public**.

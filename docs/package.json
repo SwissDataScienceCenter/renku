@@ -13,7 +13,9 @@
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
     "typecheck": "tsc",
-    "spell-check": "node scripts/spell-check.mjs"
+    "spell-check": "node scripts/spell-check.mjs",
+    "format": "prettier -w .",
+    "format:check": "prettier -c ."
   },
   "dependencies": {
     "@docusaurus/core": "^3.9.2",
@@ -30,6 +32,7 @@
     "@docusaurus/tsconfig": "^3.9.2",
     "@docusaurus/types": "^3.9.2",
     "dictionary-en": "^4.0.0",
+    "prettier": "^3.8.0",
     "remark-parse": "^11.0.0",
     "remark-retext": "^6.0.1",
     "retext-english": "^5.0.0",

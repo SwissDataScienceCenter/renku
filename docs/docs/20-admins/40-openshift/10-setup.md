@@ -74,7 +74,6 @@ Note that this require a ClusterIssuer and thus admin access.
 
 Follow the [Cert-Manager documentation for SelfSigned](https://cert-manager.io/docs/configuration/selfsigned/)
 
-
 ## Prerequisite
 
 ### CRDs
@@ -84,6 +83,7 @@ Install CRDs generated earlier (as an admin):
 ```bash
 oc apply -f renku-crds.yaml
 ```
+
 ### RBAC
 
 Install the RBAC rules generated earlier (as an admin):
@@ -104,7 +104,6 @@ metadata:
 users:
   - user1
   - user2
-
 ```
 
 As an admin:
@@ -122,32 +121,32 @@ apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: amaltheasession-manager
 rules:
-- apiGroups:
-  - amalthea.dev
-  resources:
-  - amaltheasessions
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - amalthea.dev
-  resources:
-  - amaltheasessions/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - amalthea.dev
-  resources:
-  - amaltheasessions/status
-  verbs:
-  - get
-  - patch
-  - update
+  - apiGroups:
+      - amalthea.dev
+    resources:
+      - amaltheasessions
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - amalthea.dev
+    resources:
+      - amaltheasessions/finalizers
+    verbs:
+      - update
+  - apiGroups:
+      - amalthea.dev
+    resources:
+      - amaltheasessions/status
+    verbs:
+      - get
+      - patch
+      - update
 ---
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
@@ -181,18 +180,18 @@ apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: priorityclasses-manager
 rules:
-- apiGroups:
-  - "scheduling.k8s.io"
-  resources:
-  - priorityclasses
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
+  - apiGroups:
+      - "scheduling.k8s.io"
+    resources:
+      - priorityclasses
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
 ---
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
@@ -276,7 +275,6 @@ notebooks:
       nginx.ingress.kubernetes.io/proxy-body-size: null
       nginx.ingress.kubernetes.io/proxy-request-buffering: null
       nginx.ingress.kubernetes.io/proxy-buffer-size: null
-
 ```
 
 ### Network Policies:
@@ -307,14 +305,14 @@ networkPolicies:
   sessions:
     egress:
       - ports:
-        - port: 53
-          protocol: UDP
-        - port: 53
-          protocol: TCP
-        - port: 5353
-          protocol: UDP
-        - port: 5353
-          protocol: TCP
+          - port: 53
+            protocol: UDP
+          - port: 53
+            protocol: TCP
+          - port: 5353
+            protocol: UDP
+          - port: 5353
+            protocol: TCP
         to:
           - namespaceSelector:
               matchLabels:
@@ -323,14 +321,14 @@ networkPolicies:
               matchLabels:
                 dns.operator.openshift.io/daemonset-dns: default
       - to:
-        - ipBlock:
-            cidr: 0.0.0.0/0
-            except:
-            - 10.0.0.0/8
-            - 172.16.0.0/12
-            - 192.168.0.0/16
+          - ipBlock:
+              cidr: 0.0.0.0/0
+              except:
+                - 10.0.0.0/8
+                - 172.16.0.0/12
+                - 192.168.0.0/16
       # Optional: unlock access to part of the internal network
       - to:
-        - ipBlock:
-            cidr: 172.31.0.0/16
+          - ipBlock:
+              cidr: 172.31.0.0/16
 ```
