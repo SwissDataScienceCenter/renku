@@ -18,7 +18,7 @@ Projects on RenkuLab can be public or private:
 - **Private:** The project is accessible only to **members** of the project. The level of access (whether you can modify the project or only view it) is determined by one’s **role** on the project.
 - **Public:** The project is visible to everyone on the internet. This means everyone can see the project page and launch sessions. However, only project members can modify the project.
 
-## Project Ownership (*namespace*)
+## Project Ownership (_namespace_)
 
 A project may be owned by an individual user or by a group.
 
@@ -29,7 +29,7 @@ If the project is owned by a group, all members of the group inherit membership 
 There are 2 types of project membership:
 
 - **Direct membership:** A person is added directly to the project as a member.
-- **Inherited membership**: A person has access to the project by being a member of the project’s namespace (group). For more details, see [Role Inheritance](https://www.notion.so/Role-Inheritance-b70b2a48d74043ca9b78a5ed1f60ae10?pvs=21).
+- **Inherited membership**: A person has access to the project by being a member of the project’s namespace (group).
 
 ## Project Roles {#project-roles}
 
@@ -37,7 +37,7 @@ Members of projects can have one of the following roles:
 
 - **Owner:** Can do everything on the project. This role is automatically assigned to whoever created the project.
 - **Editor:** Can edit most things on the project, but cannot change who can access the project (cannot add members or change the project visibility).
-- **Viewer:** Can see the project and launch sessions.  ****
+- **Viewer:** Can see the project and launch sessions.
 
 For more details, see [Project Abilities by Roles](#project-abilities-by-roles).
 
@@ -45,23 +45,23 @@ There may be multiple people in each of these roles (for example, a project may 
 
 ## Project Abilities by Roles {#project-abilities-by-roles}
 
-| Action | Owner | Editor | Viewer |
-| --- | --- | --- | --- |
-| View the project page | ✅ | ✅ | ✅ |
-| Launch sessions | ✅ | ✅ | ✅ |
-| See other project members and their roles | ✅ | ✅ | ✅ |
-| Can see the project in search | ✅ | ✅ | ✅ |
-| Add code repositories | ✅ | ✅ | ❌ |
-| Create data connector in the project | ✅ | ✅ | ❌ |
-| Link data connectors to the project | ✅ | ✅ | ❌ |
-| Create session launchers | ✅ | ✅ | ❌ |
-| Modify the configuration of project components (code repos, session launchers) (See Note below) | ✅ | ✅ | ❌ |
-| Edit project metadata (description, keywords, etc) | ✅ | ✅ | ❌ |
-| Add and remove project members | ✅ | ❌ | ❌ |
-| Change the roles of project members | ✅ | ❌ | ❌ |
-| Change project visibility | ✅ | ❌ | ❌ |
-| Change the namespace the project is in | ✅ | ❌ | ❌ |
-| Delete the project | ✅ | ❌ | ❌ |
+| Action                                                                                          | Owner | Editor | Viewer |
+| ----------------------------------------------------------------------------------------------- | ----- | ------ | ------ |
+| View the project page                                                                           | ✅    | ✅     | ✅     |
+| Launch sessions                                                                                 | ✅    | ✅     | ✅     |
+| See other project members and their roles                                                       | ✅    | ✅     | ✅     |
+| Can see the project in search                                                                   | ✅    | ✅     | ✅     |
+| Add code repositories                                                                           | ✅    | ✅     | ❌     |
+| Create data connector in the project                                                            | ✅    | ✅     | ❌     |
+| Link data connectors to the project                                                             | ✅    | ✅     | ❌     |
+| Create session launchers                                                                        | ✅    | ✅     | ❌     |
+| Modify the configuration of project components (code repos, session launchers) (See Note below) | ✅    | ✅     | ❌     |
+| Edit project metadata (description, keywords, etc)                                              | ✅    | ✅     | ❌     |
+| Add and remove project members                                                                  | ✅    | ❌     | ❌     |
+| Change the roles of project members                                                             | ✅    | ❌     | ❌     |
+| Change project visibility                                                                       | ✅    | ❌     | ❌     |
+| Change the namespace the project is in                                                          | ✅    | ❌     | ❌     |
+| Delete the project                                                                              | ✅    | ❌     | ❌     |
 
 ## Group Permissions {#group-permissions}
 
@@ -79,18 +79,18 @@ For more details, see [Group Abilities by Role](#group-abilities-by-role).
 
 ## Group Abilities by Role {#group-abilities-by-role}
 
-| Action | Owner | Editor | Viewer |
-| --- | --- | --- | --- |
-| Inherited role on content inside the group (see also: [Role Inheritance](https://www.notion.so/Role-Inheritance-b70b2a48d74043ca9b78a5ed1f60ae10?pvs=21)) | Owner | Viewer | Viewer |
-| View content in the group (projects and data connectors) | ✅ | ✅ | ✅ |
-| Create new content in the group (projects and data connectors) | ✅ | ✅ | ❌ |
-| Edit content in the group (projects and data connectors) | ✅ | ✅ | ❌ |
-| Move projects into the group | ✅ (The individual must also be an owner of the project being moved into the group) | ✅ (The individual must also be an owner of the project being moved into the group) | ❌ |
-| Move projects out of group | ✅ | ✅ (The individual must also be an owner of the project being moved out of the group) | ✅ (Project owners may move their project to a different namespace, regardless of their role in the original namespace) |
-| Remove a member from the group | ✅ | ❌ | ❌ |
-| Change roles of group members | ✅ | ❌ | ❌ |
-| Edit the namespace (name, slug) | ✅ | ❌ | ❌ |
-| Add a member to the group | ✅ | ❌ | ❌ |
+| Action                                                         | Owner                                                                               | Editor                                                                                | Viewer                                                                                                                  |
+| -------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Inherited role on content inside the group                     | Owner                                                                               | Editor                                                                                | Viewer                                                                                                                  |
+| View content in the group (projects and data connectors)       | ✅                                                                                  | ✅                                                                                    | ✅                                                                                                                      |
+| Create new content in the group (projects and data connectors) | ✅                                                                                  | ✅                                                                                    | ❌                                                                                                                      |
+| Edit content in the group (projects and data connectors)       | ✅                                                                                  | ✅                                                                                    | ❌                                                                                                                      |
+| Move projects into the group                                   | ✅ (The individual must also be an owner of the project being moved into the group) | ✅ (The individual must also be an owner of the project being moved into the group)   | ❌                                                                                                                      |
+| Move projects out of group                                     | ✅                                                                                  | ✅ (The individual must also be an owner of the project being moved out of the group) | ✅ (Project owners may move their project to a different namespace, regardless of their role in the original namespace) |
+| Remove a member from the group                                 | ✅                                                                                  | ❌                                                                                    | ❌                                                                                                                      |
+| Change roles of group members                                  | ✅                                                                                  | ❌                                                                                    | ❌                                                                                                                      |
+| Edit the namespace (name, slug)                                | ✅                                                                                  | ❌                                                                                    | ❌                                                                                                                      |
+| Add a member to the group                                      | ✅                                                                                  | ❌                                                                                    | ❌                                                                                                                      |
 
 ## Data Connector Permissions {#data-connector-permissions}
 
@@ -117,7 +117,7 @@ Data connectors on RenkuLab can be public or private:
 - **Private:** The data connector is accessible only to **members** of the data connector. The level of access (whether you can modify the project or only view it) is determined by one’s **role** on the data connector.
 - **Public:** The data connector is visible to everyone on the internet. This means everyone can see the data connector listing, and can use the data connector in sessions on projects where it is linked. However, only data connector members can modify the data connector.
 
-## Data Connector Ownership (*namespace*)
+## Data Connector Ownership (_namespace_)
 
 A data connector may be owned by a **project**, a **group**, or an individual **user**.
 
@@ -131,8 +131,8 @@ If the data connector is owned by an individual user, only that user can edit th
 
 There are 2 types of data connector membership:
 
-- **Inherited membership**: A person has access to the data connector by being a member of the data connector’s namespace (project, group, or user). For more details, see [Role Inheritance](https://www.notion.so/Role-Inheritance-b70b2a48d74043ca9b78a5ed1f60ae10?pvs=21).
-- *(Direct membership of data connectors does not exist at this time.)*
+- **Inherited membership**: A person has access to the data connector by being a member of the data connector’s namespace (project, group, or user).
+- _(Direct membership of data connectors does not exist at this time.)_
 
 ## Data Connector Roles
 
@@ -148,15 +148,16 @@ There may be multiple people in each of these roles (for example, a data connect
 
 ## Data Connector Abilities by Roles {#data-connector-abilities-by-roles}
 
-| Action                                                                                   | Owner | Editor | Viewer |
-|------------------------------------------------------------------------------------------| --- | --- | --- |
-| Use the data connector (i.e. the data connector will be mounted in a launched session)
- *Note: any required credentials must be provided by the user launching the session       | ✅ | ✅ | ✅ |
-| Link the data connector to another project                                               | ✅ | ✅ | ✅ |
-| See the data connector in search                                                         | ✅ | ✅ | ✅ |
+| Action | Owner | Editor | Viewer |
+| ------ | ----- | ------ | ------ |
+
+| Use the data connector (i.e. the data connector will be mounted in a launched session).
+\*Note: any required credentials must be provided by the user launching the session | ✅ | ✅ | ✅ |
+| Link the data connector to another project | ✅ | ✅ | ✅ |
+| See the data connector in search | ✅ | ✅ | ✅ |
 | Edit the data connector configuration (see this [note](#note-access-to-data-connector)). | ✅ | ✅ | ❌ |
-| Change the data connector visibility                                                     | ✅ | ❌ | ❌ |
-| Delete the data connector (which removes the data connector from all linked projects)    | ✅ | ❌ | ❌ |
+| Change the data connector visibility | ✅ | ❌ | ❌ |
+| Delete the data connector (which removes the data connector from all linked projects) | ✅ | ❌ | ❌ |
 
 ## Data Connectors & Credentials {#data-connectors-and-credentials}
 

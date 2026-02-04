@@ -6,31 +6,30 @@ If course participants need to be able to save their work during the course and 
 
 For creating the project:
 
-1. Follow the steps in [Workshop Mode](https://www.notion.so/Workshop-Mode-1460df2efafc804e9fa9e3cebb8262ef?pvs=21) to set up the course project.
+1. Follow the steps in [Renku for Teaching](index.md) page to set up the course project.
 2. Add the course participants to your Git code repository, so they can create their own branch.
 
-    :::info
+   :::info
 
-    For example, if the course git repository is on GitHub, add the course participants to the repository **on GitHub**. When the student links their GitHub account with their Renku account, Renku will automatically reflect their access from GitHub.
+   For example, if the course git repository is on GitHub, add the course participants to the repository **on GitHub**. When the student links their GitHub account with their Renku account, Renku will automatically reflect their access from GitHub.
 
-    :::
+   :::
 
 3. Instruct course participants to connect their Renku account to their GitHub or GitLab account, as described in [How to connect your Renku account to your GitHub or GitLab account](../../code/guides/connect-renku-account-to-github-or-gitlab-account)
 4. Instruct course participants to work on their branch. Once they’ve launched a session, course participants can create a new branch with the following command:
 
-    ```jsx
-    git checkout -b my-branch-name
-    ```
+   ```jsx
+   git checkout -b my-branch-name
+   ```
 
-    You can read more in the [official git documentation](https://git-scm.com/docs/git-checkout).
+   You can read more in the [official git documentation](https://git-scm.com/docs/git-checkout).
 
 5. If you have introduce new material in the master branch, ask the course participants to rebase their branch to get those changes:
 
-    ```bash
-    git checkout participant-branch
-    git rebase master
-    ```
-
+   ```bash
+   git checkout participant-branch
+   git rebase master
+   ```
 
 :::warning
 

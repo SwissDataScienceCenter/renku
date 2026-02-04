@@ -82,8 +82,7 @@ notebooks:
                 values:
                   - user
   sessionIngress:
-    annotations:
-      kubernetes.io/ingress.class: webapprouting.kubernetes.azure.com
+    className: webapprouting.kubernetes.azure.com
   sessionTolerations:
     - effect: NoSchedule
       key: renku.io/dedicated

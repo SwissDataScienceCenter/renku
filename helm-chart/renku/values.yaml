@@ -63,17 +63,6 @@ global:
     ## Should be set to a proper value (i.e. by using openssl rand -hex 32) for production.
     ## Can be set here or as .gitlabClientSecret outside of .global, the values set ouside of global (if defined) take precedence.
     gitlabClientSecret:
-  core:
-    versions:
-      latest:
-        name: v10
-        prefix: "10"
-        nameOverride: ""
-        fullnameOverride: ""
-        image:
-          repository: renku/renku-core
-          tag: "v2.9.4"
-          pullPolicy: IfNotPresent
   uiserver:
     ## The client secret for the renku-ui client application registered in keycloak.
     clientSecret: # use `uuidgen -r`
@@ -89,38 +78,6 @@ global:
     ## for a new project based on its own version.
     ## NOTE should only be set for CI deployments and development purposes.
     cli_version:
-  ## Note that the graph will not turned on by default until renku 0.4.0
-  graph:
-    dbEventLog:
-      ## Name of the postgres user to be used to access the Event Log db
-      postgresUser: eventlog
-      ## Postgres password to be used to access the Event Log db
-      ## NOTE: The helm chart cannot update this password in Postgres once it has been created for the first  time either by
-      ## setting this value or by randomly generating it because it was omitted below.
-      postgresPassword:
-        value:
-      existingSecret:
-    tokenRepository:
-      ## Name of the postgres user to be used to access the db storing access tokens
-      postgresUser: tokenstorage
-      ## Postgres password to be used to access the db storing access tokens
-      ## NOTE: The helm chart cannot update this password in Postgres once it has been created for the first time either by
-      ## setting this value or by randomly generating it because it was omitted below.
-      postgresPassword:
-        value:
-      existingSecret:
-    triplesGenerator:
-      ## Name of the postgres user to be used to access the tg db
-      postgresUser: triplesgenerator
-      ## Postgres password to be used to access the db storing access tokens
-      ## NOTE: The helm chart cannot update this password in Postgres once it has been created for the first time either by
-      ## setting this value or by randomly generating it because it was omitted below.
-      postgresPassword:
-        value:
-      existingSecret:
-    jena:
-      ## specify which dataset should be used in Jena
-      dataset:
   externalServices:
     # If an external Postgres database is defined in global.externalServices.postgresql,
     # global.externalServices.postgresql.enabled should be true, and postgresql.enabled should be false.
@@ -136,7 +93,7 @@ global:
       ## DOES NOT tolerate a change of the admin password when upgrading.
       # password:
   ## Use an existing secret instead of creating a new one. It must have a
-  ## postgresql-password key containing the password for the posgres user.
+  ## postgres-password key containing the password for the posgres user.
   # existingSecret:
 
   # Globally available solr (TBD)
@@ -240,29 +197,40 @@ networkPolicies:
       # The default setup here assumes that you have standard Kubernetes and that Renku is exposed
       # to the internet.
       - to:
-        # DNS resolution
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: kube-system
-          podSelector:
-            matchLabels:
-              k8s-app: kube-dns
+          # DNS resolution
+          - namespaceSelector:
+              matchLabels:
+                kubernetes.io/metadata.name: kube-system
+            podSelector:
+              matchLabels:
+                k8s-app: kube-dns
         ports:
-        - port: 53
-          protocol: UDP
-        - port: 53
-          protocol: TCP
+          - port: 53
+            protocol: UDP
+          - port: 53
+            protocol: TCP
       - to:
-        # Allow access to any port/protocol as long as it is directed
-        # outside of the cluster. This is done by excluding
-        # IP ranges which are reserved for private networking from
-        # the allowed range.
-        - ipBlock:
-            cidr: 0.0.0.0/0
-            except:
-            - 10.0.0.0/8
-            - 172.16.0.0/12
-            - 192.168.0.0/16
+          # Allow access to any port/protocol as long as it is directed
+          # outside of the cluster. This is done by excluding
+          # IP ranges which are reserved for private networking from
+          # the allowed range.
+          - ipBlock:
+              cidr: 0.0.0.0/0
+              except:
+                - 10.0.0.0/8
+                - 172.16.0.0/12
+                - 192.168.0.0/16
+## Alerts configuration
+alerts:
+  ## Alertmanager webhook authentication
+  ## Create an OIDC client for authenticating webhooks sent by Alertmanager to Renku
+  alertmanager:
+    enabled: false
+    ## Client ID for the Alertmanager webhook OIDC client (defaults to "alertmanager-webhook")
+    # clientId: alertmanager-webhook
+    ## Client secret for the Alertmanager webhook OIDC client
+    ## Will be auto-generated if not provided
+    clientSecret:
 ## Keycloak configuration
 keycloakx:
   ## Spawn a keycloak instance
@@ -404,7 +372,7 @@ postgresql:
     # postgresqlPassword:
 
     ## Use an existing secret instead of creating a new one. It must have a
-    ## postgresql-password key containing the password for the postgres user.
+    ## postgres-password key containing the password for the postgres user.
     # existingSecret:
 
     # Consider replication. These are the defaults for the basic settings.
@@ -581,7 +549,7 @@ ui:
     replicaCount: 1
     image:
       repository: renku/renku-ui
-      tag: "4.13.0"
+      tag: "4.17.1"
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
       ## Secrets must be manually created in the namespace.
@@ -722,6 +690,8 @@ ui:
       # overrides:
       #   9: "/"
       #   10: "/"
+    # Email for contact us links
+    contactEmail: "hello@renku.io"
     # Configuration to display the "email us" message on the session class selector.
     sessionClassEmailUs:
       # Set this to "true" to enable the "Need more compute resources? Email us!" message
@@ -771,7 +741,7 @@ ui:
     keepCookies: []
     image:
       repository: renku/renku-ui-server
-      tag: "4.13.0"
+      tag: "4.17.1"
       pullPolicy: IfNotPresent
     imagePullSecrets: []
     nameOverride: ""
@@ -853,8 +823,7 @@ dlf-chart:
     enabled: false
   dataset-operator-chart:
     enabled: true
-csi-rclone:
-  {}
+csi-rclone: {}
   # This section is only relevant if you are installing csi-rclone as part of Renku
   ## Name of the csi storage class to use for RClone/Cloudstorage. Should be unique per cluster.
   # storageClassName: csi-rclone
@@ -913,6 +882,12 @@ notebooks:
     allowUnverifiedEmail: false
   sessionIngress:
     host:
+    ## If you want to use the default cluster tls cert, set the flag below to true.
+    ## In this case you do not need to define a tlsSecret. When the flag is set to true
+    ## the tls section of the ingress for sessions gets templated with '{}' which indicates
+    ## to ingress controllers to use the default TLS cert. Note that it could be that some
+    ## ingress contrllers do not support this option.
+    useDefaultClusterTlsCert: false
     tlsSecret:
     className: "nginx"
     annotations:
@@ -1147,7 +1122,7 @@ gateway:
   secretKey:
   image:
     repository: renku/renku-gateway
-    tag: "1.8.0"
+    tag: "1.9.0"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
@@ -1203,262 +1178,6 @@ gateway:
           nginx.ingress.kubernetes.io/proxy-buffer-size: "8k" # Default is 4k, larger size necessary for keycloak
           nginx.ingress.kubernetes.io/use-regex: "true"
           nginx.ingress.kubernetes.io/rewrite-target: /api/gitlab-redirect/$1
-jena:
-  image:
-    repository: renku/renku-jena
-    pullPolicy: IfNotPresent
-  users:
-    admin:
-      ## Admin user password
-      ## Generate one using: `openssl rand -hex 16`
-      password:
-    renku:
-      ## Dataset user password
-      ## Generate one using: `openssl rand -hex 16`
-      password:
-  persistence:
-    accessModes:
-      - ReadWriteOnce
-    size: 10Gi
-  additionalEnvironmentVariables:
-    - name: JVM_ARGS
-      value: -Xmx2G -Xms2G
-  compacting:
-    - name: ADMIN_USER
-      value: admin
-    - name: COMPACTING_SCHEDULE ## The 'Mon *-*-* 00:00:00' expression means the process will be run every Monday at 00:00:00. More details at https://github.com/eikek/calev
-      value: "Mon *-*-* 00:00:00"
-  resources:
-    limits:
-      memory: 3Gi
-    requests:
-      cpu: 300m
-      memory: 3Gi
-  additionalVolumeMounts:
-    - name: shiro
-      mountPath: /fuseki/shiro.ini
-      subPath: shiro.ini
-      readOnly: true
-  additionalVolumes:
-    - name: shiro
-      configMap:
-        name: shiro-ini
-        defaultMode: 0555
-  additionalInitContainerScript: "find /fuseki -name tdb.lock -type f -delete && find /fuseki/configuration -name *.ttl -type f -empty -delete && echo clean-up done"
-  test:
-    enabled: false
-## Configuration for renku-graph services
-graph:
-  webhookService:
-    aesEncryptionKey: # A 8, 16 or 32 bytes string used for AES encryption of the project tokens
-    image:
-      repository: renku/webhook-service
-      tag: "2.50.0"
-      pullPolicy: IfNotPresent
-    service:
-      type: ClusterIP
-      port: 80
-    resources:
-      limits:
-        memory: 256Mi
-      requests:
-        cpu: 50m
-        memory: 256Mi
-    jvmXmx: 128M
-    gitlab:
-      rateLimit: 100/sec
-  tokenRepository:
-    aesEncryptionKey: # A 8, 16 or 32 bytes string used for AES encryption of the project tokens
-    image:
-      repository: renku/token-repository
-      tag: "2.50.0"
-      pullPolicy: IfNotPresent
-    service:
-      type: ClusterIP
-      port: 9003
-    resources:
-      requests:
-        cpu: 500m
-        memory: 256Mi
-    jvmXmx: 128M
-    gitlab:
-      rateLimit: 50/sec
-    projectTokenTTL: "365 days"
-    # name of the Project Access Tokens to be created on behalf of the user in GitLab; defaults to .Release.Name
-    projectTokenName:
-    projectTokenDuePeriod: "184 days"
-    connectionPool: 2
-  triplesGenerator:
-    replicas: 1
-    image:
-      repository: renku/triples-generator
-      tag: "2.50.0"
-      pullPolicy: IfNotPresent
-    service:
-      type: ClusterIP
-      port: 9002
-    jvmXmx: 512m
-    resources:
-      limits:
-        memory: 600Mi
-      requests:
-        cpu: 500m
-        memory: 600Mi
-    gitlab:
-      rateLimit: 30/sec
-    ## a demanded number of concurrent triples generation processes
-    generationProcessesNumber: 2
-    transformationProcessesNumber: 2
-    connectionPool: 5
-    # set this to a pip-installable renku-python version which will be installed on startup
-    renkuPythonDevVersion:
-  knowledgeGraph:
-    replicas: 1
-    image:
-      repository: renku/knowledge-graph
-      tag: "2.50.0"
-      pullPolicy: IfNotPresent
-    service:
-      type: ClusterIP
-      port: 80
-    resources:
-      limits:
-        memory: 512Mi
-      requests:
-        cpu: 100m
-        memory: 512Mi
-    gitlab:
-      rateLimit: 100/sec
-    jvmXmx: 256M
-    services:
-      renku:
-        ## Renku knowledge-graph resources path e.g. `knowledge-graph` would assume
-        ## Renku resource are available at: https://{global.renku.domain}/knowledge-graph
-        resourcesPath: "/knowledge-graph"
-  eventLog:
-    image:
-      repository: renku/event-log
-      tag: "2.50.0"
-      pullPolicy: IfNotPresent
-    service:
-      type: ClusterIP
-      port: 9005
-    resources:
-      limits:
-        memory: 512Mi
-      requests:
-        cpu: 100m
-        memory: 512Mi
-    jvmXmx: 256M
-    gitlab:
-      rateLimit: 10/sec
-    connectionPool: 10
-  commitEventService:
-    image:
-      repository: renku/commit-event-service
-      tag: "2.50.0"
-      pullPolicy: IfNotPresent
-    service:
-      type: ClusterIP
-      port: 9006
-    resources:
-      limits:
-        memory: 256Mi
-      requests:
-        cpu: 50m
-        memory: 256Mi
-    jvmXmx: 128M
-    gitlab:
-      rateLimit: 10/sec
-  sentry:
-    enabled: false
-    dsn: "" # Sentry dsn
-    sentryDsnRenkuPython: "" # Sentry dsn for renku CLI
-    environment: "" # Environment name e.g. renkulabio
-  persistence:
-    enabled: true
-    ## A manually managed Persistent Volume and Claim
-    ## Requires persistence.enabled: true
-    ## If defined, PVC must be created manually before volume will be bound
-    # existingClaim:
-
-    # storageClass: "-"
-    accessMode: ReadWriteOnce
-    size: 2Gi
-## Configuration for renku-core service
-core:
-  apiBasePath: /api
-  cacheDirectory: /svc/cache
-  cleanupInterval: 60 # NOTE: This needs to be a divisor of, and less than cleanupFilesTTL|cleanupProjectsTTL.
-  projectCloneDepth: 1
-  templateCloneDepth: 1
-  maximumUploadSizeBytes: "1073741824" # 1 Gigabyte, store as string to keep Helm from converting it to scientific notation
-  requestTimeout: 600
-  datasetsWorkerQueues: datasets.jobs,delayed.ctrl.DatasetsCreateCtrl,delayed.ctrl.DatasetsAddFileCtrl,delayed.ctrl.DatasetsRemoveCtrl,delayed.ctrl.DatasetsImportCtrl,delayed.ctrl.DatasetsEditCtrl,delayed.ctrl.DatasetsUnlinkCtrl
-  managementWorkerQueues: cache.cleanup.files,cache.cleanup.projects,delayed.ctrl.MigrateProjectCtrl,delayed.ctrl.SetConfigCtrl
-  cleanupFilesTTL: 1800
-  cleanupProjectsTTL: 1800
-  logLevel: INFO
-  # override to automatically pull LFS data on clone
-  gitLFSSkipSmudge: 1
-  # Concurrency settings for the main service:
-  # the default it 4 workers with 8 threads set in the Dockerfile
-  nWorkers: 4
-  nThreads: 8
-  # NOTE: Make sure token secret is greater or equal to 32 bytes.
-  jwtTokenSecret: bW9menZ3cnh6cWpkcHVuZ3F5aWJycmJn
-  imagePullSecrets: []
-  nameOverride: ""
-  fullnameOverride: ""
-  service:
-    type: ClusterIP
-    port: 80
-  metrics:
-    enabled: false
-    image:
-      repository: renku/rqmetrics
-      tag: 0.0.3
-      pullPolicy: IfNotPresent
-  resources:
-    core:
-      limits:
-        memory: 512Mi
-      requests:
-        cpu: 500m
-        memory: 512Mi
-    rqmetrics:
-      limits:
-        memory: 128Mi
-      requests:
-        cpu: 50m
-        memory: 128Mi
-    datasetsWorkers:
-      limits:
-        memory: 128Mi
-      requests:
-        cpu: 50m
-        memory: 128Mi
-    managementWorkers:
-      limits:
-        memory: 128Mi
-      requests:
-        cpu: 50m
-        memory: 128Mi
-    scheduler:
-      limits:
-        memory: 128Mi
-      requests:
-        cpu: 50m
-        memory: 128Mi
-  sentry:
-    enabled: false
-    dsn:
-    environment:
-    sampleRate: 0.2
-  horizontalPodAutoscaling:
-    minReplicas: 1
-    maxReplicas: 2
-    averageMemoryUtilization: 75
 ## Configuration for the Swagger-UI available at <renku-domain>/swagger
 swagger:
   enabled: true
@@ -1478,14 +1197,22 @@ platformInit:
 dataService:
   rbac:
     create: true
+    # Resource pools allow Renkulab administrators to define pools of compute resources
+    # that can be used for user sessions. This allows to separate resources for different
+    # user groups, e.g. students vs researchers.
+    # The feature is based on Kubernetes PriorityClasses, which are non-namespaced, therefore to access that resource
+    # the data-service service account needs a ClusterRole and the corresponding ClusterRoleBinding.
+    # If you are not allowed to create ClusterRoles in your cluster, you can disable the feature by setting
+    # `enableResourcePool` to false.
+    enableResourcePool: true
   image:
     repository: renku/renku-data-service
-    tag: "0.62.0"
+    tag: "0.68.1"
     pullPolicy: IfNotPresent
   k8sWatcher:
     image:
       repository: renku/data-service-k8s-watcher
-      tag: "0.62.0"
+      tag: "0.68.1"
       pullPolicy: IfNotPresent
     resources: {}
     sentry:
@@ -1496,7 +1223,7 @@ dataService:
   dataTasks:
     image:
       repository: renku/data-service-data-tasks
-      tag: "0.62.0"
+      tag: "0.68.1"
       pullPolicy: IfNotPresent
     resources: {}
   service:
@@ -1535,16 +1262,16 @@ dataService:
     ## The container image prefix for images built from code
     outputImagePrefix: harbor.dev.renku.ch/renku-build/
     ## The builder image (see https://buildpacks.io/docs/for-platform-operators/concepts/builder/)
-    builderImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/selector:0.2.2"
+    builderImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/selector:0.2.3"
     ## The run image (see https://buildpacks.io/docs/for-platform-operators/concepts/base-images/)
-    runImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/run-image:0.2.2"
+    runImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/run-image:0.2.3"
     ## The name of the BuildStrategy to use for image builds.
     strategyName: renku-buildpacks-v3
     ## Configuration overrides for specific target platforms
     platformOverrides: {}
       # linux/arm64:
-      #   builderImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/cuda-selector:0.2.2"
-      #   runImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/cuda-run-image:0.2.2"
+      #   builderImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/cuda-selector:0.2.3"
+      #   runImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/cuda-run-image:0.2.3"
       #   strategyName: renku-buildpacks-v3
       #   nodeSelector:
       #     kubernetes.io/arch: arm64
@@ -1614,7 +1341,7 @@ authz:
 secretsStorage:
   image:
     repository: renku/secrets-storage
-    tag: "0.62.0"
+    tag: "0.68.1"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
@@ -1632,10 +1359,6 @@ secretsStorage:
   nodeSelector: {}
   tolerations: []
   affinity: {}
-
-# Important note: running legacy (v1) services is deprecated and this chart value will be removed
-# in the next Renku release.
-enableV1Services: false
 
 # When this is set to false the gateway and data service will ignore the Gitlab
 # that can be integrated with Renku and will not ask users to log into this Gitlab.

@@ -12,7 +12,6 @@ Renku release 0.67.0 introduced more flexibility for how you connect data connec
 *A data connector with a visibility warning*
 </p>
 
-
 ## What hidden data connectors mean
 
 If you see a note that there are hidden data connectors on a project, that means that there are data connectors linked to the project that you do not have access rights to view.
@@ -27,7 +26,7 @@ A data connector visibility warning means that there may be members of the proje
 
 This may be intentional! For example, if you create a personal data connector for your personal Switchdrive folder and link it to a project, other people in the project don’t see that data connector, and that’s intentional!
 
-But if you see a visibility warning on a data connector that everyone in the project *should* be able to see and use, you’ll want to fix that. Next, we’ll walk through how to do just that.
+But if you see a visibility warning on a data connector that everyone in the project _should_ be able to see and use, you’ll want to fix that. Next, we’ll walk through how to do just that.
 
 ## How to resolve a visibility warning
 
@@ -36,18 +35,17 @@ But if you see a visibility warning on a data connector that everyone in the pro
 1. Click on the data connector with the visibility warning to open its side sheet
 2. In the side sheet, click on **Edit** in the top right
 
-    <p class="image-container-s">
-    ![image.png](./resolve-hidden-visibility-warning-30.png)
-    </p>
+<p class="image-container-s">
+![image.png](./resolve-hidden-visibility-warning-30.png)
+</p>
 
 3. Depending on your data connector, either click **Next**, or click **Test Connection** and then **Continue** to get to the next page of the data connector information
 
-    ![image.png](./resolve-hidden-visibility-warning-40.png)
+   ![image.png](./resolve-hidden-visibility-warning-40.png)
 
 4. Change the **Owner** to the current project.
 
-    ![image.png](./resolve-hidden-visibility-warning-50.png)
-
+   ![image.png](./resolve-hidden-visibility-warning-50.png)
 
 Now the data connector is owned by the project, so everyone in the project is guaranteed to be able to see the data connector.
 
@@ -64,14 +62,14 @@ Another option is to make the data connector public. This will guarantee that ev
 1. Click on the data connector with the Visibility warning to open its side sheet
 2. In the side sheet, click on **Edit** in the top right
 
-    <p class="image-container-s">
-    ![image.png](./resolve-hidden-visibility-warning-30.png)
-    </p>
+<p class="image-container-s">
+![image.png](./resolve-hidden-visibility-warning-30.png)
+</p>
 
 3. Depending on your data connector, either click **Next**, or click **Test Connection** and then **Continue** to get to the next page of the data connector information
 
-    ![image.png](./resolve-hidden-visibility-warning-40.png)
+   ![image.png](./resolve-hidden-visibility-warning-40.png)
 
 4. Change the visibility to **Public**
 
-    ![image.png](./resolve-hidden-visibility-warning-60.png)
+   ![image.png](./resolve-hidden-visibility-warning-60.png)

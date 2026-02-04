@@ -22,9 +22,9 @@ It will look something like: `ghcr.io/swissdatasciencecenter/demo-shiny-serve:sh
 
 With the image URL, you can create a Session Launcher that serves the Shiny app your Renkulab project
 
-Go to your Renkulab project (or create a new one, if necessary) and add a session launcher for a *Custom Environment* with the following values:
+Go to your Renkulab project (or create a new one, if necessary) and add a session launcher for a _Custom Environment_ with the following values:
 
-- **Container Image**: *[the image URL from above]*
+- **Container Image**: _[the image URL from above]_
 - **Port**: 3838
 - **UID**: 997 (the `shiny` user in the Rocker image)
 - **GID**: 997

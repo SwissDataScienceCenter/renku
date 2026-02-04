@@ -27,11 +27,11 @@ RenkuLab supports a range of cloud storage providers, including S3, Azure Blob, 
 
 **The access to the data connector is fully managed by the external storage provider.** When a user launches a session on a project that includes a data connector that requires credentials, Renku will ask that user for their credentials. Renku will only provide the access to the data if the user provides valid credentials.
 
-Being able to *see* a Renku data connector is not the same as being able to *access* the data itself! For example, a data connector may be public, which means other users on RenkuLab can *see* that the data connector exists, and also be protected with credentials, which means that only people with valid credentials can *access* the actual data.
+Being able to _see_ a Renku data connector is not the same as being able to _access_ the data itself! For example, a data connector may be public, which means other users on RenkuLab can _see_ that the data connector exists, and also be protected with credentials, which means that only people with valid credentials can _access_ the actual data.
 
 ### Saving credentials
 
-You can save your credentials for a data connector in RenkuLab so that you don’t have to enter them every time you launch a session. But credentials are never shared with other users on RenkuLab.  Renku will never give another user access without getting valid credentials from that user.
+You can save your credentials for a data connector in RenkuLab so that you don’t have to enter them every time you launch a session. But credentials are never shared with other users on RenkuLab. Renku will never give another user access without getting valid credentials from that user.
 
 ### How to update or remove and credentials
 
@@ -43,7 +43,7 @@ You can enter or modify the saved credentials for a data connector, and also del
 
 ## Share, reuse, and trace your data
 
-Data connectors can be shared among projects. You do not need to create the same data connector for multiple projects. Check [How to link a data connector to your project](/docs/10-users/40-data/guides/10-link-data-connector-to-project.md)!
+Data connectors can be shared among projects. You do not need to create the same data connector for multiple projects. Check [How to link a data connector to your project](/docs/users/data/guides/link-data-connector-to-project)!
 
 ### Track projects linked to your data connector
 
