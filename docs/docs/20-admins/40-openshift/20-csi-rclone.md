@@ -115,16 +115,4 @@ driver:
   create: false
 storageClass:
   create: false
-
-csiControllerRclone:
-  rclone:
-    image:
-      repository: renku/csi-rclone
-      tag: v0.5.0
-
-csiNodepluginRclone:
-  rclone:
-    image:
-      repository: renku/csi-rclone
-      tag: v0.5.0
 ```
