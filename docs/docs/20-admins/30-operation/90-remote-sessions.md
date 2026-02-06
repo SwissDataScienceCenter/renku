@@ -8,7 +8,7 @@ workloads can be started on behalf of users with an API.
 At the moment, Renku only supports starting remote sessions on High-Performance Computing (HPC)
 resources using the [FirecREST API](https://eth-cscs.github.io/firecrest-v2/).
 
-The technical details of remote sessions are explained on the [Amalthea repository](https://github.com/SwissDataScienceCenter/amalthea/blob/main/new.README.md#developer-documentation-remote-sessions).
+The technical details of remote sessions are explained on the [Amalthea repository](https://github.com/SwissDataScienceCenter/amalthea/blob/main/README.md#developer-documentation-remote-sessions).
 
 ## Configuring remote sessions at CSCS
 
