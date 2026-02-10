@@ -3,7 +3,6 @@ updates:
   - package-ecosystem: "pip"
     directories:
       - "scripts/init-realm"
-      - "acceptance-tests/"
       - "global-images/**"
     schedule:
       interval: "weekly"
