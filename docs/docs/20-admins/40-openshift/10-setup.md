@@ -357,7 +357,6 @@ cases when deployed in OpenShift.
 # and likely will not be able to support more than 5 concurrent users.
 # Therefore the resource requests, limits, replica counts here and are NOT SUITABLE FOR PRODUCTION.
 ---
-
 enableInternalGitlab: false
 
 # OpenShift
@@ -388,14 +387,14 @@ networkPolicies:
   sessions:
     egress:
       - ports:
-        - port: 53
-          protocol: UDP
-        - port: 53
-          protocol: TCP
-        - port: 5353
-          protocol: UDP
-        - port: 5353
-          protocol: TCP
+          - port: 53
+            protocol: UDP
+          - port: 53
+            protocol: TCP
+          - port: 5353
+            protocol: UDP
+          - port: 5353
+            protocol: TCP
         to:
           - namespaceSelector:
               matchLabels:
@@ -404,16 +403,16 @@ networkPolicies:
               matchLabels:
                 dns.operator.openshift.io/daemonset-dns: default
       - to:
-        - ipBlock:
-            cidr: 0.0.0.0/0
-            except:
-            - 10.0.0.0/8
-            - 172.16.0.0/12
-            - 192.168.0.0/16
+          - ipBlock:
+              cidr: 0.0.0.0/0
+              except:
+                - 10.0.0.0/8
+                - 172.16.0.0/12
+                - 192.168.0.0/16
       # Unlock access to part of the internal network
       - to:
-        - ipBlock:
-            cidr: 172.31.0.0/16
+          - ipBlock:
+              cidr: 172.31.0.0/16
 # end OpenShift
 
 authz:
@@ -592,5 +591,4 @@ ui:
         memory: 75Mi
       requests:
         memory: 75Mi
-
 ```
