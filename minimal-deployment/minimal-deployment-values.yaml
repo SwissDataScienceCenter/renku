@@ -31,6 +31,8 @@ dataService:
       cpu: 50m
       memory: 750Mi
   replicaCount: 1
+enableInternalGitlab: false
+enableV1Services: false
 gateway:
   replicaCount: 1
 gitlab:
@@ -38,13 +40,6 @@ gitlab:
 global:
   anonymousSessions:
     enabled: true
-  gateway:
-    gitlabClientId: <gitlabClientId>
-    gitlabClientSecret: <gitlabClientSecret>
-  gitlab:
-    registry:
-      host: <gitlab-registry-FQDN>
-    url: <gitlab-url>
   renku:
     domain: <deployment-FQDN>
   useHTTPS: true
