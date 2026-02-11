@@ -1,14 +1,4 @@
 charts:
-  ## gitlab and renku chart versions are not evolving together. Uncomment
-  ## this only when explicitly building the gitlab chart and set the appropriate tag.
-  # - name: helm-chart/gitlab
-  #   imagePrefix: renku/
-  #   repo:
-  #     git: SwissDataScienceCenter/helm-charts
-  #     published: https://swissdatasciencecenter.github.io/helm-charts
-  #   paths:
-  #     - ./gitlab
-
   - name: helm-chart/renku
     resetTag: latest
     imagePrefix: renku/
