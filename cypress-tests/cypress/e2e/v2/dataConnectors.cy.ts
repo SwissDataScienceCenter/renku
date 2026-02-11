@@ -111,17 +111,16 @@ describe("Data Connectors", () => {
     visitCurrentProject();
     cy.getDataCy("project-namespace-link").click();
 
+    // Open the data connector view and delete from the menu
     cy.getDataCy("data-connector-box")
       .find(`[data-cy=data-connector-name]`)
       .contains(dataConnectorName)
-      .click();
-
-    // Open the dropdown menu and click delete
-    cy.getDataCy("data-connector-menu-dropdown")
       .should("be.visible")
-      .scrollIntoView()
       .click();
-    cy.getDataCy("data-connector-delete").should("be.visible").click();
+    cy.getDataCy("data-connector-view").within(() => {
+      cy.getDataCy("data-connector-menu-dropdown").click();
+      cy.getDataCy("data-connector-delete").click();
+    });
 
     // Confirm deletion by typing the slug
     cy.getDataCy("delete-confirmation-input").type(dataConnectorName);
@@ -171,11 +170,10 @@ describe("Data Connectors", () => {
       .click();
 
     // Delete the data connector
-    cy.getDataCy("data-connector-menu-dropdown")
-      .should("be.visible")
-      .scrollIntoView()
-      .click();
-    cy.getDataCy("data-connector-delete").should("be.visible").click();
+    cy.getDataCy("data-connector-view").within(() => {
+      cy.getDataCy("data-connector-menu-dropdown").click();
+      cy.getDataCy("data-connector-delete").click();
+    });
 
     // Confirm deletion by typing the slug
     cy.getDataCy("delete-confirmation-input").type(dataConnectorName);
@@ -228,11 +226,10 @@ describe("Data Connectors", () => {
       .click();
 
     // Delete the data connector
-    cy.getDataCy("data-connector-menu-dropdown")
-      .should("be.visible")
-      .scrollIntoView()
-      .click();
-    cy.getDataCy("data-connector-delete").should("be.visible").click();
+    cy.getDataCy("data-connector-view").within(() => {
+      cy.getDataCy("data-connector-menu-dropdown").click();
+      cy.getDataCy("data-connector-delete").click();
+    });
 
     // Confirm deletion by typing the slug
     cy.getDataCy("delete-confirmation-input").type(dataConnectorName);
@@ -257,7 +254,9 @@ describe("Data Connectors", () => {
       .find(`[data-cy=data-connector-name]`)
       .contains(dataConnectorName)
       .click();
-    cy.getDataCy("data-connector-edit").click();
+    cy.getDataCy("data-connector-view").within(() => {
+      cy.getDataCy("data-connector-edit").click();
+    });
 
     // Edit the data connector
     const newName = `${dataConnectorName} edited`;
@@ -332,13 +331,13 @@ describe("Data Connectors", () => {
       .contains(dataConnectorName)
       .click();
 
-    cy.getDataCy("data-connector-title")
-      .should("be.visible")
-      .contains(dataConnectorName);
-
-    // Click the dropdown button to open the menu
-    cy.getDataCy("data-connector-menu-dropdown").should("be.visible").click();
-    cy.getDataCy("data-connector-unlink").should("be.visible").click();
+    cy.getDataCy("data-connector-view").within(() => {
+      cy.getDataCy("data-connector-title")
+        .should("be.visible")
+        .contains(dataConnectorName);
+      cy.getDataCy("data-connector-menu-dropdown").click();
+      cy.getDataCy("data-connector-unlink").should("be.visible").click();
+    });
 
     cy.getDataCy("delete-data-connector-modal-button").click();
 
@@ -390,13 +389,14 @@ describe("Data Connectors", () => {
         .contains(dataConnectorName)
         .click();
 
-      cy.getDataCy("data-connector-title")
-        .should("be.visible")
-        .contains(dataConnectorName);
-
       // Unlink the data connector from the main project
-      cy.getDataCy("data-connector-menu-dropdown").should("be.visible").click();
-      cy.getDataCy("data-connector-unlink").should("be.visible").click();
+      cy.getDataCy("data-connector-view").within(() => {
+        cy.getDataCy("data-connector-title")
+          .should("be.visible")
+          .contains(dataConnectorName);
+        cy.getDataCy("data-connector-menu-dropdown").click();
+        cy.getDataCy("data-connector-unlink").should("be.visible").click();
+      });
       cy.getDataCy("delete-data-connector-modal-button").click();
 
       // Verify the data connector is no longer linked to the main project
@@ -423,12 +423,13 @@ describe("Data Connectors", () => {
       .contains(dataConnectorName)
       .click();
 
-    cy.getDataCy("data-connector-title")
-      .should("be.visible")
-      .contains(dataConnectorName);
-
     // Edit the data connector to transfer it to the group
-    cy.getDataCy("data-connector-edit").click();
+    cy.getDataCy("data-connector-view").within(() => {
+      cy.getDataCy("data-connector-title")
+        .should("be.visible")
+        .contains(dataConnectorName);
+      cy.getDataCy("data-connector-edit").click();
+    });
 
     // Change the owner to the group
     cy.getDataCy("data-controller-namespace-input").click();
@@ -487,13 +488,14 @@ describe("Data Connectors", () => {
       .contains(dataConnectorName)
       .click();
 
-    cy.getDataCy("data-connector-title")
-      .should("be.visible")
-      .contains(dataConnectorName);
-
     // Unlink the data connector from the project
-    cy.getDataCy("data-connector-menu-dropdown").should("be.visible").click();
-    cy.getDataCy("data-connector-unlink").should("be.visible").click();
+    cy.getDataCy("data-connector-view").within(() => {
+      cy.getDataCy("data-connector-title")
+        .should("be.visible")
+        .contains(dataConnectorName);
+      cy.getDataCy("data-connector-menu-dropdown").should("be.visible").click();
+      cy.getDataCy("data-connector-unlink").should("be.visible").click();
+    });
     cy.getDataCy("delete-data-connector-modal-button").click();
 
     // Verify the data connector is no longer linked to the project
