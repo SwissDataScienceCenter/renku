@@ -213,25 +213,6 @@ As an admin, setup renku project admin roles:
 oc apply -f renku-roles.yaml
 ```
 
-## Renku deployment
-
-With everything in place as listed in the previous steps, Renku can now be
-installed as usual
-
-```bash
-helm upgrade  --install --namespace renku renku renk/renku -f renku-values.yaml --timeout 1800s --skip-crds
-```
-
-:::info
-
-Any Renku user can be made a Renku administrator. This is useful for setting up
-different global environments, resource pools or integrations. In addition,
-Renku administrators can access the projects and similar resources of any user
-in the platform. The documentation for assigning the Renku administrator role
-can be found [here](../operation/user-management).
-
-:::
-
 ### Amalthea session service account
 
 The default Security Context Constraint (SCC) used to start pods will not allow
@@ -332,6 +313,32 @@ networkPolicies:
           - ipBlock:
               cidr: 172.31.0.0/16
 ```
+
+## Renku deployment
+
+With everything in place as listed in the previous steps, Renku can now be
+installed as usual
+
+```bash
+helm upgrade  --install --namespace renku renku renk/renku -f renku-values.yaml --timeout 1800s --skip-crds
+```
+
+:::info
+
+Any Renku user can be made a Renku administrator. This is useful for setting up
+different global environments, resource pools or integrations. In addition,
+Renku administrators can access the projects and similar resources of any user
+in the platform. Read more at [Managing Renku Admin Users](/docs/admins/operation/user-management#managing-renku-admin-users).
+
+:::
+
+## Image building
+
+Based on Shipwright, OpenShift has a project called [Build for RedHat OpenShift](https://docs.redhat.com/en/documentation/builds_for_red_hat_openshift)
+that provides all the necessary pieces to enable building images for the Renku platform.
+
+Once the operator is installed, follow the [Harbor and Shipwright](/docs/admins/installation/configuration#harbor-and-shipwright)
+instructions to get your system ready to build user session images.
 
 ### Chart dependencies
 
