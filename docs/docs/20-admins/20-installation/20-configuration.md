@@ -243,6 +243,11 @@ The file above is just an example you will have to modify the options shown as f
 
 - Label the node(s) you want to use for the builds with `renku.io/node-purpose: image-build`
 
+### Build strategy
+
+The last action required to have your system ready is to deploy the [BuildStrategy
+for Shipwright](https://github.com/SwissDataScienceCenter/renku-data-services/blob/main/components/renku_pack_builder/manifests/buildstrategy.yaml).
+
 ### Configuration without Harbor and Shipwright
 
 This is the default and no further steps are needed.
