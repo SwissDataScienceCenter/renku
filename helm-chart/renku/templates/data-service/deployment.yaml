@@ -77,8 +77,6 @@ spec:
               value: /secrets/publicKey/publicKey
             - name: K8S_NAMESPACE
               value: {{ .Release.Namespace | quote }}
-            - name: GITLAB_URL
-              value: {{ .Values.global.gitlab.url | quote }}
             - name: MAX_PINNED_PROJECTS
               value: {{ .Values.dataService.maxPinnedProjects | quote }}
             - name: REDIS_HOST

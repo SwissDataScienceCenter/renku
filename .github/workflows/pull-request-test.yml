@@ -77,7 +77,7 @@ jobs:
       extra-values: ${{ steps.deploy-comment.outputs.extra-values }}
     steps:
       - id: deploy-comment
-        uses: SwissDataScienceCenter/renku-actions/check-pr-description@v1.20.0
+        uses: SwissDataScienceCenter/renku-actions/check-pr-description@remove_gitlab_interaction
         with:
           pr_ref: ${{ github.event.number }}
 
@@ -132,11 +132,10 @@ jobs:
 
       - name: renku build and deploy
         if: needs.check-deploy.outputs.deploy == 'true'
-        uses: SwissDataScienceCenter/renku-actions/deploy-renku@v1.20.0
+        uses: SwissDataScienceCenter/renku-actions/deploy-renku@remove_gitlab_interaction
         env:
           DOCKER_PASSWORD: ${{ secrets.RENKU_DOCKER_PASSWORD }}
           DOCKER_USERNAME: ${{ secrets.RENKU_DOCKER_USERNAME }}
-          GITLAB_TOKEN: ${{ secrets.DEV_GITLAB_TOKEN }}
           KUBECONFIG: "${{ github.workspace }}/renkubot-kube.config"
           RENKU_RELEASE: ci-renku-${{ github.event.number }}
           RENKU_VALUES_FILE: "${{ github.workspace }}/values.yaml"
@@ -175,7 +174,7 @@ jobs:
             sessions,
           ]
     steps:
-      - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@v1.20.0
+      - uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@remove_gitlab_interaction
         if: github.event.action != 'closed' && needs.check-deploy.outputs.deploy == 'true' && needs.check-deploy.outputs.test-enabled == 'true'
         with:
           e2e-folder: cypress/e2e/v2/
@@ -198,11 +197,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        tests:
-          [
-            sessions,
-            sessionSecrets,
-          ]
+        tests: [sessions, sessionSecrets]
     steps:
       - name: Azure login
         uses: azure/login@v2
@@ -225,13 +220,13 @@ jobs:
       - name: Install kubectl
         uses: azure/setup-kubectl@v4
         with:
-          version: 'latest'
+          version: "latest"
 
       - name: Check kubectl config and access to cluster
         run: kubectl get pods -A
 
       - name: Run Cypress slow tests
-        uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@v1.20.0
+        uses: SwissDataScienceCenter/renku-actions/test-renku-cypress@remove_gitlab_interaction
         with:
           e2e-folder: cypress/e2e/slow/
           e2e-target: ${{ matrix.tests }}
@@ -310,10 +305,9 @@ jobs:
 
       # Cleanup Azure deployments
       - name: renku teardown
-        uses: SwissDataScienceCenter/renku-actions/cleanup-renku-ci-deployments@v1.20.0
+        uses: SwissDataScienceCenter/renku-actions/cleanup-renku-ci-deployments@remove_gitlab_interaction
         env:
           HELM_RELEASE_REGEX: "^ci-renku-${{ github.event.number }}$"
-          GITLAB_TOKEN: ${{ secrets.DEV_GITLAB_TOKEN }}
           KUBECONFIG: "${{ github.workspace }}/renkubot-kube.config"
           MAX_AGE_SECONDS: 0
           DELETE_NAMESPACE: "true"
