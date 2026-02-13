@@ -11,14 +11,6 @@ charts:
       - scripts/init-db
       - scripts/platform-init
     images:
-      tests:
-        buildArgs:
-          BUILDKIT_INLINE_CACHE: "1"
-        contextPath: acceptance-tests
-        dockerfilePath: acceptance-tests/Dockerfile
-        valuesPath: tests.image
-        paths:
-          - acceptance-tests
       init-realm:
         contextPath: scripts/init-realm
         dockerfilePath: scripts/init-realm/Dockerfile
