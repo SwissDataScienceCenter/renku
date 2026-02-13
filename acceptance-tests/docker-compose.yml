@@ -1,0 +1,10 @@
+version: '3.2'
+services:
+  sbt:
+    build:
+      context: .
+      cache_from:
+        - renku/tests:latest
+    volumes:
+      - /dev/shm:/dev/shm
+      - ./target:/tests/target

@@ -1,0 +1,10 @@
+# in order to use defaults from the file copy it as tests-defaults.conf and fill in the missing values.
+
+env = "https://dev.renku.ch"
+gitlaburl = "https://gitlab.dev.renku.ch"
+cliversion = ""
+email = ""
+username = ""
+password = ""
+fullname = ""
+gitlabaccesstoken = ""
