@@ -180,29 +180,29 @@ This integration can be used for mounting `drive` data connectors.
 1. Log into the [Cloud Console](https://console.cloud.google.com/).
 2. Select an existing project or create one.
 3. Go to `APIs & Services` -> `Enabled APIs & Services`, then click `+ Enable APIs and services`, search "Drive", pick
-    the `Google Drive API` and make sure that the API is enabled.
+   the `Google Drive API` and make sure that the API is enabled.
 4. Now go to `APIs & Services` -> `OAuth consent screen`. If the consent screen is not configured, click `Configure consent screen`
-    then `Get Started`:
-    1. Enter the application name
-    2. Enter the user support email (you can pick the email account used for the Cloud Console).
-    3. Under `Audience`, pick `External`
-    4. Enter any remaining required details and click `Create`
+   then `Get Started`:
+   1. Enter the application name
+   2. Enter the user support email (you can pick the email account used for the Cloud Console).
+   3. Under `Audience`, pick `External`
+   4. Enter any remaining required details and click `Create`
 5. Configure scopes in `APIs & Services` -> `OAuth consent screen` -> `Data Access` by clicking `Add or remove scopes`:
-    1. Search for `userinfo.email` and select it (full string is `https://www.googleapis.com/auth/userinfo.email`)
-    2. Search for `auth/docs` and select it (full string is `https://www.googleapis.com/auth/docs`)
-    3. Search for `auth/drive` and select it (full string is `https://www.googleapis.com/auth/drive`)
-    4. Search for `auth/drive.metadata.readonly` and select it (full string is `https://www.googleapis.com/auth/drive.metadata.readonly`)
-    5. Make sure to click `Save` to persist the changes
+   1. Search for `userinfo.email` and select it (full string is `https://www.googleapis.com/auth/userinfo.email`)
+   2. Search for `auth/docs` and select it (full string is `https://www.googleapis.com/auth/docs`)
+   3. Search for `auth/drive` and select it (full string is `https://www.googleapis.com/auth/drive`)
+   4. Search for `auth/drive.metadata.readonly` and select it (full string is `https://www.googleapis.com/auth/drive.metadata.readonly`)
+   5. Make sure to click `Save` to persist the changes
 6. You may need to manually add test users in `APIs & Services` -> `OAuth consent screen` -> `Audience`
 7. Go to `APIs & Services` -> `OAuth consent screen` -> `Clients` and click `Create client`:
-    1. Under `Application type`, pick `Web application`
-    2. Enter a name
-    3. Under `Authorized redirect URIs`, click `+ Add URI` and enter the callback URL: `https://<DOMAIN>/api/data/oauth2/callback`
-        where `<DOMAIN>` is the domain where your RenkuLab instance is deployed
-    4. Click `Create`
-    5. Save the OAuth 2.0 application credentials; this can be done by downloading the JSON configuration file.
+   1. Under `Application type`, pick `Web application`
+   2. Enter a name
+   3. Under `Authorized redirect URIs`, click `+ Add URI` and enter the callback URL: `https://<DOMAIN>/api/data/oauth2/callback`
+      where `<DOMAIN>` is the domain where your RenkuLab instance is deployed
+   4. Click `Create`
+   5. Save the OAuth 2.0 application credentials; this can be done by downloading the JSON configuration file.
 8. Once you have tested the integration, you can go to `APIs & Services` -> `OAuth consent screen` -> `Audience` and click `Publish app`
-    to let users connect
+   to let users connect
 
 Note: you can also consult the [rclone documentation about Google Drive](https://rclone.org/drive/#making-your-own-client-id).
 
@@ -210,7 +210,7 @@ Note: you can also consult the [rclone documentation about Google Drive](https:/
 
 1. Log into Renku and navigate to the admin panel.
 2. Come up with an identifier for the integration and fill that in the `Id` field.
-Some people use the domain of the Gitlab deployment as the `Id`.
+   Some people use the domain of the Gitlab deployment as the `Id`.
 3. Select `Google` in the `Kind` field dropdown menu.
 4. You can skip the `Application slug` field and leave it blank.
 5. Use `Google` for then `Display Name` field.
