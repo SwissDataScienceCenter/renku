@@ -256,8 +256,7 @@ keycloakx:
     - "--http-enabled=true"
     - "--http-port=8080"
     - "--hostname-strict=false"
-    - "--hostname-strict-https=false"
-    - "--auto-build"
+    - "--proxy-headers=xforwarded"
     # The following environment variables are provided to keycloak
     # as extraEnvFrom secrets.
   # renku-keycloak-postgres
