@@ -64,6 +64,8 @@ spec:
                 secretKeyRef:
                   name: {{ include "renku.fullname" . }}
                   key: dataServiceKeycloakClientSecret
+            - name: K8S_NAMESPACE
+              value: {{ .Release.Namespace | quote }}
             - name: REDIS_HOST
               value: {{ .Values.global.redis.host | quote }}
             - name: REDIS_PORT
