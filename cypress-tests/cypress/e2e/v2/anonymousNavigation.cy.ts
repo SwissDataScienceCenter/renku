@@ -174,6 +174,7 @@ describe("Anonymous users can only access public resources", () => {
       .filter(`:contains("${publicProjectName}")`)
       .find(`[data-cy=search-card-entity-link]`)
       .click();
+    cy.getDataCy("project-name").should("be.visible");
 
     // Login, check the public project and change visibility
     cy.url().then((url) => {
