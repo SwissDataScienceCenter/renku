@@ -36,7 +36,7 @@ roleRef:
   name: {{ template "renku.fullname" . }}-data-service-resource-pool
 subjects:
   - kind: ServiceAccount
-    name: {{ template "renku.fullname" . }}-data-service-resource-pool
+    name: {{ template "renku.fullname" . }}-data-service
     namespace: {{ .Release.Namespace }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -75,6 +75,6 @@ roleRef:
   name: {{ template "renku.fullname" . }}-data-service-resource-pool
 subjects:
   - kind: ServiceAccount
-    name: {{ template "renku.fullname" . }}-data-service-resource-pool
+    name: {{ template "renku.fullname" . }}-data-service
     namespace: {{ .Release.Namespace }}
 {{- end -}}
