@@ -117,6 +117,7 @@ describe("Anonymous users can only access public resources", () => {
     cy.getDataCy("search-card").getDataCy("search-card-entity-link").click();
     cy.getDataCy("project-name").should("contain", publicProjectName);
     cy.getDataCy("project-settings-link").click();
+    cy.getDataCy("project-settings-general").should("be.visible");
     cy.getDataCy("project-update-button").should("not.exist");
 
     // Login, check the private project and change visibility
