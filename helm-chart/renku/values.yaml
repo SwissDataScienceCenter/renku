@@ -1178,12 +1178,12 @@ dataService:
     enableResourcePool: true
   image:
     repository: renku/renku-data-service
-    tag: "0.68.1"
+    tag: "0.69.0"
     pullPolicy: IfNotPresent
   k8sWatcher:
     image:
       repository: renku/data-service-k8s-watcher
-      tag: "0.68.1"
+      tag: "0.69.0"
       pullPolicy: IfNotPresent
     resources: {}
     sentry:
@@ -1194,7 +1194,7 @@ dataService:
   dataTasks:
     image:
       repository: renku/data-service-data-tasks
-      tag: "0.68.1"
+      tag: "0.69.0"
       pullPolicy: IfNotPresent
     resources: {}
   service:
@@ -1312,7 +1312,7 @@ authz:
 secretsStorage:
   image:
     repository: renku/secrets-storage
-    tag: "0.68.1"
+    tag: "0.69.0"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
