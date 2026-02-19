@@ -9,8 +9,7 @@ description: Zenodo, Dataverse, etc.
 
 We support data from the following repositories:
 
-- Any instance running [Invenio](https://inveniosoftware.org/) 
-- Any instance running [Dataverse](https://dataverse.org/)
+- Almost any instance running [InvenioRDM](https://inveniosoftware.org/) or [Dataverse](https://dataverse.org/)
 - [EnviDat](https://envidat.ch)
 
 **Examples of Invenio data repositories:**
@@ -22,7 +21,7 @@ _/_ [See all](https://inveniosoftware.org/showcase/)
 **Examples of Dataverse data repositories:**
 
 [Harvard Dataverse](https://dataverse.harvard.edu)
-_/_ [See all](https://dataverse.org)
+_/_ [See all](https://dataverse.org/installations)
 
 :::info
 
