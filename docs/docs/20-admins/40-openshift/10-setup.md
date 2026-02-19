@@ -297,6 +297,7 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
   name: priorityclasses-manager
+---
 # Source: renku/templates/data-service/rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
