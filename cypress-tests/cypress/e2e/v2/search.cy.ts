@@ -112,7 +112,7 @@ describe("Search for resources: groups, projects, users", () => {
     // Filter for projects and groups
     cy.getDataCy("search-filter-type-Group").filter(":visible").click();
     cy.wait("@searchQuery");
-    cy.getDataCy("search-list-item").should("have.length", 2);
+    cy.getDataCy("search-list-item").should("have.length", 1);
 
     cy.getDataCy("search-query-input").clear().type(stringRandomOne);
     cy.getDataCy("search-query-button").click();
@@ -128,7 +128,7 @@ describe("Search for resources: groups, projects, users", () => {
       .should("have.length", 1)
       .contains(projects.first);
 
-    // Filter by date
+    // Filter by dateÏ
     cy.getDataCy("search-filter-created-older-than-90-days")
       .filter(":visible")
       .click();
@@ -138,7 +138,7 @@ describe("Search for resources: groups, projects, users", () => {
 
     // Can search for users -- can't guarantee we match an exact number here
     const userSearch = "type:User";
-    cy.getDataCy("search-filter-created-all").filter(":visible").click();
+    cy.getDataCy("search-filter-created-any").filter(":visible").click();
     cy.getDataCy("search-query-input").clear().type(userSearch);
     cy.getDataCy("search-query-button").click();
     cy.wait("@searchQuery");

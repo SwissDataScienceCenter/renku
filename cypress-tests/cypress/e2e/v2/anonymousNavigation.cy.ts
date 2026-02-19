@@ -98,7 +98,7 @@ describe("Anonymous users can only access public resources", () => {
     cy.getDataCy("search-query-button").click();
     cy.wait("@searchQuery");
     cy.getDataCy("search-list-item")
-      .should("have.length", 1);
+      .should("have.length", 2);
     cy.getDataCy("search-list-item")
       .should("contain.text", randomString);
 
@@ -113,7 +113,7 @@ describe("Anonymous users can only access public resources", () => {
     cy.getDataCy("search-query-button").click();
     cy.wait("@searchQuery");
     cy.getDataCy("search-list-item").should("have.length", 1).contains(randomString);
-    cy.getDataCy("search-list-item").getDataCy("search-card-entity-link").click();
+    cy.getDataCy("search-list-item").click();
     cy.getDataCy("project-name").should("contain", publicProjectName);
     cy.getDataCy("project-settings-link").click();
     cy.getDataCy("project-update-button").should("not.exist");
@@ -135,7 +135,6 @@ describe("Anonymous users can only access public resources", () => {
         });
       cy.getDataCy("search-list-item")
         .filter(`:contains("${privateProjectName}")`)
-        .find(`[data-cy=search-card-entity-link]`)
         .click();
       cy.getDataCy("project-name").should("contain", privateProjectName);
       cy.getDataCy("project-settings-link").click();
@@ -170,7 +169,6 @@ describe("Anonymous users can only access public resources", () => {
 
     cy.getDataCy("search-list-item")
       .filter(`:contains("${publicProjectName}")`)
-      .find(`[data-cy=search-card-entity-link]`)
       .click();
 
     // Login, check the public project and change visibility
