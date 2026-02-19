@@ -3,19 +3,14 @@ title: Data Repositories
 description: Zenodo, Dataverse, etc.
 ---
 
-# How to connect data from via DOI
+# How to connect data from a published dataset (by DOI)
 
 ## Which data repositories are supported?
 
-There are different "backends" that are used by many different data repositories.
-We support several such common backends:
+We support data from the following repositories:
 
-- [Invenio](https://inveniosoftware.org/)
-- [Dataverse](https://dataverse.org/)
-
-In addition to the above we support other data repositories that have custom backends
-or other less-common backends:
-
+- Any instance running [Invenio](https://inveniosoftware.org/) 
+- Any instance running [Dataverse](https://dataverse.org/)
 - [EnviDat](https://envidat.ch)
 
 **Examples of Invenio data repositories:**
