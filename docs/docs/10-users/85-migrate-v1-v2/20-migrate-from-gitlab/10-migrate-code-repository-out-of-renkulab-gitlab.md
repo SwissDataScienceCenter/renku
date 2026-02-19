@@ -18,29 +18,43 @@ work.
 
 :::
 
+<p class="image-container-l">
+<iframe
+  width="560"
+  height="315"
+  src="https://www.youtube.com/embed/TTRfg9XBfqQ?list=PLagSzgm6aERkLQ8LINw8luZKdv9ru7aHh"
+  title="YouTube video player"
+  frameborder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+  referrerpolicy="strict-origin-when-cross-origin"
+  allowfullscreen>
+</iframe>
+*Bring your RenkuLab GitLab project to the public GitLab instance with the import feature.*
+</p>
+
 ## 1. Move a code repository to an external provider
 
 1. **Clone your repository** from the RenkuLab GitLab to your local machine
 
-    ```bash
-    git clone <renku-repo>
-    ```
+   ```bash
+   git clone <renku-repo>
+   ```
 
 2. **Create a new empty repository** in your chosen provider (for example GitLab.com or GitHub.com)
 3. **Copy the clone URL for the new repository.** We'll call this URL `<new-remote>`.
 4. Run the following commands from inside the repository to **push the repository to the new git repository provider**. You may want to name your new git origin (`<new-origin>`) to match the provider, for example `github`.
 
-    ```bash
-    cd <renku-repo>
-    git remote add <new-origin> <new-remote>
-    git push --all <new-origin>
-    ```
+   ```bash
+   cd <renku-repo>
+   git remote add <new-origin> <new-remote>
+   git push --all <new-origin>
+   ```
 
 5. **Important - The next time you push:** Set your `git push` to push to the new origin (git provider):
 
-    ```bash
-    git push -u <new-origin> <current-branch>
-    ```
+   ```bash
+   git push -u <new-origin> <current-branch>
+   ```
 
 Here's a full, real-ish example (with identifiers removed 😉):
 
@@ -67,7 +81,7 @@ git push -u github master
 
 **Does your new git provider not support git LFS data?** For a short term workaround, run the following command to push your code while ignoring the git LFS data: `git push --no-verify`.
 
-In the long term, we recommend that you move your git LFS data to a [cloud storage](/docs/users/data/data) that you can connect to your Renku 2.0 project. Feel free to [get in touch](mailto:hello@renku.io) with us if you need help.
+In the long term, we recommend that you move your git LFS data to a [cloud storage](../../data/data) that you can connect to your Renku 2.0 project. Feel free to [get in touch](mailto:hello@renku.io) with us if you need help.
 
 :::
 

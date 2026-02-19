@@ -7,8 +7,8 @@ on how to configure Renku prior to installation via the Helm chart values file.
 
 ## Values file
 
-The source code for the Helm chart is located [here](https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart/renku). 
-We strongly recommend checking the `values.yaml` as well as all templates if you are unsure how things are 
+The source code for the Helm chart is located [here](https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart/renku).
+We strongly recommend checking the `values.yaml` as well as all templates if you are unsure how things are
 templated or how some portion of the values file affects what is created in your cluster.
 
 :::info
@@ -23,12 +23,11 @@ One of the most important setting in your values file is the amount of resources
 for the different Renku services that will be deployed. We strongly recommend setting resource requests
 for CPU and memory, and resource limits for memory that match the request. In addition to this, you should have
 alarms on the memory usage for each service so that more memory can be provisioned when the memory usage
-is high (e.g. >80% or 90% of the limit). Without tracking this or acting when memory usage spikes to 
+is high (e.g. >80% or 90% of the limit). Without tracking this or acting when memory usage spikes to
 do a sudden increase in users your Renku deployment will not run reliably and crucial services will
 keep restarting or be permanently unavailable.
 
 Here is an example values for a deployment that should handle approximately 50-100 active users per day.
-
 
 ```yaml
 amalthea-sessions:
@@ -185,16 +184,16 @@ authz:
       cpu: 100m
       memory: 500Mi
 ```
+
 :::info
 You may be able to run some of these services with fewer resources. The memory and CPU shown
 here are just guides and good starting points for running Renku. Once you deploy and run Renku
 for some time you can look at trends and modify things accordingly.
 :::
 
-
 ## Harbor and Shipwright
 
-As stated in the [Requirements section](/docs/admins/installation/requirements) both of these need to be installed
+As stated in the [Requirements section](requirements) both of these need to be installed
 separately from Renku prior to installing Renku. You may also deploy Renku without Harbor and Shipwright
 but then your users will not have the ability to build images from a code repository automatically.
 
@@ -204,11 +203,12 @@ but then your users will not have the ability to build images from a code reposi
 
 This assumes that you have successfully installed Harbor and Shipwright and now you just
 have to configure a Harbor project and a robot account that Renku will use.
-You can create the project and robot account manually or utilize the scripts that can be found 
-[here](https://github.com/SwissDataScienceCenter/renku/tree/master/scripts/harbor-init) 
+You can create the project and robot account manually or utilize the scripts that can be found
+[here](https://github.com/SwissDataScienceCenter/renku/tree/master/scripts/harbor-init)
 in the Renku repository.
 
 This is what is required:
+
 - Public Harbor project.
 - Robot account with permissions `list`, `pull`, `push`, `read`.
 - Kubernetes secret of type `kubernetes.io/dockerconfigjson` which contains the
@@ -231,16 +231,22 @@ dataService:
 ```
 
 The file above is just an example you will have to modify the options shown as follows:
+
 - `outputImagePrefix`: Should contain the harbor domain name and the name of the Harbor project
   you created in step 1 above. Please make sure you add a trailing `/` at the end. The example
   in the yaml snippet above is for Harbor deployed at the domain `harbor.dev.renku.ch` and for
   a Harbor project called `renku-build`.
 - `pushSecretName`: The name the `kubernetes.io/dockerconfigjson` Kubernetes secret that you
-  created in step 1 above. This secret will be used by Renku to push images in the Harbor repository. 
+  created in step 1 above. This secret will be used by Renku to push images in the Harbor repository.
   The example in the yaml snippet above is for a secret called `renku-build-docker-secret` located
   in the same namespace as where Renku is installed.
 
 - Label the node(s) you want to use for the builds with `renku.io/node-purpose: image-build`
+
+### Build strategy
+
+The last action required to have your system ready is to deploy the [BuildStrategy
+for Shipwright](https://github.com/SwissDataScienceCenter/renku-data-services/blob/main/components/renku_pack_builder/manifests/buildstrategy.yaml).
 
 ### Configuration without Harbor and Shipwright
 

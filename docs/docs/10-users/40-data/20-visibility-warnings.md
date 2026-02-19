@@ -1,21 +1,16 @@
-# About visibility warnings
+# How to resolve ‘hidden’ & ‘visibility warning’ data connectors
 
-You may sometimes see a note that there are **hidden data connectors** that you can’t see,
-especially in projects were created before version 0.67.0. And conversely, you may see **visibility
-warnings** on data connectors that *other* project members can’t see. This how-to guide will walk
-you through what these warnings mean and how to resolve them.
+Renku release 0.67.0 introduced more flexibility for how you connect data connectors to projects. Since this update, you may see a note that there are **hidden data connectors** that you can’t see, especially in projects that were created before version 0.67.0. And conversely, you may see **visibility warnings** on data connectors that other project members can’t see. This how-to guide will walk you through what these warnings mean and how to resolve them.
 
-<p class="image-container-s"> 
+<p class="image-container-s">
 ![A notification about hidden data connectors](./resolve-hidden-visibility-warning-10.png)
+*A notification about hidden data connectors*
 </p>
 
-A notification about hidden data connectors
-
-<p class="image-container-s"> 
+<p class="image-container-s">
 ![A data connector with a visibility warning](./resolve-hidden-visibility-warning-20.png)
+*A data connector with a visibility warning*
 </p>
-
-A data connector with a visibility warning
 
 ## What hidden data connectors mean
 
@@ -31,7 +26,7 @@ A data connector visibility warning means that there may be members of the proje
 
 This may be intentional! For example, if you create a personal data connector for your personal Switchdrive folder and link it to a project, other people in the project don’t see that data connector, and that’s intentional!
 
-But if you see a visibility warning on a data connector that everyone in the project *should* be able to see and use, you’ll want to fix that. Next, we’ll walk through how to do just that.
+But if you see a visibility warning on a data connector that everyone in the project _should_ be able to see and use, you’ll want to fix that. Next, we’ll walk through how to do just that.
 
 ## How to resolve a visibility warning
 
@@ -39,19 +34,18 @@ But if you see a visibility warning on a data connector that everyone in the pro
 
 1. Click on the data connector with the visibility warning to open its side sheet
 2. In the side sheet, click on **Edit** in the top right
-    
-    <p class="image-container-s"> 
-    ![image.png](./resolve-hidden-visibility-warning-30.png)
-    </p>
-    
+
+<p class="image-container-s">
+![image.png](./resolve-hidden-visibility-warning-30.png)
+</p>
+
 3. Depending on your data connector, either click **Next**, or click **Test Connection** and then **Continue** to get to the next page of the data connector information
-    
-    ![image.png](./resolve-hidden-visibility-warning-40.png)
-    
+
+   ![image.png](./resolve-hidden-visibility-warning-40.png)
+
 4. Change the **Owner** to the current project.
-    
-    ![image.png](./resolve-hidden-visibility-warning-50.png)
-    
+
+   ![image.png](./resolve-hidden-visibility-warning-50.png)
 
 Now the data connector is owned by the project, so everyone in the project is guaranteed to be able to see the data connector.
 
@@ -67,15 +61,15 @@ Another option is to make the data connector public. This will guarantee that ev
 
 1. Click on the data connector with the Visibility warning to open its side sheet
 2. In the side sheet, click on **Edit** in the top right
-   
-    <p class="image-container-s"> 
-    ![image.png](./resolve-hidden-visibility-warning-30.png)
-    </p>
-    
+
+<p class="image-container-s">
+![image.png](./resolve-hidden-visibility-warning-30.png)
+</p>
+
 3. Depending on your data connector, either click **Next**, or click **Test Connection** and then **Continue** to get to the next page of the data connector information
-    
-    ![image.png](./resolve-hidden-visibility-warning-40.png)
-    
+
+   ![image.png](./resolve-hidden-visibility-warning-40.png)
+
 4. Change the visibility to **Public**
-    
-    ![image.png](./resolve-hidden-visibility-warning-60.png)
+
+   ![image.png](./resolve-hidden-visibility-warning-60.png)

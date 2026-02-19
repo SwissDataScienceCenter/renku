@@ -24,6 +24,8 @@ import logging
 import os
 from typing import Dict, List
 
+import requests
+from requests.exceptions import ConnectionError, SSLError
 from keycloak import KeycloakAdmin
 from keycloak.exceptions import (
     KeycloakConnectionError,
@@ -31,9 +33,17 @@ from keycloak.exceptions import (
     KeycloakPostError,
 )
 
-from utils import DemoUserConfig, OIDCClientsConfig, OIDCGitlabClient, OIDCClient, OAuthFlow
+from utils import (
+    DemoUserConfig,
+    OIDCAlertmanagerWebhookClient,
+    OIDCClientsConfig,
+    OIDCGitlabClient,
+    OIDCClient,
+    OAuthFlow,
+)
 
 logging.basicConfig(level=logging.INFO)
+
 
 def _check_existing(existing_object: Dict, new_object: Dict, case, id_key) -> bool:
     """
@@ -58,7 +68,9 @@ def _check_existing(existing_object: Dict, new_object: Dict, case, id_key) -> bo
                     continue
 
             changed = True
-            warning = f"Found mismatch for key '{key}' at {case} '{new_object[id_key]}'!"
+            warning = (
+                f"Found mismatch for key '{key}' at {case} '{new_object[id_key]}'!"
+            )
             logging.warning(warning)
 
     return changed
@@ -68,7 +80,9 @@ def _fix_json_values(data: Dict) -> Dict:
     """
     Fix quoted booleans in the JSON document from the Keycloak API.
     """
-    return json.loads(json.dumps(data).replace('"true"', "true").replace('"false"', "false"))
+    return json.loads(
+        json.dumps(data).replace('"true"', "true").replace('"false"', "false")
+    )
 
 
 def _check_and_create_client(keycloak_admin, new_client: OIDCClient, force: bool):
@@ -104,23 +118,45 @@ def _check_and_create_client(keycloak_admin, new_client: OIDCClient, force: bool
         roles_changed = False
         service_account_user = None
         existing_roles = []
+        existing_realm_roles = []
         if new_client.oauth_flow == OAuthFlow.client_credentials:
             try:
-                service_account_user = keycloak_admin.get_client_service_account_user(realm_client["id"])
+                service_account_user = keycloak_admin.get_client_service_account_user(
+                    realm_client["id"]
+                )
             except KeycloakGetError as err:
                 if err.response_code != 404:
                     raise
             if isinstance(service_account_user, dict):
                 try:
-                    existing_roles = keycloak_admin.get_client_roles_of_user(service_account_user["id"], realm_management_client_id)
+                    existing_roles = keycloak_admin.get_client_roles_of_user(
+                        service_account_user["id"], realm_management_client_id
+                    )
+                except KeycloakGetError as err:
+                    if err.response_code != 404:
+                        raise
+                try:
+                    existing_realm_roles = keycloak_admin.get_realm_roles_of_user(
+                        service_account_user["id"]
+                    )
                 except KeycloakGetError as err:
                     if err.response_code != 404:
                         raise
             existing_roles_names = [role["name"] for role in existing_roles]
+            existing_realm_roles_names = [role["name"] for role in existing_realm_roles]
             if set(existing_roles_names) != set(new_client.service_account_roles):
-                logging.warning(f"Roles changed existing roles {set(existing_roles_names)} != new roles {set(new_client.service_account_roles)}")
+                logging.warning(
+                    f"Roles changed existing roles {set(existing_roles_names)} != new roles {set(new_client.service_account_roles)}"
+                )
                 roles_changed = True
-        changed = _check_existing(realm_client, new_client.to_dict(), "client", "clientId")
+            if set(existing_realm_roles_names) != set(new_client.service_account_realm_roles):
+                logging.warning(
+                    f"Realm roles changed existing realm roles {set(existing_realm_roles_names)} != new realm roles {set(new_client.service_account_realm_roles)}"
+                )
+                roles_changed = True
+        changed = _check_existing(
+            realm_client, new_client.to_dict(), "client", "clientId"
+        )
 
         if not force or (not changed and not roles_changed):
             return
@@ -129,14 +165,41 @@ def _check_and_create_client(keycloak_admin, new_client: OIDCClient, force: bool
 
         keycloak_admin.delete_client(realm_client["id"])
         created_client_id = keycloak_admin.create_client(new_client.to_dict())
-        service_account_user = keycloak_admin.get_client_service_account_user(created_client_id)
+        service_account_user = keycloak_admin.get_client_service_account_user(
+            created_client_id
+        )
 
         if isinstance(service_account_user, dict) and service_account_user.get("id"):
-            logging.info(f"Reassigning service account roles {new_client.service_account_roles}")
-            realm_management_roles = keycloak_admin.get_client_roles(realm_management_client_id)
-            matching_roles = [{"name": role["name"], "id": role["id"]} for role in realm_management_roles if role["name"] in new_client.service_account_roles ]
-            logging.info(f"Found and assigning matching roles: {matching_roles}")
-            keycloak_admin.assign_client_role(service_account_user["id"], realm_management_client_id, matching_roles)
+            if new_client.service_account_roles:
+                logging.info(
+                    f"Reassigning service account roles {new_client.service_account_roles}"
+                )
+                realm_management_roles = keycloak_admin.get_client_roles(
+                    realm_management_client_id
+                )
+                matching_roles = [
+                    {"name": role["name"], "id": role["id"]}
+                    for role in realm_management_roles
+                    if role["name"] in new_client.service_account_roles
+                ]
+                logging.info(f"Found and assigning matching roles: {matching_roles}")
+                keycloak_admin.assign_client_role(
+                    service_account_user["id"], realm_management_client_id, matching_roles
+                )
+            if new_client.service_account_realm_roles:
+                logging.info(
+                    f"Reassigning service account realm roles {new_client.service_account_realm_roles}"
+                )
+                all_realm_roles = keycloak_admin.get_realm_roles()
+                matching_realm_roles = [
+                    {"name": role["name"], "id": role["id"]}
+                    for role in all_realm_roles
+                    if role["name"] in new_client.service_account_realm_roles
+                ]
+                logging.info(f"Found and assigning matching realm roles: {matching_realm_roles}")
+                keycloak_admin.assign_realm_roles(
+                    user_id=service_account_user["id"], roles=matching_realm_roles
+                )
 
         logging.info("done")
 
@@ -144,14 +207,43 @@ def _check_and_create_client(keycloak_admin, new_client: OIDCClient, force: bool
         logging.info("not found")
         logging.info("Creating {} client...".format(new_client.id))
         created_client_id = keycloak_admin.create_client(new_client.to_dict())
-        if new_client.oauth_flow == OAuthFlow.client_credentials and new_client.service_account_roles:
-            service_account_user = keycloak_admin.get_client_service_account_user(created_client_id)
-            logging.info(f"Assigning service account roles {new_client.service_account_roles}")
-            realm_management_client_id = keycloak_admin.get_client_id("realm-management")
-            realm_management_roles = keycloak_admin.get_client_roles(realm_management_client_id)
-            matching_roles = [{"name": role["name"], "id": role["id"]} for role in realm_management_roles if role["name"] in new_client.service_account_roles ]
-            logging.info(f"Found and assigning matching roles: {matching_roles}")
-            keycloak_admin.assign_client_role(service_account_user["id"], realm_management_client_id, matching_roles)
+        if new_client.oauth_flow == OAuthFlow.client_credentials:
+            service_account_user = keycloak_admin.get_client_service_account_user(
+                created_client_id
+            )
+            if new_client.service_account_roles:
+                logging.info(
+                    f"Assigning service account roles {new_client.service_account_roles}"
+                )
+                realm_management_client_id = keycloak_admin.get_client_id(
+                    "realm-management"
+                )
+                realm_management_roles = keycloak_admin.get_client_roles(
+                    realm_management_client_id
+                )
+                matching_roles = [
+                    {"name": role["name"], "id": role["id"]}
+                    for role in realm_management_roles
+                    if role["name"] in new_client.service_account_roles
+                ]
+                logging.info(f"Found and assigning matching roles: {matching_roles}")
+                keycloak_admin.assign_client_role(
+                    service_account_user["id"], realm_management_client_id, matching_roles
+                )
+            if new_client.service_account_realm_roles:
+                logging.info(
+                    f"Assigning service account realm roles {new_client.service_account_realm_roles}"
+                )
+                all_realm_roles = keycloak_admin.get_realm_roles()
+                matching_realm_roles = [
+                    {"name": role["name"], "id": role["id"]}
+                    for role in all_realm_roles
+                    if role["name"] in new_client.service_account_realm_roles
+                ]
+                logging.info(f"Found and assigning matching realm roles: {matching_realm_roles}")
+                keycloak_admin.assign_realm_roles(
+                    user_id=service_account_user["id"], roles=matching_realm_roles
+                )
 
         logging.info("done")
 
@@ -179,8 +271,30 @@ def _check_and_create_user(keycloak_admin, new_user):
         logging.info("Creating user {} ...".format(new_user["username"]))
         keycloak_admin.create_user(payload=new_user)
         new_user_id = keycloak_admin.get_user_id(new_user["username"])
-        keycloak_admin.set_user_password(new_user_id, new_user_password, temporary=False)
+        keycloak_admin.set_user_password(
+            new_user_id, new_user_password, temporary=False
+        )
         logging.info("done")
+
+
+def _wait_for_tls(url: str, retries=60, wait_secs=2):
+    """Keeps calling the url and waits in between retries until the name resolution and TLS works."""
+    logging.info("Waiting for name resolution and TLS.")
+    cur_retry = 1
+    while True:
+        try:
+            requests.get(url, allow_redirects=True)
+        except (ConnectionError, SSLError) as err:
+            if cur_retry >= retries:
+                raise Exception(
+                    "Timed out trying to wait for name resolution or TLS"
+                ) from err
+            logging.warning("Failed name resolution or TLS, will wait and retry.")
+            time.sleep(wait_secs)
+        else:
+            break
+        finally:
+            cur_retry += 1
 
 
 # The actual script
@@ -221,6 +335,10 @@ if not keycloak_admin_password:
 n_attempts = 0
 success = False
 
+server_url = args.keycloak_url if args.keycloak_url.endswith("/") else args.keycloak_url + "/"
+
+_wait_for_tls(server_url)
+
 while not success and n_attempts < 31:
     try:
         logging.info("Getting an admin access token for Keycloak...")
@@ -228,10 +346,11 @@ while not success and n_attempts < 31:
         # "http://dev.renku.ch/auth" without the trailing "/" will fail with a 405 whereas
         # "http://dev.renku.ch/auth/" will work without a problem.
         keycloak_admin = KeycloakAdmin(
-            server_url=args.keycloak_url if args.keycloak_url.endswith("/") else args.keycloak_url + "/",
+            server_url=server_url,
             username=args.admin_user,
             password=keycloak_admin_password,
             verify=True,
+            max_retries=10,
         )
         success = True
     except (KeycloakConnectionError, KeycloakGetError, KeycloakPostError) as error:
@@ -247,9 +366,7 @@ if success:
 else:
     logging.info(
         "Could not get a token. Is Keycloak \
-        running under {}?".format(
-            args.keycloak_url
-        )
+        running under {}?".format(args.keycloak_url)
     )
     exit(1)
 
@@ -278,7 +395,9 @@ if not realm.get("eventsEnabled"):
     logging.info(
         f"Enabling user events tracking for realm with retention {event_retention_seconds}"
     )
-    keycloak_admin.update_realm(args.realm, {"eventsEnabled": True, "eventsExpiration": event_retention_seconds})
+    keycloak_admin.update_realm(
+        args.realm, {"eventsEnabled": True, "eventsExpiration": event_retention_seconds}
+    )
 if not realm.get("adminEventsEnabled"):
     logging.info(
         f"Enabling admin events tracking for realm with retention {event_retention_seconds}"
@@ -296,13 +415,6 @@ if not realm.get("adminEventsEnabled"):
 keycloak_admin.connection.realm_name = args.realm
 
 
-for client in OIDCClientsConfig.from_env().to_list():
-    _check_and_create_client(keycloak_admin, client, args.force)
-
-if os.environ.get("INTERNAL_GITLAB_ENABLED", "false").lower() == "true":
-    gitlab_oidc_client = OIDCGitlabClient.from_env()
-    _check_and_create_client(keycloak_admin, gitlab_oidc_client, args.force)
-
 # Create renku-admin realm role
 logging.info("Creating renku-admin realm role, skipping if it already exists...")
 realm_role_payload = {
@@ -316,10 +428,42 @@ realm_role_payload = {
     "clientRole": False,
 }
 keycloak_admin.create_realm_role(realm_role_payload, skip_exists=True)
+
+# Create alertmanager-webhook realm role
+logging.info(
+    "Creating alertmanager-webhook realm role, skipping if it already exists..."
+)
+alertmanager_webhook_realm_role_payload = {
+    "name": "alertmanager-webhook",
+    "composite": True,
+    "composites": {
+        "client": {
+            "realm-management": ["view-clients", "view-realm"],
+        },
+    },
+    "clientRole": False,
+}
+keycloak_admin.create_realm_role(
+    alertmanager_webhook_realm_role_payload, skip_exists=True
+)
+
 logging.info("done")
 
+for client in OIDCClientsConfig.from_env().to_list():
+    _check_and_create_client(keycloak_admin, client, args.force)
+
+if os.environ.get("INTERNAL_GITLAB_ENABLED", "false").lower() == "true":
+    gitlab_oidc_client = OIDCGitlabClient.from_env()
+    _check_and_create_client(keycloak_admin, gitlab_oidc_client, args.force)
+
+if os.environ.get("ALERTMANAGER_WEBHOOK_OIDC_ENABLED", "false").lower() == "true":
+    alertmanager_webhook_oidc_client = OIDCAlertmanagerWebhookClient.from_env()
+    _check_and_create_client(
+        keycloak_admin, alertmanager_webhook_oidc_client, args.force
+    )
+
 demo_user = DemoUserConfig.from_env().to_dict()
-if demo_user is not None:   
+if demo_user is not None:
     logging.info("Creating Keycloak demo user...")
     _check_and_create_user(keycloak_admin, demo_user)
     logging.info("done")

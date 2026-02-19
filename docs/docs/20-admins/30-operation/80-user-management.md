@@ -20,11 +20,13 @@ Renku uses [Keycloak](https://www.keycloak.org/) as its identity provider. When 
 The default Keycloak admin username and password are stored in the `keycloak-password-secret` Kubernetes secret when Renku is installed. To retrieve these credentials run the commands below:
 
 For the username:
+
 ```bash
 kubectl get secret keycloak-password-secret -n renku -o jsonpath='{.data.KEYCLOAK_ADMIN}' | base64 -d
 ```
 
 For the password:
+
 ```bash
 kubectl get secret keycloak-password-secret -n renku -o jsonpath='{.data.KEYCLOAK_ADMIN_PASSWORD}' | base64 -d
 ```
@@ -47,7 +49,7 @@ To grant administrative privileges to additional users:
 
 ## Managing Keycloak Admin Users
 
-In addition to Renku-specific admin user, you may want to create additional Keycloak admin accounts for managing the identity provider itself. 
+In addition to Renku-specific admin user, you may want to create additional Keycloak admin accounts for managing the identity provider itself.
 
 :::danger[Keycloak admins have very broad permissions]
 Assigning someone to be a Keycloak admin gives them full access to every realm in the Keycloak deployment and the ability to create, impersonate and delete any user in any realm, as well as make any user a Renku admin. Use this with caution.

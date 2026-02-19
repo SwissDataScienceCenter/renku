@@ -16,20 +16,23 @@ A resource pool contains a set of **resource classes**. A resource class is a re
 
 For example, a resource class may be:
 
-- 12 CPUs, 80 GB RAM, 2 GPUs, 50 GB *default* disk, 500 GB *max* disk
+- 12 CPUs, 80 GB RAM, 2 GPUs, 50 GB _default_ disk, 500 GB _max_ disk
 
 As users run sessions, their session resources (the resource class the session is using) comes out of the quota on the resource pool. If the resource pool’s quota has been reached, users won’t be able to start any more sessions in that resource pool (but they may run sessions in other resource pools).
 
+<p class="image-container-l">
 ![Untitled](./resource-pools-and-classes-10.png)
-
-For custom resource pools granted to users, you may customize the resource classes in you resource pool.
+*For custom resource pools granted to users, you may customize the resource classes in you resource pool.*
+</p>
 
 ## The Public Resource Pool & Classes
 
 On RenkuLab, the following resources classes are publicly available (in the “public resource pool”):
 
+<p class="image-container-l">
 ![Untitled](./resource-pools-and-classes-20.jpg)
+</p>
 
 ## Request a Custom Resource Pool {#request-custom-resource-pool}
 
-Do you need more resources than are available in RenkuLab’s public resource classes? [Contact](/docs/users/community) us! We can configure a custom resource pool for your needs upon demand. We apply flat, transparent pricing, passing down infra rates savings.
+Do you need more resources than are available in RenkuLab’s public resource classes? [Contact](../community) us! We can configure a custom resource pool for your needs upon demand. We apply flat, transparent pricing, passing down infra rates savings.

@@ -5,13 +5,13 @@ To change which resource class your project’s session launcher uses, you can e
 1. Click on the session launcher in your project
 2. Navigate to “Default Resource Class” and click the pencil icon to change the resource class.
 
-import selectResourceVideo from './select-compute-resources-for-session-10.mov';
+<!-- <video controls width="100%" src={selectResourceVideo} /> -->
 
-<video controls width="100%" src={selectResourceVideo} />
+![image.png](./use-your-own-docker-image-for-renku-session-20.png)
 
 :::tip
 
-Do you need more resources than are available in RenkuLab’s public resource classes? [Contact](/docs/users/community) us! We can configure a custom resource pool for your needs upon demand.
+Do you need more resources than are available in RenkuLab’s public resource classes? [Contact us](../../community)! We can configure a custom resource pool for your needs upon demand.
 
 :::
 
@@ -21,5 +21,6 @@ If you would **temporarily** launch a session with different resources without c
 2. Select **Custom launch**.
 3. Choose a resource class for this session
 
-<video controls width="100%" src={selectResourceVideo} />
+import selectResourceVideo from './select-compute-resources-for-session-10.mov';
 
+<video controls width="100%" src={selectResourceVideo} />
