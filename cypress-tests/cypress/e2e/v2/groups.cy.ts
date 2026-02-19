@@ -217,7 +217,7 @@ describe("Groups", () => {
       cy.contains(projectName).should("be.visible");
 
       // Click on the Data Connectors filter to show data connectors
-      cy.getDataCy("group-search-filter-type-DataConnector").last().click();
+      cy.getDataCy("search-filter-type-DataConnector").last().click();
 
       // Verify data connectors are visible
       cy.contains(dataConnectorName).should("be.visible");
@@ -267,7 +267,7 @@ describe("Groups", () => {
       cy.contains(projectName).should("not.exist");
 
       // Click on the Data Connectors filter to show data connectors
-      cy.getDataCy("group-search-filter-type-DataConnector").last().click();
+      cy.getDataCy("search-filter-type-DataConnector").last().click();
 
       // Verify the project's data connectors no longer appears in group search
       cy.contains(dataConnectorName).should("be.visible");

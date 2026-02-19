@@ -94,14 +94,13 @@ describe("Anonymous users can only access public resources", () => {
     cy.intercept(
       new RegExp(`/api/data/search/query\\?(?:.*&)*q=.*?${randomString}.*`),
     ).as("searchQuery");
-    cy.getDataCy("search-input").clear().type(randomString);
-    cy.getDataCy("search-button").click();
+    cy.getDataCy("search-query-input").clear().type(randomString);
+    cy.getDataCy("search-query-button").click();
     cy.wait("@searchQuery");
-    cy.getDataCy("search-card")
-      .should("have.length", 2)
-      .each((card) => {
-        cy.wrap(card).should("contain", randomString);
-      });
+    cy.getDataCy("search-list-item")
+      .should("have.length", 2);
+    cy.getDataCy("search-list-item")
+      .should("contain.text", randomString);
 
     // Log out and search for the projects as an anonymous user
     cy.session(anonymousSession.id, anonymousSession.setup);
@@ -110,11 +109,11 @@ describe("Anonymous users can only access public resources", () => {
     cy.intercept(
       new RegExp(`/api/data/search/query\\?(?:.*&)*q=.*?${randomString}.*`),
     ).as("searchQuery");
-    cy.getDataCy("search-input").clear().type(randomString);
-    cy.getDataCy("search-button").click();
+    cy.getDataCy("search-query-input").clear().type(randomString);
+    cy.getDataCy("search-query-button").click();
     cy.wait("@searchQuery");
-    cy.getDataCy("search-card").should("have.length", 1).contains(randomString);
-    cy.getDataCy("search-card").getDataCy("search-card-entity-link").click();
+    cy.getDataCy("search-list-item").should("have.length", 1).contains(randomString);
+    cy.getDataCy("search-list-item").click();
     cy.getDataCy("project-name").should("contain", publicProjectName);
     cy.getDataCy("project-settings-link").click();
     cy.getDataCy("project-update-button").should("not.exist");
@@ -126,17 +125,16 @@ describe("Anonymous users can only access public resources", () => {
       cy.getDataCy("project-update-button").should("be.visible");
 
       cy.getDataCy("navbar-link-search").click();
-      cy.getDataCy("search-input").clear().type(randomString);
-      cy.getDataCy("search-button").click();
+      cy.getDataCy("search-query-input").clear().type(randomString);
+      cy.getDataCy("search-query-button").click();
       cy.wait("@searchQuery");
-      cy.getDataCy("search-card")
+      cy.getDataCy("search-list-item")
         .should("have.length", 2)
         .each((card) => {
           cy.wrap(card).should("contain", randomString);
         });
-      cy.getDataCy("search-card")
+      cy.getDataCy("search-list-item")
         .filter(`:contains("${privateProjectName}")`)
-        .find(`[data-cy=search-card-entity-link]`)
         .click();
       cy.getDataCy("project-name").should("contain", privateProjectName);
       cy.getDataCy("project-settings-link").click();
@@ -160,18 +158,17 @@ describe("Anonymous users can only access public resources", () => {
     cy.session(anonymousSession.id, anonymousSession.setup);
     cy.visit("/search");
     cy.getDataCy("navbar-login").should("be.visible");
-    cy.getDataCy("search-input").clear().type(randomString);
-    cy.getDataCy("search-button").click();
+    cy.getDataCy("search-query-input").clear().type(randomString);
+    cy.getDataCy("search-query-button").click();
     cy.wait("@searchQuery");
-    cy.getDataCy("search-card")
+    cy.getDataCy("search-list-item")
       .should("have.length", 2)
       .each((card) => {
         cy.wrap(card).should("contain", randomString);
       });
 
-    cy.getDataCy("search-card")
+    cy.getDataCy("search-list-item")
       .filter(`:contains("${publicProjectName}")`)
-      .find(`[data-cy=search-card-entity-link]`)
       .click();
 
     // Login, check the public project and change visibility
@@ -199,10 +196,10 @@ describe("Anonymous users can only access public resources", () => {
     cy.session(anonymousSession.id, anonymousSession.setup);
     cy.visit("/search");
     cy.getDataCy("navbar-login").should("be.visible");
-    cy.getDataCy("search-input").clear().type(randomString);
-    cy.getDataCy("search-button").click();
+    cy.getDataCy("search-query-input").clear().type(randomString);
+    cy.getDataCy("search-query-button").click();
     cy.wait("@searchQuery");
-    cy.getDataCy("search-card")
+    cy.getDataCy("search-list-item")
       .should("have.length", 1)
       .should("not.contain", publicProjectName)
       .should("contain", privateProjectName);

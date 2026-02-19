@@ -56,9 +56,9 @@ describe("Dashboard v2 - Authenticated user", () => {
 
   it("Can find project in the search results", () => {
     cy.visit("/");
-    cy.getDataCy("view-my-projects-btn").click();
-    cy.getDataCy("search-card").should("have.length.at.least", 1);
-    cy.getDataCy("search-card").should(
+    cy.getDataCy("view-my-Projects-btn").click();
+    cy.getDataCy("search-list-item").should("have.length.at.least", 1);
+    cy.getDataCy("search-list-item").should(
       "contain.text",
       `${prefixProjectTitle} ${projectSlug}`,
     );

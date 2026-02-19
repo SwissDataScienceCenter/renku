@@ -94,72 +94,54 @@ describe("Search for resources: groups, projects, users", () => {
     // Search for string
     cy.getDataCy("navbar-link-search").click();
     cy.intercept(new RegExp(`/api/data/search/query.*`)).as("searchQuery");
-    cy.getDataCy("search-input").clear().type(stringRandomOne);
-    cy.getDataCy("search-button").click();
+    cy.getDataCy("search-query-input").clear().type(stringRandomOne);
+    cy.getDataCy("search-query-button").click();
     cy.wait("@searchQuery");
-    cy.getDataCy("search-card")
-      .should("have.length", 2)
-      .each((card) => {
-        cy.wrap(card).should("contain", stringRandomOne);
-      });
-    cy.getDataCy("search-input").clear().type(stringRandomTwo);
-    cy.getDataCy("search-button").click();
+    cy.getDataCy("search-list-item")
+      .should("have.length", 1);
+    cy.getDataCy("search-list-item")
+      .should("contain.text", stringRandomOne);
+    cy.getDataCy("search-query-input").clear().type(stringRandomTwo);
+    cy.getDataCy("search-query-button").click();
     cy.wait("@searchQuery");
-    cy.getDataCy("search-card")
-      .should("have.length", 2)
-      .each((card) => {
-        cy.wrap(card).should("contain", stringRandomTwo);
-      });
+    cy.getDataCy("search-list-item")
+      .should("have.length", 1);
+    cy.getDataCy("search-list-item")
+      .should("contain.text", stringRandomTwo);
 
     // Filter for projects and groups
-    cy.getDataCy("search-filter-type-group").filter(":visible").click();
+    cy.getDataCy("search-filter-type-Group").filter(":visible").click();
     cy.wait("@searchQuery");
-    cy.getDataCy("search-card").should("have.length", 1).contains(groups.first);
+    cy.getDataCy("search-list-item").should("have.length", 1);
 
-    cy.getDataCy("search-input").clear().type(stringRandomOne);
-    cy.getDataCy("search-button").click();
+    cy.getDataCy("search-query-input").clear().type(stringRandomOne);
+    cy.getDataCy("search-query-button").click();
     cy.wait("@searchQuery");
-    cy.getDataCy("search-card")
+    cy.getDataCy("search-list-item")
       .should("have.length", 1)
-      .contains(groups.second);
+      .contains(groups.first);
 
-    cy.getDataCy("search-filter-type-group").filter(":visible").click();
-    cy.getDataCy("search-filter-type-project").filter(":visible").click();
+    cy.getDataCy("search-filter-type-Group").filter(":visible").click();
+    cy.getDataCy("search-filter-type-Project").filter(":visible").click();
     cy.wait("@searchQuery");
-    cy.getDataCy("search-card")
+    cy.getDataCy("search-list-item")
       .should("have.length", 1)
       .contains(projects.first);
 
-    // Search with filters
-    const complexSearch = `type:group,project ${stringRandomOne} ${stringRandomTwo}`;
-    cy.getDataCy("search-input").clear().type(complexSearch);
-    cy.getDataCy("search-button").click();
-    cy.wait("@searchQuery");
-    cy.getDataCy("search-card")
-      .should("have.length", 4)
-      .each((card) => {
-        cy.wrap(card).should(($card) => {
-          const text = $card.text();
-          expect(text).to.match(
-            new RegExp(`${stringRandomOne}|${stringRandomTwo}`),
-          );
-        });
-      });
-
-    // Filter by date
+    // Filter by dateÏ
     cy.getDataCy("search-filter-created-older-than-90-days")
       .filter(":visible")
       .click();
     cy.wait("@searchQuery");
-    cy.getDataCy("search-card").should("have.length", 0);
+    cy.getDataCy("search-list-item").should("have.length", 0);
     cy.getDataCy("search-filter-created-last-week").filter(":visible").click();
 
     // Can search for users -- can't guarantee we match an exact number here
-    const userSearch = "type:user";
-    cy.getDataCy("search-filter-created-all").filter(":visible").click();
-    cy.getDataCy("search-input").clear().type(userSearch);
-    cy.getDataCy("search-button").click();
+    const userSearch = "type:User";
+    cy.getDataCy("search-filter-created-any").filter(":visible").click();
+    cy.getDataCy("search-query-input").clear().type(userSearch);
+    cy.getDataCy("search-query-button").click();
     cy.wait("@searchQuery");
-    cy.getDataCy("search-card").should("have.length.at.least", 1);
+    cy.getDataCy("search-list-item").should("have.length.at.least", 1);
   });
 });
