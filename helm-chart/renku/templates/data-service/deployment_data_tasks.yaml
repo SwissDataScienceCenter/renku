@@ -81,6 +81,8 @@ spec:
                   key: {{ .Values.global.redis.existingSecretPasswordKey }}
             - name: POSTHOG_ENABLED
               value: {{ .Values.posthog.enabled | quote }}
+            - name: LOG_FORMAT_STYLE
+              value: {{ .Values.logging.logFormatStyle | quote }}
             - name: POSTHOG_API_KEY
               value: {{ .Values.posthog.apiKey | default "" | quote }}
             - name: POSTHOG_HOST
