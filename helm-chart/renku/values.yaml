@@ -51,13 +51,13 @@ global:
   gateway:
     ## Client secret of the renku client application registered in keycloak.
     ## Should be set to a proper value (i.e. by using openssl rand -hex 32) for production.
-    ## Can be set here or as .clientSecret outside of .global, the values set ouside of global (if defined) take precedence.
+    ## Can be set here or as .clientSecret outside .global, the values set outside global (if defined) take precedence.
     clientSecret:
     ## Client id and client secret of the renku gateway client application which is registered in GitLab.
-    ## Can be set here or as .gitlabClientId outside of .global, the values set ouside of global (if defined) take precedence.
+    ## Can be set here or as .gitlabClientId outside .global, the values set outside global (if defined) take precedence.
     gitlabClientId: renku-ui
     ## Should be set to a proper value (i.e. by using openssl rand -hex 32) for production.
-    ## Can be set here or as .gitlabClientSecret outside of .global, the values set ouside of global (if defined) take precedence.
+    ## Can be set here or as .gitlabClientSecret outside .global, the values set outside global (if defined) take precedence.
     gitlabClientSecret:
   uiserver:
     ## The client secret for the renku-ui client application registered in keycloak.
@@ -89,7 +89,7 @@ global:
       ## DOES NOT tolerate a change of the admin password when upgrading.
       # password:
   ## Use an existing secret instead of creating a new one. It must have a
-  ## postgres-password key containing the password for the posgres user.
+  ## postgres-password key containing the password for the postgres user.
   # existingSecret:
 
   # Globally available solr (TBD)
@@ -112,7 +112,7 @@ global:
     ## Specify the redis host and port. Notice that these settings only affect
     ## the subcharts which represent the applications which are clients to redis,
     ## but not the redis cluster deployment itself.
-    ## If you're deploying redis through this chart and you want to deviate from
+    ## If you're deploying redis through this chart, and you want to deviate from
     ## the defaults, you'll have to match whatever you set here in the non-global
     ## redis section below which defines the actual redis cluster.
     port: 26379
@@ -207,7 +207,7 @@ networkPolicies:
             protocol: TCP
       - to:
           # Allow access to any port/protocol as long as it is directed
-          # outside of the cluster. This is done by excluding
+          # outside the cluster. This is done by excluding
           # IP ranges which are reserved for private networking from
           # the allowed range.
           - ipBlock:
@@ -227,6 +227,10 @@ alerts:
     ## Client secret for the Alertmanager webhook OIDC client
     ## Will be auto-generated if not provided
     clientSecret:
+## Logging configuration (applied to all services that support it)
+logging:
+  ## Possible values are "json" and "plain". This defaults to "plain" if it's not set or any other value is provided.
+  logFormatStyle: plain
 ## Keycloak configuration
 keycloakx:
   ## Spawn a keycloak instance
@@ -261,7 +265,7 @@ keycloakx:
   # - DB_USER: database username for keycloak database  value: global.keycloak.postgresUser
   # - DB_PASSWORD: database password for keycloak       value: global.keycloak.postgresPassword.value
   # keycloak-password-secret
-  # - KEYCLOAK_USER: keyclaok admin username            value: global.keycloak.user
+  # - KEYCLOAK_USER: keycloak admin username            value: global.keycloak.user
   # - KEYCLOAK_PASSWORD: keycloak admin password        value: global.keycloak.password.value
   extraEnvFrom: |
     - secretRef:
@@ -292,7 +296,7 @@ keycloakx:
     {{- end -}}
   ## Create a demo user in keycloak? Note that the password for the demo
   ## user must be queried from kubernetes (see the rendered NOTES.txt
-  ## template which is shown after a successul deployment).
+  ## template which is shown after a successful deployment).
   createDemoUser: false
   ## This section points to an image used to create
   ## a Renku realm and initialize it with the necessary
@@ -349,7 +353,7 @@ keycloakx:
 # Postgresql configuration
 # The bitnami postgres chart offers a variety of configuration options, most of
 # which are not explicitly mentioned here. We predominantly list the values where we
-# deviate from the defaults or where we expect the some deployment specific values
+# deviate from the defaults or where we expect some deployment specific values
 # to be set. For all options and their defaults see:
 # https://github.com/bitnami/charts/tree/master/bitnami/postgresql#parameters
 # For production deployments check out
@@ -416,7 +420,7 @@ redis:
 
   # the values below were taken from the default values for the chart
   # and adapted to our context. The following contains a mix of specific
-  # customisations plus some higher level defaults which have been
+  # customizations plus some higher level defaults which have been
   # retained here so someone can get some overview of what this values
   # file can do.
   fullnameOverride: renku-redis
@@ -551,7 +555,7 @@ ui:
       ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
       ##
       # pullSecrets:
-      #   - myRegistrKeySecretName
+      #   - myRegistryKeySecretName
     service:
       type: ClusterIP
       port: 80
@@ -572,7 +576,7 @@ ui:
     nodeSelector: {}
     tolerations: []
     affinity: {}
-    # This defines the message displayed on the home page of logged in users.
+    # This defines the message displayed on the home page of logged-in users.
     dashboardMessage:
       enabled: false
       # This is the main message and is rendered as Markdown content.
@@ -611,7 +615,7 @@ ui:
     uploadSizeThreshold:
       soft: 104857600 # 100MB
     # Any string here, other than 'false', will enable the maintenance page and be added on it as an info.
-    # Setting 'true' will display a standard message embedded in maintenace page.
+    # Setting 'true' will display a standard message embedded in maintenance page.
     maintenance: false
     sentry:
       enabled: false
@@ -619,7 +623,7 @@ ui:
       environment: ""
       sampleRate: 0 # number between 0 and 1. (e.g., to send 20% of transactions, set 0.2.)
     privacy:
-      # If you want to enable the Privacy Policy and Terms of Service pages, you shoud add your custom content
+      # If you want to enable the Privacy Policy and Terms of Service pages, you should add your custom content
       # in privacyPolicyContent and termsContent. Markdown is supported.
       page:
         enabled: false
@@ -881,7 +885,7 @@ notebooks:
     ## In this case you do not need to define a tlsSecret. When the flag is set to true
     ## the tls section of the ingress for sessions gets templated with '{}' which indicates
     ## to ingress controllers to use the default TLS cert. Note that it could be that some
-    ## ingress contrllers do not support this option.
+    ## ingress controllers do not support this option.
     useDefaultClusterTlsCert: false
     tlsSecret:
     className: "nginx"
@@ -908,7 +912,7 @@ notebooks:
   ## dedicated nodes rather than on all nodes in a cluster. A strict setup where session pods
   ## are scheduled only on dedicated nodes and nothing else is scheduled on said nodes would involve:
   ## (i) taints on the nodes to prevent other non-session workloads from getting scheduled there,
-  ## (ii) tolerations below to make sure the user session pods can get schedulded on the dedicated nodes,
+  ## (ii) tolerations below to make sure the user session pods can get scheduled on the dedicated nodes,
   ## (iii) node affinity below to make sure the user sessions do not get scheduled on other nodes.
   sessionNodeSelector: {}
   sessionTolerations: []
@@ -964,7 +968,7 @@ notebooks:
   ## such values are not provided explicitly in the post request.
   ## It is mandatory to provide all of these to deploy the helm chart.
   ## The defaults below do not have to be equal to the default values
-  ## specified in the server options for the UI above but they have to be
+  ## specified in the server options for the UI above, but they have to be
   ## within the available choices or valid ranges.
   serverDefaults:
     defaultUrl: "/lab"
@@ -1039,7 +1043,7 @@ notebooks:
     ## This is useful to make sure that the host can be properly recognized
     ## when connecting to a session. If left unset then the host keys are
     ## likely to change causing ssh connections to fail and require removing the
-    ## old keys from ~/.ssh/known_hosts. Therefore it is reccomended that this is
+    ## old keys from ~/.ssh/known_hosts. Therefore, it is reccomended that this is
     ## set for production. The required keys are:
     ## - ssh_host_dsa_key
     ## - ssh_host_dsa_key.pub
@@ -1057,7 +1061,7 @@ gateway:
   allowOrigin:
   # - http://example.com
   # - https://foo.example.com
-  ## Set to true to enable the developement mode. This has negative security
+  ## Set to true to enable the development mode. This has negative security
   ## implications and should never be done in a production setting.
   development: false
   ## To protect the backend services from an excessive amount of API calls
@@ -1147,7 +1151,7 @@ swagger:
   image:
     repository: swaggerapi/swagger-ui
     tag: "latest"
-## The image used in startup scripts to initialize different postgress databases
+## The image used in startup scripts to initialize different postgres databases
 initDb:
   image:
     repository: renku/init-db
@@ -1220,7 +1224,7 @@ dataService:
   # Build session images from code repositories with Shipwright
   imageBuilders:
     # Experimental feature: enable at your own risk!
-    # The feature depends on Shipwright (version >= 0.15.x) being already installed independently from the Renku Helm chart.
+    # The feature depends on Shipwright (version >= 0.15.x) being already installed independently of the Renku Helm chart.
     enabled: false
     ## The container image prefix for images built from code
     outputImagePrefix: harbor.dev.renku.ch/renku-build/
@@ -1265,7 +1269,7 @@ dataService:
         operator: Equal
         value: image-build
   ## The service account used in the Amalthea session pods for the resource pool(s) that use the local cluster.
-  ## The only use for this is if you want to use a different SCC than the default in Openshift.
+  ## The only use for this is if you want to use a different SCC than the default in OpenShift.
   ## The service account is not mounted in the session. Leaving the default value of "" means that
   ## a service account will not be specified for the Session spec.
   localClusterSessionServiceAccount: ""
@@ -1325,7 +1329,7 @@ secretsStorage:
 
 # When this is set to false the gateway and data service will ignore the Gitlab
 # that can be integrated with Renku and will not ask users to log into this Gitlab.
-# NOTE: This flag has no effect on the core service and knowledge graph. Therefore
+# NOTE: This flag has no effect on the core service and knowledge graph. Therefore,
 # setting this to false should only be done if the enableV1Services flag is also false.
 # When this is set to false the gateway will not inject the internal gitlab tokens and
 # the data service will not require them and if tokens are passed it will just ignore them.
