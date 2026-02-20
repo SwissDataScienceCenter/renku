@@ -81,11 +81,6 @@ spec:
               value: "authorization_code"
             - name: CLI_KC_CLIENT_ID
               value: renku-cli
-            - name: CLI_KC_CLIENT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: {{ cat (include "renku.fullname" .) "-gateway" | nospace }}
-                  key: cliClientSecret
             - name: CLI_KC_CLIENT_PUBLIC
               value: "true"
             - name: CLI_KC_CLIENT_ATTRIBUTES
