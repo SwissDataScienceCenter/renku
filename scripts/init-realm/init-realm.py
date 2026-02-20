@@ -72,6 +72,10 @@ def _check_existing(existing_object: Dict, new_object: Dict, case, id_key) -> bo
                 f"Found mismatch for key '{key}' at {case} '{new_object[id_key]}'!"
             )
             logging.warning(warning)
+            logging.warning("new_object")
+            logging.warning(new_object)
+            logging.warning("existing_object")
+            logging.warning(existing_object)
 
     return changed
 
