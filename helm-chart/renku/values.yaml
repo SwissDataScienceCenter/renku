@@ -53,10 +53,6 @@ global:
     ## Should be set to a proper value (i.e. by using openssl rand -hex 32) for production.
     ## Can be set here or as .clientSecret outside of .global, the values set ouside of global (if defined) take precedence.
     clientSecret:
-    ## Client secret of the renku-cli client application registered in keycloak.
-    ## Should be set to a proper value (i.e. by using openssl rand -hex 32) for production.
-    ## Can be set here or as .cliClientSecret outside of .global, the values set ouside of global (if defined) take precedence.
-    cliClientSecret:
     ## Client id and client secret of the renku gateway client application which is registered in GitLab.
     ## Can be set here or as .gitlabClientId outside of .global, the values set ouside of global (if defined) take precedence.
     gitlabClientId: renku-ui
