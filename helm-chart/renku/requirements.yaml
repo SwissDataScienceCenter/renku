@@ -13,7 +13,7 @@ dependencies:
     condition: redis.install
   - name: amalthea-sessions
     repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-    version: "0.24.0"
+    version: "0.26.1"
   - name: dlf-chart
     repository: "https://swissdatasciencecenter.github.io/datashim/"
     version: "0.3.9-renku-2"
