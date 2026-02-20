@@ -53,10 +53,6 @@ global:
     ## Should be set to a proper value (i.e. by using openssl rand -hex 32) for production.
     ## Can be set here or as .clientSecret outside of .global, the values set ouside of global (if defined) take precedence.
     clientSecret:
-    ## Client secret of the renku-cli client application registered in keycloak.
-    ## Should be set to a proper value (i.e. by using openssl rand -hex 32) for production.
-    ## Can be set here or as .cliClientSecret outside of .global, the values set ouside of global (if defined) take precedence.
-    cliClientSecret:
     ## Client id and client secret of the renku gateway client application which is registered in GitLab.
     ## Can be set here or as .gitlabClientId outside of .global, the values set ouside of global (if defined) take precedence.
     gitlabClientId: renku-ui
@@ -256,8 +252,7 @@ keycloakx:
     - "--http-enabled=true"
     - "--http-port=8080"
     - "--hostname-strict=false"
-    - "--hostname-strict-https=false"
-    - "--auto-build"
+    - "--proxy-headers=xforwarded"
     # The following environment variables are provided to keycloak
     # as extraEnvFrom secrets.
   # renku-keycloak-postgres
@@ -1055,38 +1050,6 @@ notebooks:
     ## - ssh_host_ed25519_key
     ## - ssh_host_ed25519_key.pub
     hostKeySecret:
-tests:
-  enabled: false
-  image:
-    repository: renku/tests
-    tag: "0.36.3"
-  resources:
-    requests:
-      memory: "3G"
-      cpu: "500m"
-      ephemeral-storage: "3G"
-  ## User account for running `helm test`
-  #parameters:
-  #  email: bwayne@example.com
-  #  username: bwayne
-  #  fullname: Bruce Wayne
-  #  password: IamBatman
-  #  provider:
-  #  register:
-  #  docsRun:
-  #  extantProject:
-  #  anonProject:
-  #  anonAvailable: false
-  #  batchRemove: false
-  #  removePattern:
-  #  testTarget:
-  resultsS3:
-    enabled: false
-    #  host:
-    #  bucket:
-    #  filename:
-    #  accessKey:
-    #  secretKey:
 ## Configuration for the Gateway service
 gateway:
   ## Optional list of allowed sources for Cross-Origin Resource Sharing.
