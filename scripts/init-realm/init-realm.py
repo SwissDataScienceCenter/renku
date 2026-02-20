@@ -55,11 +55,6 @@ def _check_existing(existing_object: Dict, new_object: Dict, case, id_key) -> bo
 
     changed: bool = False
 
-    logging.warning("new_object")
-    logging.warning(new_object)
-    logging.warning("existing_object")
-    logging.warning(existing_object)
-
     for key in new_object.keys():
         if key not in existing_object:
             changed = True
@@ -77,10 +72,6 @@ def _check_existing(existing_object: Dict, new_object: Dict, case, id_key) -> bo
                 f"Found mismatch for key '{key}' at {case} '{new_object[id_key]}'!"
             )
             logging.warning(warning)
-            logging.warning("new_object")
-            logging.warning(new_object)
-            logging.warning("existing_object")
-            logging.warning(existing_object)
 
     return changed
 
