@@ -109,6 +109,16 @@ spec:
                   key: SPICEDB_GRPC_PRESHARED_KEY
             - name: AUTHZ_DB_GRPC_PORT
               value: "50051"
+            {{- with .Values.notebooks.sessionNodeSelector }}
+            - name: NB_SESSIONS__NODE_SELECTOR
+              value: |
+                {{- toYaml . | nindent 16 }}
+            {{- end }}
+            {{- with .Values.notebooks.sessionAffinity }}
+            - name: NB_SESSIONS__AFFINITY
+              value: |
+                {{- toYaml . | nindent 16 }}
+            {{- end }}
             {{- with .Values.notebooks.sessionTolerations }}
             - name: NB_SESSIONS__TOLERATIONS
               value: |
