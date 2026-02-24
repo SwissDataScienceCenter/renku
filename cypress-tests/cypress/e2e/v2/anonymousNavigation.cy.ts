@@ -116,6 +116,7 @@ describe("Anonymous users can only access public resources", () => {
     cy.getDataCy("search-list-item").click();
     cy.getDataCy("project-name").should("contain", publicProjectName);
     cy.getDataCy("project-settings-link").click();
+    cy.getDataCy("project-settings-general").should("be.visible");
     cy.getDataCy("project-update-button").should("not.exist");
 
     // Login, check the private project and change visibility
@@ -170,6 +171,7 @@ describe("Anonymous users can only access public resources", () => {
     cy.getDataCy("search-list-item")
       .filter(`:contains("${publicProjectName}")`)
       .click();
+    cy.getDataCy("project-name").should("be.visible");
 
     // Login, check the public project and change visibility
     cy.url().then((url) => {
