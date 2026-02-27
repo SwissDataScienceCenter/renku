@@ -549,7 +549,7 @@ ui:
     replicaCount: 1
     image:
       repository: renku/renku-ui
-      tag: "4.17.1"
+      tag: "4.17.2"
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
       ## Secrets must be manually created in the namespace.
@@ -741,7 +741,7 @@ ui:
     keepCookies: []
     image:
       repository: renku/renku-ui-server
-      tag: "4.17.1"
+      tag: "4.17.2"
       pullPolicy: IfNotPresent
     imagePullSecrets: []
     nameOverride: ""
@@ -1055,38 +1055,6 @@ notebooks:
     ## - ssh_host_ed25519_key
     ## - ssh_host_ed25519_key.pub
     hostKeySecret:
-tests:
-  enabled: false
-  image:
-    repository: renku/tests
-    tag: "0.36.3"
-  resources:
-    requests:
-      memory: "3G"
-      cpu: "500m"
-      ephemeral-storage: "3G"
-  ## User account for running `helm test`
-  #parameters:
-  #  email: bwayne@example.com
-  #  username: bwayne
-  #  fullname: Bruce Wayne
-  #  password: IamBatman
-  #  provider:
-  #  register:
-  #  docsRun:
-  #  extantProject:
-  #  anonProject:
-  #  anonAvailable: false
-  #  batchRemove: false
-  #  removePattern:
-  #  testTarget:
-  resultsS3:
-    enabled: false
-    #  host:
-    #  bucket:
-    #  filename:
-    #  accessKey:
-    #  secretKey:
 ## Configuration for the Gateway service
 gateway:
   ## Optional list of allowed sources for Cross-Origin Resource Sharing.
