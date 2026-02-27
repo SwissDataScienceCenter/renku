@@ -55,6 +55,10 @@ spec:
                   key: password
             - name: K8S_NAMESPACE
               value: {{ .Release.Namespace | quote }}
+            {{- if .Values.dataService.remoteClustersKubeconfigSecretName }}
+            - name: K8S_CONFIGS_ROOT
+              value: "/secrets/kube_configs"
+            {{- end }}
             - name: KEYCLOAK_URL
               value: {{ include "renku.keycloakUrl" . | quote}}
             - name: KEYCLOAK_REALM
