@@ -145,6 +145,8 @@ global:
       tag: "0.0.2"
     customCAs: []
     # - secret:
+    customCAsForDataConnectorMounts: []
+    # - secret:
   ## Database credentials for postgres
   db:
     ## Used by the renku-data-services and potentially other backend services
