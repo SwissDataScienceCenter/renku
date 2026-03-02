@@ -9,7 +9,7 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   replicas: 1
-  strategy: 
+  strategy:
     {{- toYaml .Values.dataService.updateStrategy | nindent 4 }}
   selector:
     matchLabels:
@@ -52,6 +52,8 @@ spec:
               value: {{ .Release.Namespace | quote }}
             - name: POSTHOG_ENABLED
               value: {{ .Values.posthog.enabled | quote }}
+            - name: LOG_FORMAT_STYLE
+              value: {{ .Values.logging.logFormatStyle | quote }}
             - name: IMAGE_BUILDERS_ENABLED
               value: {{ .Values.dataService.imageBuilders.enabled | quote }}
             - name: KUBERNETES_NAMESPACE
