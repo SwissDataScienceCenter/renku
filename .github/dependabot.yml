@@ -2,9 +2,7 @@ version: 2
 updates:
   - package-ecosystem: "pip"
     directories:
-      - "docs-legacy/"
       - "scripts/init-realm"
-      - "acceptance-tests/"
       - "global-images/**"
     schedule:
       interval: "weekly"
