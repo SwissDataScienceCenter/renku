@@ -18,15 +18,14 @@ The following describes how to setup a cluster to be able to run Renku sessions,
   - [ ] CertManager to provide valid certificates to the user sessions
 - [ ] Worker nodes need internet access to retrieve code, container images, and data from repositories
 - [ ] Egress setup: Allow traffic to the main cluster and Internet, while preventing access to any cluster services.
-    
-    ```yaml
-    apiVersion: networking.k8s.io/v1
-    kind: NetworkPolicy
-    metadata:
-      name: egress-from-renku-v2-sessions
-    spec:
-      egress:
-        - to:
+  ```yaml
+  apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    name: egress-from-renku-v2-sessions
+  spec:
+    egress:
+      - to:
           # DNS resolution
           - namespaceSelector:
               matchLabels:
@@ -34,12 +33,12 @@ The following describes how to setup a cluster to be able to run Renku sessions,
             podSelector:
               matchLabels:
                 k8s-app: kube-dns
-          ports:
+        ports:
           - port: 53
             protocol: UDP
           - port: 53
             protocol: TCP
-        - to:
+      - to:
           # Allow access to any port/protocol as long as it is directed
           # outside of the cluster. This is done by excluding
           # IP ranges which are reserved for private networking from
@@ -47,51 +46,47 @@ The following describes how to setup a cluster to be able to run Renku sessions,
           - ipBlock:
               cidr: 0.0.0.0/0
               except:
-              - 10.0.0.0/8
-              - 172.16.0.0/12
-              - 192.168.0.0/16
-      podSelector:
-        matchLabels:
-          app.kubernetes.io/created-by: controller-manager
-          app.kubernetes.io/name: AmaltheaSession
-      policyTypes:
+                - 10.0.0.0/8
+                - 172.16.0.0/12
+                - 192.168.0.0/16
+    podSelector:
+      matchLabels:
+        app.kubernetes.io/created-by: controller-manager
+        app.kubernetes.io/name: AmaltheaSession
+    policyTypes:
       - Egress
-    ```
+  ```
 
 ### User Session Nodes Configuration
 
 - Labels
-	- [ ] `renku.io/node-purpose: user` User sessions are scheduled only on nodes with this label
-	- [ ] Extra labels to differentiate node pools as required
+  - [ ] `renku.io/node-purpose: user` User sessions are scheduled only on nodes with this label
+  - [ ] Extra labels to differentiate node pools as required
 - Taints
-	- [ ] Taints to differentiate node pools as required
+  - [ ] Taints to differentiate node pools as required
 
 ### Resources Requirements
 
 - [ ] Priority classes for the user sessions
-    
-    This will be the priority class(es) we can reference when defining quota requirements / limits.
-    
-    We recommend to create at least one dedicated priority class for the user sessions.
-    
-    Here as an example on how to create one, adapt as required:
-    
-    ```bash
-    kubectl create priorityclass renku-user-sessions-priority --value=1000 --description="default priority for renku sessions"
-    ```
+  This will be the priority class(es) we can reference when defining quota requirements / limits.
+  We recommend to create at least one dedicated priority class for the user sessions.
+  Here as an example on how to create one, adapt as required:
+  ```bash
+  kubectl create priorityclass renku-user-sessions-priority --value=1000 --description="default priority for renku sessions"
+  ```
 
 ### Storage Requirements
 
 - [ ] CSI-driver with automatic provisioning support on your cluster
-    
-    *If you already have automatic volume provisioning setup in your cluster, you may skip this.*
-    
-    For example, to install cinder-csi:
-    
-    ```bash
-    helm repo add cinder-csi <https://kubernetes.github.io/cloud-provider-openstack>
-    helm install --create-namespace --namespace storage cinder-csi/openstack-cinder-csi --version 2.2.0 -g
-    ```
+
+  _If you already have automatic volume provisioning setup in your cluster, you may skip this._
+
+  For example, to install cinder-csi:
+
+  ```bash
+  helm repo add cinder-csi <https://kubernetes.github.io/cloud-provider-openstack>
+  helm install --create-namespace --namespace storage cinder-csi/openstack-cinder-csi --version 2.2.0 -g
+  ```
 
 - [ ] Storage classes with automatic provisioning (Will be used as the working dir of the user session containers)
 
@@ -107,78 +102,78 @@ The following describes how to setup a cluster to be able to run Renku sessions,
     name: renku-session-manager
     namespace: renku-user-sessions
   rules:
-  - apiGroups:
-    - ""
-    resources:
-    - pods
-    - pods/log
-    - services
-    - endpoints
-    - secrets
-    - priorityclasses
-    - resourcequotas
-    verbs:
-    - get
-    - list
-    - watch
-  - apiGroups:
-    - ""
-    resources:
-    - pods
-    - secrets
-    verbs:
-    - delete
-  - apiGroups:
-    - apps
-    resources:
-    - statefulsets
-    verbs:
-    - get
-    - list
-    - watch
-    - patch
-  - apiGroups:
-    - ""
-    resources:
-    - secrets
-    - resourcequotas
-    verbs:
-    - create
-    - update
-    - delete
-    - patch
-  - apiGroups:
-    - scheduling.k8s.io
-    resources:
-    - priorityclasses
-    verbs:
-    - get
-    - list
-    - watch
-  - apiGroups:
-    - amalthea.dev
-    resources:
-    - amaltheasessions
-    verbs:
-    - create
-    - update
-    - delete
-    - patch
-    - list
-    - get
-    - watch
+    - apiGroups:
+        - ""
+      resources:
+        - pods
+        - pods/log
+        - services
+        - endpoints
+        - secrets
+        - priorityclasses
+        - resourcequotas
+      verbs:
+        - get
+        - list
+        - watch
+    - apiGroups:
+        - ""
+      resources:
+        - pods
+        - secrets
+      verbs:
+        - delete
+    - apiGroups:
+        - apps
+      resources:
+        - statefulsets
+      verbs:
+        - get
+        - list
+        - watch
+        - patch
+    - apiGroups:
+        - ""
+      resources:
+        - secrets
+        - resourcequotas
+      verbs:
+        - create
+        - update
+        - delete
+        - patch
+    - apiGroups:
+        - scheduling.k8s.io
+      resources:
+        - priorityclasses
+      verbs:
+        - get
+        - list
+        - watch
+    - apiGroups:
+        - amalthea.dev
+      resources:
+        - amaltheasessions
+      verbs:
+        - create
+        - update
+        - delete
+        - patch
+        - list
+        - get
+        - watch
   ```
 
 ## Deploy the User Session Operator (AmaltheaSession)
 
-- [ ]  Retrieve the helm chart repository:
+- [ ] Retrieve the helm chart repository:
 
   ```bash
   helm repo add renku https://swissdatasciencecenter.github.io/helm-charts
   helm repo update
   ```
 
-- [ ]  User session operator in the `renku-user-sessions` dedicated namespace:
+- [ ] User session operator in the `renku-user-sessions` dedicated namespace:
 
   ```bash
   helm install \
@@ -188,7 +183,7 @@ The following describes how to setup a cluster to be able to run Renku sessions,
     renku/amalthea-sessions
   ```
 
-- [ ]  CSI-rClone Operator (for remote storage)
+- [ ] CSI-rClone Operator (for remote storage)
 
   ```bash
   helm install --set-json='csiNodepluginRclone.tolerations=[{"effect": "NoSchedule", "operator": "Exists"}]' csi-rclone renku/csi-rclone
@@ -199,16 +194,16 @@ The following describes how to setup a cluster to be able to run Renku sessions,
 Send to the **RenkuLab Administrators** the following parameters
 
 - For the connection
-    - [ ] **Namespace** to use
-    - [ ] **ServiceAccount** name & authentication token
-    - [ ] **Base URL** of the user session running on the remote cluster
+  - [ ] **Namespace** to use
+  - [ ] **ServiceAccount** name & authentication token
+  - [ ] **Base URL** of the user session running on the remote cluster
 - For the sessions
-    - [ ] The name(s) of your **storage classes** and their role
-    - [ ] The name(s) of your **priority classes** and their role
-    - [ ] The name(s) of your **resource classes**, and for each class:
-	    - [ ] The priority classe it should be associated with
-	    - [ ] The label(s) to use to select specific cluster nodes
-	    - [ ] The taint(s) to tolerate
-	    - [ ] The requests in terms of CPU, RAM, GPUs, default and maximum storage size
+  - [ ] The name(s) of your **storage classes** and their role
+  - [ ] The name(s) of your **priority classes** and their role
+  - [ ] The name(s) of your **resource classes**, and for each class:
+    - [ ] The priority classe it should be associated with
+    - [ ] The label(s) to use to select specific cluster nodes
+    - [ ] The taint(s) to tolerate
+    - [ ] The requests in terms of CPU, RAM, GPUs, default and maximum storage size
 - HTTPS Certificates
-    - [ ] The name of the **secret** generated by CertManager, or if we should use the default provider of your cluster
+  - [ ] The name of the **secret** generated by CertManager, or if we should use the default provider of your cluster
