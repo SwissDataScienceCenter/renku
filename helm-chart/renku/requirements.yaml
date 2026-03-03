@@ -21,7 +21,7 @@ dependencies:
   - name: csi-rclone
     # repository: "https://swissdatasciencecenter.github.io/helm-charts/"
     # version: "0.5.0"
-    repository: "oci://ghcr.io/swissdatasciencecenter/csi-rclone/helm-charts-dev/csi-rclone"
+    repository: "oci://ghcr.io/swissdatasciencecenter/csi-rclone/helm-charts-dev"
     version: "0.7.0-0.dev.git.148.habdec5f"
     condition: global.csi-rclone.install
   - name: solr
