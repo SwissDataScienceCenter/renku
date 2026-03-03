@@ -82,11 +82,11 @@ To illustrate the difference between `maintain` and `reduce`:
 
 **Scenario**: Course from 9:00-12:00, 20 placeholder pods, current time 10:30 (halfway through)
 
-| Active Sessions | `maintain` Behavior | `reduce` Behavior |
-|----------------|---------------------|-------------------|
-| 5 sessions | Keep 15 placeholders<br/>(20 total) | Keep 7-8 placeholders<br/>(spare reduced 50%) |
-| 15 sessions | Keep 5 placeholders<br/>(20 total) | Keep 2-3 placeholders<br/>(spare reduced 50%) |
-| 20 sessions | 0 placeholders<br/>(all replaced) | 0 placeholders<br/>(all replaced) |
+| Active Sessions | `maintain` Behavior                 | `reduce` Behavior                             |
+| --------------- | ----------------------------------- | --------------------------------------------- |
+| 5 sessions      | Keep 15 placeholders<br/>(20 total) | Keep 7-8 placeholders<br/>(spare reduced 50%) |
+| 15 sessions     | Keep 5 placeholders<br/>(20 total)  | Keep 2-3 placeholders<br/>(spare reduced 50%) |
+| 20 sessions     | 0 placeholders<br/>(all replaced)   | 0 placeholders<br/>(all replaced)             |
 
 **Use `maintain` when**: You want to ensure spare capacity is always available (e.g., for a Hackathon where users may join at any time)
 
@@ -163,6 +163,7 @@ xychart-beta
 ### List All Reservations
 
 Use `GET /api/data/capacity-reservations` to retrieve all capacity reservations, which returns:
+
 - Reservation ID, name, and resource class
 - Recurrence configuration (type, dates, schedule)
 - Provisioning settings (placeholder count, lead time, scale-down behavior)
@@ -170,6 +171,7 @@ Use `GET /api/data/capacity-reservations` to retrieve all capacity reservations,
 ### Delete a Reservation
 
 Send a `DELETE /api/data/capacity-reservations/{reservation_id}` request. Deleting a reservation will:
+
 1. Remove the reservation from the database
 2. Delete all occurrences associated with that reservation, even if they are active
 3. Clean up any active placeholder deployments
@@ -265,6 +267,7 @@ Create a capacity reservation for a weekly data science course that runs every M
 ```
 
 This reservation will:
+
 - Create 25 placeholder pods 30 minutes before each session (8:30 AM)
 - Keep them running during the 4-hour window
 - Maintain spare capacity as students join
