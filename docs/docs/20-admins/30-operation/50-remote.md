@@ -3,16 +3,16 @@ title: Remote Clusters
 ---
 
 :::warning[Under construction]
-Coming soon
+This is a first write-up, we welcome any constructive feedback to improve this documentation.
 :::
 
 The following describes how to setup a cluster to be able to run Renku sessions, and connect it to a Renku web portal.
 
 ## Requirements
 
-### Network Requirements
+### Network
 
-- Ingress from public Internet
+- [ ] Ingress from public Internet
   - [ ] load balancer 6443 to 6443 on all cluster nodes (Kubectl API)
   - [ ] load balancer 443 to 443 on all worker nodes for HTTPS access to the user session (JupiterLab or Visual Studio Code for example)
   - [ ] CertManager to provide valid certificates to the user sessions
@@ -57,40 +57,47 @@ The following describes how to setup a cluster to be able to run Renku sessions,
       - Egress
   ```
 
-### User Session Nodes Configuration
+### Priority classes
 
-- Labels
-  - [ ] `renku.io/node-purpose: user` User sessions are scheduled only on nodes with this label
-  - [ ] Extra labels to differentiate node pools as required
-- Taints
-  - [ ] Taints to differentiate node pools as required
+This will be the priority class(es) we can reference when defining quota requirements / limits.
 
-### Resources Requirements
+We recommend to create at least one dedicated priority class for the user sessions.
 
-- [ ] Priority classes for the user sessions
-  This will be the priority class(es) we can reference when defining quota requirements / limits.
-  We recommend to create at least one dedicated priority class for the user sessions.
-  Here as an example on how to create one, adapt as required:
-  ```bash
+Here as an example on how to create one, adapt as required:
+
+- ```bash
   kubectl create priorityclass renku-user-sessions-priority --value=1000 --description="default priority for renku sessions"
   ```
 
-### Storage Requirements
+### Storage classes
 
-- [ ] CSI-driver with automatic provisioning support on your cluster
+#### CSI-driver with automatic provisioning support on your cluster
 
-  _If you already have automatic volume provisioning setup in your cluster, you may skip this._
+_If you already have automatic volume provisioning setup in your cluster, you may skip this._
 
-  For example, to install cinder-csi:
+For example, to install cinder-csi:
 
-  ```bash
-  helm repo add cinder-csi <https://kubernetes.github.io/cloud-provider-openstack>
-  helm install --create-namespace --namespace storage cinder-csi/openstack-cinder-csi --version 2.2.0 -g
-  ```
+```bash
+helm repo add cinder-csi <https://kubernetes.github.io/cloud-provider-openstack>
+helm install --create-namespace --namespace storage cinder-csi/openstack-cinder-csi --version 2.2.0 -g
+```
 
-- [ ] Storage classes with automatic provisioning (Will be used as the working dir of the user session containers)
+The storage class associated will be used to provide the working directory of the user session containers.
 
-### Remote Connection for RenkuLab Services
+## User Session Nodes Configuration
+
+User session scheduling is based on label and taints to select nodes where to run the pod associated with each user session.
+
+### Labels
+
+- [ ] `renku.io/node-purpose: user` User sessions are scheduled only on nodes with this label
+- [ ] Extra labels to differentiate node pools as required
+
+### Taints
+
+- [ ] Taints to differentiate node pools as required
+
+## Remote Connection for RenkuLab Services
 
 - [ ] Dedicated **Namespace** for the user sessions (for example `renku-user-sessions`)
 - [ ] Dedicated **ServiceAccount** (for example `renku-session-manager`) with the following rights
