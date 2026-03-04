@@ -142,6 +142,11 @@ spec:
             {{- include "certificates.env.grpc" . | nindent 12 }}
           volumeMounts:
             {{- include "certificates.volumeMounts.system" . | nindent 12 }}
+            {{- if .Values.dataService.remoteClustersKubeconfigSecretName }}
+            - name: remote-cluster-kubeconfigs
+              mountPath: "/secrets/kube_configs"
+              readOnly: true
+            {{- end }}
           livenessProbe:
             tcpSocket:
               port: 8001
@@ -164,4 +169,9 @@ spec:
     {{- end }}
       volumes:
         {{- include "certificates.volumes" . | nindent 8 }}
+        {{- if .Values.dataService.remoteClustersKubeconfigSecretName }}
+        - name: remote-cluster-kubeconfigs
+          secret:
+            secretName: {{ .Values.dataService.remoteClustersKubeconfigSecretName }}
+        {{- end }}
       serviceAccountName: {{ template "renku.fullname" . }}-data-tasks
