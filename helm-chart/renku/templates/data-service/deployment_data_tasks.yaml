@@ -64,6 +64,8 @@ spec:
                 secretKeyRef:
                   name: {{ include "renku.fullname" . }}
                   key: dataServiceKeycloakClientSecret
+            - name: K8S_NAMESPACE
+              value: {{ .Release.Namespace | quote }}
             - name: REDIS_HOST
               value: {{ .Values.global.redis.host | quote }}
             - name: REDIS_PORT
@@ -109,6 +111,27 @@ spec:
                   key: SPICEDB_GRPC_PRESHARED_KEY
             - name: AUTHZ_DB_GRPC_PORT
               value: "50051"
+            - name: NB_SESSIONS__PLACEHOLDER_PRIORITY_CLASS
+              value: {{ if .Values.dataService.capacityReservation.createPriorityClass }}
+                {{- printf "%s-capacity-placeholder" (include "renku.fullname" . | trunc 42 | trimSuffix "-") | quote }}
+              {{- else }}
+                {{- .Values.dataService.capacityReservation.existingPriorityClass | quote }}
+              {{- end }}
+            {{- with .Values.notebooks.sessionNodeSelector }}
+            - name: NB_SESSIONS__NODE_SELECTOR
+              value: |
+                {{- toYaml . | nindent 16 }}
+            {{- end }}
+            {{- with .Values.notebooks.sessionAffinity }}
+            - name: NB_SESSIONS__AFFINITY
+              value: |
+                {{- toYaml . | nindent 16 }}
+            {{- end }}
+            {{- with .Values.notebooks.sessionTolerations }}
+            - name: NB_SESSIONS__TOLERATIONS
+              value: |
+                {{- toYaml . | nindent 16 }}
+            {{- end }}
             {{- include "certificates.env.python" . | nindent 12 }}
             {{- include "certificates.env.grpc" . | nindent 12 }}
           volumeMounts:
@@ -135,3 +158,4 @@ spec:
     {{- end }}
       volumes:
         {{- include "certificates.volumes" . | nindent 8 }}
+      serviceAccountName: {{ template "renku.fullname" . }}-data-tasks
