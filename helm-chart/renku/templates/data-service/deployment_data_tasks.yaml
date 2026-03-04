@@ -38,6 +38,8 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           env:
+            - name: ENABLE_RESOURCE_REQUEST_TRACKING
+              value: {{ .Values.dataService.dataTasks.enableResourceRequestTracking }}
             - name: TCP_PORT
               value: "8001"
             - name: TCP_HOST

@@ -1201,6 +1201,7 @@ dataService:
       tag: "0.70.0"
       pullPolicy: IfNotPresent
     resources: {}
+    enableResourceRequestTracking: false
   service:
     type: ClusterIP
     port: 80
