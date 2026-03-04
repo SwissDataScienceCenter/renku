@@ -55,8 +55,6 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.global.db.common.passwordSecretName }}
                   key: password
-            - name: K8S_NAMESPACE
-              value: {{ .Release.Namespace | quote }}
             {{- if .Values.dataService.remoteClustersKubeconfigSecretName }}
             - name: K8S_CONFIGS_ROOT
               value: "/secrets/kube_configs"
