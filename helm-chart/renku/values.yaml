@@ -1173,6 +1173,13 @@ dataService:
     # If you are not allowed to create ClusterRoles in your cluster, you can disable the feature by setting
     # `enableResourcePool` to false.
     enableResourcePool: true
+  capacityReservation:
+    # Creates a PriorityClass with value -1 for placeholder pods so they are evicted
+    # when real user session pods need resources.
+    createPriorityClass: true
+    # Name of an existing PriorityClass to use for placeholder pods when createPriorityClass is false.
+    # If left empty and createPriorityClass is false, placeholder pods will have no priority class assigned.
+    existingPriorityClass: ""
   image:
     repository: renku/renku-data-service
     tag: "0.69.0"
