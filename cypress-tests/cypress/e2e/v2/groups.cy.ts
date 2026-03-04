@@ -12,6 +12,7 @@ import {
 import { verifySearchIndexing } from "../../support/utils/search";
 import { createDataConnector } from "../../support/utils/dataConnectors";
 import { login } from "../../support/utils/general";
+import { TIMEOUTS } from "../../../config";
 
 const sessionId = ["groups", getRandomString()];
 
@@ -209,15 +210,24 @@ describe("Groups", () => {
       // Test group search functionality
       // Wait for search indexing to complete (1 project, 2 data connectors)
       verifySearchIndexing(randomString, 3);
+      cy.intercept(new RegExp(`/api/data/search/query.*`)).as("searchQuery");
 
       // Use the group search button
       cy.getDataCy("group-search-link").click();
+      cy.wait("@searchQuery", { timeout: TIMEOUTS.long });
 
-      // By default, projects are shown - verify the project is visible
+      cy.getDataCy("search-filter-type-Project").filter(":visible").should("be.checked");
+      // Verify the project is visible
       cy.contains(projectName).should("be.visible");
+      cy.getDataCy("search-filter-type-DataConnector").filter(":visible").last().click();
+      cy.wait("@searchQuery");
+      cy.getDataCy("search-filter-type-DataConnector").should("be.checked");
 
-      // Click on the Data Connectors filter to show data connectors
-      cy.getDataCy("group-search-filter-type-DataConnector").last().click();
+
+      cy.getDataCy("search-filter-type-DataConnector").filter(":visible").last().click();
+      cy.wait("@searchQuery");
+      cy.getDataCy("search-filter-type-DataConnector").should("be.checked");
+
 
       // Verify data connectors are visible
       cy.contains(dataConnectorName).should("be.visible");
@@ -262,12 +272,18 @@ describe("Groups", () => {
         .click();
       cy.getDataCy("group-name").should("contain", groupName);
       cy.getDataCy("group-search-link").click();
+      cy.wait("@searchQuery", { timeout: TIMEOUTS.long });
 
+
+      cy.getDataCy("search-filter-type-Project").filter(":visible").should("be.checked");
       // Verify the project no longer appears in group search
       cy.contains(projectName).should("not.exist");
 
-      // Click on the Data Connectors filter to show data connectors
-      cy.getDataCy("group-search-filter-type-DataConnector").last().click();
+      cy.getDataCy("search-filter-type-DataConnector").filter(":visible").last().click();
+      cy.wait("@searchQuery", { timeout: TIMEOUTS.long });
+      cy.getDataCy("search-filter-type-DataConnector").should("be.checked");
+
+      cy.getDataCy("search-filter-type-DataConnector").filter(":visible").last().click();
 
       // Verify the project's data connectors no longer appears in group search
       cy.contains(dataConnectorName).should("be.visible");
