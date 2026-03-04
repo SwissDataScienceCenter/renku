@@ -1,5 +1,5 @@
 ---
-title: Remote Clusters
+title: Remote Clusters - Setup
 ---
 
 :::warning[Under construction]
