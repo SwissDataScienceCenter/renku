@@ -264,5 +264,5 @@ spec:
           secret:
             secretName: {{ .Values.dataService.remoteClustersKubeconfigSecretName }}
         {{- end }}
-        {{- include "certificates.volumes" . | nindent 8 }}
+        {{- include "certificatesForMounts.volumes" . | nindent 8 }}
       serviceAccountName: {{ template "renku.fullname" . }}-data-service
