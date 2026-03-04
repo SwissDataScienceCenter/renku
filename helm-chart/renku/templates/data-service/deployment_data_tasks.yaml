@@ -38,6 +38,8 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           env:
+            - name: ENABLE_RESOURCE_REQUEST_TRACKING
+              value: {{ .Values.dataService.dataTasks.enableResourceRequestTracking | quote }}
             - name: TCP_PORT
               value: "8001"
             - name: TCP_HOST
@@ -53,6 +55,10 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.global.db.common.passwordSecretName }}
                   key: password
+            {{- if .Values.dataService.remoteClustersKubeconfigSecretName }}
+            - name: K8S_CONFIGS_ROOT
+              value: "/secrets/kube_configs"
+            {{- end }}
             - name: KEYCLOAK_URL
               value: {{ include "renku.keycloakUrl" . | quote}}
             - name: KEYCLOAK_REALM
@@ -136,6 +142,11 @@ spec:
             {{- include "certificates.env.grpc" . | nindent 12 }}
           volumeMounts:
             {{- include "certificates.volumeMounts.system" . | nindent 12 }}
+            {{- if .Values.dataService.remoteClustersKubeconfigSecretName }}
+            - name: remote-cluster-kubeconfigs
+              mountPath: "/secrets/kube_configs"
+              readOnly: true
+            {{- end }}
           livenessProbe:
             tcpSocket:
               port: 8001
@@ -158,4 +169,9 @@ spec:
     {{- end }}
       volumes:
         {{- include "certificates.volumes" . | nindent 8 }}
+        {{- if .Values.dataService.remoteClustersKubeconfigSecretName }}
+        - name: remote-cluster-kubeconfigs
+          secret:
+            secretName: {{ .Values.dataService.remoteClustersKubeconfigSecretName }}
+        {{- end }}
       serviceAccountName: {{ template "renku.fullname" . }}-data-tasks

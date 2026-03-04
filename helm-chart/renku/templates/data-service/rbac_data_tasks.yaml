@@ -9,6 +9,16 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 rules:
+{{- if .Values.dataService.dataTasks.enableResourceRequestTracking }}
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+      - persistentvolumeclaims
+    verbs:
+      - get
+      - list
+{{- end }}
   - apiGroups:
       - apps
     resources:
@@ -46,4 +56,42 @@ subjects:
   - kind: ServiceAccount
     name: {{ template "renku.fullname" . }}-data-tasks
     namespace: {{ .Release.Namespace }}
-{{- end -}}
+{{- if .Values.dataService.dataTasks.enableResourceRequestTracking }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ template "renku.fullname" . }}-data-tasks-cluster-role
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ template "renku.fullname" . }}-data-tasks
+subjects:
+  - kind: ServiceAccount
+    name: {{ template "renku.fullname" . }}-data-tasks
+    namespace: {{ .Release.Namespace }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ template "renku.fullname" . }}-data-tasks
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - nodes
+  verbs:
+  - get
+  - list
+{{- end }}
+{{- end }}

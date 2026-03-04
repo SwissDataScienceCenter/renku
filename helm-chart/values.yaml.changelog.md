@@ -8,6 +8,9 @@ Please follow this convention when adding a new row
 ## Upgrading to Renku 2.15.0
 
 * DELETE `global.gateway.cliClientSecret` the client is public and has no secret in Keycloak 25.
+* ADD `dataService.dataTasks.enableResourceRequestTracking` flag and
+  set it to `false`. Setting it to `true` enables resource request
+  tracking.
 
 ## Upgrading to Renku 2.12.0
 
