@@ -58,10 +58,6 @@ extraEnvVars: []
   ## These variables can override defaults in the configuration of the load tests. Here are variables can be used for this purpose:
   # - name: "BASE_URL"  # the url of the Renku deployment
   #   value: "https://dev.renku.ch"
-  # - name: "GIT_URL"  # the url of the Gitlab deployment Renku is using
-  #   value: "https://gitlab.dev.renku.ch"
-  # - name: "REGISTRY_DOMAIN"  # the domain for Gitlab's docker image registry
-  #   value: "repository.dev.renku.ch"
   # - name: "CREDENTIALS_FILE"  # used to log into Renku and run the tests
   #   value: "/credentials.json"
   # - name: "OLD_RENKU_TEMPLATE_REF"  # the version of the old Renku template used to test migrations
