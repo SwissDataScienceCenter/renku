@@ -1,14 +1,4 @@
 charts:
-  ## gitlab and renku chart versions are not evolving together. Uncomment
-  ## this only when explicitly building the gitlab chart and set the appropriate tag.
-  # - name: helm-chart/gitlab
-  #   imagePrefix: renku/
-  #   repo:
-  #     git: SwissDataScienceCenter/helm-charts
-  #     published: https://swissdatasciencecenter.github.io/helm-charts
-  #   paths:
-  #     - ./gitlab
-
   - name: helm-chart/renku
     resetTag: latest
     imagePrefix: renku/
@@ -17,19 +7,10 @@ charts:
       published: https://swissdatasciencecenter.github.io/helm-charts
     paths:
       - helm-chart
-      - acceptance-tests
       - scripts/init-realm
       - scripts/init-db
       - scripts/platform-init
     images:
-      tests:
-        buildArgs:
-          BUILDKIT_INLINE_CACHE: "1"
-        contextPath: acceptance-tests
-        dockerfilePath: acceptance-tests/Dockerfile
-        valuesPath: tests.image
-        paths:
-          - acceptance-tests
       init-realm:
         contextPath: scripts/init-realm
         dockerfilePath: scripts/init-realm/Dockerfile

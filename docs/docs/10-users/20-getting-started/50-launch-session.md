@@ -5,10 +5,9 @@
 To run your code and analyze data on RenkuLab, first decide what kind of session environment you would like by creating a session launcher.
 
 1. In the **Sessions** section of your project page, click on **+**.
-2. In the **Global environment** tab, scroll down and select  **Python Data Science - Jupyter**. This will give you a pre-configured environment with python and data science packages pre-installed. If you need to install other packages, you can install any necessary packages using the terminal. For a detailed guide for how to install packages, see [How to install packages on-the-fly in your session](../sessions/guides/environments/install-packages-on-the-fly-in-your-session). However, the packages you install on-the-fly in the session will not be shared with other people working with your Renku project. To ensure the adequate dependencies are installed in your environment, follow step 4.3 to create a custom environment from code.
+2. In the **Global environment** tab, scroll down and select **Python Data Science - Jupyter**. This will give you a pre-configured environment with python and data science packages pre-installed. If you need to install other packages, you can install any necessary packages using the terminal. For a detailed guide for how to install packages, see [How to install packages on-the-fly in your session](../sessions/guides/environments/install-packages-on-the-fly-in-your-session). However, the packages you install on-the-fly in the session will not be shared with other people working with your Renku project. To ensure the adequate dependencies are installed in your environment, follow step 4.3 to create a custom environment from code.
 3. Click **Next**.
 4. Choose the compute resources for your session based on your project’s needs in the drop-down menu, and select the amount of disk space.
-
 
 ![image.png](./add-session-launcher.png)
 
@@ -19,6 +18,7 @@ You can have multiple Session Launchers in your project that run different kinds
 :::info
 Do you need more resources than those available in RenkuLab’s public resource classes? [Contact us!](mailto:hello@renku.io) We can configure a custom resource pool for your team or class.
 :::
+
 ## Launch a Session
 
 Click on the **Launch** button in your new Session Launcher to start a session.

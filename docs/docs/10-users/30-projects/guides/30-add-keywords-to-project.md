@@ -6,8 +6,9 @@ In the project page:
 
 1. Click on the **Settings** tab **(a)**
 2. Under **General settings** section **(b)**
+
 - Inside the box under **Keywords** **(c)**
-    - Add a new keyword and press enter.
+  - Add a new keyword and press enter.
 - Repeat the previous step for as many keywords as you wish.
 - Click on the **Update project** button **(d)**
 

@@ -13,7 +13,7 @@ session.
 
 You can use Renku sessions for pretty much any computational task that has a graphical user
 interface. Though you mostly see examples of Python and R in RenkuLab, you can use any programming
-language in Renku.  
+language in Renku.
 
 You can [configure a custom environment for your Renku
 session](../sessions/guides/environments/create-environment-with-custom-packages-installed), and
@@ -26,7 +26,7 @@ If you work logged into Renku, your session will still be running even if you cl
 shut down your computer. Sessions in the public resource pool will go to a Pause state after 2 hours
 of the session not using CPU resources. When you resume your session, you will have access to your
 work where you left it. A paused session that is not resumed before 14 days will be automatically
-shut-down. 
+shut-down.
 
 ## Billing
 

@@ -5,7 +5,7 @@
 
 .heroBanner {
   padding: 4rem 0;
-  background-color: #01192D;
+  background-color: #01192d;
   background-image: url("dots.svg");
   background-repeat: no-repeat;
   background-position: top;
@@ -20,7 +20,8 @@
   }
 }
 
-.heroBanner :global(.hero__title), .heroBanner :global(.hero__subtitle) {
+.heroBanner :global(.hero__title),
+.heroBanner :global(.hero__subtitle) {
   color: var(--ifm-color-gray-0);
 }
 

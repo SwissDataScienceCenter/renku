@@ -29,16 +29,16 @@ Use [**Method 2 (Docker CLI)**](#using-the-docker-command-line) if you with to a
 
 - Go to your GitLab project → Settings → CI/CD → Variables
 - Add these variables, entering the variable name as the KEY:
-    - `DOCKERHUB_USER`: Your DockerHub username
-    - `DOCKERHUB_REPO`: Your DockerHub repository name
-    - `DOCKERHUB_TOKEN`: Your DockerHub access token
-        - To get this value, in DockerHub:
-            1. In the top right click on your profile and select “Account Settings”
-            2. Click on “Personal Access Tokens”
-            3. Give your token a name in the “Description” field
-            4. Set the expiration date for 30 days, since you don’t need this token for long.
-            5. For Access Permission, select “Read & Write”
-            6. Copy the token
+  - `DOCKERHUB_USER`: Your DockerHub username
+  - `DOCKERHUB_REPO`: Your DockerHub repository name
+  - `DOCKERHUB_TOKEN`: Your DockerHub access token
+    - To get this value, in DockerHub:
+      1. In the top right click on your profile and select “Account Settings”
+      2. Click on “Personal Access Tokens”
+      3. Give your token a name in the “Description” field
+      4. Set the expiration date for 30 days, since you don’t need this token for long.
+      5. For Access Permission, select “Read & Write”
+      6. Copy the token
 
 **Step 4: Modify your CI/CD pipeline in GitLab**
 
@@ -81,15 +81,14 @@ mirror:
 - Commit your changes. This should trigger a Pipeline run.
 - Go to “Build” → “Pipelines” and confirm that the pipeline was successful and now has 2 stages instead of just 1.
 
-    ![image.png](dockerhub-image-0.png)
-
+  ![image.png](dockerhub-image-0.png)
 
 **Step 5: Confirm your image is on DockerHub & Find its identifier**
 
 - In DockerHub, go to your “Repositories”, click on the repository you created for this project. Under “Tags”, there should be 1 entry. Click on it.
 - Copy the image identifier, which is in the form `<username>/<repo-name>:<commit>`
 
-    ![image.png](dockerhub-image-1.png)
+  ![image.png](dockerhub-image-1.png)
 
 Your image is migrated! Continue to [Part 2: create a new session launcher](#part-2-create-a-new-renku-session-launcher-that-uses-the-migrated-image).
 
@@ -146,10 +145,9 @@ docker push your-dockerhub-username/your-repo-name:tag
 - Check your DockerHub repository online to confirm the image appears
 - Test pulling from DockerHub:
 
-    ```bash
-    docker pull your-dockerhub-username/your-repo-name:tag
-    ```
-
+  ```bash
+  docker pull your-dockerhub-username/your-repo-name:tag
+  ```
 
 **Step 10: Clean up local images (optional)**
 
@@ -165,19 +163,19 @@ Your image is migrated! Continue to [Part 2: create a new session launcher](#par
 
 In the project page:
 
-1. Under **Sessions** section click on ➕ to add a new launcher
-2. Select **External environment**
+1.  Under **Sessions** section click on ➕ to add a new launcher
+2.  Select **External environment**
 
-    <p class="image-container-l">
-    ![image.png](dockerhub-image-2.png)
-    </p>
+<p class="image-container-l">
+![image.png](dockerhub-image-2.png)
+</p>
 
-3. For the container image, enter your **image identifier**.
+3.  For the container image, enter your **image identifier**.
     - Some examples of image identifiers:
-        - `renku/renkulab-py:3.10-0.24.0`
-        - `continuumio/anaconda3:2024.06-1`
+      - `renku/renkulab-py:3.10-0.24.0`
+      - `continuumio/anaconda3:2024.06-1`
     - The image identifier should be in the format that works with `docker pull`
-4. Depending on the image you’re using, you’ll need to fill in the **Advanced settings**. See the information below for how to fill it in:
+4.  Depending on the image you’re using, you’ll need to fill in the **Advanced settings**. See the information below for how to fill it in:
 
     <p class="image-container-l">
     ![image.png](dockerhub-image-3.png)
@@ -192,35 +190,27 @@ In the project page:
     <details>
       <summary>I’m using an image that is **newer** than version 0.24.0 (the version number is in the image tag).</summary>
 
-      The only additional parameter you have to provide in the session launcher creation dialog is the `Default URL` and this should be set to `/lab`.
+    The only additional parameter you have to provide in the session launcher creation dialog is the `Default URL` and this should be set to `/lab`.
 
     </details>
 
     <details>
       <summary>I’m using an image that is **older** than version 0.24.0 (the version number is in the image tag).</summary>
 
-      :::info
+    :::info
 
-      Note: If you are working with an image in a launcher where the **launcher was created before November 27, 2024**, the launcher was migrated automatically with the new Renku release to include the necessary advanced settings. The instructions below apply only to new session launchers you are creating for the first time.
+    Note: If you are working with an image in a launcher where the **launcher was created before November 27, 2024**, the launcher was migrated automatically with the new Renku release to include the necessary advanced settings. The instructions below apply only to new session launchers you are creating for the first time.
 
-      :::
+    :::
 
-      Enter the following configuration in the session launcher. Here is an example configuration needed to run a Renku base image of version 0.24.0 or older:
-          - **Container Image**: `renku/renkulab-py:3.10-0.24.0` or whatever image you are trying to use
-          - **Default URL**: `/lab`  (or `/rstudio` if you are using `renku/renkulab-r` or `renku/renkulab-bioc`).
-          - **Mount Directory**: `/home/jovyan/work`
-          - **Working Directory**: `/home/jovyan/work`
-          - **UID**: `1000`
-          - **GID**: `100`
-          - **Command ENTRYPOINT**: `["sh", "-c"]`
-          - **Command Arguments**:
+    Enter the following configuration in the session launcher. Here is an example configuration needed to run a Renku base image of version 0.24.0 or older: - **Container Image**: `renku/renkulab-py:3.10-0.24.0` or whatever image you are trying to use - **Default URL**: `/lab` (or `/rstudio` if you are using `renku/renkulab-r` or `renku/renkulab-bioc`). - **Mount Directory**: `/home/jovyan/work` - **Working Directory**: `/home/jovyan/work` - **UID**: `1000` - **GID**: `100` - **Command ENTRYPOINT**: `["sh", "-c"]` - **Command Arguments**:
 
               ```json
               ["/entrypoint.sh jupyter server --ServerApp.ip=0.0.0.0 --ServerApp.port=8888 --ServerApp.base_url=$RENKU_BASE_URL_PATH --ServerApp.token=\"\" --ServerApp.password=\"\" --ServerApp.allow_remote_access=true --ContentsManager.allow_hidden=true --ServerApp.allow_origin=* --ServerApp.root_dir=\"/home/jovyan/work\""]
               ```
+
     </details>
 
-
-5. Select the **Resource class** that best fits your expected computational needs.
-6. Give your session launcher a **name**
-7. Click on **Add session launcher** button
+5.  Select the **Resource class** that best fits your expected computational needs.
+6.  Give your session launcher a **name**
+7.  Click on **Add session launcher** button

@@ -20,11 +20,13 @@ helm repo update renku
 
 :::info
 You can merge the different values file examples from different steps of the documentation
-into a single file, or use multiple values file and let Helm merge them. 
+into a single file, or use multiple values file and let Helm merge them.
 For example, you can do the following:
+
 ```
 helm upgrade --install -n renku -f values1.yaml -f values2.yaml renku renku/renku
 ```
+
 And Helm will merge the files with the right-most file taking precedence in the case where
 there are conflicts.
 :::
@@ -59,8 +61,7 @@ spec:
 ```
 
 3. Starter `HelmRelease`, you will need to populate the values file in here for
-a functional deployment. See the [Configuration section](./configuration) for more details.
-
+   a functional deployment. See the [Configuration section](./configuration) for more details.
 
 ```yaml
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
@@ -83,13 +84,13 @@ spec:
     ### Refer to the Configuration section of the Admin documentation for the values file.
 ```
 
-You can refer to the Flux documentation about 
+You can refer to the Flux documentation about
 [specifying multiple Helm chart values files](https://fluxcd.io/flux/components/helm/helmreleases/#values)
 in Kubernetes `Secrets` or `ConfigMaps` if you don't want to merge all the examples from the documentation by hand.
 
 :::warning
 You should not be committing any secrets or passwords that may be required in the values file
-in a Git repository if you are using Flux. Flux has different ways to handle sensitive values 
-like this. The Flux documentation proposes two possible solutions, using 
+in a Git repository if you are using Flux. Flux has different ways to handle sensitive values
+like this. The Flux documentation proposes two possible solutions, using
 [SOPS](https://fluxcd.io/flux/guides/mozilla-sops/) or [sealed secrets](https://fluxcd.io/flux/guides/sealed-secrets/).
 :::

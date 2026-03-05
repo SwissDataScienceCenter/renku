@@ -19,7 +19,6 @@
  *Copy a data connector identifier from the side panel.*
   </p>
 
-
 7. Click **Link data**.
 
 <p class="image-container-m">

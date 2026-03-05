@@ -12,9 +12,9 @@ If you are adding a session secret to a project for the first time, follow these
 2. Scroll down to the **Session secret slots** section.
 3. Click the ➕ button to add a session secret slot.
 
-    <p class="image-container-l">
-    ![image.png](./configure-session-secret-10.png)
-    </p>
+<p class="image-container-l">
+![image.png](./configure-session-secret-10.png)
+</p>
 
 4. Give the session secret slot a **name** and a **description** so that other project members know what the secret is for.
 5. Specify the **filename** for the secret slot.
@@ -39,12 +39,11 @@ You can either:
 - **Provide a new secret value**: You can enter the for secret you want to use for the secret slot.
 - **Use an existing secret value**: This lets you reuse a secret you have already saved in Renku for this secret slot.
 
-    :::tip
+  :::tip
 
-    If you use the same database in multiple projects, you can save the database credential in Renku once, and use the *Use an existing secret value* option to attach that secret to multiple projects.
+  If you use the same database in multiple projects, you can save the database credential in Renku once, and use the _Use an existing secret value_ option to attach that secret to multiple projects.
 
-    :::
-
+  :::
 
 **Where do I go to enter a secret for a session secret slot?**
 
@@ -68,9 +67,9 @@ There are a few ways to get to the screen above.
 
 1. Click on the **user menu** in the top right and select **User Secrets**.
 
-    <p class="image-container-l">
-    ![image.png](./configure-session-secret-50.png)
-    </p>
+<p class="image-container-l">
+![image.png](./configure-session-secret-50.png)
+</p>
 
 This page shows you all secrets you have saved on Renku, both saved session secrets and saved data connector secrets.
 

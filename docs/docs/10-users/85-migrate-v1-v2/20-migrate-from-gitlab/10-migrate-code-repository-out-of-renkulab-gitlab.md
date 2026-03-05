@@ -32,31 +32,29 @@ work.
 *Bring your RenkuLab GitLab project to the public GitLab instance with the import feature.*
 </p>
 
-
-
 ## 1. Move a code repository to an external provider
 
 1. **Clone your repository** from the RenkuLab GitLab to your local machine
 
-    ```bash
-    git clone <renku-repo>
-    ```
+   ```bash
+   git clone <renku-repo>
+   ```
 
 2. **Create a new empty repository** in your chosen provider (for example GitLab.com or GitHub.com)
 3. **Copy the clone URL for the new repository.** We'll call this URL `<new-remote>`.
 4. Run the following commands from inside the repository to **push the repository to the new git repository provider**. You may want to name your new git origin (`<new-origin>`) to match the provider, for example `github`.
 
-    ```bash
-    cd <renku-repo>
-    git remote add <new-origin> <new-remote>
-    git push --all <new-origin>
-    ```
+   ```bash
+   cd <renku-repo>
+   git remote add <new-origin> <new-remote>
+   git push --all <new-origin>
+   ```
 
 5. **Important - The next time you push:** Set your `git push` to push to the new origin (git provider):
 
-    ```bash
-    git push -u <new-origin> <current-branch>
-    ```
+   ```bash
+   git push -u <new-origin> <current-branch>
+   ```
 
 Here's a full, real-ish example (with identifiers removed 😉):
 
