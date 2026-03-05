@@ -992,7 +992,7 @@ notebooks:
     image:
       name: renku/sidecars
       tag: 0.26.1
-    args: [ "gitproxy", "proxy" ]
+    args: ["gitproxy", "proxy"]
     port: 65480
     healthPort: 65481
   gitClone:
@@ -1346,7 +1346,7 @@ secretsStorage:
 # that use the internal Gitlab not functioning properly. If you still want to set this
 # to false and keep operating with an internal Gitlab you should create an Integration
 # with the internal Gitlab and ask users to activate the connection.
-enableInternalGitlab: true
+enableInternalGitlab: false
 
 podSecurityContext: {}
 securityContext:
