@@ -193,7 +193,12 @@ User session scheduling is based on label and taints to select nodes where to ru
 - [ ] CSI-rClone Operator (for remote storage)
 
   ```bash
-  helm install --set-json='csiNodepluginRclone.tolerations=[{"effect": "NoSchedule", "operator": "Exists"}]' csi-rclone renku/csi-rclone
+  helm install \
+  --create-namespace \
+  --namespace csi-rclone \
+  --set-json='csiNodepluginRclone.tolerations=[{"effect": "NoSchedule", "operator": "Exists"}]' \
+  csi-rclone \
+  renku/csi-rclone
   ```
 
 ## Configuration parameters
