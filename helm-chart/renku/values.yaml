@@ -156,7 +156,7 @@ global:
       passwordSecretName: renku-db-common-password
     ## Used by the gateway
     gateway:
-      username: renku-gateway
+      username: renku_gateway
       ## If the secret name below does not exist it will be automatically and randomly generated.
       ## The contents of the 'password' key is used.
       ## The secret is not re-generated or modified in any way if it already exists.

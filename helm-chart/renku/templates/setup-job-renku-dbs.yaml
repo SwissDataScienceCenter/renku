@@ -63,7 +63,7 @@ spec:
             - name: RENKU_GATEWAY_DB_USERNAME
               value: {{ .Values.global.db.gateway.username | quote }}
             - name: RENKU_GATEWAY_DB_NAME
-              value: renku-gateway
+              value: renku_gateway
             - name: RENKU_GATEWAY_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
