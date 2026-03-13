@@ -73,16 +73,7 @@ Here as an example on how to create one, adapt as required:
 
 #### CSI-driver with automatic provisioning support on your cluster
 
-_If you already have automatic volume provisioning setup in your cluster, you may skip this._
-
-For example, to install cinder-csi:
-
-```bash
-helm repo add cinder-csi <https://kubernetes.github.io/cloud-provider-openstack>
-helm install --create-namespace --namespace storage cinder-csi/openstack-cinder-csi --version 2.2.0 -g
-```
-
-The storage class associated will be used to provide the working directory of the user session containers.
+This storage class will be used to provide the working directory of the user session containers.
 
 ## User Session Nodes Configuration
 
