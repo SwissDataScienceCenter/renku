@@ -176,6 +176,36 @@ def main():
         general_config.port,
     )
 
+    logging.info("Creating the renku-gateway postgres database...")
+    renku_gatway_config = DBCredentials.from_env("RENKU_GATEWAY_DB_")
+    db_init = DatabaseInit(
+        renku_gatway_config.username,
+        renku_gatway_config.db_name,
+        renku_gatway_config.password,
+        postgres_db_connection,
+        ["pg_trgm", "pgcrypto"],
+        admin_config.username,
+    )
+    db_init.create_database()
+    renku_gateway_conn = get_db_connection(
+        user=admin_config.username,
+        password=admin_config.password,
+        host=general_config.host,
+        port=general_config.port,
+        database=renku_gatway_config.db_name,
+    )
+    # NOTE: Database extensions do not get created in transactions
+    renku_gateway_conn.set_session(autocommit=True)
+    db_init.set_connection(renku_gateway_conn)
+    db_init.set_extensions_and_roles()
+    create_ulid_func(
+        admin_config.username,
+        admin_config.password,
+        renku_gatway_config.db_name,
+        general_config.host,
+        general_config.port,
+    )
+
 
 if __name__ == "__main__":
     main()
