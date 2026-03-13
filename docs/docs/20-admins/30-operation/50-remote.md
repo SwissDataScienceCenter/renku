@@ -63,12 +63,6 @@ This will be the priority class(es) we can reference when defining quota require
 
 We recommend to create at least one dedicated priority class for the user sessions.
 
-Here as an example on how to create one, adapt as required:
-
-- ```bash
-  kubectl create priorityclass renku-user-sessions-priority --value=1000 --description="default priority for renku sessions"
-  ```
-
 ### Storage classes
 
 #### CSI-driver with automatic provisioning support on your cluster
@@ -91,76 +85,7 @@ User session scheduling is based on label and taints to select nodes where to ru
 ## Remote Connection for RenkuLab Services
 
 - [ ] Dedicated **Namespace** for the user sessions (for example `renku-user-sessions`)
-- [ ] Dedicated **ServiceAccount** (for example `renku-session-manager`) with the following rights
-
-  ```yaml
-  apiVersion: rbac.authorization.k8s.io/v1
-  kind: Role
-  metadata:
-    name: renku-session-manager
-    namespace: renku-user-sessions
-  rules:
-    - apiGroups:
-        - ""
-      resources:
-        - pods
-        - pods/log
-        - services
-        - endpoints
-        - secrets
-        - priorityclasses
-        - resourcequotas
-      verbs:
-        - get
-        - list
-        - watch
-    - apiGroups:
-        - ""
-      resources:
-        - pods
-        - secrets
-      verbs:
-        - delete
-    - apiGroups:
-        - apps
-      resources:
-        - statefulsets
-      verbs:
-        - get
-        - list
-        - watch
-        - patch
-    - apiGroups:
-        - ""
-      resources:
-        - secrets
-        - resourcequotas
-      verbs:
-        - create
-        - update
-        - delete
-        - patch
-    - apiGroups:
-        - scheduling.k8s.io
-      resources:
-        - priorityclasses
-      verbs:
-        - get
-        - list
-        - watch
-    - apiGroups:
-        - amalthea.dev
-      resources:
-        - amaltheasessions
-      verbs:
-        - create
-        - update
-        - delete
-        - patch
-        - list
-        - get
-        - watch
-  ```
+- [ ] Dedicated **ServiceAccount** (for example `renku-session-manager`)
 
 ## Deploy the User Session Operator (AmaltheaSession)
 
@@ -171,13 +96,14 @@ User session scheduling is based on label and taints to select nodes where to ru
   helm repo update
   ```
 
-- [ ] User session operator in the `renku-user-sessions` dedicated namespace:
+- [ ] User session operator in the `renku-user-sessions` dedicated namespace, with the default priority class and remote service account:
 
   ```bash
   helm install \
     --generate-name \
     --create-namespace \
     --namespace renku-user-sessions \
+    --set-json='deploy.priorityClass=true,deploy.remoteServiceAccount=true' \
     renku/amalthea-sessions
   ```
 
