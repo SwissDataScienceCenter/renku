@@ -61,7 +61,7 @@ spec:
                   name: {{ .Values.global.db.common.passwordSecretName }}
                   key: password
             - name: RENKU_GATEWAY_DB_USERNAME
-              value: {{ .Values.global.db.common.username | quote }}
+              value: {{ .Values.global.db.gateway.username | quote }}
             - name: RENKU_GATEWAY_DB_NAME
               value: renku-gateway
             - name: RENKU_GATEWAY_DB_PASSWORD
