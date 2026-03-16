@@ -1280,7 +1280,7 @@ dataService:
         operator: Equal
         value: image-build
   dataDeposits:
-    image: olevski90/renku-cli:0.0.2
+    image: ghcr.io/swissdatasciencecenter/renku-cli:v0.2.1
     ## The node selector for running data upload jobs
     nodeSelector:
       renku.io/node-purpose: user
