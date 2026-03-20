@@ -25,7 +25,7 @@ flowchart LR
         AmaltheaLocal[Amalthea operator]
         Backend
     end
-    
+
     Backend --> APIA
     APIA --> AmaltheaRemoteA
     AmaltheaRemoteA --> SessionA
@@ -119,10 +119,12 @@ This storage class will be used to provide the working directory of the user ses
 User session scheduling is based on label and taints to select nodes where to run the pod associated with each user session.
 
 Labels:
+
 - `renku.io/node-purpose: user` User sessions are scheduled only on nodes with this label
 - Extra labels to differentiate node pools as required
 
 Taints:
+
 - Taints to differentiate node pools as required
 
 ### Namespace
@@ -218,8 +220,7 @@ data:
 type: kubernetes.io/service-account-token
 ```
 
-
-Now we need to extract these values and format them into a valid `kubeconfig`. 
+Now we need to extract these values and format them into a valid `kubeconfig`.
 
 ```yaml
 apiVersion: v1
@@ -285,13 +286,13 @@ CSI-rClone has to run on every node on the remote cluster where sessions may run
 Therefore you need to make sure you add the correct tolerations in the values file for the
 Helm chart for any taints you may add on nodes intended for user sessions.
 
-  ```bash
-  helm install \
-  --create-namespace \
-  --namespace csi-rclone \
-  csi-rclone \
-  renku/csi-rclone
-  ```
+```bash
+helm install \
+--create-namespace \
+--namespace csi-rclone \
+csi-rclone \
+renku/csi-rclone
+```
 
 :::note
 The versions of the CSI-rClone between the local and remote clusters must be identical.
@@ -306,12 +307,12 @@ In the previous section we described how to derive the `kubeconfig` for a remote
 That kubeconfig now needs to be added into a dedicated secret in the "local" cluster
 where the backed services will be able to read it and connect to the remote cluster.
 
-The name of the secret with all the remote cluster `kubeconfig`s can be found in the Helm chart 
-values file at `.dataService.remoteClustersKubeconfigSecretName`. 
+The name of the secret with all the remote cluster `kubeconfig`s can be found in the Helm chart
+values file at `.dataService.remoteClustersKubeconfigSecretName`.
 If you do not have this value specified in your Helm chart (by default it is blank).
 Then, you should set the value and upgrade your Helm installation.
 
-Here is an example of the `kubeconfig`s secret, assuming the full Renku deployment 
+Here is an example of the `kubeconfig`s secret, assuming the full Renku deployment
 runs under the `renku` namespace:
 
 ```yaml
@@ -351,7 +352,7 @@ for registering the cluster with the API.
 The first step is to define the remote cluster parameters, which are stored using the `/cluster` API endpoint.
 Below is an example payload, assuming `remote-cluster.yaml` is the key of the secret that contains all `Kubeconfig`s
 for the remote clusters. The name of the secret that contains all remote `Kubeconfig`s can be defined at
-`.dataService.remoteClustersKubeconfigSecretName` in the Helm chart values. 
+`.dataService.remoteClustersKubeconfigSecretName` in the Helm chart values.
 
 Adapt the example below as required.
 
@@ -374,6 +375,82 @@ Adapt the example below as required.
 :::note
 When using `"session_ingress_use_default_cluster_tls_cert": true`,
 _you have to set_ `"session_tls_secret_name": ""` as well, otherwise the API call will fail.
+:::
+
+:::note
+If creating the resource pool fails with a message like `Could not find cluster with id XXXXXX in the list of clusters`. This means that you either got the cluster ID wrong or you need to restart the `data_service`, `k8s_watcher` and `data_tasks` services after you have added a new kubeconfig to the kubeconfigs secret.
+:::
+
+### Security considerations
+
+Renku sessions are embedded in an iframe. And when you run the session on a remote cluster
+then the session hostname is different from the website hostname that hosts the iframe.
+So to make this work we need to set the `SameSite` property on the session cookie to `none`.
+
+This raises additional security concerns that should be mitigated as follows on the
+remote cluster ingress configuration.
+
+:::note
+It may acceptable to just always open remote sessions in Renku via a separate tab.
+If this is the case then do not set the `SameSite` property to `none` and you do not have
+to implement the additional mitigations discussed below.
+:::
+
+1. Enable Cross-Origin Resource Sharing (CORS)
+
+```yaml
+nginx.ingress.kubernetes.io/enable-cors: "true"
+nginx.ingress.kubernetes.io/cors-allow-origin: "https://<remote hostname>"
+nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+nginx.ingress.kubernetes.io/cors-allow-methods: "GET, PUT, POST, DELETE, PATCH, OPTIONS"
+nginx.ingress.kubernetes.io/cors-allow-headers: "$http_access_control_request_headers"
+```
+
+:::info
+You should add the `--skip-auth-preflight=true` to oauth2proxy in the session.
+This can be done via Helm chart values on the amalthea-sessions Helm chart.
+:::
+
+2. Specify a Content Security Policy (CSP)
+
+This says what hosts can embed the session in an iframe. If you are using nginx ingress
+as the ingress controller, you can set this via the following ingress annotation:
+
+```yaml
+nginx.ingress.kubernetes.io/configuration-snippet: |
+  more_set_headers "Content-Security-Policy: frame-ancestors 'self' <remote hostname>";
+```
+
+With all of these ingress headers, the payload to create the cluster configuration via the API
+would look something like this:
+
+```yaml
+{
+  "name": "Remote Cluster",
+  "config_name": "remote-cluster.yaml",
+  "session_protocol": "https",
+  "session_host": "sessions.example.org",
+  "session_port": 443,
+  "session_path": "/sessions",
+  "session_ingress_class_name": "renku-user-session-ingress-class",
+  "session_ingress_annotations":
+    {
+      "nginx.ingress.kubernetes.io/enable-cors": "true",
+      "nginx.ingress.kubernetes.io/cors-allow-origin": "https://<local hostname>",
+      "nginx.ingress.kubernetes.io/cors-allow-credentials": "true",
+      "nginx.ingress.kubernetes.io/cors-allow-methods": "GET, PUT, POST, DELETE, PATCH, OPTIONS",
+      "nginx.ingress.kubernetes.io/cors-allow-headers": '"$http_access_control_request_headers"',
+      "nginx.ingress.kubernetes.io/configuration-snippet": "more_set_headers \"Content-Security-Policy: frame-ancestors 'self' https://<local hostname>\";\n",
+    },
+  "session_storage_class": "renku-user-session-storage-class",
+  "session_tls_secret_name": "",
+  "session_ingress_use_default_cluster_tls_cert": true,
+}
+```
+
+:::warning
+Removing or not setting the CORS and CSP headers above can have serious security implications.
+If you are using a different controller make sure you set all equivalent annotations.
 :::
 
 ### Create a resource pool for the remote cluster
@@ -442,7 +519,7 @@ https://www.example.org/*
 
 ### Restart the backend services
 
-The `renku-data-service`, `renku-k8s-watcher`, and `renku-secrets-storage` pods need to be 
+The `renku-data-service`, `renku-k8s-watcher`, and `renku-secrets-storage` pods need to be
 restarted in order to use the new configuration.
 
 As a check, you may watch the logs as each service will announce all the kubeconfigs being loaded as they restart, or during their first remote connections.
