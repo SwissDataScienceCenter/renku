@@ -169,6 +169,9 @@ rules:
   - apiGroups: ["amalthea.dev"]
     resources: ["amaltheasessions"]
     verbs: ["create", "update", "delete", "patch", "list", "get", "watch"]
+  - apiGroups: [""]
+    resources: ["resourcequotas"]
+    verbs: ["create", "update", "delete", "patch", "list", "get", "watch"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
