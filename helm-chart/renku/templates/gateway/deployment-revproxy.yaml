@@ -115,10 +115,6 @@ spec:
               value: {{ .Values.posthog.host| default "" | quote }}
             - name: GATEWAY_POSTHOG_ENVIRONMENT
               value: {{ .Values.posthog.environment| default "" | quote }}
-            - name: GATEWAY_POSTGRES_HOST
-              value: {{ template "postgresql.fullname" . }}
-            - name: GATEWAY_POSTGRES_USERNAME
-              value: {{ .Values.global.db.gateway.username }}
             - name: GATEWAY_POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:

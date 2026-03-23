@@ -90,4 +90,8 @@ data:
         enabled: {{ .Values.gateway.redirects.gitlab.enabled }}
         renkuBaseUrl: {{ include "renku.baseUrl" . | quote }}
         redirectedHost: {{ .Values.gateway.redirects.gitlab.redirectedHost | default "" | quote }}
+    postgres:
+      host: {{ include "postgresql.fullname" . | quote }}
+      database: "renku_gateway"
+      username: {{ .Values.global.db.gateway.username | default "" | quote }}
 ---
