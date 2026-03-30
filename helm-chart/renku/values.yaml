@@ -991,7 +991,7 @@ notebooks:
   gitHttpsProxy:
     image:
       name: renku/sidecars
-      tag: 0.26.1
+      tag: 0.26.2
     args: ["gitproxy", "proxy"]
     port: 65480
     healthPort: 65481
