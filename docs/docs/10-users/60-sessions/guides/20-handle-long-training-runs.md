@@ -66,3 +66,7 @@ tmux attach
 If you have multiple tmux sessions running, you can see a list by running `tmux ls` and attach to a specific session using `tmux attach -t [session name]`.
 
 Consult the [Tmux Cheat Sheet](https://tmuxcheatsheet.com) for details on tmux and further tricks for managing sessions.
+
+## Limitations
+
+Using `tmux` can help you keep processes running and re-connect to long-running processes, but sessions will still get paused if the CPU goes idle for longer than the idle threshold for the session pool. If this is happening, then you will need to change how your code runs to ensure that the CPU does not go idle for an extended period of time during your long-running process.
