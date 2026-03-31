@@ -75,6 +75,8 @@ spec:
               value: /secrets/encryptionKey/encryptionKey
             - name: SECRETS_SERVICE_PUBLIC_KEY_PATH
               value: /secrets/publicKey/publicKey
+            - name: INTERNAL_AUTHN_SECRET_KEY_PATH
+              value: /secrets/internalSecretKey/secretKey
             - name: K8S_NAMESPACE
               value: {{ .Release.Namespace | quote }}
             - name: MAX_PINNED_PROJECTS
@@ -203,6 +205,9 @@ spec:
             - mountPath: "/secrets/publicKey"
               name: secret-service-public-key
               readOnly: true
+            - mountPath: "/secrets/internalSecretKey"
+              name: internal-authn-key
+              readOnly: true
             {{- if .Values.dataService.remoteClustersKubeconfigSecretName }}
             - name: remote-cluster-kubeconfigs
               mountPath: "/secrets/kube_configs"
@@ -259,6 +264,12 @@ spec:
             items:
             - key: publicKey
               path: publicKey
+        - name: internal-authn-key
+          secret:
+            secretName: {{ template "renku.fullname" . }}-internal-authn
+            items:
+            - key: secretKey
+              path: secretKey
         {{- if .Values.dataService.remoteClustersKubeconfigSecretName }}
         - name: remote-cluster-kubeconfigs
           secret:
