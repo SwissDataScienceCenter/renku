@@ -271,7 +271,7 @@ def init_data_service_internal_authentication_secret_key(config: Config):
         config.k8s_namespace, internal_secret_key, internal_secret_key_name
     )
 
-    if existing_internal_secret_key is None and config.encryption_key is None:
+    if existing_internal_secret_key is None and config.internal_authn_secret_key is None:
         # generate a random string
         rand = random.SystemRandom()
         key = urlsafe_b64encode (rand.randbytes(64))
@@ -288,8 +288,8 @@ def init_data_service_internal_authentication_secret_key(config: Config):
                 type="Opaque",
             ),
         )
-    elif existing_internal_secret_key is None and config.encryption_key is not None:
-        key = config.encryption_key.encode()
+    elif existing_internal_secret_key is None and config.internal_authn_secret_key is not None:
+        key = config.internal_authn_secret_key.encode()
         v1.create_namespaced_secret(
             config.k8s_namespace,
             k8s_client.V1Secret(
