@@ -1,4 +1,4 @@
-from base64 import b64decode, b64encode
+from base64 import b64decode, b64encode, urlsafe_b64encode
 import yaml
 import logging
 import random
@@ -274,7 +274,7 @@ def init_data_service_internal_authentication_secret_key(config: Config):
     if existing_internal_secret_key is None and config.encryption_key is None:
         # generate a random string
         rand = random.SystemRandom()
-        key = rand.randbytes(64)
+        key = urlsafe_b64encode (rand.randbytes(64))
         v1.create_namespaced_secret(
             config.k8s_namespace,
             k8s_client.V1Secret(
