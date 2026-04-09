@@ -551,7 +551,7 @@ ui:
     replicaCount: 1
     image:
       repository: renku/renku-ui
-      tag: "4.20.0"
+      tag: "4.21.0"
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
       ## Secrets must be manually created in the namespace.
@@ -743,7 +743,7 @@ ui:
     keepCookies: []
     image:
       repository: renku/renku-ui-server
-      tag: "4.20.0"
+      tag: "4.21.0"
       pullPolicy: IfNotPresent
     imagePullSecrets: []
     nameOverride: ""
@@ -1186,12 +1186,12 @@ dataService:
     existingPriorityClass: ""
   image:
     repository: renku/renku-data-service
-    tag: "0.71.0"
+    tag: "0.72.0"
     pullPolicy: IfNotPresent
   k8sWatcher:
     image:
       repository: renku/data-service-k8s-watcher
-      tag: "0.71.0"
+      tag: "0.72.0"
       pullPolicy: IfNotPresent
     resources: {}
     sentry:
@@ -1202,7 +1202,7 @@ dataService:
   dataTasks:
     image:
       repository: renku/data-service-data-tasks
-      tag: "0.71.0"
+      tag: "0.72.0"
       pullPolicy: IfNotPresent
     resources: {}
     enableResourceRequestTracking: false
@@ -1282,6 +1282,17 @@ dataService:
         key: renku.io/dedicated
         operator: Equal
         value: image-build
+  dataDeposits:
+    image: ghcr.io/swissdatasciencecenter/renku-cli:v0.2.1
+    ## The node selector for running data upload jobs
+    nodeSelector:
+      renku.io/node-purpose: user
+    ## The tolerations for running data upload jobs
+    tolerations:
+      - effect: NoSchedule
+        key: renku.io/dedicated
+        operator: Equal
+        value: user
   ## The service account used in the Amalthea session pods for the resource pool(s) that use the local cluster.
   ## The only use for this is if you want to use a different SCC than the default in OpenShift.
   ## The service account is not mounted in the session. Leaving the default value of "" means that
@@ -1322,7 +1333,7 @@ authz:
 secretsStorage:
   image:
     repository: renku/secrets-storage
-    tag: "0.71.0"
+    tag: "0.72.0"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
