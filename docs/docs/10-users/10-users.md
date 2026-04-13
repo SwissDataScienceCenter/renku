@@ -50,6 +50,16 @@ Renku is an **open-source platform for researchers and scientists to connect dat
 
 ## What's new - Check out our latest blog posts:
 
+    <p class="image-container-s">
+    [![Streamlining data delivery](https://blog.renkulab.io/assets/images/SwissCat_Cover_image-6d47ba812a924eabdc413573134b0588.png)](https://blog.renkulab.io/swisscat-collaboration/)
+
+    **Streamlining data delivery:**
+     <p>How ETHZ SwissCAT+ uses Renku to let clients focus on science, not setup</p>
+
+    </p>
+
+---
+
       <p class="image-container-s">
       [![Renku Release Octubre 2025](https://blog.renkulab.io/assets/images/cscs-cover-90cd8e2dbe514501f43d26ed2c6b2a45.png)](https://blog.renkulab.io/release-2025-10/)
 
@@ -67,3 +77,5 @@ Renku is an **open-source platform for researchers and scientists to connect dat
      <p>How PSI's Materials Software and Data group uses Renku to facilitate access to research data.</p>
 
     </p>
+
+---
