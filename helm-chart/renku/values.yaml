@@ -825,8 +825,7 @@ dlf-chart:
     enabled: false
   dataset-operator-chart:
     enabled: true
-csi-rclone:
-  {}
+csi-rclone: {}
   # This section is only relevant if you are installing csi-rclone as part of Renku
   ## Name of the csi storage class to use for RClone/Cloudstorage. Should be unique per cluster.
   # storageClassName: csi-rclone
@@ -1248,8 +1247,7 @@ dataService:
     ## The name of the BuildStrategy to use for image builds.
     strategyName: renku-buildpacks-v3
     ## Configuration overrides for specific target platforms
-    platformOverrides:
-      {}
+    platformOverrides: {}
       # linux/arm64:
       #   builderImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/cuda-selector:0.3.1"
       #   runImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/cuda-run-image:0.3.1"
@@ -1283,7 +1281,7 @@ dataService:
         operator: Equal
         value: image-build
   dataDeposits:
-    image: ghcr.io/swissdatasciencecenter/renku-cli:v0.2.1
+    image: ghcr.io/swissdatasciencecenter/renku-cli:v0.3.0
     ## The node selector for running data upload jobs
     nodeSelector:
       renku.io/node-purpose: user
