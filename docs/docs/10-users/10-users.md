@@ -51,12 +51,13 @@ Renku is an **open-source platform for researchers and scientists to connect dat
 ## What's new - Check out our latest blog posts:
 
     <p class="image-container-s">
-    [![Streamlining data delivery]([https://blog.renkulab.io/assets/images/intro-image-f9ca2c80c6b9ad273b0d8750b112dab7.png](https://blog.renkulab.io/assets/images/SwissCat_Cover_image-6d47ba812a924eabdc413573134b0588.png))]([https://blog.renkulab.io/aiida-success-story/](https://blog.renkulab.io/swisscat-collaboration/))
+    [![Streamlining data delivery](https://blog.renkulab.io/assets/images/SwissCat_Cover_image-6d47ba812a924eabdc413573134b0588.png)](https://blog.renkulab.io/swisscat-collaboration/)
 
     **Streamlining data delivery:**
      <p>How ETHZ SwissCAT+ uses Renku to let clients focus on science, not setup</p>
 
     </p>
+
 ---
 
       <p class="image-container-s">
