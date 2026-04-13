@@ -75,9 +75,13 @@ const config: Config = {
   projectName: "renku", // Usually your repo name.
 
   onBrokenLinks: "throw",
-  onBrokenMarkdownLinks: "warn",
 
-  markdown: { mermaid: true },
+  markdown: {
+    mermaid: true,
+    hooks: {
+      onBrokenMarkdownLinks: "warn",
+    },
+  },
 
   themes: ["@docusaurus/theme-mermaid"],
 
