@@ -799,16 +799,25 @@ ui:
         prometheus.io/path: "/metrics"
         prometheus.io/port: "8080"
         prometheus.io/scrape: "true"
-amalthea:
+amalthea-sessions:
   scope:
     clusterWide: false
   deployCrd: true
-  resources:
-    requests:
-      cpu: 20m
-      memory: 200Mi
-    limits:
-      memory: 200Mi
+  controllerManager:
+    manager:
+      # resources:
+      #   limits:
+      #     cpu: 500m
+      #     memory: 128Mi
+      #   requests:
+      #     cpu: 10m
+      #     memory: 64Mi
+      ## Sentry configuration
+      sentry:
+        enabled: false
+        dsn:
+        environment:
+        tracesSampleRate: 0.1
 ## Used only if S3 Mounts are enabled
 dlf-chart:
   csi-sidecars-rbac:
