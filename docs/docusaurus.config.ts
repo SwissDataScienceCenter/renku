@@ -9,7 +9,7 @@ const url = new URL(
 );
 const versionSlug = process.env.READTHEDOCS_VERSION;
 
-const algoliaConfig = process.env.ALGOLIA_APP_ID
+const algoliaConfig = process.env.ALGOLIA_APP_ID && process.env.ALGOLIA_API_KEY
   ? ({
       // The application ID provided by Algolia
       appId: process.env.ALGOLIA_APP_ID,
@@ -107,6 +107,8 @@ const config: Config = {
         theme: {
           customCss: "./src/css/custom.css",
         },
+        // Do not generate a sitemap if algolia is enabled
+        sitemap: algoliaConfig ? false : {},
       } satisfies Preset.Options,
     ],
   ],
