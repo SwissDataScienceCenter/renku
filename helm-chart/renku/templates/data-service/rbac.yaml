@@ -17,6 +17,15 @@ rules:
       - services
       - endpoints
       - secrets
+      - persistentvolumeclaims
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - batch
+    resources:
+      - jobs
     verbs:
       - get
       - list
@@ -41,6 +50,16 @@ rules:
       - ""
     resources:
       - secrets
+      - persistentvolumeclaims
+    verbs:
+      - create
+      - update
+      - delete
+      - patch
+  - apiGroups:
+      - batch
+    resources:
+      - jobs
     verbs:
       - create
       - update
