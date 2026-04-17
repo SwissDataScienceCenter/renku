@@ -1243,6 +1243,9 @@ dataService:
     runImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/run-image:0.4.0"
     ## The name of the BuildStrategy to use for image builds.
     strategyName: renku-buildpacks-v3
+    ## DO NOT USE IN PRODUCTION
+    ## Comma separated list of insecure registries (e.g. http, self-signed certificate)
+    insecureRegistries: ""
     ## Configuration overrides for specific target platforms
     platformOverrides: {}
       # linux/arm64:
