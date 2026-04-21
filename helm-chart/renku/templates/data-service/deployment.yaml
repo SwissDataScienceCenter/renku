@@ -142,6 +142,8 @@ spec:
               value: {{ .Values.dataService.imageBuilders.pushSecretName | default "" | quote }}
             - name: BUILD_PUSH_PRIVATE_SECRET_NAME
               value: {{ .Values.dataService.imageBuilders.pushPrivateSecretName | default "" | quote }}
+            - name: BUILD_PULL_PRIVATE_SECRET_NAME
+              value: {{ .Values.dataService.imageBuilders.pullPrivateSecretName | default "" | quote }}
             - name: BUILD_RUN_RETENTION_AFTER_FAILED_SECONDS
               value: {{ .Values.dataService.imageBuilders.buildRunRetentionAfterFailedSeconds | default "" | quote }}
             - name: BUILD_RUN_RETENTION_AFTER_SUCCEEDED_SECONDS
