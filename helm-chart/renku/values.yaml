@@ -879,6 +879,8 @@ notebooks:
     tokenUrl:
     authUrl:
     allowUnverifiedEmail: false
+    extraRedirectUris:
+    extraWebOrigins:
   sessionIngress:
     host:
     ## If you want to use the default cluster tls cert, set the flag below to true.
