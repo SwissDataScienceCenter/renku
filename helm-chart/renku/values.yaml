@@ -1185,12 +1185,12 @@ dataService:
     existingPriorityClass: ""
   image:
     repository: renku/renku-data-service
-    tag: "0.72.1"
+    tag: "0.72.2"
     pullPolicy: IfNotPresent
   k8sWatcher:
     image:
       repository: renku/data-service-k8s-watcher
-      tag: "0.72.1"
+      tag: "0.72.2"
       pullPolicy: IfNotPresent
     resources: {}
     sentry:
@@ -1201,7 +1201,7 @@ dataService:
   dataTasks:
     image:
       repository: renku/data-service-data-tasks
-      tag: "0.72.1"
+      tag: "0.72.2"
       pullPolicy: IfNotPresent
     resources: {}
     enableResourceRequestTracking: false
@@ -1241,16 +1241,16 @@ dataService:
     ## The container image prefix for images built from code
     outputImagePrefix: harbor.dev.renku.ch/renku-build/
     ## The builder image (see https://buildpacks.io/docs/for-platform-operators/concepts/builder/)
-    builderImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/selector:0.3.1"
+    builderImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/selector:0.5.1"
     ## The run image (see https://buildpacks.io/docs/for-platform-operators/concepts/base-images/)
-    runImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/run-image:0.3.1"
+    runImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/run-image:0.5.1"
     ## The name of the BuildStrategy to use for image builds.
     strategyName: renku-buildpacks-v3
     ## Configuration overrides for specific target platforms
     platformOverrides: {}
       # linux/arm64:
-      #   builderImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/cuda-selector:0.3.1"
-      #   runImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/cuda-run-image:0.3.1"
+      #   builderImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/cuda-selector:0.5.1"
+      #   runImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/cuda-run-image:0.5.1"
       #   strategyName: renku-buildpacks-v3
       #   nodeSelector:
       #     kubernetes.io/arch: arm64
@@ -1331,7 +1331,7 @@ authz:
 secretsStorage:
   image:
     repository: renku/secrets-storage
-    tag: "0.72.1"
+    tag: "0.72.2"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP

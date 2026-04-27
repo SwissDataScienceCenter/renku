@@ -216,18 +216,24 @@ describe("Groups", () => {
       cy.getDataCy("group-search-link").click();
       cy.wait("@searchQuery", { timeout: TIMEOUTS.long });
 
-      cy.getDataCy("search-filter-type-Project").filter(":visible").should("be.checked");
+      cy.getDataCy("search-filter-type-Project")
+        .filter(":visible")
+        .should("be.checked");
       // Verify the project is visible
       cy.contains(projectName).should("be.visible");
-      cy.getDataCy("search-filter-type-DataConnector").filter(":visible").last().click();
+      cy.getDataCy("search-filter-type-DataConnector")
+        .filter(":visible")
+        .last()
+        .click();
       cy.wait("@searchQuery");
       cy.getDataCy("search-filter-type-DataConnector").should("be.checked");
 
-
-      cy.getDataCy("search-filter-type-DataConnector").filter(":visible").last().click();
+      cy.getDataCy("search-filter-type-DataConnector")
+        .filter(":visible")
+        .last()
+        .click();
       cy.wait("@searchQuery");
       cy.getDataCy("search-filter-type-DataConnector").should("be.checked");
-
 
       // Verify data connectors are visible
       cy.contains(dataConnectorName).should("be.visible");
@@ -274,16 +280,23 @@ describe("Groups", () => {
       cy.getDataCy("group-search-link").click();
       cy.wait("@searchQuery", { timeout: TIMEOUTS.long });
 
-
-      cy.getDataCy("search-filter-type-Project").filter(":visible").should("be.checked");
+      cy.getDataCy("search-filter-type-Project")
+        .filter(":visible")
+        .should("be.checked");
       // Verify the project no longer appears in group search
       cy.contains(projectName).should("not.exist");
 
-      cy.getDataCy("search-filter-type-DataConnector").filter(":visible").last().click();
+      cy.getDataCy("search-filter-type-DataConnector")
+        .filter(":visible")
+        .last()
+        .click();
       cy.wait("@searchQuery", { timeout: TIMEOUTS.long });
       cy.getDataCy("search-filter-type-DataConnector").should("be.checked");
 
-      cy.getDataCy("search-filter-type-DataConnector").filter(":visible").last().click();
+      cy.getDataCy("search-filter-type-DataConnector")
+        .filter(":visible")
+        .last()
+        .click();
 
       // Verify the project's data connectors no longer appears in group search
       cy.contains(dataConnectorName).should("be.visible");
