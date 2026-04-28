@@ -306,7 +306,7 @@ keycloakx:
   initRealm:
     image:
       repository: renku/init-realm
-      tag: "latest"
+      tag: "2.15.3"
   resources:
     requests:
       cpu: 100m
@@ -1156,12 +1156,12 @@ swagger:
 initDb:
   image:
     repository: renku/init-db
-    tag: "latest"
+    tag: "2.15.3"
 ## The image used for general platform initialization
 platformInit:
   image:
     repository: renku/platform-init
-    tag: "latest"
+    tag: "2.15.3"
 dataService:
   rbac:
     create: true
@@ -1347,6 +1347,13 @@ secretsStorage:
 # to false and keep operating with an internal Gitlab you should create an Integration
 # with the internal Gitlab and ask users to activate the connection.
 enableInternalGitlab: false
+
+# When this is set to true all secrets in Renku that are auto-generated via Helm hooks are
+# disabled. This is only useful for Gitops setups where Helm hooks cannot be properly handled
+# like in ArgoCD. If the flag is set to true all secrets created via Helm hooks have to be
+# created manually by the admin before Renku is deployed the first time. And when new Helm hooks
+# are added to the Helm chart with updates the admin has to create the new secrets manually too.
+disableHelmHookSecrets: false
 
 podSecurityContext: {}
 securityContext:
