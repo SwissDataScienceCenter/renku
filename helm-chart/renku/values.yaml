@@ -998,8 +998,8 @@ notebooks:
   gitClone:
     # TODO: change the image source here
     image:
-      name: renku/git-clone
-      tag: "1.31.1"
+      name: renku/cloner
+      tag: 0.26.2
   service:
     type: ClusterIP
     port: 80
