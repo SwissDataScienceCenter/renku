@@ -996,6 +996,7 @@ notebooks:
     port: 65480
     healthPort: 65481
   gitClone:
+    # TODO: change the image source here
     image:
       name: renku/git-clone
       tag: "1.31.1"
