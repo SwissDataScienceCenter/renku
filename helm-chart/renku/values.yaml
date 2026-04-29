@@ -1093,7 +1093,7 @@ gateway:
   secretKey:
   image:
     repository: renku/renku-gateway
-    tag: "1.9.0"
+    tag: "1.10.0"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
