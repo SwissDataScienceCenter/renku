@@ -22,7 +22,7 @@ describe("Data Connectors", () => {
   const projectSlug = `project-for-data-connector-tests-${randomString}`;
   let userNamespace: string;
   let dataConnectorName: string;
-  let projectId: string;
+  let projectId: string | undefined;
   let groupName: string;
   let groupSlug: string;
 
@@ -40,7 +40,7 @@ describe("Data Connectors", () => {
         slug: projectSlug,
         visibility: "private",
       }).then((response) => {
-        projectId = response.body.id ?? "";
+        projectId = response.body.id;
       });
     });
   });
