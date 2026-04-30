@@ -46,11 +46,9 @@ export function createDataConnector(
         visibility: body.visibility || "private",
         description: body.description || "Test data connector description",
         storage: {
-          storage_type: "s3",
           configuration: {
             type: "s3",
             provider: "AWS",
-            region: "us-east-1",
           },
           source_path: "giab",
           target_path: body.slug || "/",
