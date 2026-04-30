@@ -69,6 +69,15 @@ spec:
               value: {{ .Values.dataService.k8sWatcher.sentry.environment | quote }}
             - name: SENTRY_SAMPLE_RATE
               value: {{ .Values.dataService.k8sWatcher.sentry.sampleRate | quote }}
+            - name: AUTHZ_DB_HOST
+              value: {{ include "renku.fullname" . }}-authz
+            - name: AUTHZ_DB_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "renku.fullname" . }}-authz
+                  key: SPICEDB_GRPC_PRESHARED_KEY
+            - name: AUTHZ_DB_GRPC_PORT
+              value: "50051"
             {{- if .Values.dataService.remoteClustersKubeconfigSecretName }}
             - name: K8S_CONFIGS_ROOT
               value: "/secrets/kube_configs"
