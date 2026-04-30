@@ -1,4 +1,4 @@
-import { Project } from "../types/projects";
+import type { Project, ProjectPost } from "../types/projects";
 
 export function getProjectByNamespaceSlug(
   namespace: string,
@@ -12,7 +12,7 @@ export function getProjectByNamespaceSlug(
 }
 
 export function createProjectIfMissingV2(
-  project: Project,
+  project: ProjectPost,
 ): Cypress.Chainable<Cypress.Response<Project>> {
   return getProjectByNamespaceSlug(project.namespace, project.slug).then(
     (response) => {

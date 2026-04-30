@@ -97,17 +97,13 @@ describe("Search for resources: groups, projects, users", () => {
     cy.getDataCy("search-query-input").clear().type(stringRandomOne);
     cy.getDataCy("search-query-button").click();
     cy.wait("@searchQuery");
-    cy.getDataCy("search-list-item")
-      .should("have.length", 1);
-    cy.getDataCy("search-list-item")
-      .should("contain.text", stringRandomOne);
+    cy.getDataCy("search-list-item").should("have.length", 1);
+    cy.getDataCy("search-list-item").should("contain.text", stringRandomOne);
     cy.getDataCy("search-query-input").clear().type(stringRandomTwo);
     cy.getDataCy("search-query-button").click();
     cy.wait("@searchQuery");
-    cy.getDataCy("search-list-item")
-      .should("have.length", 1);
-    cy.getDataCy("search-list-item")
-      .should("contain.text", stringRandomTwo);
+    cy.getDataCy("search-list-item").should("have.length", 1);
+    cy.getDataCy("search-list-item").should("contain.text", stringRandomTwo);
 
     // Filter for projects and groups
     cy.getDataCy("search-filter-type-Group").filter(":visible").click();
