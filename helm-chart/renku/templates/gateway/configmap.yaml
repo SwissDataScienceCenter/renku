@@ -36,7 +36,7 @@ data:
           audience: renku
           authorizedParty: renku-cli
     revproxy:
-      enableInternalGitlab: {{ .Values.enableInternalGitlab | default false }}
+      enableInternalGitlab: "false"
       renkuBaseUrl: {{ include "renku.baseUrl" . | quote }}
       externalGitlabUrl: {{ .Values.global.gitlab.url | default "" | quote }}
       k8sNamespace: {{ .Release.Namespace }}
@@ -47,7 +47,7 @@ data:
         uiserver: {{ printf "http://%s" (include "ui-server.fullname" .) | quote }} 
         search: {{ printf "http://%s-search-api" .Release.Name | quote }}
     login:
-      enableInternalGitlab: {{ .Values.enableInternalGitlab | default false }}
+      enableInternalGitlab: "false"
       renkuBaseUrl: {{ include "renku.baseUrl" . | quote }}
       loginRoutesBasePath: "/api/auth"
       defaultAppRedirectURL: {{ include "renku.baseUrl" . | quote }}
@@ -60,14 +60,6 @@ data:
           scopes: ["profile", "email", "openid", "microprofile-jwt"]
           callbackURI:  {{ printf "%s/api/auth/callback" (include "renku.baseUrl" .) }}
           usePKCE: false
-        {{- if .Values.enableInternalGitlab }}
-        gitlab:
-          issuer: {{ .Values.global.gitlab.url | quote }}
-          clientID: {{ .Values.gateway.gitlabClientId | default .Values.global.gateway.gitlabClientId | quote }}
-          scopes: ["openid", "api", "read_user", "read_repository"] 
-          callbackURI: {{ printf "%s/api/auth/callback" (include "renku.baseUrl" .) }}
-          usePKCE: false
-        {{- end }}
       oldGitLabLogout: {{ .Values.gateway.oldGitLabLogout | default false }}
       logoutGitLabUponRenkuLogout: {{ .Values.gateway.logoutGitLabUponRenkuLogout | default true }}
     redis:
