@@ -10,12 +10,14 @@ hesitate to [Contact](../../community) us, and we will be happy to add it to Ren
 :::
 
 1. In the User menu in the top right corner, click on **Integrations.**
-2. For the desired services, click on **Connect.**
-   1. Approve the steps. After that, the service status will turn into connected.
+2. Find the provider you want to connect:
+   1. If it is already listed, click **Connect** next to it.
+   2. If not, click the ➕ button to browse all available providers and click **Connect** for the desired one.
+      ![image.png](./connect-your-renku-account-to-your-github-or-gitlab-account-10.png)
+      ![image.png](./connect-your-renku-account-to-your-github-or-gitlab-account-20.png)
+3. Approve the steps. After that, the service status will turn into connected.
 
-   ![image.png](./connect-your-renku-account-to-your-github-or-gitlab-account-10.jpg)
-
-3. (GitHub only) Follow the prompts to install the Renku app in the namespace(s) where you want to
+4. (GitHub only) Follow the prompts to install the Renku app in the namespace(s) where you want to
    use repositories in Renku.
 
 Now you can [add code repositories to your
