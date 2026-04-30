@@ -1239,6 +1239,8 @@ dataService:
     enabled: false
     ## The container image prefix for images built from code
     outputImagePrefix: harbor.dev.renku.ch/renku-build/
+    ## The container image prefix for images built from private code
+    outputPrivateImagePrefix: harbor.dev.renku.ch/renku-private-build/
     ## The builder image (see https://buildpacks.io/docs/for-platform-operators/concepts/builder/)
     builderImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/selector:0.5.1"
     ## The run image (see https://buildpacks.io/docs/for-platform-operators/concepts/base-images/)
@@ -1266,6 +1268,10 @@ dataService:
       #       value: arm64
     ## The name of the secret used to push images built from code.
     pushSecretName: renku-build-docker-secret
+    ## The name of the secret used to push images built from private code.
+    pushPrivateSecretName: renku-build-private-docker-secret
+    ## The name of the secret used to pull images built from private code.
+    pullPrivateSecretName: renku-pull-private-docker-secret
     ## The TTL for BuildRuns
     buildRunRetentionAfterFailedSeconds: 86400
     buildRunRetentionAfterSucceededSeconds: 86400
