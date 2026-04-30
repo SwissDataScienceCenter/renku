@@ -1,6 +1,7 @@
-from base64 import b64decode, b64encode
+from base64 import b64decode, b64encode, urlsafe_b64encode
 import yaml
 import logging
+import random
 from typing import cast
 from kubernetes import client as k8s_client, config as k8s_config
 from dataclasses import dataclass, field
@@ -23,6 +24,7 @@ class Config:
     secret_service_private_key: str | None = field(repr=False)
     encryption_key: str | None = field(repr=False)
     previous_secret_service_private_key: str | None = field(repr=False)
+    internal_authn_secret_key : str | None = field(repr=False)
 
     @classmethod
     def from_env(cls):
@@ -40,6 +42,7 @@ class Config:
             ),
             secret_service_private_key_secret_name=f"{renku_fullname}-secret-service-private-key",
             secret_service_public_key_secret_name=f"{renku_fullname}-secret-service-public-key",
+            internal_authn_secret_key=config_map.get("dataServiceInternalAuthnKey"),
         )
 
 
@@ -257,6 +260,50 @@ def init_secret_and_data_service_encryption(config: Config):
             ),
         )
 
+def init_data_service_internal_authentication_secret_key(config: Config):
+    """Initialize symmetric signing key for internal authentication in data service."""
+    logging.info("Initializing data service internal secret key")
+    v1 = k8s_client.CoreV1Api()
+
+    internal_secret_key = f"{config.renku_fullname}-internal-authn"
+    internal_secret_key_name = "secretKey"
+    existing_internal_secret_key = _get_k8s_secret(
+        config.k8s_namespace, internal_secret_key, internal_secret_key_name
+    )
+
+    if existing_internal_secret_key is None and config.internal_authn_secret_key is None:
+        # generate a random string
+        rand = random.SystemRandom()
+        key = urlsafe_b64encode (rand.randbytes(64))
+        v1.create_namespaced_secret(
+            config.k8s_namespace,
+            k8s_client.V1Secret(
+                api_version="v1",
+                data={internal_secret_key_name: b64encode(key).decode()},
+                kind="Secret",
+                metadata={
+                    "name": internal_secret_key,
+                    "namespace": config.k8s_namespace,
+                },
+                type="Opaque",
+            ),
+        )
+    elif existing_internal_secret_key is None and config.internal_authn_secret_key is not None:
+        key = config.internal_authn_secret_key.encode()
+        v1.create_namespaced_secret(
+            config.k8s_namespace,
+            k8s_client.V1Secret(
+                api_version="v1",
+                data={internal_secret_key_name: b64encode(key).decode()},
+                kind="Secret",
+                metadata={
+                    "name": internal_secret_key,
+                    "namespace": config.k8s_namespace,
+                },
+                type="Opaque",
+            ),
+        )
+
 
 def main():
     config = Config.from_env()
@@ -265,6 +312,7 @@ def main():
     logging.info("Initializing Renku platform")
     set_secret_service_secrets(config)
     init_secret_and_data_service_encryption(config)
+    init_data_service_internal_authentication_secret_key(config)
 
 
 if __name__ == "__main__":
