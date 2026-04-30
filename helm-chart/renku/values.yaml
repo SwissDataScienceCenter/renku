@@ -879,6 +879,16 @@ notebooks:
     tokenUrl:
     authUrl:
     allowUnverifiedEmail: false
+    ## This value is a yaml string of a json list of URIs strings, i.e.
+    ## '["https://domain-a.example.org/*", "https://domain-b.example.net/*"]'
+    ## Each URI should follow the format expected by Keycloak in the Redirect
+    ## URIs field of a keycloak client.
+    extraRedirectUris: '[]'
+    ## This value is a yaml string of a json list of URIs strings, i.e.
+    ## '["https://domain-a.example.org/*", "https://domain-b.example.net/*"]'
+    ## Each URI should follow the format expected by Keycloak in the Web Origins
+    ## field of a keycloak client.
+    extraWebOrigins: '[]'
   sessionIngress:
     host:
     ## If you want to use the default cluster tls cert, set the flag below to true.
