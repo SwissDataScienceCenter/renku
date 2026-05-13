@@ -135,10 +135,10 @@ ui:
   client:
     resources:
       limits:
-        memory: 150Mi
+        memory: 300Mi
       requests:
         cpu: 10m
-        memory: 150Mi
+        memory: 300Mi
   server:
     resources:
       limits:

@@ -14,6 +14,7 @@ global:
   # secretServicePrivateKey: ... RSA Private Key in PKCS8 PEM format (`ssh-keygen -m PKCS8 -t rsa -b 4096`)
   # secretServicePreviousPrivateKey: ... Previous Private key in PEM format, only set this when rotating keys
   # dataServiceEncryptionKey: 32 byte random string
+  # dataServiceInternalAuthnKey: 64 byte random string
   gitlab:
     ## Name of the postgres database to be used by Gitlab
     postgresDatabase: gitlabhq_production
@@ -318,7 +319,7 @@ keycloakx:
     enabled: false
   extraInitContainers: |
     - name: theme-provider
-      image: renku/keycloak-theme:4.1.8
+      image: renku/keycloak-theme:4.1.9
       imagePullPolicy: IfNotPresent
       command:
         - sh
@@ -550,7 +551,7 @@ ui:
     replicaCount: 1
     image:
       repository: renku/renku-ui
-      tag: "4.18.1"
+      tag: "4.23.0"
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
       ## Secrets must be manually created in the namespace.
@@ -742,7 +743,7 @@ ui:
     keepCookies: []
     image:
       repository: renku/renku-ui-server
-      tag: "4.18.1"
+      tag: "4.23.0"
       pullPolicy: IfNotPresent
     imagePullSecrets: []
     nameOverride: ""
@@ -824,7 +825,8 @@ dlf-chart:
     enabled: false
   dataset-operator-chart:
     enabled: true
-csi-rclone: {}
+csi-rclone:
+  {}
   # This section is only relevant if you are installing csi-rclone as part of Renku
   ## Name of the csi storage class to use for RClone/Cloudstorage. Should be unique per cluster.
   # storageClassName: csi-rclone
@@ -881,6 +883,16 @@ notebooks:
     tokenUrl:
     authUrl:
     allowUnverifiedEmail: false
+    ## This value is a yaml string of a json list of URIs strings, i.e.
+    ## '["https://domain-a.example.org/*", "https://domain-b.example.net/*"]'
+    ## Each URI should follow the format expected by Keycloak in the Redirect
+    ## URIs field of a keycloak client.
+    extraRedirectUris: '[]'
+    ## This value is a yaml string of a json list of URIs strings, i.e.
+    ## '["https://domain-a.example.org/*", "https://domain-b.example.net/*"]'
+    ## Each URI should follow the format expected by Keycloak in the Web Origins
+    ## field of a keycloak client.
+    extraWebOrigins: '[]'
   sessionIngress:
     host:
     ## If you want to use the default cluster tls cert, set the flag below to true.
@@ -993,8 +1005,8 @@ notebooks:
   gitHttpsProxy:
     image:
       name: renku/sidecars
-      tag: 0.26.1
-    args: [ "gitproxy", "proxy" ]
+      tag: "0.29.1"
+    args: ["gitproxy", "proxy"]
     port: 65480
     healthPort: 65481
   gitClone:
@@ -1092,7 +1104,7 @@ gateway:
   secretKey:
   image:
     repository: renku/renku-gateway
-    tag: "1.9.0"
+    tag: "1.10.0"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
@@ -1175,14 +1187,21 @@ dataService:
     # If you are not allowed to create ClusterRoles in your cluster, you can disable the feature by setting
     # `enableResourcePool` to false.
     enableResourcePool: true
+  capacityReservation:
+    # Creates a PriorityClass with value -1 for placeholder pods so they are evicted
+    # when real user session pods need resources.
+    createPriorityClass: true
+    # Name of an existing PriorityClass to use for placeholder pods when createPriorityClass is false.
+    # If left empty and createPriorityClass is false, placeholder pods will have no priority class assigned.
+    existingPriorityClass: ""
   image:
     repository: renku/renku-data-service
-    tag: "0.69.0"
+    tag: "0.74.1"
     pullPolicy: IfNotPresent
   k8sWatcher:
     image:
       repository: renku/data-service-k8s-watcher
-      tag: "0.69.0"
+      tag: "0.74.1"
       pullPolicy: IfNotPresent
     resources: {}
     sentry:
@@ -1193,9 +1212,10 @@ dataService:
   dataTasks:
     image:
       repository: renku/data-service-data-tasks
-      tag: "0.69.0"
+      tag: "0.74.1"
       pullPolicy: IfNotPresent
     resources: {}
+    enableResourceRequestTracking: false
   service:
     type: ClusterIP
     port: 80
@@ -1232,16 +1252,17 @@ dataService:
     ## The container image prefix for images built from code
     outputImagePrefix: harbor.dev.renku.ch/renku-build/
     ## The builder image (see https://buildpacks.io/docs/for-platform-operators/concepts/builder/)
-    builderImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/selector:0.3.1"
+    builderImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/selector:0.5.1"
     ## The run image (see https://buildpacks.io/docs/for-platform-operators/concepts/base-images/)
-    runImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/run-image:0.3.1"
+    runImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/run-image:0.5.1"
     ## The name of the BuildStrategy to use for image builds.
     strategyName: renku-buildpacks-v3
     ## Configuration overrides for specific target platforms
-    platformOverrides: {}
+    platformOverrides:
+      {}
       # linux/arm64:
-      #   builderImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/cuda-selector:0.3.1"
-      #   runImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/cuda-run-image:0.3.1"
+      #   builderImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/cuda-selector:0.5.1"
+      #   runImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/cuda-run-image:0.5.1"
       #   strategyName: renku-buildpacks-v3
       #   nodeSelector:
       #     kubernetes.io/arch: arm64
@@ -1271,6 +1292,17 @@ dataService:
         key: renku.io/dedicated
         operator: Equal
         value: image-build
+  dataDeposits:
+    image: ghcr.io/swissdatasciencecenter/renku-cli:v0.3.0
+    ## The node selector for running data upload jobs
+    nodeSelector:
+      renku.io/node-purpose: user
+    ## The tolerations for running data upload jobs
+    tolerations:
+      - effect: NoSchedule
+        key: renku.io/dedicated
+        operator: Equal
+        value: user
   ## The service account used in the Amalthea session pods for the resource pool(s) that use the local cluster.
   ## The only use for this is if you want to use a different SCC than the default in OpenShift.
   ## The service account is not mounted in the session. Leaving the default value of "" means that
@@ -1311,7 +1343,7 @@ authz:
 secretsStorage:
   image:
     repository: renku/secrets-storage
-    tag: "0.69.0"
+    tag: "0.74.1"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
@@ -1329,18 +1361,6 @@ secretsStorage:
   nodeSelector: {}
   tolerations: []
   affinity: {}
-
-# When this is set to false the gateway and data service will ignore the Gitlab
-# that can be integrated with Renku and will not ask users to log into this Gitlab.
-# NOTE: This flag has no effect on the core service and knowledge graph. Therefore,
-# setting this to false should only be done if the enableV1Services flag is also false.
-# When this is set to false the gateway will not inject the internal gitlab tokens and
-# the data service will not require them and if tokens are passed it will just ignore them.
-# Setting this to false in existing Renku deployment will result in code repositories
-# that use the internal Gitlab not functioning properly. If you still want to set this
-# to false and keep operating with an internal Gitlab you should create an Integration
-# with the internal Gitlab and ask users to activate the connection.
-enableInternalGitlab: true
 
 podSecurityContext: {}
 securityContext:

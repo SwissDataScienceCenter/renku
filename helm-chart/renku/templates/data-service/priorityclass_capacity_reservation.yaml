@@ -1,0 +1,14 @@
+{{- if .Values.dataService.capacityReservation.createPriorityClass }}
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: {{ printf "%s-capacity-placeholder" (include "renku.fullname" . | trunc 42 | trimSuffix "-") }}
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+value: -1
+globalDefault: false
+description: "Low priority class for Renku capacity reservation placeholder pods. Evicted when user session pods need resources."
+{{- end }}
