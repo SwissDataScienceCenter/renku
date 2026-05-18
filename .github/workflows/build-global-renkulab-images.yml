@@ -23,6 +23,8 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
+        LANG_PREFIX:
+          - py
         PLATFORM:
           - linux/amd64
           - linux/arm64
@@ -34,10 +36,12 @@ jobs:
           - vscodium
           - ttyd
         include:
-          - PLATFORM: linux/amd64
+          - LANG_PREFIX: r
+            PLATFORM: linux/amd64
             FLAVOR: r-basic
             FRONTEND: rstudio
-          - PLATFORM: linux/arm64
+          - LANG_PREFIX: r
+            PLATFORM: linux/arm64
             FLAVOR: r-basic
             FRONTEND: rstudio
     steps:
@@ -55,14 +59,14 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.DOCKER_PREFIX }}/py-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}
+          images: ${{ env.DOCKER_PREFIX }}/${{ matrix.LANG_PREFIX }}-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}
           tags: |
             type=sha,prefix=${{ matrix.PLATFORM == 'linux/arm64' && 'arm64' || 'amd64' }}-
       - name: Docker meta cache
         id: meta_cache
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.DOCKER_PREFIX }}/py-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}-cache
+          images: ${{ env.DOCKER_PREFIX }}//${{ matrix.LANG_PREFIX }}-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}-cache
           tags: |
             type=raw,value=${{ matrix.PLATFORM == 'linux/arm64' && 'arm64' || 'amd64' }}
       - name: Setup pack
@@ -112,7 +116,8 @@ jobs:
           - vscodium
           - ttyd
         include:
-          - FLAVOR: r-basic
+          - LANG_PREFIX: r
+            FLAVOR: r-basic
             FRONTEND: rstudio
     steps:
       - name: Checkout repository
@@ -131,9 +136,9 @@ jobs:
         env:
           DOCKER_METADATA_ANNOTATIONS_LEVELS: index
         with:
-          images: ${{ env.DOCKER_PREFIX }}/py-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}
+          images: ${{ env.DOCKER_PREFIX }}//${{ matrix.LANG_PREFIX }}-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}
           annotations: |
-            org.opencontainers.image.title=renku/py-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}
+            org.opencontainers.image.title=renku//${{ matrix.LANG_PREFIX }}-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}
             org.opencontainers.image.description=An image for renku sessions, with ${{ matrix.FLAVOR }} Python packages and a ${{ matrix.FRONTEND }} frontend.
           tags: |
             type=sha,prefix=
@@ -143,14 +148,14 @@ jobs:
         id: meta_amd64
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.DOCKER_PREFIX }}/py-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}
+          images: ${{ env.DOCKER_PREFIX }}//${{ matrix.LANG_PREFIX }}-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}
           tags: |
             type=sha,prefix=amd64-
       - name: Docker meta arm64
         id: meta_arm64
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.DOCKER_PREFIX }}/py-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}
+          images: ${{ env.DOCKER_PREFIX }}//${{ matrix.LANG_PREFIX }}-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}
           tags: |
             type=sha,prefix=arm64-
       - name: Combine images
