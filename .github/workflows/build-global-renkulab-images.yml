@@ -22,6 +22,7 @@ jobs:
     runs-on: ${{ matrix.PLATFORM == 'linux/arm64' && 'ubuntu-24.04-arm' || 'ubuntu-24.04' }}
     strategy:
       fail-fast: true
+      max-parallel: 6
       matrix:
         LANG_PREFIX:
           - py
@@ -38,11 +39,11 @@ jobs:
         include:
           - LANG_PREFIX: r
             PLATFORM: linux/amd64
-            FLAVOR: r-basic
+            FLAVOR: basic-r
             FRONTEND: rstudio
           - LANG_PREFIX: r
             PLATFORM: linux/arm64
-            FLAVOR: r-basic
+            FLAVOR: basic-r
             FRONTEND: rstudio
     steps:
       - name: Checkout repository
@@ -117,7 +118,7 @@ jobs:
           - ttyd
         include:
           - LANG_PREFIX: r
-            FLAVOR: r-basic
+            FLAVOR: basic-r
             FRONTEND: rstudio
     steps:
       - name: Checkout repository
