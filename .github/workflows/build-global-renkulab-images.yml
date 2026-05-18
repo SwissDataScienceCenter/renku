@@ -67,7 +67,7 @@ jobs:
         id: meta_cache
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.DOCKER_PREFIX }}//${{ matrix.LANG_PREFIX }}-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}-cache
+          images: ${{ env.DOCKER_PREFIX }}/${{ matrix.LANG_PREFIX }}-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}-cache
           tags: |
             type=raw,value=${{ matrix.PLATFORM == 'linux/arm64' && 'arm64' || 'amd64' }}
       - name: Setup pack
@@ -108,6 +108,7 @@ jobs:
     runs-on: ubuntu-24.04
     strategy:
       fail-fast: true
+      max-parallel: 6
       matrix:
         FLAVOR:
           - basic
