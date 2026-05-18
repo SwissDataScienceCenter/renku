@@ -138,7 +138,7 @@ jobs:
         env:
           DOCKER_METADATA_ANNOTATIONS_LEVELS: index
         with:
-          images: ${{ env.DOCKER_PREFIX }}//${{ matrix.LANG_PREFIX }}-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}
+          images: ${{ env.DOCKER_PREFIX }}/${{ matrix.LANG_PREFIX }}-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}
           annotations: |
             org.opencontainers.image.title=renku//${{ matrix.LANG_PREFIX }}-${{ matrix.FLAVOR }}-${{ matrix.FRONTEND }}
             org.opencontainers.image.description=An image for renku sessions, with ${{ matrix.FLAVOR }} Python packages and a ${{ matrix.FRONTEND }} frontend.
