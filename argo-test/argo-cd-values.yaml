@@ -1,0 +1,6 @@
+dex:
+  enabled: false
+configs:
+  params:
+    server.insecure: true
+createClusterRoles: false
