@@ -157,16 +157,26 @@ To use `renv` with a code-based environment:
 2. Install the packages your project needs as usual, for example:
 
    ```r
-   install.packages(c("dplyr", "ggplot2", "shiny"))
+   install.packages(c("dplyr", "ggplot2"))
    ```
 
-3. Snapshot the environment to update the lockfile:
+3. Write your analysis code that uses those packages.
+
+4. Snapshot the environment to update the lockfile:
 
    ```r
    renv::snapshot()
    ```
 
-4. Commit `renv.lock` at the root (top level) of the code repository. You should also commit the
+   :::warning
+
+   The `renv::snapshot()` command will pick up only the packages that are
+   installed _and_ used in your source code. If you install packages but do not use them (yet)
+   they will not be added by default.
+
+   :::
+
+5. Commit `renv.lock` at the root (top level) of the code repository. You should also commit the
    files created by `renv` that are meant to be shared with the project, such as `.Rprofile` and
    `renv/activate.R`.
 
