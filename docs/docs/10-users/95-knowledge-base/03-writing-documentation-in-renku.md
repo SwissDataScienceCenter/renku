@@ -23,7 +23,7 @@ A paragraph is one or more lines of text followed by at least one blank line.
 
 # Links
 
-You can create an inline link by wrapping the link display text in brackets`[ ]`, followed by the linked URL in parentheses`( )` with no space in between.
+You can create an inline link by wrapping the link display text in brackets `[ ]`, followed by the linked URL in parentheses `( )` with no space in between.
 
 ```markdown
 [text](link.com)
@@ -78,7 +78,7 @@ or declaring a `math` block:
 
 Declaring a “mermaid” block allows input of [Mermaid](https://mermaid.js.org/intro/) diagrams in documentation, for example:
 
-````markdown
+````
 ```mermaid
 graph TD;
     A-->B;
@@ -88,18 +88,15 @@ graph TD;
 ```
 ````
 
-````
-
 ```mermaid
 graph TD;
     A-->B;
     A-->C;
     B-->D;
     C-->D;
+```
 
 ````
-
-````markdown
 ```mermaid
 sequenceDiagram
     participant Alice
@@ -115,8 +112,6 @@ sequenceDiagram
 ```
 ````
 
-````
-
 ```mermaid
 sequenceDiagram
     participant Alice
@@ -129,7 +124,7 @@ sequenceDiagram
     John-->>Alice: Great!
     John->>Bob: How about you?
     Bob-->>John: Jolly good!
-````
+```
 
 # Emojis
 
