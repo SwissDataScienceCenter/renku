@@ -549,7 +549,7 @@ ui:
     replicaCount: 1
     image:
       repository: renku/renku-ui
-      tag: "4.23.0"
+      tag: "4.24.0"
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
       ## Secrets must be manually created in the namespace.
@@ -741,7 +741,7 @@ ui:
     keepCookies: []
     image:
       repository: renku/renku-ui-server
-      tag: "4.23.0"
+      tag: "4.24.0"
       pullPolicy: IfNotPresent
     imagePullSecrets: []
     nameOverride: ""
@@ -885,12 +885,12 @@ notebooks:
     ## '["https://domain-a.example.org/*", "https://domain-b.example.net/*"]'
     ## Each URI should follow the format expected by Keycloak in the Redirect
     ## URIs field of a keycloak client.
-    extraRedirectUris: '[]'
+    extraRedirectUris: "[]"
     ## This value is a yaml string of a json list of URIs strings, i.e.
     ## '["https://domain-a.example.org/*", "https://domain-b.example.net/*"]'
     ## Each URI should follow the format expected by Keycloak in the Web Origins
     ## field of a keycloak client.
-    extraWebOrigins: '[]'
+    extraWebOrigins: "[]"
   sessionIngress:
     host:
     ## If you want to use the default cluster tls cert, set the flag below to true.
@@ -1194,12 +1194,12 @@ dataService:
     existingPriorityClass: ""
   image:
     repository: renku/renku-data-service
-    tag: "0.74.1"
+    tag: "0.75.0"
     pullPolicy: IfNotPresent
   k8sWatcher:
     image:
       repository: renku/data-service-k8s-watcher
-      tag: "0.74.1"
+      tag: "0.75.0"
       pullPolicy: IfNotPresent
     resources: {}
     sentry:
@@ -1210,7 +1210,7 @@ dataService:
   dataTasks:
     image:
       repository: renku/data-service-data-tasks
-      tag: "0.74.1"
+      tag: "0.75.0"
       pullPolicy: IfNotPresent
     resources: {}
     enableResourceRequestTracking: false
@@ -1341,7 +1341,7 @@ authz:
 secretsStorage:
   image:
     repository: renku/secrets-storage
-    tag: "0.74.1"
+    tag: "0.75.0"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
