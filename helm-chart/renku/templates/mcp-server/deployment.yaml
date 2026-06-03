@@ -47,24 +47,23 @@ spec:
               value: "9000"
             - name: RENKU_BASE_URL
               value: {{ (printf "%s://%s" (include "renku.http" .) .Values.global.renku.domain) | quote }}
+            - name: KEYCLOAK_ISSUER_URL
+              value: {{ include "renku.keycloakIssuerUrl" . | quote }}
             {{- include "certificates.env.python" $ | nindent 12 }}
           livenessProbe:
-            httpGet:
-              path: /mcp
+            tcpSocket:
               port: http
             initialDelaySeconds: 10
             periodSeconds: 10
             failureThreshold: 6
           readinessProbe:
-            httpGet:
-              path: /mcp
+            tcpSocket:
               port: http
             initialDelaySeconds: 10
             periodSeconds: 2
             failureThreshold: 2
           startupProbe:
-            httpGet:
-              path: /mcp
+            tcpSocket:
               port: http
             periodSeconds: 5
             failureThreshold: 60

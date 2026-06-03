@@ -269,6 +269,7 @@ class OIDCClientsConfig:
     notebooks: OIDCClient
     swagger: OIDCClient
     data_service: OIDCClient
+    mcp: OIDCClient
 
     @classmethod
     def from_env(cls) -> "OIDCClientsConfig":
@@ -279,6 +280,7 @@ class OIDCClientsConfig:
             notebooks=OIDCClient.from_env(prefix="NOTEBOOKS_KC_CLIENT_"),
             swagger=OIDCClient.from_env(prefix="SWAGGER_KC_CLIENT_"),
             data_service=OIDCClient.from_env(prefix="DATASERVICE_KC_CLIENT_"),
+            mcp=OIDCClient.from_env(prefix="MCP_KC_CLIENT_"),
         )
 
     def to_list(self) -> List[OIDCClient]:
@@ -289,4 +291,5 @@ class OIDCClientsConfig:
             self.notebooks,
             self.swagger,
             self.data_service,
+            self.mcp,
         ]
