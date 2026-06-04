@@ -130,7 +130,7 @@ spec:
             - name: MCP_KC_CLIENT_ATTRIBUTES
               value: '{"pkce.code.challenge.method": "S256", "access.token.lifespan": "86400"}'
             - name: MCP_KC_CLIENT_EXTRA_REDIRECT_URIS
-              value: '["https://claude.ai/api/mcp/auth_callback", "http://localhost", "http://127.0.0.1"]'
+              value: '["https://claude.ai/api/mcp/auth_callback", "http://localhost", "http://127.0.0.1", "http://localhost:8484", "http://localhost:3000", "http://127.0.0.1:8484", "http://127.0.0.1:3000"]'
             - name: DATASERVICE_KC_CLIENT_ID
               value: {{ include "renku.dataService.keycloak.clientId" . | quote }}
             - name: DATASERVICE_KC_CLIENT_SECRET
