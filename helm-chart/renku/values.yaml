@@ -228,6 +228,9 @@ alerts:
     ## Client secret for the Alertmanager webhook OIDC client
     ## Will be auto-generated if not provided
     clientSecret:
+## Apps configuration
+apps:
+  enabled: false
 ## Logging configuration (applied to all services that support it)
 logging:
   ## Possible values are "json" and "plain". This defaults to "plain" if it's not set or any other value is provided.
@@ -823,8 +826,7 @@ dlf-chart:
     enabled: false
   dataset-operator-chart:
     enabled: true
-csi-rclone:
-  {}
+csi-rclone: {}
   # This section is only relevant if you are installing csi-rclone as part of Renku
   ## Name of the csi storage class to use for RClone/Cloudstorage. Should be unique per cluster.
   # storageClassName: csi-rclone
@@ -885,12 +887,12 @@ notebooks:
     ## '["https://domain-a.example.org/*", "https://domain-b.example.net/*"]'
     ## Each URI should follow the format expected by Keycloak in the Redirect
     ## URIs field of a keycloak client.
-    extraRedirectUris: '[]'
+    extraRedirectUris: "[]"
     ## This value is a yaml string of a json list of URIs strings, i.e.
     ## '["https://domain-a.example.org/*", "https://domain-b.example.net/*"]'
     ## Each URI should follow the format expected by Keycloak in the Web Origins
     ## field of a keycloak client.
-    extraWebOrigins: '[]'
+    extraWebOrigins: "[]"
   sessionIngress:
     host:
     ## If you want to use the default cluster tls cert, set the flag below to true.
@@ -1256,8 +1258,7 @@ dataService:
     ## The name of the BuildStrategy to use for image builds.
     strategyName: renku-buildpacks-v3
     ## Configuration overrides for specific target platforms
-    platformOverrides:
-      {}
+    platformOverrides: {}
       # linux/arm64:
       #   builderImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/cuda-selector:0.5.1"
       #   runImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/cuda-run-image:0.5.1"
