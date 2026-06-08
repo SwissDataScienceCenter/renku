@@ -108,6 +108,7 @@ class OIDCClient:
     service_account_roles: List[str] = field(default_factory=list)
     service_account_realm_roles: List[str] = field(default_factory=list)
     public_client: bool = False
+    consent_required: bool = False
     client_extra_web_origins: List[str] = field(default_factory=list)
     client_extra_redirect_uris: List[str] = field(default_factory=list)
 
@@ -179,6 +180,7 @@ class OIDCClient:
             "clientId": self.id,
             "baseUrl": self.base_url,
             "publicClient": self.public_client,
+            "consentRequired": self.consent_required,
             "attributes": self.attributes,
             "redirectUris": [self.base_url + "/*"] + self.client_extra_redirect_uris,
             "webOrigins": [self.base_url + "/*"] + self.client_extra_web_origins,
@@ -294,6 +296,7 @@ class OIDCClientsConfig:
         codex_uri = _codex_callback_uri(mcp.base_url)
         if codex_uri not in mcp.client_extra_redirect_uris:
             mcp.client_extra_redirect_uris.append(codex_uri)
+        mcp.consent_required = True
         return cls(
             renku=OIDCClient.from_env(prefix="RENKU_KC_CLIENT_"),
             cli=OIDCClient.from_env(prefix="CLI_KC_CLIENT_"),
