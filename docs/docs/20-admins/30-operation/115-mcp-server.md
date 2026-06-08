@@ -15,7 +15,7 @@ The MCP server is disabled by default. Add the following to your Helm values to 
 mcpServer:
   enabled: true
   image:
-    tag: "latest"  # pin to a specific version in production
+    tag: "latest" # pin to a specific version in production
   resources:
     requests:
       memory: 256Mi
@@ -61,10 +61,10 @@ mcpServer:
 
 The MCP server exposes two standard OAuth discovery endpoints:
 
-| Endpoint | RFC | Purpose |
-|---|---|---|
-| `/.well-known/oauth-protected-resource` | RFC 9728 | Points clients to the authorization server |
-| `/.well-known/oauth-authorization-server` | RFC 8414 | Proxies Keycloak's OIDC metadata |
+| Endpoint                                  | RFC      | Purpose                                    |
+| ----------------------------------------- | -------- | ------------------------------------------ |
+| `/.well-known/oauth-protected-resource`   | RFC 9728 | Points clients to the authorization server |
+| `/.well-known/oauth-authorization-server` | RFC 8414 | Proxies Keycloak's OIDC metadata           |
 
 Standards-compliant MCP clients (Claude.ai, Claude Code) discover these automatically and
 complete the OAuth flow without any manual token configuration.

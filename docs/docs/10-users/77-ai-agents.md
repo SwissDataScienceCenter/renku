@@ -66,6 +66,7 @@ Tell the agent what you need — for example:
 > "Start a session for my project `myuser/analysis` with at least 8 GB RAM"
 
 The agent will:
+
 1. Look up your project
 2. Query available resource classes for one with at least 8 GB
 3. Find or create a session launcher
