@@ -1,14 +1,22 @@
 # Create an environment with custom packages from a private code repository (GitHub Actions)
 
-Would you like Renku to create an environment for you with the packages you need pre-installed? Renku can create a docker image for your Renku session for you based on a environment definition file in a code repository, such as a `environment.yml`, `requirements.txt`, or `pyproject.toml`.
+Would you like Renku to create an environment for you with the packages you need pre-installed?
+Renku can create a docker image for your Renku session for you based on an environment definition
+file in a code repository, such as an `environment.yml`, `requirements.txt`, `pyproject.toml`, or
+`renv.lock`.
 
-If your code repository is public, you can have Renku build this image directly as part of your project! See [How to create an environment with custom packages installed](create-environment-with-custom-packages-installed).
+If your code repository is public, you can have Renku build this image directly as part of your
+project! See [How to create an environment with custom packages
+installed](create-environment-with-custom-packages-installed).
 
-If your code repository is private, follow the instructions below.
+The instructions below are for _private_ code repositories that cannot use the
+automatic builds in RenkuLab.
 
 ## Create a GitHub action to build a docker image
 
-1. First, make sure your code repository meets the requirements for Renku to build an image for you. See [What kinds of environment definitions are supported?](create-environment-with-custom-packages-installed)
+1. First, make sure your code repository meets the requirements for Renku to build an image for you.
+   See [What kinds of environment definitions are
+   supported?](create-environment-with-custom-packages-installed)
 2. In your GitHub code repository, in the upper menu, click on **Actions**.
 
 <p class="image-container-l">
@@ -69,10 +77,14 @@ If your code repository is private, follow the instructions below.
              frontend: jupyterlab
    ```
 
-6. By default, the action defined above will create an image with JupyterLab as the front end. If you prefer a different front end, replace `jupyterlab` in the last line of the file with one of the following alternative front ends:
+6. By default, the action defined above will create an image with JupyterLab as
+   the front end. If you prefer a different front end, replace `jupyterlab` in
+   the last line of the file with one of the following alternative front ends:
    - `jupyterlab`: Web-based interactive development for Jupyter notebooks, code, and data.
    - `vscodium`: A freely-licensed version of Microsoft’s editor VS Code.
    - `ttyd`: A web-based terminal with a minimalist interface.
+   - `rstudio`: RStudio Server for R projects.
+
 7. Commit changes
 
 ## Add the built image to your Renku project
