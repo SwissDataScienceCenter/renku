@@ -23,7 +23,7 @@ Make sure that:
 ## Step 1: activate the Zenodo integration
 
 1. Open the Renku **Integrations** page.
-2. Find the **Zenodo** integration.
+2. Click on the Add button and search for the **Zenodo** integration.
 3. Click **Connect**.
 4. Follow the Zenodo authorization flow and grant Renku the requested permissions.
 5. When you return to Renku, confirm that the Zenodo integration is shown as active.
@@ -33,11 +33,10 @@ You only need to do this once per Renku account, unless the integration is disco
 ## Step 2: export files from the data connector
 
 1. Open the project, group, or user page that contains the data connector.
-2. Click the data connector to open its side panel.
-3. Open the data connector drop-down menu.
-4. Select the option to export or publish the data connector files to Zenodo.
-5. Enter the path inside the data connector that contains the files you want to publish.
-6. Confirm the export.
+2. Click the data connector drop-down menu.
+3. Select the option to export or publish the data connector files to Zenodo.
+4. Enter the path inside the data connector that contains the files you want to publish.
+5. Confirm the export.
 
 Renku will start uploading the files from the selected path to Zenodo in the background.
 
@@ -80,7 +79,7 @@ Depending on the number and size of files, the upload can take some time. You ca
 
 ## Complete and publish the deposit in Zenodo
 
-When the upload is complete, open the draft deposit in Zenodo and review it before publishing. In Zenodo, you should:
+When the upload is complete, the deposit export section will show a URL linking to the draft deposit in Zenodo for opening and reviewing the publishing. In Zenodo, you should:
 
 - Check that all expected files are present.
 - Add or complete the required metadata, such as title, description, creators, license, and related identifiers.
