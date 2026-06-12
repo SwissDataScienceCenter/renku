@@ -31,12 +31,9 @@ dataService:
       cpu: 50m
       memory: 750Mi
   replicaCount: 1
-enableInternalGitlab: false
 enableV1Services: false
 gateway:
   replicaCount: 1
-gitlab:
-  enabled: false
 global:
   anonymousSessions:
     enabled: true
@@ -49,7 +46,6 @@ global:
     sentinel:
       enabled: false
 ingress:
-  className: webapprouting.kubernetes.azure.com
   enabled: true
   hosts:
     - <deployment-FQDN>
@@ -63,65 +59,6 @@ keycloakx:
       memory: 600Mi
     limits:
       memory: 600Mi
-networkPolicies:
-  sessions:
-    egress:
-      - to:
-          # DNS resolution
-          - namespaceSelector:
-              matchLabels:
-                kubernetes.io/metadata.name: kube-system
-            podSelector:
-              matchLabels:
-                k8s-app: kube-dns
-        ports:
-          - port: 53
-            protocol: UDP
-          - port: 53
-            protocol: TCP
-      - to:
-          # Allow access to any port/protocol as long as it is directed
-          # outside the cluster. This is done by excluding
-          # IP ranges which are reserved for private networking from
-          # the allowed range.
-          - ipBlock:
-              cidr: 0.0.0.0/0
-              except:
-                - 10.0.0.0/8
-                - 172.16.0.0/12
-                - 192.168.0.0/16
-      - to:
-          # This resolves issues with hairpinning where a session pod is accessing
-          # a service that runs in the cluster but through its public URL.
-          # Without this the session pods cannot reach services (Keycloak, data services) on the public URL.
-          - namespaceSelector:
-              matchLabels:
-                kubernetes.io/metadata.name: app-routing-system
-            podSelector:
-              matchLabels:
-                app: nginx
-        ports:
-          - port: 443
-            protocol: TCP
-notebooks:
-  oidc:
-    allowUnverifiedEmail: true
-  sessionAffinity:
-    nodeAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-        nodeSelectorTerms:
-          - matchExpressions:
-              - key: renku.io/node-purpose
-                operator: In
-                values:
-                  - user
-  sessionIngress:
-    className: webapprouting.kubernetes.azure.com
-  sessionTolerations:
-    - effect: NoSchedule
-      key: renku.io/dedicated
-      operator: Equal
-      value: user
 postgresql:
   primary:
     resources:
