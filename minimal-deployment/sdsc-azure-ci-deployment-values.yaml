@@ -1,0 +1,224 @@
+# This file is based on the minimal-deployment-values.yaml file,
+# but it overrides some values to make the deployment work on Azure.
+---
+authz:
+  image:
+    repository: harbor.dev.renku.ch/dockerhub_cache/authzed/spicedb
+  resources:
+    limits:
+      memory: 75Mi
+    requests:
+      cpu: 50m
+      memory: 75Mi
+dataService:
+  image:
+    repository: harbor.dev.renku.ch/dockerhub_cache/renku/renku-data-service
+  dataTasks:
+    image:
+      repository: harbor.dev.renku.ch/dockerhub_cache/renku/data-service-data-tasks
+    resources:
+      limits:
+        memory: 250Mi
+      requests:
+        cpu: 50m
+        memory: 250Mi
+  k8sWatcher:
+    image:
+      repository: harbor.dev.renku.ch/dockerhub_cache/renku/data-service-k8s-watcher
+    resources:
+      limits:
+        memory: 200Mi
+      requests:
+        cpu: 20m
+        memory: 200Mi
+  resources:
+    limits:
+      memory: 750Mi
+    requests:
+      cpu: 50m
+      memory: 750Mi
+  replicaCount: 1
+enableV1Services: false
+gateway:
+  image:
+    repository: harbor.dev.renku.ch/dockerhub_cache/renku/renku-gateway
+  replicaCount: 1
+global:
+  anonymousSessions:
+    enabled: true
+  certificates:
+    image:
+      repository: harbor.dev.renku.ch/dockerhub_cache/renku/certificates
+  renku:
+    domain: <deployment-FQDN>
+  useHTTPS: true
+  redis:
+    port: 6379
+    host: renku-redis-master
+    sentinel:
+      enabled: false
+ingress:
+  enabled: true
+  className: webapprouting.kubernetes.azure.com
+  hosts:
+    - <deployment-FQDN>
+  tls:
+    - hosts:
+        - <deployment-FQDN>
+      secretName: <certificate-secret-name>
+initDb:
+  image:
+    repository: harbor.dev.renku.ch/dockerhub_cache/renku/init-db
+keycloakx:
+  initRealm:
+    image:
+      repository: harbor.dev.renku.ch/dockerhub_cache/renku/init-realm
+  resources:
+    requests:
+      memory: 600Mi
+    limits:
+      memory: 600Mi
+platformInit:
+  image:
+    repository: harbor.dev.renku.ch/dockerhub_cache/renku/platform-init
+networkPolicies:
+  sessions:
+    egress:
+      - to:
+          # DNS resolution
+          - namespaceSelector:
+              matchLabels:
+                kubernetes.io/metadata.name: kube-system
+            podSelector:
+              matchLabels:
+                k8s-app: kube-dns
+        ports:
+          - port: 53
+            protocol: UDP
+          - port: 53
+            protocol: TCP
+      - to:
+          # Allow access to any port/protocol as long as it is directed
+          # outside the cluster. This is done by excluding
+          # IP ranges which are reserved for private networking from
+          # the allowed range.
+          - ipBlock:
+              cidr: 0.0.0.0/0
+              except:
+                - 10.0.0.0/8
+                - 172.16.0.0/12
+                - 192.168.0.0/16
+      - to:
+          # This resolves issues with hairpinning where a session pod is accessing
+          # a service that runs in the cluster but through its public URL.
+          # Without this the session pods cannot reach services (Keycloak, data services) on the public URL.
+          - namespaceSelector:
+              matchLabels:
+                kubernetes.io/metadata.name: app-routing-system
+            podSelector:
+              matchLabels:
+                app: nginx
+        ports:
+          - port: 443
+            protocol: TCP
+notebooks:
+  gitRpcServer:
+    image:
+      name: harbor.dev.renku.ch/dockerhub_cache/renku/git-rpc-server
+  gitHttpsProxy:
+    image:
+      name: harbor.dev.renku.ch/dockerhub_cache/renku/sidecars
+  gitClone:
+    image:
+      name: harbor.dev.renku.ch/dockerhub_cache/renku/git-clone
+  secretsMount:
+    image:
+      repository: harbor.dev.renku.ch/dockerhub_cache/renku/secrets-mount
+  ssh:
+    image:
+      repository: harbor.dev.renku.ch/dockerhub_cache/renku/ssh-jump-host
+  oidc:
+    allowUnverifiedEmail: true
+  sessionAffinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: renku.io/node-purpose
+                operator: In
+                values:
+                  - user
+  sessionIngress:
+    className: webapprouting.kubernetes.azure.com
+  sessionTolerations:
+    - effect: NoSchedule
+      key: renku.io/dedicated
+      operator: Equal
+      value: user
+postgresql:
+  image:
+    registry: harbor.dev.renku.ch
+    repository: bitnami-mirror/postgresql
+  primary:
+    resources:
+      limits:
+        memory: 300Mi
+      requests:
+        memory: 300Mi
+redis:
+  architecture: standalone
+  image:
+    registry: harbor.dev.renku.ch
+    repository: bitnami-mirror/redis
+  master:
+    persistence:
+      enabled: false
+  metrics:
+    image:
+      registry: harbor.dev.renku.ch
+      repository: bitnami-mirror/redis-exporter
+  sentinel:
+    enabled: false
+    image:
+      registry: harbor.dev.renku.ch
+      repository: bitnami-mirror/redis-sentinel
+secretsStorage:
+  image:
+    repository: harbor.dev.renku.ch/dockerhub_cache/renku/secrets-storage
+  resources:
+    limits:
+      memory: 500Mi
+    requests:
+      cpu: 50m
+      memory: 500Mi
+solr:
+  image:
+    registry: harbor.dev.renku.ch
+    repository: bitnami-mirror/solr
+  resources:
+    limits:
+      memory: 400Mi
+    requests:
+      cpu: 50m
+      memory: 400Mi
+swagger:
+  image:
+    repository: harbor.dev.renku.ch/dockerhub_cache/swaggerapi/swagger-ui
+ui:
+  client:
+    image:
+      repository: harbor.dev.renku.ch/dockerhub_cache/renku/renku-ui
+    resources:
+      limits:
+        memory: 300Mi
+      requests:
+        cpu: 10m
+        memory: 300Mi
+  server:
+    image:
+      repository: harbor.dev.renku.ch/dockerhub_cache/renku/renku-ui-server
+    resources:
+      limits:
+        memory: 75Mi
+      requests:
+        memory: 75Mi

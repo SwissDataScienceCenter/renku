@@ -139,7 +139,7 @@ jobs:
           KUBECONFIG: "${{ github.workspace }}/renkubot-kube.config"
           RENKU_RELEASE: ci-renku-${{ github.event.number }}
           RENKU_VALUES_FILE: "${{ github.workspace }}/values.yaml"
-          RENKU_VALUES: minimal-deployment/minimal-deployment-values.yaml
+          RENKU_VALUES: minimal-deployment/sdsc-azure-ci-deployment-values.yaml
           TEST_ARTIFACTS_PATH: "tests-artifacts-${{ github.sha }}"
           KUBERNETES_CLUSTER_FQDN: "dev.renku.ch"
           RENKU_ANONYMOUS_SESSIONS: "true"

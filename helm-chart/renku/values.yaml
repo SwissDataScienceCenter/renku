@@ -1177,7 +1177,7 @@ swagger:
   enabled: true
   image:
     repository: swaggerapi/swagger-ui
-    tag: "latest"
+    tag: "v5.32.6"
 ## The image used in startup scripts to initialize different postgres databases
 initDb:
   image:
