@@ -91,9 +91,9 @@ networkPolicies:
                 - 172.16.0.0/12
                 - 192.168.0.0/16
       - to:
-          # Resolves issues with hairpinning where a session pod is accessing
+          # This resolves issues with hairpinning where a session pod is accessing
           # a service that runs in the cluster but through its public URL.
-          # Without this the session pods cann reach keycloak on the public URL.
+          # Without this the session pods cannot reach services (Keycloak, data services) on the public URL.
           - namespaceSelector:
               matchLabels:
                 kubernetes.io/metadata.name: app-routing-system
