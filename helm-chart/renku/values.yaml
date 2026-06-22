@@ -217,6 +217,21 @@ networkPolicies:
                 - 10.0.0.0/8
                 - 172.16.0.0/12
                 - 192.168.0.0/16
+      ## Depending on the ingress controller in your cluster you will need an
+      ## additional network policy like the one below. The example below is for ingress nginx.
+      ## This resolves issues with hairpinning where a session pod is accessing
+      ## a service that runs in the cluster but through its public URL.
+      ## Without this the session pods cannot reach services (Keycloak, data services) on the public URL.
+      # - to:
+      #     - namespaceSelector:
+      #         matchLabels:
+      #           kubernetes.io/metadata.name: app-routing-system
+      #       podSelector:
+      #         matchLabels:
+      #           app: nginx
+      #   ports:
+      #     - port: 443
+      #       protocol: TCP
 ## Alerts configuration
 alerts:
   ## Alertmanager webhook authentication
@@ -823,8 +838,7 @@ dlf-chart:
     enabled: false
   dataset-operator-chart:
     enabled: true
-csi-rclone:
-  {}
+csi-rclone: {}
   # This section is only relevant if you are installing csi-rclone as part of Renku
   ## Name of the csi storage class to use for RClone/Cloudstorage. Should be unique per cluster.
   # storageClassName: csi-rclone
@@ -885,12 +899,12 @@ notebooks:
     ## '["https://domain-a.example.org/*", "https://domain-b.example.net/*"]'
     ## Each URI should follow the format expected by Keycloak in the Redirect
     ## URIs field of a keycloak client.
-    extraRedirectUris: '[]'
+    extraRedirectUris: "[]"
     ## This value is a yaml string of a json list of URIs strings, i.e.
     ## '["https://domain-a.example.org/*", "https://domain-b.example.net/*"]'
     ## Each URI should follow the format expected by Keycloak in the Web Origins
     ## field of a keycloak client.
-    extraWebOrigins: '[]'
+    extraWebOrigins: "[]"
   sessionIngress:
     host:
     ## If you want to use the default cluster tls cert, set the flag below to true.
@@ -1256,8 +1270,7 @@ dataService:
     ## The name of the BuildStrategy to use for image builds.
     strategyName: renku-buildpacks-v3
     ## Configuration overrides for specific target platforms
-    platformOverrides:
-      {}
+    platformOverrides: {}
       # linux/arm64:
       #   builderImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/cuda-selector:0.8.0"
       #   runImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/cuda-run-image:0.8.0"
