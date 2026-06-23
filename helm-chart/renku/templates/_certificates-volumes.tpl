@@ -14,8 +14,13 @@
               path: {{ include "renku.CASecretName" . }}-internal-communication-ca.crt
     {{- if $customCAsEnabled }}
     {{- range $customCA := .Values.global.certificates.customCAs }}
+    {{- if $customCA.secret }}
       - secret:
           name: {{ $customCA.secret }}
-    {{- end -}}
-    {{- end -}}
-{{- end -}}
+    {{- else if $customCA.configMap }}
+      - configMap:
+          name: {{ $customCA.configMap }}
+    {{- end }}
+    {{- end }}
+    {{- end }}
+{{- end }}

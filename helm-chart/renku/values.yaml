@@ -134,10 +134,10 @@ global:
   anonymousSessions:
     ## Set to true to enable anonymous sessions
     enabled: false
-  ## Specify the name of an existing K8s secret that contains the certificate
+  ## Specify the name of an existing K8s secret or configmap that contains the certificate
   ## if you would like to use a custom CA. The key for the secret
   ## should have the .crt extension otherwise it is ignored. The
-  ## keys across all secrets are mounted as files in one location so
+  ## keys across all secrets and configmaps are mounted as files in one location so
   ## the keys across all secrets have to be unique. In addition to the
   ## changes here modifications need to be made in the keycloak section below
   certificates:
@@ -145,7 +145,8 @@ global:
       repository: renku/certificates
       tag: "0.0.2"
     customCAs: []
-    # - secret:
+    # - secret: a-secret-name
+    # - configMap: a-configmap-name
   ## Database credentials for postgres
   db:
     ## Used by the renku-data-services and potentially other backend services
@@ -291,10 +292,15 @@ keycloakx:
         defaultMode: 0777
         sources:
         {{- range $customCA := .Values.global.certificates.customCAs }}
+        {{- if $customCA.secret }}
           - secret:
               name: {{ $customCA.secret }}
-        {{- end -}}
-    {{- end -}}
+        {{- else if $customCA.configMap }}
+          - configMap:
+              name: {{ $customCA.configMap }}
+        {{- end }}
+        {{- end }}
+    {{- end }}
   ## Create a demo user in keycloak? Note that the password for the demo
   ## user must be queried from kubernetes (see the rendered NOTES.txt
   ## template which is shown after a successful deployment).
@@ -549,7 +555,7 @@ ui:
     replicaCount: 1
     image:
       repository: renku/renku-ui
-      tag: "4.23.0"
+      tag: "4.26.0"
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
       ## Secrets must be manually created in the namespace.
@@ -741,7 +747,7 @@ ui:
     keepCookies: []
     image:
       repository: renku/renku-ui-server
-      tag: "4.23.0"
+      tag: "4.26.0"
       pullPolicy: IfNotPresent
     imagePullSecrets: []
     nameOverride: ""
@@ -881,6 +887,16 @@ notebooks:
     tokenUrl:
     authUrl:
     allowUnverifiedEmail: false
+    ## This value is a yaml string of a json list of URIs strings, i.e.
+    ## '["https://domain-a.example.org/*", "https://domain-b.example.net/*"]'
+    ## Each URI should follow the format expected by Keycloak in the Redirect
+    ## URIs field of a keycloak client.
+    extraRedirectUris: "[]"
+    ## This value is a yaml string of a json list of URIs strings, i.e.
+    ## '["https://domain-a.example.org/*", "https://domain-b.example.net/*"]'
+    ## Each URI should follow the format expected by Keycloak in the Web Origins
+    ## field of a keycloak client.
+    extraWebOrigins: "[]"
   sessionIngress:
     host:
     ## If you want to use the default cluster tls cert, set the flag below to true.
@@ -993,7 +1009,7 @@ notebooks:
   gitHttpsProxy:
     image:
       name: renku/sidecars
-      tag: "0.29.0"
+      tag: "0.29.1"
     args: ["gitproxy", "proxy"]
     port: 65480
     healthPort: 65481
@@ -1184,12 +1200,12 @@ dataService:
     existingPriorityClass: ""
   image:
     repository: renku/renku-data-service
-    tag: "0.74.0"
+    tag: "0.77.0"
     pullPolicy: IfNotPresent
   k8sWatcher:
     image:
       repository: renku/data-service-k8s-watcher
-      tag: "0.74.0"
+      tag: "0.77.0"
       pullPolicy: IfNotPresent
     resources: {}
     sentry:
@@ -1200,7 +1216,7 @@ dataService:
   dataTasks:
     image:
       repository: renku/data-service-data-tasks
-      tag: "0.74.0"
+      tag: "0.77.0"
       pullPolicy: IfNotPresent
     resources: {}
     enableResourceRequestTracking: false
@@ -1239,6 +1255,16 @@ dataService:
     enabled: false
     ## The container image prefix for images built from code
     outputImagePrefix: harbor.dev.renku.ch/renku-build/
+    ## Private repository support requires a dedicated registry and is a separate feature.
+    privateRepositoryBuilds:
+      enabled: false
+      ## The container image prefix for images built from private code
+      outputPrivateImagePrefix: "harbor.dev.renku.ch/renku-private-build/"
+      ## The name of the secret used to push images built from private code.
+      pushPrivateSecretName: "renku-build-private-docker-secret"
+      ## The name of the secret used to pull images built from private code.
+      pullPrivateSecretName: "renku-pull-private-docker-secret"
+
     ## The builder image (see https://buildpacks.io/docs/for-platform-operators/concepts/builder/)
     builderImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/selector:0.5.1"
     ## The run image (see https://buildpacks.io/docs/for-platform-operators/concepts/base-images/)
@@ -1331,7 +1357,7 @@ authz:
 secretsStorage:
   image:
     repository: renku/secrets-storage
-    tag: "0.74.0"
+    tag: "0.77.0"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP

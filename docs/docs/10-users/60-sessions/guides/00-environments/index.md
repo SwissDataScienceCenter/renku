@@ -20,19 +20,24 @@ environment is right for you, answer the following questions:
 
 ### 1. What language are you working in?
 
-#### → I’m working in R
-
-Renku only has one mode for working with R sessions at the moment. When you create a session
-launcher, select **global environment** and select the **R** global environment. If you need to
-install additional packages, see [How to install packages on-the-fly in your
-session](install-packages-on-the-fly-in-your-session).
-
 #### → I’m working in Python
 
 We have multiple ways of working in Python in Renku sessions! Please continue to the next question
 [2. Would you like packages to be pre-installed and ready to go when you (or anyone else) launches
 the
 session?](#2-would-you-like-packages-to-be-pre-installed-and-ready-to-go-when-you-or-anyone-else-launches-the-session).
+
+#### → I’m working in R
+
+If your project uses [`renv`](https://rstudio.github.io/renv/) and has an `renv.lock` file,
+Renku can build a code-based environment with your packages pre-installed. See [How to create an
+environment with custom packages
+installed](create-environment-with-custom-packages-installed#defining-an-r-environment-with-renv).
+
+If you do not need packages pre-installed, create a session launcher with a **global environment**
+and select the **R** global environment. If you need to install additional packages temporarily, see
+[How to install packages on-the-fly in your
+session](install-packages-on-the-fly-in-your-session).
 
 #### → I’m working in another language
 
@@ -48,8 +53,8 @@ If you’d like a set of custom packages to be installed and ready to go when yo
 launches a session in your project, you can take advantage of Renku’s code based environments.
 
 With Renku code based environments, you can point Renku to a code repository that contains an
-environment definition file, such as a environment.yml, requirements.txt, or pyproject.toml, and
-Renku will build a custom environment for your session for you!
+environment definition file, such as `environment.yml`, `requirements.txt`, `pyproject.toml`, or
+`renv.lock`, and Renku will build a custom environment for your session for you!
 
 → If your code repository is **public**, see [How to create an environment with custom packages
 installed](create-environment-with-custom-packages-installed).
