@@ -1016,7 +1016,7 @@ notebooks:
   gitClone:
     image:
       name: renku/cloner
-      tag: 0.29.0
+      tag: "0.29.1"
   service:
     type: ClusterIP
     port: 80
