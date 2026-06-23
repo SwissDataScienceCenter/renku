@@ -555,7 +555,7 @@ ui:
     replicaCount: 1
     image:
       repository: renku/renku-ui
-      tag: "4.25.0"
+      tag: "4.26.0"
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
       ## Secrets must be manually created in the namespace.
@@ -747,7 +747,7 @@ ui:
     keepCookies: []
     image:
       repository: renku/renku-ui-server
-      tag: "4.25.0"
+      tag: "4.26.0"
       pullPolicy: IfNotPresent
     imagePullSecrets: []
     nameOverride: ""
@@ -829,7 +829,8 @@ dlf-chart:
     enabled: false
   dataset-operator-chart:
     enabled: true
-csi-rclone: {}
+csi-rclone:
+  {}
   # This section is only relevant if you are installing csi-rclone as part of Renku
   ## Name of the csi storage class to use for RClone/Cloudstorage. Should be unique per cluster.
   # storageClassName: csi-rclone
@@ -1254,6 +1255,16 @@ dataService:
     enabled: false
     ## The container image prefix for images built from code
     outputImagePrefix: harbor.dev.renku.ch/renku-build/
+    ## Private repository support requires a dedicated registry and is a separate feature.
+    privateRepositoryBuilds:
+      enabled: false
+      ## The container image prefix for images built from private code
+      outputPrivateImagePrefix: "harbor.dev.renku.ch/renku-private-build/"
+      ## The name of the secret used to push images built from private code.
+      pushPrivateSecretName: "renku-build-private-docker-secret"
+      ## The name of the secret used to pull images built from private code.
+      pullPrivateSecretName: "renku-pull-private-docker-secret"
+
     ## The builder image (see https://buildpacks.io/docs/for-platform-operators/concepts/builder/)
     builderImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/selector:0.5.1"
     ## The run image (see https://buildpacks.io/docs/for-platform-operators/concepts/base-images/)
@@ -1261,7 +1272,8 @@ dataService:
     ## The name of the BuildStrategy to use for image builds.
     strategyName: renku-buildpacks-v3
     ## Configuration overrides for specific target platforms
-    platformOverrides: {}
+    platformOverrides:
+      {}
       # linux/arm64:
       #   builderImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/cuda-selector:0.5.1"
       #   runImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/cuda-run-image:0.5.1"

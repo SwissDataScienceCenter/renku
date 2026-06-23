@@ -107,6 +107,8 @@ spec:
               value: {{ toJson .Values.ui.client.sessionClassEmailUs | quote }}
             - name: IMAGE_BUILDERS_ENABLED
               value: {{ .Values.dataService.imageBuilders.enabled | quote }}
+            - name: BUILD_PRIVATE_REPO_BUILDS_ENABLED
+              value: {{ .Values.dataService.imageBuilders.privateRepositoryBuilds.enabled | quote }}
             - name: METRICS_ENABLED
               value: {{ .Values.ui.client.prometheus.enabled | quote }}
             - name: LEGACY_SUPPORT
