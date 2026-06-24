@@ -75,6 +75,8 @@ spec:
               value: /secrets/encryptionKey/encryptionKey
             - name: SECRETS_SERVICE_PUBLIC_KEY_PATH
               value: /secrets/publicKey/publicKey
+            - name: INTERNAL_AUTHN_SECRET_KEY_PATH
+              value: /secrets/internalSecretKey/secretKey
             - name: K8S_NAMESPACE
               value: {{ .Release.Namespace | quote }}
             - name: MAX_PINNED_PROJECTS
@@ -128,8 +130,12 @@ spec:
               value: {{ .Values.dataService.trustedProxies.realIpHeader | default "" | quote }}
             - name: IMAGE_BUILDERS_ENABLED
               value: {{ .Values.dataService.imageBuilders.enabled | quote }}
+            - name: BUILD_PRIVATE_REPO_BUILDS_ENABLED
+              value: {{ .Values.dataService.imageBuilders.privateRepositoryBuilds.enabled | quote }}
             - name: BUILD_OUTPUT_IMAGE_PREFIX
               value: {{ .Values.dataService.imageBuilders.outputImagePrefix | default "" | quote }}
+            - name: BUILD_OUTPUT_PRIVATE_IMAGE_PREFIX
+              value: {{ .Values.dataService.imageBuilders.privateRepositoryBuilds.outputPrivateImagePrefix | default "" | quote }}
             - name: BUILD_BUILDER_IMAGE
               value: {{ .Values.dataService.imageBuilders.builderImage | default "" | quote }}
             - name: BUILD_RUN_IMAGE
@@ -138,6 +144,10 @@ spec:
               value: {{ .Values.dataService.imageBuilders.strategyName | default "" | quote }}
             - name: BUILD_PUSH_SECRET_NAME
               value: {{ .Values.dataService.imageBuilders.pushSecretName | default "" | quote }}
+            - name: BUILD_PUSH_PRIVATE_SECRET_NAME
+              value: {{ .Values.dataService.imageBuilders.privateRepositoryBuilds.pushPrivateSecretName | default "" | quote }}
+            - name: BUILD_PULL_PRIVATE_SECRET_NAME
+              value: {{ .Values.dataService.imageBuilders.privateRepositoryBuilds.pullPrivateSecretName | default "" | quote }}
             - name: BUILD_RUN_RETENTION_AFTER_FAILED_SECONDS
               value: {{ .Values.dataService.imageBuilders.buildRunRetentionAfterFailedSeconds | default "" | quote }}
             - name: BUILD_RUN_RETENTION_AFTER_SUCCEEDED_SECONDS
@@ -159,7 +169,7 @@ spec:
             - name: V1_SESSIONS_ENABLED
               value: {{ .Values.ui.client.supportLegacySessions | default false | quote }}
             - name: ENABLE_INTERNAL_GITLAB
-              value: {{ .Values.enableInternalGitlab | default false | quote }}
+              value: "false"
             - name: POSTHOG_ENABLED
               value: {{ .Values.posthog.enabled | quote }}
             - name: LOG_FORMAT_STYLE
@@ -194,6 +204,18 @@ spec:
             {{- end }}
             {{- include "certificates.env.python" . | nindent 12 }}
             {{- include "certificates.env.grpc" . | nindent 12 }}
+            {{- with .Values.dataService.dataDeposits.nodeSelector }}
+            - name: DATA_DEPOSITS_NODE_SELECTOR
+              value: {{ toJson . | quote }}
+            {{- end }}
+            {{- with .Values.dataService.dataDeposits.tolerations }}
+            - name: DATA_DEPOSITS_NODE_TOLERATIONS
+              value: {{ toJson . | quote }}
+            {{- end }}
+            - name: DATA_DEPOSITS_JOB_IMAGE
+              value: {{ .Values.dataService.dataDeposits.image | quote }}
+            - name: RENKU_URL
+              value: {{ (include "renku.baseUrl" .) | quote }}
           volumeMounts:
             - name: server-options
               mountPath: /etc/renku-notebooks/server_options
@@ -202,6 +224,9 @@ spec:
               readOnly: true
             - mountPath: "/secrets/publicKey"
               name: secret-service-public-key
+              readOnly: true
+            - mountPath: "/secrets/internalSecretKey"
+              name: internal-authn-key
               readOnly: true
             {{- if .Values.dataService.remoteClustersKubeconfigSecretName }}
             - name: remote-cluster-kubeconfigs
@@ -259,6 +284,12 @@ spec:
             items:
             - key: publicKey
               path: publicKey
+        - name: internal-authn-key
+          secret:
+            secretName: {{ template "renku.fullname" . }}-internal-authn
+            items:
+            - key: secretKey
+              path: secretKey
         {{- if .Values.dataService.remoteClustersKubeconfigSecretName }}
         - name: remote-cluster-kubeconfigs
           secret:

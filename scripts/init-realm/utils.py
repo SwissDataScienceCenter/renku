@@ -93,6 +93,8 @@ class OIDCClient:
     service_account_roles: List[str] = field(default_factory=list)
     service_account_realm_roles: List[str] = field(default_factory=list)
     public_client: bool = False
+    client_extra_web_origins: List[str] = field(default_factory=list)
+    client_extra_redirect_uris: List[str] = field(default_factory=list)
 
     def __post_init__(self):
         self.base_url = self.base_url.rstrip("/")
@@ -163,8 +165,8 @@ class OIDCClient:
             "baseUrl": self.base_url,
             "publicClient": self.public_client,
             "attributes": self.attributes,
-            "redirectUris": [self.base_url + "/*"],
-            "webOrigins": [self.base_url + "/*"],
+            "redirectUris": [self.base_url + "/*"] + self.client_extra_redirect_uris,
+            "webOrigins": [self.base_url + "/*"] + self.client_extra_web_origins,
             "protocolMappers": default_protocol_mappers
             + [
                 {
@@ -207,6 +209,12 @@ class OIDCClient:
             service_account_realm_roles=json.loads(
                 os.environ.get(f"{prefix}SERVICE_ACCOUNT_REALM_ROLES", "[]")
             ),
+            client_extra_redirect_uris=json.loads(
+                os.environ.get(f"{prefix}EXTRA_REDIRECT_URIS", "[]")
+            ),
+            client_extra_web_origins=json.loads(
+                os.environ.get(f"{prefix}EXTRA_WEB_ORIGINS", "[]")
+            )
         )
 
 
