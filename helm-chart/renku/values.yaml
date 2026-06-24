@@ -1030,8 +1030,8 @@ notebooks:
     healthPort: 65481
   gitClone:
     image:
-      name: renku/git-clone
-      tag: "1.31.1"
+      name: renku/cloner
+      tag: "0.29.1"
   service:
     type: ClusterIP
     port: 80
