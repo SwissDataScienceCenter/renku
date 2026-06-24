@@ -218,6 +218,21 @@ networkPolicies:
                 - 10.0.0.0/8
                 - 172.16.0.0/12
                 - 192.168.0.0/16
+      ## Depending on the ingress controller in your cluster you will need an
+      ## additional network policy like the one below. The example below is for ingress nginx.
+      ## This resolves issues with hairpinning where a session pod is accessing
+      ## a service that runs in the cluster but through its public URL.
+      ## Without this the session pods cannot reach services (Keycloak, data services) on the public URL.
+      # - to:
+      #     - namespaceSelector:
+      #         matchLabels:
+      #           kubernetes.io/metadata.name: app-routing-system
+      #       podSelector:
+      #         matchLabels:
+      #           app: nginx
+      #   ports:
+      #     - port: 443
+      #       protocol: TCP
 ## Alerts configuration
 alerts:
   ## Alertmanager webhook authentication
@@ -1108,7 +1123,7 @@ gateway:
   secretKey:
   image:
     repository: renku/renku-gateway
-    tag: "1.10.0"
+    tag: "1.10.2"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
@@ -1266,17 +1281,17 @@ dataService:
       pullPrivateSecretName: "renku-pull-private-docker-secret"
 
     ## The builder image (see https://buildpacks.io/docs/for-platform-operators/concepts/builder/)
-    builderImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/selector:0.5.1"
+    builderImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/selector:0.8.0"
     ## The run image (see https://buildpacks.io/docs/for-platform-operators/concepts/base-images/)
-    runImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/run-image:0.5.1"
+    runImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/run-image:0.8.0"
     ## The name of the BuildStrategy to use for image builds.
     strategyName: renku-buildpacks-v3
     ## Configuration overrides for specific target platforms
     platformOverrides:
       {}
       # linux/arm64:
-      #   builderImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/cuda-selector:0.5.1"
-      #   runImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/cuda-run-image:0.5.1"
+      #   builderImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/cuda-selector:0.8.0"
+      #   runImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/cuda-run-image:0.8.0"
       #   strategyName: renku-buildpacks-v3
       #   nodeSelector:
       #     kubernetes.io/arch: arm64
