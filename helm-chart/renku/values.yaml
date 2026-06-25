@@ -822,8 +822,7 @@ ui:
         prometheus.io/port: "8080"
         prometheus.io/scrape: "true"
 amalthea-sessions:
-  scope:
-    clusterWide: false
+  clusterScoped: false
   deployCrd: true
   controllerManager:
     manager:
