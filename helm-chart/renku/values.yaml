@@ -838,7 +838,7 @@ amalthea-sessions:
         enabled: false
         dsn:
         environment:
-        tracesSampleRate: 0.1
+        tracesSampleRate: 0.01
 ## Used only if S3 Mounts are enabled
 dlf-chart:
   csi-sidecars-rbac:
