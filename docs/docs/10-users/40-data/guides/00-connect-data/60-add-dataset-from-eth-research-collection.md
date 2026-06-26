@@ -36,6 +36,6 @@ In your project’s dashboard:
 
 :::note
 
-For examples of data from the ETH Research Collection to add to your project, see [Data & Code for Reproducibility](/docs/users/use-cases/Demo-Workshop-Material).
+For examples of data from the ETH Research Collection to add to your project, see [Data & Code for Reproducibility](/docs/users/use-cases/demo-workshop-material).
 
 :::
