@@ -34,13 +34,6 @@ Renku is an **open-source platform for researchers and scientists to connect dat
 [**Knowledge Base**](/docs/users/knowledge-base/fair-open-science/) Curiosity about how it works? [Any doubts](/docs/users/knowledge-base/faq/)? Join our channels to keep in touch with us.
 </p>
 
----
-
-<p class="text-align: center">
-![image.png](./sunset_40px.png)
-[**Renku Legacy:**](/docs/users/migrate-v1-v2/) Guidelines on how to migrate your code repositories from Legacy Renkulab Gitlab to your own code repository provider, and keep
-</p>
-
 ## Use cases
 
 |                                                                  Researchers                                                                   |                                                                                    Educators                                                                                     |                                                                                    Event organizers                                                                                     |
