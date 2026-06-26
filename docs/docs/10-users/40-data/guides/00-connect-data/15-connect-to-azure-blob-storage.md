@@ -108,7 +108,7 @@ This set-up allows you to have access to your full Azure storage account, with t
 
 ### Azure portal configuration
 
-1. **Option A (full account):** Go to **Security + networking > Shared access signature**. Select **Blob** service, **Service/Container/Object** types, and check **ONLY Read** and **List**.
+1. Go to **Security + networking > Shared access signature**. Select **Blob** service, **Service/Container/Object** types, and check **ONLY Read** and **List**.
 
    <p class="image-container-m">
    ![Azure portal: Shared access signature page with Blob service and Read/List permissions selected](./azure-portal-full-access-sas.png)
@@ -116,17 +116,11 @@ This set-up allows you to have access to your full Azure storage account, with t
 
 ### Set up in Renku
 
-1. Under **Data** section click on **+** button
-2. Go to the tab **+ Create a data connector** and select **azureblob**.
-3. Click on **Next**
-
-<p class="image-container-m">
-![image.png](./add-azureblob-10.png)
-</p>
+Proceed to steps 1 to 3 from the [Public access set-up](#set-up-in-renku).
 
 4. Set the following parameters in **Connection information**:
-   1. **Source path (XXXX)**: the `container_name` as specified in the storage account you are using (e.g. `my-container`). You can also mount a sub-folder by appending it to the bucket name with a slash, e.g. `my-container/sub-folder`.
-   2. **Account Name (XXXX)**: the storage account name, e.g. `elisabettestsa`
+   1. **Source path**: the `container_name` as specified in the storage account you are using (e.g. `my-container`). You can also mount a sub-folder by appending it to the bucket name with a slash, e.g. `my-container/sub-folder`.
+   2. **Account Name**: the storage account name, e.g. `elisabettestsa`
 
 5. Click on **Test connection** and if succeeds, click **Next**
 
@@ -141,7 +135,3 @@ This set-up allows you to have access to your full Azure storage account, with t
    4. **Read-only**: do not uncheck this box, or the data connector will not work properly.
 
 7. Click on **+ Add connector**.
-
-<p class="image-container-m">
-![image.png](./azureblob-30.png)
-</p>
