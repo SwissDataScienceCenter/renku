@@ -23,10 +23,9 @@ In the project page:
 1. Under **Sessions** section click on ➕ to add a new launcher
 2. Select **External environment**
 
-<p class="image-container-l">
-![image.png](./use-your-own-docker-image-for-renku-session-10.png)
-</p>
-
+  <p class="image-container-l">
+  ![image.png](./use-your-own-docker-image-for-renku-session-10.png)
+  </p>
 3. For the container image, provide an **image identifier**.
    - Some examples of image identifiers:
      - if the image is hosted on DockerHub:
@@ -36,7 +35,6 @@ In the project page:
        - `ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/base-image:0.0.8`
    - The image identifier should be in the format that works with `docker pull`
 4. If needed, fill in the **Advanced settings** to tell Renku how to run your image. The available fields are:
-
    - **Container Image**: the image identifier to use (e.g. `renku/renkulab-py:3.10-0.24.0`)
    - **Default URL**: the path appended to the session URL to open the front end (e.g. `/lab` for JupyterLab, `/rstudio` for RStudio)
    - **Mount Directory**: the directory inside the container where Renku mounts your project files (e.g. `/home/jovyan/work`)
@@ -45,28 +43,20 @@ In the project page:
    - **GID**: the group ID the container process runs as (e.g. `100`)
    - **Command ENTRYPOINT**: the shell entrypoint (e.g. `["sh", "-c"]`)
    - **Command Arguments**: the command passed to the entrypoint to start the front end server
-
    See [Example image configurations for common front ends](#example-image-configurations) below for ready-made values per front end.
-
 5. Select the **Resource class** that best fits your expected computational needs.
-
    :::tip
-
-   If the available resource classes are too small for your compute requirements, we can create a custom resource pool for you! See [Request a Custom Resource Pool](../../resource-pools-and-classes#request-custom-resource-pool).
-
+      If the available resource classes are too small for your compute requirements, we can create a custom resource pool for you! See [Request a Custom Resource Pool](../../resource-pools-and-classes#request-custom-resource-pool).
    :::
 
-6. Give your session launcher a **name**
-7. Click on **Add session launcher** button
+6. Give your session launcher a **name**.
+7. Click on **Add session launcher** button.
 
 :::info
-
 Note that you can always **modify your session launcher** by clicking on top of it on the project’s page, and using the menu on the right:
-
-<p class="image-container-l">
-![image.png](./edit-session-launcher.png)
-</p>
-
+  <p class="image-container-l">
+  ![image.png](./edit-session-launcher.png)
+  </p>
 :::
 
 ## Example image configurations for common front ends {#example-image-configurations}
