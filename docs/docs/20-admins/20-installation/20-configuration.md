@@ -241,7 +241,35 @@ The file above is just an example you will have to modify the options shown as f
   The example in the yaml snippet above is for a secret called `renku-build-docker-secret` located
   in the same namespace as where Renku is installed.
 
-- Label the node(s) you want to use for the builds with `renku.io/node-purpose: image-build`
+By default, only builds from public repositories are enabled. Building from
+internal or private repositories requires more work:
+
+- An dedicated registry to hold the images
+- Two additional secrets that will hold the credentials to access that
+  registry.
+
+Here is an example on how to configure that:
+
+```yaml
+dataService:
+  imageBuilders:
+    enabled: true
+    privateRepositoryBuilds:
+      enabled: true
+      outputPrivateImagePrefix: "harbor.dev.renku.ch/renku-private-build/"
+      pushPrivateSecretName: "renku-build-private-docker-secret"
+      pullPrivateSecretName: "renku-pull-private-docker-secret"
+```
+
+The same rules applies as for the public builds:
+
+- `outputPrivateImagePrefix` contains the Harbor domain and project name.
+  The prefix **must** be different from `outputImagePrefix`
+- `pushPrivateSecretName` is the secret to push the image created to the
+  dedicated registry
+- `pullPrivateSecretName` is the secret the pod will need to load the image.
+
+3. Label the node(s) you want to use for the builds with `renku.io/node-purpose: image-build`
 
 ### Build strategy
 
