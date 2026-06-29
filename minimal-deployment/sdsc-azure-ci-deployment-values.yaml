@@ -130,7 +130,7 @@ notebooks:
       name: harbor.dev.renku.ch/dockerhub_cache/renku/sidecars
   gitClone:
     image:
-      name: harbor.dev.renku.ch/dockerhub_cache/renku/git-clone
+      name: harbor.dev.renku.ch/dockerhub_cache/renku/cloner
   secretsMount:
     image:
       repository: harbor.dev.renku.ch/dockerhub_cache/renku/secrets-mount
