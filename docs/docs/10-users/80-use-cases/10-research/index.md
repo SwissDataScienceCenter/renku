@@ -22,14 +22,14 @@ If you work with data and need your analysis to be reproducible and shareable, R
 
 # What Renku gives you
 
-| Capability | What it means in practice |
-|---|---|
-| **Data connectors** | Mount S3, Azure Blob, SwitchDrive, SFTP, or DOI-based files directly into your session. No download, no hardcoded paths. |
-| **Automatic environments** | Create a session launcher from your GitHub or GitLab repository. Renku builds the image from your dependency file and every collaborator gets the same environment. |
-| **Persistent sessions** | Sessions run independently of your browser. Close your laptop, and come back tomorrow. Reconnect from any machine. |
-| **Access to supercompute** | Select a GPU resource class, including CSCS Alps, from the same dropdown as a standard session. No job scripts, no queue systems. |
-| **Shareable launch links** | Share a URL that opens your exact environment in a browser. |
-| **DOI-based inputs and Zenodo export** | Reference the exact dataset your analysis used, and export your results to Zenodo for a citable DOI, all from the same project page. |
+| Capability                             | What it means in practice                                                                                                                                           |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Data connectors**                    | Mount S3, Azure Blob, SwitchDrive, SFTP, or DOI-based files directly into your session. No download, no hardcoded paths.                                            |
+| **Automatic environments**             | Create a session launcher from your GitHub or GitLab repository. Renku builds the image from your dependency file and every collaborator gets the same environment. |
+| **Persistent sessions**                | Sessions run independently of your browser. Close your laptop, and come back tomorrow. Reconnect from any machine.                                                  |
+| **Access to supercompute**             | Select a GPU resource class, including CSCS Alps, from the same dropdown as a standard session. No job scripts, no queue systems.                                   |
+| **Shareable launch links**             | Share a URL that opens your exact environment in a browser.                                                                                                         |
+| **DOI-based inputs and Zenodo export** | Reference the exact dataset your analysis used, and export your results to Zenodo for a citable DOI, all from the same project page.                                |
 
 # The research and data science lifecycle
 

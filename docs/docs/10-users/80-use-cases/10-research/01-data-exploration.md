@@ -2,7 +2,6 @@
 title: Data Exploration & Exploratory Data Analysis
 ---
 
-
 # Your data ready in seconds
 
 ## Connect any cloud data source directly to your session: Renku mounts it for you
@@ -17,7 +16,7 @@ Renku eliminates this entirely. Instead of downloading data to wherever your ana
 
 Setting up the project [Exploring a 50-Year European Climate Archive Without a Single Download](https://renkulab.io/p/renku-team/exploring-a-50-year-european-climate-archive-without-a-single-download) demonstrates Renku capabilities for exploratory data analysis. We will set up three data connectors: a **public S3 bucket in AWS** hosting the [ERA5 reanalysis dataset](https://registry.opendata.aws/nsf-ncar-era5/), a **DOI-linked Zenodo** dataset 4-years subset for [daily total precipitation](https://zenodo.org/records/17098120) and a **private Polybox** read-write data connector protected with credentials with some station observations (syntehtically create for demonstration purposes, which you can recreate by uploading the original [dataset](https://drive.google.com/drive/folders/1mdpfrlShIGksz0Ent_POihU1kqMggD7o?usp=sharing) in your favorite data storage provider. At this initial stage, we usually do not have a code repository for version control, and we usually create notebooks on-the-fly. In Renku you can either store these notebooks directly in a data connector with read and write access, or you can download them directly to your computer from the session, and upload them after session restart to your local disk.
 
-  ![image.png](./dataexploration-project-setup.png)
+![image.png](./dataexploration-project-setup.png)
 
 **Create the project from scratch**
 
@@ -26,8 +25,8 @@ Setting up the project [Exploring a 50-Year European Climate Archive Without a S
 3. Click **Test connection** and a green confirmation appears immediately.
 4. Name the connector as `ERA5 Climate Archive` and set the mount point to `era5` (under Advanced Settings), then click **+ Add connector**.
 5. Repeat steps 1 to 4, for the other data sources:
-    -  **[ERA5 daily total precipitation](https://zenodo.org/records/17098120)**: In the **Link a data connector** tab paste the DOI of the Zenodo dataset, `https://doi.org/10.5281/zenodo.17098120`, and click on the **Link** button.
-    -  **Station observations**: Go to the **+ Create a data connector** tab, and select your storage provider (e.g. Polybox/Shared as explained in the [how-to guides](../../data/guides/connect-data)). Click on **Next** and provide connection details. After that, name the connector as `Field Observations 2020-2023` and set the mount point to `observations`.
+   - **[ERA5 daily total precipitation](https://zenodo.org/records/17098120)**: In the **Link a data connector** tab paste the DOI of the Zenodo dataset, `https://doi.org/10.5281/zenodo.17098120`, and click on the **Link** button.
+   - **Station observations**: Go to the **+ Create a data connector** tab, and select your storage provider (e.g. Polybox/Shared as explained in the [how-to guides](../../data/guides/connect-data)). Click on **Next** and provide connection details. After that, name the connector as `Field Observations 2020-2023` and set the mount point to `observations`.
 6. Create a global session launcher (e.g. Python Datascience - Jupyter), and click on **Launch**. The selected UI (e.g. JupyterLab) file browser shows all mount points populated.
 7. Create a notebook and begin analysis without any download, path configuration or `os.environ` juggling steps. You can find [here](https://drive.google.com/drive/folders/1mdpfrlShIGksz0Ent_POihU1kqMggD7o?usp=sharing) an example Notebook that you can upload in your session (e.g. by right-clicking on the UI file browser).
 
@@ -43,11 +42,11 @@ When Renku connects a session to a data source, it does not copy files to local 
 
 The practical consequence is immediate: a 10 TB raw data archive is accessible in your session within seconds, and your first `pd.read_csv()` or `xr.open_dataset()` call reads only the bytes it needs. You do not have to wait for a full transfer and you can browse the directory structure of massive archives at interactive speed. Lazy-loading libraries such as `xarray`, `dask`, and `arrow` pair naturally with this approach, giving you efficient access to petabyte-scale datasets.
 
-  ![image.png](./dataexploration-data-flow-diagram.png)
+![image.png](./dataexploration-data-flow-diagram.png)
 
 ### Your data never leaves your infrastructure
 
-Renku stores only the *connection configuration* of a data connector, including the endpoint address, container name, and optionally a reference to your credential secret, but never the data itself. When a session reads a file, the read request travels directly from the session environment to your storage provider. Sensitive institutional datasets, patient records under IRB approval, and proprietary data under NDA remain entirely within your storage infrastructure. Only a user with valid credentials can read them through a Renku session.
+Renku stores only the _connection configuration_ of a data connector, including the endpoint address, container name, and optionally a reference to your credential secret, but never the data itself. When a session reads a file, the read request travels directly from the session environment to your storage provider. Sensitive institutional datasets, patient records under IRB approval, and proprietary data under NDA remain entirely within your storage infrastructure. Only a user with valid credentials can read them through a Renku session.
 
 For public datasets accessed by DOI, no credentials are involved at all and Renku reads directly from the upstream repository with no intermediate storage.
 
@@ -55,12 +54,10 @@ For public datasets accessed by DOI, no credentials are involved at all and Renk
 
 One of the most misleading causes of broken analysis pipelines is hardcoded data paths. A notebook that reads `/home/username/Downloads/climate/era5_2024.nc` on one machine fails silently on another. Renku solves this by giving each data connector a fixed, configurable mount point inside the session, for example `/work/era5/`, regardless of who launched it. Your code references that path, and Renku guarantees the data is there.
 
-  ![image.png](./dataexploration-path-comparison.png)
-
-
+![image.png](./dataexploration-path-comparison.png)
 
 :::tip Remember
 
-The data connector stores only the *connection configuration*, not the data itself. Your raw files never leave your storage provider, instead Renku requests them on demand, exactly as a mounted NFS share works on an HPC cluster. Revoke the access credentials and Renku immediately loses access. There is no copy on Renku to worry about.
+The data connector stores only the _connection configuration_, not the data itself. Your raw files never leave your storage provider, instead Renku requests them on demand, exactly as a mounted NFS share works on an HPC cluster. Revoke the access credentials and Renku immediately loses access. There is no copy on Renku to worry about.
 
 :::
