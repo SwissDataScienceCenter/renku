@@ -60,7 +60,9 @@ describe("Session Launchers", () => {
     cy.getDataCy("launcher-type-selector-modal").should("be.visible");
     cy.getDataCy("launcher-option-session").click();
     cy.getDataCy("environment-kind-custom").click();
-    cy.getDataCy("custom-image-input").should("be.empty").type(sessionImage);
+    cy.get('.modal-body').scrollTo("top");
+    cy.getDataCy("custom-image-input").should("be.empty");
+    cy.getDataCy("custom-image-input").type(sessionImage);
 
     cy.getDataCy("session-launcher-field-args")
       .clear()
