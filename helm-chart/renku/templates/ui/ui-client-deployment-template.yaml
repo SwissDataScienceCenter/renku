@@ -26,6 +26,8 @@ spec:
         release: {{ .Release.Name }}
     spec:
       automountServiceAccountToken: {{ .Values.global.debug }}
+      initContainers:
+        {{- include "certificates.initContainer" . | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
           image: {{ .imageName }}
@@ -105,10 +107,13 @@ spec:
               value: {{ toJson .Values.ui.client.sessionClassEmailUs | quote }}
             - name: IMAGE_BUILDERS_ENABLED
               value: {{ .Values.dataService.imageBuilders.enabled | quote }}
+            - name: BUILD_PRIVATE_REPO_BUILDS_ENABLED
+              value: {{ .Values.dataService.imageBuilders.privateRepositoryBuilds.enabled | quote }}
             - name: METRICS_ENABLED
               value: {{ .Values.ui.client.prometheus.enabled | quote }}
             - name: LEGACY_SUPPORT
               value: {{ dict "enabled" false "supportLegacySessions" false | toJson | quote }}
+            {{- include "certificates.env.nodejs" . | nindent 12 }}
           livenessProbe:
             httpGet:
               path: /
@@ -125,6 +130,8 @@ spec:
 {{ toYaml .Values.ui.client.resources | indent 12 }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
+          volumeMounts:
+            {{- include "certificates.volumeMounts.system" . | nindent 12 }}
     {{- with .Values.ui.client.nodeSelector }}
       nodeSelector:
 {{ toYaml . | indent 8 }}
@@ -145,4 +152,6 @@ spec:
         - name: {{ . }}
       {{- end}}
       {{- end }}
+      volumes:
+        {{- include "certificates.volumes" . | nindent 8 }}
 {{- end }}
