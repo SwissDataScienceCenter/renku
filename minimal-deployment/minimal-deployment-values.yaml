@@ -31,12 +31,9 @@ dataService:
       cpu: 50m
       memory: 750Mi
   replicaCount: 1
-enableInternalGitlab: false
 enableV1Services: false
 gateway:
   replicaCount: 1
-gitlab:
-  enabled: false
 global:
   anonymousSessions:
     enabled: true
@@ -49,7 +46,6 @@ global:
     sentinel:
       enabled: false
 ingress:
-  className: webapprouting.kubernetes.azure.com
   enabled: true
   hosts:
     - <deployment-FQDN>
@@ -63,25 +59,6 @@ keycloakx:
       memory: 600Mi
     limits:
       memory: 600Mi
-notebooks:
-  oidc:
-    allowUnverifiedEmail: true
-  sessionAffinity:
-    nodeAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-        nodeSelectorTerms:
-          - matchExpressions:
-              - key: renku.io/node-purpose
-                operator: In
-                values:
-                  - user
-  sessionIngress:
-    className: webapprouting.kubernetes.azure.com
-  sessionTolerations:
-    - effect: NoSchedule
-      key: renku.io/dedicated
-      operator: Equal
-      value: user
 postgresql:
   primary:
     resources:

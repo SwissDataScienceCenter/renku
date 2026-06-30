@@ -1,8 +1,11 @@
 # Create an environment with custom packages installed
 
-If you’d like a set of custom packages to be installed and ready to go when you (or anyone else) launches a session in your project, you can take advantage of Renku’s **code based environments**.
+If you’d like a set of custom packages to be installed and ready to go when you (or anyone else)
+launches a session in your project, you can take advantage of Renku’s **code based environments**.
 
-With Renku code based environments, you can point Renku to a code repository that contains an environment definition file, such as a `environment.yml`, `requirements.txt`, or `pyproject.toml`, and Renku will build a custom environment for your session for you!
+With Renku code based environments, you can point Renku to a code repository that contains an
+environment definition file, such as an `environment.yml`, `requirements.txt`, `pyproject.toml`, or
+`renv.lock`, and Renku will build a custom environment for your session for you!
 
 This guide has 2 parts:
 
@@ -13,15 +16,7 @@ This guide has 2 parts:
 
 ## What kinds of environment definitions are supported?
 
-RenkuLab’s code-based environments currently supports creating **Python** environments. Support for more languages is coming soon!
-
-:::tip
-
-Are you working in R? Support for R is coming soon. For now, for working with R please see
-[installing packages on the fly in your
-session](install-packages-on-the-fly-in-your-session).
-
-:::
+RenkuLab’s code-based environments currently support creating **Python** and **R** environments.
 
 ### Defining a Python Environment
 
@@ -144,13 +139,51 @@ Note that poetry version `1.8.3` will be used.
 
 </details>
 
-## Defining an R Environment
+### Defining an R Environment with renv
 
-:::info
+Renku can build an R environment from an [`renv`](https://rstudio.github.io/renv/) lockfile.
+`renv` records the R packages used by your project in `renv.lock`; Renku uses this lockfile to
+restore those packages when building the session image.
 
-This feature is coming soon. For now, please see [R](./install-packages-on-the-fly-in-your-session). ).
+To use `renv` with a code-based environment:
 
-:::
+1. In your R project, install and initialize `renv` if you have not already done so:
+
+   ```r
+   install.packages("renv")
+   renv::init()
+   ```
+
+2. Install the packages your project needs as usual, for example:
+
+   ```r
+   install.packages(c("dplyr", "ggplot2"))
+   ```
+
+3. Write your analysis code that uses those packages.
+
+4. Snapshot the environment to update the lockfile:
+
+   ```r
+   renv::snapshot()
+   ```
+
+   :::warning
+
+   The `renv::snapshot()` command will pick up only the packages that are
+   installed _and_ used in your source code. If you install packages but do not use them (yet)
+   they will not be added by default.
+
+   :::
+
+5. Commit `renv.lock` at the root (top level) of the code repository. You should also commit the
+   files created by `renv` that are meant to be shared with the project, such as `.Rprofile` and
+   `renv/activate.R`.
+
+When Renku builds the image, it restores the packages recorded in `renv.lock`. If a package requires
+system libraries that are not available in the build image, the build can fail. In that case,
+consider using a custom Docker image instead; see [How to use your own docker image for a Renku
+session](use-your-own-docker-image-for-renku-session).
 
 ## How to create a code-based environment for your Renku session
 
@@ -162,7 +195,8 @@ repository](create-environment-with-custom-packages-private-code-repository).
 
 :::
 
-1. Make sure the code repository that contains your environment definition file is added to your Renku project.
+1. Make sure the code repository that contains your environment definition file is added to your
+   Renku project.
 2. Create a **new session launcher**
 3. Select the **Create from code** option
 
@@ -184,8 +218,10 @@ repository](create-environment-with-custom-packages-private-code-repository).
 
    :::
 
-5. Select the **Environment** **type** (Python, _more coming soon_)
-6. Select the **User interface** you’d like your session to have (VSCodium or Jupyterlab, _more coming soon_).
+5. Select the **Environment type**. Choose **Python** for Python environment definition files,
+   or **R** for repositories that use `renv.lock`.
+6. Select the **User interface** you’d like your session to have, such as VSCodium/JupyterLab
+   for Python environments or RStudio for R environments.
 7. Click **Next**
 8. Define the **name** of the Session Launcher
 9. Select the default **compute resources**
@@ -199,7 +235,9 @@ When the environment is built, you can launch your session.
 
 ## Updating a code-based environment
 
-1. When you want to make changes to your environment (add new packages), first update the environment definition file in the code repository where the environment is defined.
+1. When you want to make changes to your environment (add new packages), first
+   update the environment definition file in the code repository where the
+   environment is defined.
 2. Then, rebuild the environment in RenkuLab:
    1. Click on the session launcher to open the session launcher side panel.
    2. Navigate to the **Session Environment** section.

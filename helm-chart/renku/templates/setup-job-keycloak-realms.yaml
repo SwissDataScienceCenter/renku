@@ -109,6 +109,10 @@ spec:
               value: "false"
             - name: NOTEBOOKS_KC_CLIENT_OAUTH_FLOW
               value: "authorization_code"
+            - name: NOTEBOOKS_KC_CLIENT_EXTRA_REDIRECT_URIS
+              value: {{ .Values.notebooks.oidc.extraRedirectUris | quote }}
+            - name: NOTEBOOKS_KC_CLIENT_EXTRA_WEB_ORIGINS
+              value: {{ .Values.notebooks.oidc.extraWebOrigins | quote }}
             - name: SWAGGER_KC_CLIENT_ID
               value: swagger
             - name: SWAGGER_KC_CLIENT_PUBLIC

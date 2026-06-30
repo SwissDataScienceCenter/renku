@@ -10,8 +10,11 @@ import {
   deleteDataConnector,
 } from "../../support/utils/dataConnectors";
 import { login } from "../../support/utils/general";
+import { verifySearchIndexing } from "../../support/utils/search";
 
 const sessionId = ["dataConnectors", getRandomString()];
+const searchDataConnectorType = "type:DataConnector";
+const searchDataConnectorSlug = "slug:";
 
 describe("Data Connectors", () => {
   const randomString = getRandomString();
@@ -19,7 +22,7 @@ describe("Data Connectors", () => {
   const projectSlug = `project-for-data-connector-tests-${randomString}`;
   let userNamespace: string;
   let dataConnectorName: string;
-  let projectId: string;
+  let projectId: string | undefined;
   let groupName: string;
   let groupSlug: string;
 
@@ -43,7 +46,7 @@ describe("Data Connectors", () => {
   });
 
   after(() => {
-    deleteProject(projectId);
+    if (projectId) deleteProject(projectId);
   });
 
   beforeEach(() => {
@@ -111,19 +114,16 @@ describe("Data Connectors", () => {
     visitCurrentProject();
     cy.getDataCy("project-namespace-link").click();
 
+    // Open the data connector view and delete from the menu
     cy.getDataCy("data-connector-box")
       .find(`[data-cy=data-connector-name]`)
       .contains(dataConnectorName)
-      .click();
-
-    // Open the dropdown menu and click delete
-    cy.getDataCy("data-connector-menu-dropdown")
       .should("be.visible")
-      .scrollIntoView()
       .click();
-    cy.getDataCy("data-connector-delete").should("be.visible").click();
-
-    // Confirm deletion by typing the slug
+    cy.getDataCy("data-connector-view").within(() => {
+      cy.getDataCy("data-connector-menu-dropdown").click();
+      cy.getDataCy("data-connector-delete").click();
+    });
     cy.getDataCy("delete-confirmation-input").type(dataConnectorName);
     cy.getDataCy("delete-data-connector-modal-button").click();
 
@@ -171,11 +171,10 @@ describe("Data Connectors", () => {
       .click();
 
     // Delete the data connector
-    cy.getDataCy("data-connector-menu-dropdown")
-      .should("be.visible")
-      .scrollIntoView()
-      .click();
-    cy.getDataCy("data-connector-delete").should("be.visible").click();
+    cy.getDataCy("data-connector-view").within(() => {
+      cy.getDataCy("data-connector-menu-dropdown").click();
+      cy.getDataCy("data-connector-delete").click();
+    });
 
     // Confirm deletion by typing the slug
     cy.getDataCy("delete-confirmation-input").type(dataConnectorName);
@@ -228,11 +227,10 @@ describe("Data Connectors", () => {
       .click();
 
     // Delete the data connector
-    cy.getDataCy("data-connector-menu-dropdown")
-      .should("be.visible")
-      .scrollIntoView()
-      .click();
-    cy.getDataCy("data-connector-delete").should("be.visible").click();
+    cy.getDataCy("data-connector-view").within(() => {
+      cy.getDataCy("data-connector-menu-dropdown").click();
+      cy.getDataCy("data-connector-delete").click();
+    });
 
     // Confirm deletion by typing the slug
     cy.getDataCy("delete-confirmation-input").type(dataConnectorName);
@@ -251,13 +249,14 @@ describe("Data Connectors", () => {
       projectId,
     );
 
-    // ? Currently, data connectors newly linked might not appear immediately
     visitCurrentProject();
     cy.getDataCy("data-connector-box")
       .find(`[data-cy=data-connector-name]`)
       .contains(dataConnectorName)
       .click();
-    cy.getDataCy("data-connector-edit").click();
+    cy.getDataCy("data-connector-view").within(() => {
+      cy.getDataCy("data-connector-edit").click();
+    });
 
     // Edit the data connector
     const newName = `${dataConnectorName} edited`;
@@ -280,70 +279,54 @@ describe("Data Connectors", () => {
     cy.getDataCy("data-connector-edit-close-button").click();
 
     // Verify the data connector is present with the edited name
-    visitCurrentProject();
     cy.getDataCy("data-connector-box")
       .find(`[data-cy=data-connector-name]`)
       .contains(newName);
   });
 
-  it("Link an existing data connector to a project", () => {
-    // Create a data connector not linked to a project
+  it("Link and unlink an existing data connector to a project", () => {
+    // Create a data connector not linked to a project and check it has been indexed
     const dataConnectorIdentifier = `${userNamespace}/${dataConnectorName}`;
     createDataConnector(dataConnectorIdentifier);
+    verifySearchIndexing(
+      `${searchDataConnectorType} ${searchDataConnectorSlug}${dataConnectorName}`,
+      1,
+    );
 
-    // Now link the data connector to the project
+    // Link the data connector to the project
     visitCurrentProject();
     cy.getDataCy("add-data-connector").click();
-    cy.getDataCy("project-data-controller-mode-link").click();
-
-    // Enter the data connector identifier
-    cy.get("#data-connector-identifier")
+    cy.getDataCy("data-connector-search-input")
       .should("be.empty")
       .type(dataConnectorIdentifier);
-    cy.getDataCy("link-data-connector-button").click();
+    cy.getDataCy("data-connector-search-body")
+      .contains("[data-cy=link-data-connector-list-item]", dataConnectorName)
+      .find(`[data-cy=data-connector-link-button]`)
+      .click();
 
     // Verify the data connector is linked to the project
-    visitCurrentProject();
+    cy.getDataCy("project-data-connector-connect-header")
+      .find('button[data-bs-dismiss="modal"]')
+      .click();
     cy.getDataCy("data-connector-box")
       .find(`[data-cy=data-connector-name]`)
       .contains(dataConnectorName);
-  });
 
-  it("Unlink a data connector from a project", () => {
-    // Create a data connector not linked to a project
-    const dataConnectorIdentifier = `${userNamespace}/${dataConnectorName}`;
-    createDataConnector(dataConnectorIdentifier);
-
-    // Now link the data connector to the project
-    visitCurrentProject();
-    cy.getDataCy("add-data-connector").click();
-    cy.getDataCy("project-data-controller-mode-link").click();
-
-    // Enter the data connector identifier
-    cy.get("#data-connector-identifier")
-      .should("be.empty")
-      .type(dataConnectorIdentifier);
-    cy.getDataCy("link-data-connector-button").click();
-
-    // ? Currently, data connectors newly linked might not appear immediately
-    visitCurrentProject();
+    // Unlink the data connector from the project
     cy.getDataCy("data-connector-box")
       .find(`[data-cy=data-connector-name]`)
       .contains(dataConnectorName)
       .click();
-
-    cy.getDataCy("data-connector-title")
-      .should("be.visible")
-      .contains(dataConnectorName);
-
-    // Click the dropdown button to open the menu
-    cy.getDataCy("data-connector-menu-dropdown").should("be.visible").click();
-    cy.getDataCy("data-connector-unlink").should("be.visible").click();
-
+    cy.getDataCy("data-connector-view").within(() => {
+      cy.getDataCy("data-connector-title")
+        .should("be.visible")
+        .contains(dataConnectorName);
+      cy.getDataCy("data-connector-menu-dropdown").click();
+      cy.getDataCy("data-connector-unlink").click();
+    });
     cy.getDataCy("delete-data-connector-modal-button").click();
 
     // Verify the data connector is no longer linked to the project
-    visitCurrentProject();
     cy.getDataCy("data-connector-box")
       .contains(`[data-cy=data-connector-name]`, dataConnectorName)
       .should("not.exist");
@@ -360,47 +343,54 @@ describe("Data Connectors", () => {
       slug: otherProjectName,
       visibility: "private",
     }).then((response) => {
-      const otherProjectId = response.body.id;
+      const otherProjectId = response.body.id ?? "";
 
       // Defer-delete the other project (which will also delete the data connector)
       cy.defer(() => {
-        deleteProject(otherProjectId);
+        if (otherProjectId) deleteProject(otherProjectId);
       });
 
-      // Create a data connector in the other project
+      // Create a data connector in the other project and check it has been indexed
       const dataConnectorIdentifier = `${userNamespace}/${otherProjectName}/${dataConnectorName}`;
       createDataConnector(dataConnectorIdentifier, otherProjectId);
+      verifySearchIndexing(
+        `${searchDataConnectorType} ${searchDataConnectorSlug}${dataConnectorName}`,
+        1,
+      );
 
       // Navigate to the main project
       visitCurrentProject();
 
       // Link the data connector from the other project to the main project
       cy.getDataCy("add-data-connector").click();
-      cy.getDataCy("project-data-controller-mode-link").click();
-
-      cy.get("#data-connector-identifier")
+      cy.getDataCy("data-connector-search-input")
         .should("be.empty")
         .type(dataConnectorIdentifier);
-      cy.getDataCy("link-data-connector-button").click();
+      cy.getDataCy("data-connector-search-body")
+        .contains("[data-cy=link-data-connector-list-item]", dataConnectorName)
+        .find(`[data-cy=data-connector-link-button]`)
+        .click();
 
       // Verify the data connector is linked to the main project
-      visitCurrentProject();
+      cy.getDataCy("project-data-connector-connect-header")
+        .find('button[data-bs-dismiss="modal"]')
+        .click();
       cy.getDataCy("data-connector-box")
         .find(`[data-cy=data-connector-name]`)
         .contains(dataConnectorName)
         .click();
 
-      cy.getDataCy("data-connector-title")
-        .should("be.visible")
-        .contains(dataConnectorName);
-
       // Unlink the data connector from the main project
-      cy.getDataCy("data-connector-menu-dropdown").should("be.visible").click();
-      cy.getDataCy("data-connector-unlink").should("be.visible").click();
+      cy.getDataCy("data-connector-view").within(() => {
+        cy.getDataCy("data-connector-title")
+          .should("be.visible")
+          .contains(dataConnectorName);
+        cy.getDataCy("data-connector-menu-dropdown").click();
+        cy.getDataCy("data-connector-unlink").click();
+      });
       cy.getDataCy("delete-data-connector-modal-button").click();
 
       // Verify the data connector is no longer linked to the main project
-      visitCurrentProject();
       cy.getDataCy("data-connector-box")
         .contains(`[data-cy=data-connector-name]`, dataConnectorName)
         .should("not.exist");
@@ -423,12 +413,13 @@ describe("Data Connectors", () => {
       .contains(dataConnectorName)
       .click();
 
-    cy.getDataCy("data-connector-title")
-      .should("be.visible")
-      .contains(dataConnectorName);
-
     // Edit the data connector to transfer it to the group
-    cy.getDataCy("data-connector-edit").click();
+    cy.getDataCy("data-connector-view").within(() => {
+      cy.getDataCy("data-connector-title")
+        .should("be.visible")
+        .contains(dataConnectorName);
+      cy.getDataCy("data-connector-edit").click();
+    });
 
     // Change the owner to the group
     cy.getDataCy("data-controller-namespace-input").click();
@@ -467,33 +458,41 @@ describe("Data Connectors", () => {
     // Create a data connector owned by the group
     const dataConnectorIdentifier = `${groupSlug}/${dataConnectorName}`;
     createDataConnector(dataConnectorIdentifier);
+    verifySearchIndexing(
+      `${searchDataConnectorType} ${searchDataConnectorSlug}${dataConnectorName}`,
+      1,
+    );
 
     // Navigate to the user's project
     visitCurrentProject();
 
     // Link the group data connector to the user's project
     cy.getDataCy("add-data-connector").click();
-    cy.getDataCy("project-data-controller-mode-link").click();
-
-    // Enter the data connector identifier
-    cy.get("#data-connector-identifier")
+    cy.getDataCy("data-connector-search-input")
       .should("be.empty")
       .type(dataConnectorIdentifier);
-    cy.getDataCy("link-data-connector-button").click();
+    cy.getDataCy("data-connector-search-body")
+      .contains("[data-cy=link-data-connector-list-item]", dataConnectorName)
+      .find(`[data-cy=data-connector-link-button]`)
+      .click();
 
     // Verify the data connector is linked to the project
+    cy.getDataCy("project-data-connector-connect-header")
+      .find('button[data-bs-dismiss="modal"]')
+      .click();
     cy.getDataCy("data-connector-box")
       .find(`[data-cy=data-connector-name]`)
       .contains(dataConnectorName)
       .click();
 
-    cy.getDataCy("data-connector-title")
-      .should("be.visible")
-      .contains(dataConnectorName);
-
     // Unlink the data connector from the project
-    cy.getDataCy("data-connector-menu-dropdown").should("be.visible").click();
-    cy.getDataCy("data-connector-unlink").should("be.visible").click();
+    cy.getDataCy("data-connector-view").within(() => {
+      cy.getDataCy("data-connector-title")
+        .should("be.visible")
+        .contains(dataConnectorName);
+      cy.getDataCy("data-connector-menu-dropdown").click();
+      cy.getDataCy("data-connector-unlink").click();
+    });
     cy.getDataCy("delete-data-connector-modal-button").click();
 
     // Verify the data connector is no longer linked to the project

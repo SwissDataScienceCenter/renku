@@ -103,7 +103,7 @@ describe("Session Launchers", () => {
       sessionMountDirectory,
     );
     cy.getDataCy("session-view-port").contains(sessionPort);
-    cy.getDataCy("session-view-title").should("be.visible");
+    cy.getDataCy("session-launcher-title").should("be.visible");
     cy.getDataCy("session-view-uid").contains(sessionUid);
     cy.getDataCy("session-view-working-directory").contains(
       sessionWorkingDirectory,
@@ -149,7 +149,7 @@ describe("Session Launchers", () => {
       .click();
 
     // Delete session launcher from the properties view
-    cy.getDataCy("session-view-title").should("be.visible");
+    cy.getDataCy("session-launcher-title").should("be.visible");
     cy.getDataCy("session-launcher-menu-dropdown").click();
     cy.getDataCy("session-view-menu-delete").click();
     cy.getDataCy("delete-session-launcher-title").should("be.visible");
@@ -248,7 +248,7 @@ describe("Session Launchers", () => {
         .click();
 
       // Open edit resource class dialog
-      cy.getDataCy("session-view-title").should("be.visible");
+      cy.getDataCy("session-launcher-title").should("be.visible");
       cy.getDataCy("session-view-resource-class-edit-button").click();
 
       // Wait for the dialog to open

@@ -5,6 +5,12 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
+## Upgrading to Renku 2.18.0
+
+* DELETE `enableInternalGitlab`, it is now not possible to configure Renku to use an "internal" GitLab instance. Admins can set up a GitLab integration instead.
+* NEW `dataService.imageBuilders.privateRepositoryBuilds.enabled` feature flag to enable building images from private code repositories (defaults to `false`)
+* NEW `dataService.imageBuilders.privateRepositoryBuilds` other configuration options for building images from private code repositories.
+
 ## Upgrading to Renku 2.15.0
 
 * DELETE `global.gateway.cliClientSecret` the client is public and has no secret in Keycloak 25.
