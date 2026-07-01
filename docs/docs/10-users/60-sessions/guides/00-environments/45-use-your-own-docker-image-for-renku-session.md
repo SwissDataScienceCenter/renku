@@ -23,80 +23,40 @@ In the project page:
 1. Under **Sessions** section click on ➕ to add a new launcher
 2. Select **External environment**
 
-<p class="image-container-l">
-![image.png](./use-your-own-docker-image-for-renku-session-10.png)
-</p>
-
+  <p class="image-container-l">
+  ![image.png](./use-your-own-docker-image-for-renku-session-10.png)
+  </p>
 3. For the container image, provide an **image identifier**.
    - Some examples of image identifiers:
      - if the image is hosted on DockerHub:
        - `renku/renkulab-py:3.10-0.24.0`
        - `continuumio/anaconda3:2024.06-1`
-     - if the image is hosted on gitlab.renkulab.io:
-       - `registry.renkulab.io/laura.kinkead1/n2o-pathway-analysis:980f4a3`
+     - if the image is hosted on GitHub:
+       - `ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/base-image:0.0.8`
    - The image identifier should be in the format that works with `docker pull`
-4. Depending on the image you’re using, you’ll need to fill in the **Advanced settings**. See the information below for how to fill it in:
-
-   :::danger
-
-   This part is important! Please read carefully.
-
-   :::
-   - I’m using an image created by **Renku** and that is **newer** than version 0.24.0 (the version number is in the image tag).
-
-     The only additional parameter you have to provide in the session launcher creation dialog is the `Default URL` and this should be set to `/lab`.
-
-     ![image.png](./use-your-own-docker-image-for-renku-session-30.png)
-
-   - I’m using an image created by **Renku** and that is **older** than version 0.24.0 (the version number is in the image tag).
-
-     :::note
-
-     If you are working with an image in a launcher where the **launcher was created before November 27, 2024**, the launcher was migrated automatically with the new Renku release to include the necessary advanced settings. The instructions below apply only to new session launchers you are creating for the first time.
-
-     :::
-
-     For Renku base images of version 0.24.0 or older (or images that are based on these images), you have 2 options:
-     1. **Option 1:** Upgrade your base image to 0.25.0 or newer. This can be done by going into the settings of the Renku 1.0 project that builds the image, and accepting the updates. Or, directly update your Dockerfile to refer to the newer base image.
-     2. **Option 2:** Provide additional configuration in the session launcher. Here is an example configuration needed to run a Renku base image of version 0.24.0 or older:
-        - **Container Image**: `renku/renkulab-py:3.10-0.24.0` or whatever image you are trying to use
-        - **Default URL**: `/lab` (or `/rstudio` if you are using `renku/renkulab-r` or `renku/renkulab-bioc`).
-        - **Mount Directory**: `/home/jovyan/work`
-        - **Working Directory**: `/home/jovyan/work`
-        - **UID**: `1000`
-        - **GID**: `100`
-        - **Command ENTRYPOINT**: `["sh", "-c"]`
-        - **Command Arguments**:
-
-          ```json
-          [
-            "/entrypoint.sh jupyter server --ServerApp.ip=0.0.0.0 --ServerApp.port=8888 --ServerApp.base_url=$RENKU_BASE_URL_PATH --ServerApp.token=\"\" --ServerApp.password=\"\" --ServerApp.allow_remote_access=true --ContentsManager.allow_hidden=true --ServerApp.allow_origin=* --ServerApp.root_dir=\"/home/jovyan/work\""
-          ]
-          ```
-
-   - I’m using an image created **somewhere else** (not by Renku).
-
-     You need to fill in the **Advanced Settings** for your image to work on RenkuLab. See [Example image configurations for common front ends](#example-image-configurations) below.
-
+4. If needed, fill in the **Advanced settings** to tell Renku how to run your image. The available fields are:
+   - **Container Image**: the image identifier to use (e.g. `renku/renkulab-py:3.10-0.24.0`)
+   - **Default URL**: the path appended to the session URL to open the front end (e.g. `/lab` for JupyterLab, `/rstudio` for RStudio)
+   - **Mount Directory**: the directory inside the container where Renku mounts your project files (e.g. `/home/jovyan/work`)
+   - **Working Directory**: the directory the session opens in (e.g. `/home/jovyan/work`)
+   - **UID**: the user ID the container process runs as (e.g. `1000`)
+   - **GID**: the group ID the container process runs as (e.g. `100`)
+   - **Command ENTRYPOINT**: the shell entrypoint (e.g. `["sh", "-c"]`)
+   - **Command Arguments**: the command passed to the entrypoint to start the front end server
+   See [Example image configurations for common front ends](#example-image-configurations) below for ready-made values per front end.
 5. Select the **Resource class** that best fits your expected computational needs.
-
    :::tip
-
-   If the available resource classes are too small for your compute requirements, we can create a custom resource pool for you! See [Request a Custom Resource Pool](../../resource-pools-and-classes#request-custom-resource-pool).
-
+      If the available resource classes are too small for your compute requirements, we can create a custom resource pool for you! See [Request a Custom Resource Pool](../../resource-pools-and-classes#request-custom-resource-pool).
    :::
 
-6. Give your session launcher a **name**
-7. Click on **Add session launcher** button
+6. Give your session launcher a **name**.
+7. Click on **Add session launcher** button.
 
 :::info
-
 Note that you can always **modify your session launcher** by clicking on top of it on the project’s page, and using the menu on the right:
-
 <p class="image-container-l">
 ![image.png](./edit-session-launcher.png)
 </p>
-
 :::
 
 ## Example image configurations for common front ends {#example-image-configurations}

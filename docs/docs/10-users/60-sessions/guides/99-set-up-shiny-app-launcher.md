@@ -2,9 +2,7 @@
 
 :::info
 
-If you have a shiny app that does not need any additional R packages, this how-to guide will configure that Shiny app to run in a Renku session (using R version 4.2.0).
-
-If your Shiny app requires additional R packages, please refer instead to [How to create a custom environment and launcher for a Shiny app](/docs/users/sessions/guides/create-custom-environment-and-launcher-for-shiny-app).
+This how-to guide will configure a Shiny app to run in a Renku session (using R version 4.2.0).
 
 :::
 
