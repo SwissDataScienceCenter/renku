@@ -81,3 +81,7 @@ img {
 .image-container-l {
   max-width: 85%;
 }
+
+.image-container-xl {
+  max-width: 100%;
+}
