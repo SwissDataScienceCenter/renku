@@ -98,7 +98,7 @@ Continue with steps 5 to 7 as presented in the [public access set-up](#set-up-in
 
 :::warning
 
-You will need to share the sas_url value with your collaborators since they will be requested to enter the credentials. This variable will be stored as a user secret.
+You will need to share the sas_url value with your collaborators since they will be requested to enter the credentials. This will be stored as a user secret. Note also that SAS links expire and there is no automated process for renewing them, so you will need to generate a new one manually.
 
 :::
 
