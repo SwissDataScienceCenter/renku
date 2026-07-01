@@ -61,6 +61,12 @@ This set-up allows you to provide access to data publicly without requiring auth
 ![image.png](./azureblob-30.png)
 </p>
 
+:::warning
+
+If you set up an Azure blob for public access from a public project, anyone who
+can see your project may be able to pull data from the storage account. This
+could incurr egress costs on your Azure subsciption.
+
 ## Restricted access
 
 Use this option to share data securely with your collaborators and stakeholders, controlling their access rights (e.g. read-only, write and delete files).
