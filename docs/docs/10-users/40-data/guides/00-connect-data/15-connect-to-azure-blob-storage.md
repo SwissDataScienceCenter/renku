@@ -18,14 +18,14 @@ This set-up allows you to provide access to data publicly without requiring auth
 
 1. **Account level:** Go to **Settings > Configuration** and set **Allow Blob anonymous access** to **Enabled**.
 
-   <p class="image-container-m">
+   <p class="image-container-xl">
    ![Azure portal: Allow Blob anonymous access setting](./azure-portal-public-account-config.png)
    </p>
 
 2. **Container level:** Go to **Data storage > Containers**, select your container, and click **Change access level**.
    - Select **Container**, which allows anonymously listing files and downloading.
 
-   <p class="image-container-m">
+   <p class="image-container-xl">
    ![Azure portal: Change access level dialog with Container option selected](./azure-portal-public-container-access.png)
    </p>
 
@@ -35,7 +35,7 @@ This set-up allows you to provide access to data publicly without requiring auth
 2. Go to the tab **+ Create a data connector** and select **azureblob**.
 3. Click on **Next**
 
-<p class="image-container-m">
+<p class="image-container-s">
 ![image.png](./add-azureblob-10.png)
 </p>
 
@@ -45,7 +45,7 @@ This set-up allows you to provide access to data publicly without requiring auth
 
 5. Click on **Test connection** and if succeeds, click **Next**
 
-<p class="image-container-m">
+<p class="image-container-s">
 ![image.png](./azureblob-20.png)
 </p>
 
@@ -57,7 +57,7 @@ This set-up allows you to provide access to data publicly without requiring auth
 
 7. Click on **+ Add connector**.
 
-<p class="image-container-m">
+<p class="image-container-s">
 ![image.png](./azureblob-30.png)
 </p>
 
@@ -69,14 +69,14 @@ Use this option to share data securely with your collaborators and stakeholders,
 
 1. Go to **Data storage > Containers > [Your container] > Settings > Shared access tokens**. Select the desired permissions (e.g. **Read** and **List** for read-only access, select on top **Add**, **Create** and **Write** for read and write access, avoid **Delete** if you want an append/upload-only environment).
 
-   <p class="image-container-m">
+   <p class="image-container-xl">
    ![Azure portal: Shared access tokens permissions panel](./azure-portal-restricted-sas-permissions.png)
    </p>
 
 2. Click on the button **Generate SAS token and URL**.
 3. Copy the generated **SAS URL** field.
 
-   <p class="image-container-m">
+   <p class="image-container-xl">
    ![Azure portal: Generated SAS URL field to copy](./azure-portal-restricted-sas-url.png)
    </p>
 
@@ -110,7 +110,7 @@ This set-up allows you to have access to your full Azure storage account, with t
 
 1. Go to **Security + networking > Shared access signature**. Select **Blob** service, **Service/Container/Object** types, and check **ONLY Read** and **List**.
 
-   <p class="image-container-m">
+   <p class="image-container-xl">
    ![Azure portal: Shared access signature page with Blob service and Read/List permissions selected](./azure-portal-full-access-sas.png)
    </p>
 
@@ -124,7 +124,7 @@ Proceed to steps 1 to 3 from the [Public access set-up](#set-up-in-renku).
 
 5. Click on **Test connection** and if succeeds, click **Next**
 
-<p class="image-container-m">
+<p class="image-container-s">
 ![image.png](./azureblob-20.png)
 </p>
 
