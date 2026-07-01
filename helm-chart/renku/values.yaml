@@ -1391,6 +1391,20 @@ secretsStorage:
   tolerations: []
   affinity: {}
 
+mcpServer:
+  enabled: false
+  image:
+    repository: renku/renku-mcp-server
+    tag: "latest"
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 80
+  replicaCount: 1
+  podAnnotations: {}
+  resources: {}
+  nodeSelector: {}
+
 podSecurityContext: {}
 securityContext:
   runAsUser: 1000

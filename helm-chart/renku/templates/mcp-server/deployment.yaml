@@ -1,0 +1,80 @@
+{{- if .Values.mcpServer.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "renku.fullname" . }}-mcp-server
+  labels:
+    app: renku-mcp-server
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.mcpServer.replicaCount }}
+  selector:
+    matchLabels:
+      app: renku-mcp-server
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: renku-mcp-server
+        release: {{ .Release.Name }}
+      {{- with .Values.mcpServer.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        {{- include "certificates.initContainer" . | nindent 8 }}
+      containers:
+        - name: mcp-server
+          image: "{{ .Values.mcpServer.image.repository }}:{{ .Values.mcpServer.image.tag }}"
+          imagePullPolicy: {{ .Values.mcpServer.image.pullPolicy }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          ports:
+            - name: http
+              containerPort: 9000
+              protocol: TCP
+          env:
+            - name: MCP_TRANSPORT
+              value: "streamable-http"
+            - name: MCP_HOST
+              value: "0.0.0.0"
+            - name: MCP_PORT
+              value: "9000"
+            - name: RENKU_BASE_URL
+              value: {{ (printf "%s://%s" (include "renku.http" .) .Values.global.renku.domain) | quote }}
+            - name: KEYCLOAK_ISSUER_URL
+              value: {{ include "renku.keycloakIssuerUrl" . | quote }}
+            {{- include "certificates.env.python" $ | nindent 12 }}
+          livenessProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 6
+          readinessProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 2
+            failureThreshold: 2
+          startupProbe:
+            tcpSocket:
+              port: http
+            periodSeconds: 5
+            failureThreshold: 60
+          resources:
+            {{- toYaml .Values.mcpServer.resources | nindent 12 }}
+          volumeMounts:
+            {{- include "certificates.volumeMounts.system" . | nindent 12 }}
+      volumes:
+        {{- include "certificates.volumes" . | nindent 8 }}
+    {{- with .Values.mcpServer.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+{{- end }}
