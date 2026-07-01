@@ -38,7 +38,7 @@
     "remark-retext": "^6.0.1",
     "retext-english": "^5.0.0",
     "retext-spell": "^6.1.0",
-    "typescript": "~6.0.2",
+    "typescript": "~6.0.3",
     "unified": "^11.0.5",
     "unified-engine": "^11.2.2"
   },
