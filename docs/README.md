@@ -59,8 +59,7 @@ builds and deploys when changes are made in the repo.
 
   .image-container-s,
   .image-container-m,
-  .image-container-l
-  .image-container-xl {
+  .image-container-l .image-container-xl {
     margin: auto;
     text-align: center; /* Center the image horizontally when its width is narrower than the max-width*/
   }
