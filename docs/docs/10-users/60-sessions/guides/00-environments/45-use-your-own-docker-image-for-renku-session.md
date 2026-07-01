@@ -54,9 +54,9 @@ In the project page:
 
 :::info
 Note that you can always **modify your session launcher** by clicking on top of it on the project’s page, and using the menu on the right:
-  <p class="image-container-l">
-  ![image.png](./edit-session-launcher.png)
-  </p>
+<p class="image-container-l">
+![image.png](./edit-session-launcher.png)
+</p>
 :::
 
 ## Example image configurations for common front ends {#example-image-configurations}
