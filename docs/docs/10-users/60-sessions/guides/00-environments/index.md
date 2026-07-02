@@ -1,10 +1,16 @@
-# Add a session launcher to your project
+# Add a launcher to your project
 
-A session launcher defines the environment and compute resources for a Renku session. The basic steps for creating a session launcher are:
+A launcher defines the environment and compute resources for work on your Renku project. Renku supports two launcher types:
 
-1. In the **Sessions** section of the project page, click on ➕ to add a new session launcher.
-2. Choose and configure an **environment** (see [Creating an environment for your session](#creating-an-environment-for-your-session) below).
-3. Select the **Resource class** that best fits your expected computational needs.
+- **Session** — an interactive environment for coding and data exploration. See [Creating an environment for your session](#creating-an-environment-for-your-session) below.
+- **Job** — a background run that executes a command you configure. See [How to create a job launcher](../jobs/create-a-job-launcher).
+
+The basic steps for creating a launcher are:
+
+1. In the **Sessions** section of the project page, click on ➕ to add a new launcher.
+2. Choose **Session** or **Job** in the type selector.
+3. Choose and configure an **environment** (see below for session launchers; job launchers require a custom environment).
+4. Select the **Resource class** that best fits your expected computational needs.
 
    :::tip
 
