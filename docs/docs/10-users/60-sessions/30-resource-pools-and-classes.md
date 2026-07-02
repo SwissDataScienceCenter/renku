@@ -1,6 +1,6 @@
 # Resource Pools & Classes
 
-The compute resource available to Renku users are determined by the **resources pools** the user has access to. To specify the resources for a project’s session launcher, you select a **resource class** from any of the resource pools available to you.
+The compute resource available to Renku users are determined by the **resources pools** the user has access to. To specify the resources for a project’s launcher, you select a **resource class** from any of the resource pools available to you. The same resource pools and classes apply to interactive [Sessions](session) and background [Jobs](job).
 
 ## Resource Pools
 
@@ -8,7 +8,7 @@ A **resource pool** is a total resource quota, a set of users who are allowed to
 
 - **Resources:** For example, a resource pool may be configured for 160 CPUs, 1024 GB RAM, and 16 GPUs.
 - **Users:** There is no limit to how many users can be added to a resource pool. And conversely, a user may be granted access to any number of resource pools. All resource pools the user has access to show up in their resource selector when they configure their RenkuLab session.
-- **Culling times:** You can customize the max idle time for your resource pool(s). For example, in the Public resource pool (the default resource pool available to all RenkuLab users), sessions auto-pause after 2 hours of idle time, and shut down after 2 weeks. You may customize these thresholds to be longer or shorter.
+- **Culling times:** You can customize the max idle time for your resource pool(s). For example, in the Public resource pool (the default resource pool available to all RenkuLab users), sessions auto-pause after 2 hours of idle time, and shut down after 2 weeks. You may customize these thresholds to be longer or shorter. Jobs are not paused for idle time in the same way as sessions, but completed and errored jobs are removed from the interface after a retention period (see [Job](job)).
 
 ## Resource Classes
 
@@ -18,7 +18,7 @@ For example, a resource class may be:
 
 - 12 CPUs, 80 GB RAM, 2 GPUs, 50 GB _default_ disk, 500 GB _max_ disk
 
-As users run sessions, their session resources (the resource class the session is using) comes out of the quota on the resource pool. If the resource pool’s quota has been reached, users won’t be able to start any more sessions in that resource pool (but they may run sessions in other resource pools).
+As users run sessions and jobs, their compute resources (the resource class in use) come out of the quota on the resource pool. If the resource pool’s quota has been reached, users won’t be able to start more sessions or jobs in that resource pool (but they may use other resource pools they have access to).
 
 <p class="image-container-l">
 ![Untitled](./resource-pools-and-classes-10.png)

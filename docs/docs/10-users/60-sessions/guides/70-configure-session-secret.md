@@ -1,6 +1,8 @@
 # Configure a session secret
 
-Session secrets help you connect to protected resources, such as databases or external compute systems, from a Renku session in a standardized and shareable manner. Collaborating with secrets is easy too: configure a single session secret slot to ensure that the secret shows up the same way for everyone, and each person enters their own value.
+Session secrets help you connect to protected resources, such as databases or external compute systems, from a Renku session or job in a standardized and shareable manner. Collaborating with secrets is easy too: configure a single session secret slot to ensure that the secret shows up the same way for everyone, and each person enters their own value.
+
+When you submit a [Job](../job), Renku uses the same session secret slots as when you launch a [Session](../session).
 
 ## **How to add a session secret slot to the project**
 
@@ -51,7 +53,7 @@ There are a few ways to get to the screen above.
 
 1. If you just created a session secret slot, you will see the screen above directly as the next step after creating the session secret slot.
 
-1. When you launch a session on a project that has session secrets slots, you will be prompted during session launch to enter secrets for the slots.
+1. When you launch a session or submit a job on a project that has session secrets slots, you will be prompted during launch or submit to enter secrets for the slots.
 
 <p class="image-container-l">
 ![image.png](./configure-session-secret-30.png)
