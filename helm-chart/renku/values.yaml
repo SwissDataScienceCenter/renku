@@ -244,6 +244,9 @@ alerts:
     ## Client secret for the Alertmanager webhook OIDC client
     ## Will be auto-generated if not provided
     clientSecret:
+## Apps configuration
+apps:
+  enabled: false
 ## Logging configuration (applied to all services that support it)
 logging:
   ## Possible values are "json" and "plain". This defaults to "plain" if it's not set or any other value is provided.
@@ -844,8 +847,7 @@ dlf-chart:
     enabled: false
   dataset-operator-chart:
     enabled: true
-csi-rclone:
-  {}
+csi-rclone: {}
   # This section is only relevant if you are installing csi-rclone as part of Renku
   ## Name of the csi storage class to use for RClone/Cloudstorage. Should be unique per cluster.
   # storageClassName: csi-rclone
@@ -1287,8 +1289,7 @@ dataService:
     ## The name of the BuildStrategy to use for image builds.
     strategyName: renku-buildpacks-v3
     ## Configuration overrides for specific target platforms
-    platformOverrides:
-      {}
+    platformOverrides: {}
       # linux/arm64:
       #   builderImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/cuda-selector:0.8.0"
       #   runImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/cuda-run-image:0.8.0"
