@@ -25,6 +25,7 @@ There are multiple ways you can define a python environment for your Renku sessi
 - [Miniconda (`environment.yml`) (recommended)](#miniconda-environmentyml-recommended)
 - [Pip (`requirements.txt`)](#pip-requirementstxt)
 - [Poetry (`pyproject.toml`)](#poetry-pyprojecttoml)
+- [uv (`pyproject.toml` and `uv.lock`)](#uv-pyprojecttoml-and-uvlock)
 
 See below for more details on how to use each of these systems.
 
@@ -135,6 +136,38 @@ Note that poetry version `1.8.3` will be used.
     [build-system]
     requires = ["poetry-core"]
     build-backend = "poetry.core.masonry.api"
+    ```
+
+</details>
+
+#### uv (`pyproject.toml` and `uv.lock`)
+
+Include a `pyproject.toml` file and a `uv.lock` file at the root (top level) of your code repository. The buildpack will invoke `uv` to install the dependencies recorded in `uv.lock`.
+
+If you do not have a `uv.lock` file yet, you can generate one by running `uv lock` in your local project.
+
+:::info
+
+Renku sets the environment variable `UV_PROJECT_ENVIRONMENT` to `$RENKU_WORKING_DIR/.venv` in the session. This means the regular `python` command has access to everything installed with `uv add`, and you do not need to pass the `--active` flag to `uv` commands.
+
+:::
+
+<details>
+<summary>Here is an example `pyproject.toml`:</summary>
+
+    ```toml
+    [project]
+    name = "my-renku-project"
+    version = "0.1.0"
+    description = ""
+    readme = "README.md"
+    requires-python = ">=3.12"
+    dependencies = [
+        "numpy>=2.2.2",
+        "pandas>=2.2.3",
+        "jupyterlab>=4.3.5",
+        "scipy>=1.15.1",
+    ]
     ```
 
 </details>
