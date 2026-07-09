@@ -105,6 +105,8 @@ spec:
               value: {{ toJson .Values.ui.client.sessionClassEmailUs | quote }}
             - name: IMAGE_BUILDERS_ENABLED
               value: {{ .Values.dataService.imageBuilders.enabled | quote }}
+            - name: APPS_ENABLED
+              value: {{ .Values.apps.enabled | quote }}
             - name: METRICS_ENABLED
               value: {{ .Values.ui.client.prometheus.enabled | quote }}
             - name: LEGACY_SUPPORT
