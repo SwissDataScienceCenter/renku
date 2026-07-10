@@ -7,7 +7,7 @@ For the purposes of Renku, a code repository is a git-based collection of code f
 
 When a code repository is connected to a [Project](../projects/projects),
 the repository is automatically cloned into the
-[Session](../sessions/session), where the files can be accessed and run.
+[Session](../compute/session), where the files can be accessed and run.
 
 ## Access to Code Repositories from RenkuLab
 
