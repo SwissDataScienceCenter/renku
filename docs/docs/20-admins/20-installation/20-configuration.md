@@ -264,10 +264,12 @@ dataService:
 The same rules applies as for the public builds:
 
 - `outputPrivateImagePrefix` contains the Harbor domain and project name.
-  The prefix **must** be different from `outputImagePrefix`
+  The prefix **must** be different from `outputImagePrefix`.
 - `pushPrivateSecretName` is the secret to push the image created to the
-  dedicated registry
+  dedicated registry. The corresponding robot account should have the
+  `list`, `pull`, `push` and `read` permissions.
 - `pullPrivateSecretName` is the secret the pod will need to load the image.
+  The corresponding robot account should only have the `pull` permission.
 
 3. Label the node(s) you want to use for the builds with `renku.io/node-purpose: image-build`
 
