@@ -51,6 +51,11 @@ If a job is still **Starting** or **Running**, you can cancel it:
 
 When a job has **Completed** or **Errored**, click **Dismiss** to remove it from your project and dashboard.
 
+<p class="image-container-l">
+![JobLauncher](./job-monitoring-40.png)
+</p>
+
+
 :::warning
 
 Dismissing a job is permanent. You will not be able to view that job or its logs again in RenkuLab after dismissing it.
@@ -58,9 +63,8 @@ Dismissing a job is permanent. You will not be able to view that job or its logs
 :::
 
 <p class="image-container-l">
-![JobLauncher](./job-monitoring-40.png)
+![JobLauncher](./job-monitoring-50.png)
 </p>
-<!-- TODO: screenshot monitor-cancel-and-dismiss-jobs-50.png — Completed job with Dismiss action -->
 
 ## Multiple jobs at once
 
