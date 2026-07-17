@@ -57,7 +57,7 @@ tmux
 python training.py
 ```
 
-N.b., if your session launcher environment was built from code on RenkuLab, `tmux` will be available. If the environment is built elsewhere, you may need to install `tmux` yourself.
+If your session launcher environment was built from code on RenkuLab, `tmux` will be available. If the environment is built elsewhere, you may need to install `tmux` yourself.
 
 ## Reconnect
 
