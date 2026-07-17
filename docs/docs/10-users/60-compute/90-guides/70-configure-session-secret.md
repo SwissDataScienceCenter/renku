@@ -38,7 +38,7 @@ Secrets you enter on Renku are only saved for you. Secrets are not shared with o
 
 You can either:
 
-- **Provide a new secret value**: You can enter the for secret you want to use for the secret slot.
+- **Provide a new secret value**: You can enter the value of secret you want to use for the secret slot.
 - **Use an existing secret value**: This lets you reuse a secret you have already saved in Renku for this secret slot.
 
   :::tip

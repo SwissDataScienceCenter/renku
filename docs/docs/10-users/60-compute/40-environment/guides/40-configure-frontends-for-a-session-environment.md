@@ -48,7 +48,7 @@ In this section, you can see example configurations for commonly used images. If
 ]
 ```
 
-### Rstudio
+### RStudio
 
 🚧 _Not yet available_
 
