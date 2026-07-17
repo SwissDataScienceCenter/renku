@@ -22,6 +22,14 @@ Project's launchers are usable to everyone who can see the project. Anyone with 
 
 However, the sessions you launch and the jobs you submit are only accessible to you. They are not shared across users.
 
+:::info
+
+A third type of launcher, namely an **App Launchers**, will be available by October 2026.
+
+:::
+
+
+
 ## Next steps
 
 - To create an interactive session launcher, see [Add a session launcher to your project](session/guides/add-a-session-launcher-to-your-project).
