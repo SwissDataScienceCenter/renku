@@ -12,17 +12,23 @@ Job launchers do not support **global environments**. You must use **Create from
 
 1. In the **Sessions** section of the project page, click **+** to add a new launcher.
 
-   <!-- TODO: screenshot create-a-job-launcher-10.png — Sessions section with + button -->
+<p class="image-container-l">
+![JobLauncher](./job-creation-10.png)
+</p>
 
 2. In the **Select the type of launcher to create** modal, choose **Job**.
 
-   <!-- TODO: screenshot create-a-job-launcher-20.png — launcher type modal with Job selected -->
+<p class="image-container-l">
+![JobLauncher](./job-creation-20.png)
+</p>
 
 3. Choose and configure an **environment**:
    - **Create from code** — Renku builds an environment from a code repository (for example, one with an `environment.yml` or `requirements.txt`). See [How to create an environment with custom packages installed](../../environment/guides/create-environment-with-custom-packages-installed).
    - **Custom image** — use your own Docker image. See [How to use your own docker image for a Renku session](../../environment/guides/use-your-own-docker-image-for-renku-session).
 
-   <!-- TODO: screenshot create-a-job-launcher-30.png — environment options for a job launcher -->
+   <p class="image-container-l">
+   ![JobLauncher](./job-creation-30.png)
+   </p>
 
 4. Configure the **job command** as a JSON array, for example `["python", "my_repo/main.py"]`. This command is required and defines what runs when someone submits a job from this launcher.
 
@@ -40,7 +46,9 @@ Job launchers do not support **global environments**. You must use **Create from
 
 7. Click **Add launcher** (or the equivalent button to save the launcher).
 
-   <!-- TODO: screenshot create-a-job-launcher-50.png — completed job launcher on the project page -->
+   <p class="image-container-l">
+   ![JobLauncher](./job-creation-40.png)
+   </p>
 
 If your environment is built from code, wait for the environment **build** to succeed before submitting a job. You can rebuild the environment from the launcher card if needed.
 

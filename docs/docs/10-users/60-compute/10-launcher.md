@@ -8,7 +8,7 @@ Renku supports two types of launcher:
 2. **Job launcher:** runs a non-interactive [Job](job) in the background when you submit it.
 
 <p class="image-container-l">
-![Launchers](./launcher-10.jpg)
+![Launchers](./launcher-10.png)
 </p>
 
 A launcher contains:
