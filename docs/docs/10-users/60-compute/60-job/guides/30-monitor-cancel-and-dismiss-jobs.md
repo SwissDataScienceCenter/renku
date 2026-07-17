@@ -10,7 +10,9 @@ Your active and recent jobs appear in several places:
 - **In the launcher side panel** — open the launcher to see **Your submitted jobs**
 - **On your dashboard** — jobs are listed alongside interactive sessions
 
-<!-- TODO: screenshot monitor-cancel-and-dismiss-jobs-10.png — job row under launcher with Running status -->
+<p class="image-container-l">
+![JobLauncher](./job-monitoring-10.png)
+</p>
 
 ## Job states
 
@@ -26,6 +28,10 @@ Your active and recent jobs appear in several places:
 
 While a job is **Starting**, **Running**, **Completed**, or **Errored**, click **View logs** to open the job logs.
 
+<p class="image-container-l">
+![JobLauncher](./job-monitoring-20.png)
+</p>
+
 <!-- TODO: screenshot monitor-cancel-and-dismiss-jobs-30.png — View logs for a running job -->
 
 Logs are available for 24 hours or until you dismiss the job.
@@ -37,7 +43,9 @@ If a job is still **Starting** or **Running**, you can cancel it:
 1. Click **Cancel** on the job row or in the launcher panel.
 2. Confirm in the modal. Cancelling stops the job and removes it.
 
-<!-- TODO: screenshot monitor-cancel-and-dismiss-jobs-40.png — Cancel job confirmation modal -->
+<p class="image-container-l">
+![JobLauncher](./job-monitoring-30.png)
+</p>
 
 ## Dismiss a completed or errored job
 
@@ -49,6 +57,9 @@ Dismissing a job is permanent. You will not be able to view that job or its logs
 
 :::
 
+<p class="image-container-l">
+![JobLauncher](./job-monitoring-40.png)
+</p>
 <!-- TODO: screenshot monitor-cancel-and-dismiss-jobs-50.png — Completed job with Dismiss action -->
 
 ## Multiple jobs at once
