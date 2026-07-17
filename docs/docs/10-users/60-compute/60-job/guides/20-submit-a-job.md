@@ -1,14 +1,14 @@
 # Submit a job
 
-When a job launcher is configured and its environment image is ready, anyone who can see the project can **Submit** a job from that launcher. Each submission runs your job command in the background.
+When a job launcher is configured and its environment image is ready, anyone who can see the project can **Submit** a job from that launcher. Each submission runs the job command in the background.
 
 ## Before you submit
 
-Renku may ask you to resolve prerequisites before the job starts — the same kinds of checks that apply when launching a [Session](../../session):
+Renku may ask you to resolve prerequisites before the job starts, which are the same kinds of checks that apply when launching a [Session](../../session):
 
-- **Code repositories** that Renku cannot access
-- **Session secrets** that you have not yet provided for the project
-- **Data connector** credentials
+- **Code repositories** that Renku cannot access.
+- **Session secrets** that you have not provided for the project yet.
+- **Data connector** credentials.
 
 See [How to configure a session secret](../../guides/configure-session-secret) for setting up secrets that jobs can use.
 
@@ -16,13 +16,17 @@ See [How to configure a session secret](../../guides/configure-session-secret) f
 
 1. On the project page, find the job launcher and click **Submit**.
 
-   <!-- TODO: screenshot submit-a-job-10.png — job launcher card with Submit button -->
+<p class="image-container-l">
+![JobLauncher](./job-submission-10.png)
+</p>
 
 2. Review the environment summary in the **Review and submit job** modal.
 
-   <!-- TODO: screenshot submit-a-job-20.png — submit job modal with environment summary -->
+<p class="image-container-l">
+![JobLauncher](./job-submission-20.png)
+</p>
 
-3. Enter a **Submission ID** — a short unique name for this job run (for example, `run-a1b2c3`). Renku suggests one automatically; you can edit it.
+3. Enter a **Submission ID**, that is a short unique name for this job run (for example, `run-a1b2c3`). Renku suggests one automatically; you can edit it.
 
    The submission ID must:
    - Start with a lowercase letter
@@ -35,13 +39,13 @@ See [How to configure a session secret](../../guides/configure-session-secret) f
 
 5. Optionally set **Job args** as a JSON array.
 
-6. Select a **resource class** and disk storage for this submission, if you want to override the launcher defaults.
-
-   <!-- TODO: screenshot submit-a-job-40.png — job command, args, and resource class fields -->
+6. Select a **resource class** for this submission, if you want to override the launcher defaults.
 
 7. Click **Submit job**.
 
-   <!-- TODO: screenshot submit-a-job-50.png — success message after submission -->
+<p class="image-container-l">
+![JobLauncher](./job-submission-30.png)
+</p>
 
 You can submit multiple jobs from the same launcher at the same time. Each job must have its own submission ID.
 
