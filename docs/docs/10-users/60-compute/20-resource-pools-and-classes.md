@@ -21,8 +21,8 @@ For example, a resource class may be:
 As users run sessions and jobs, their compute resources (the resource class in use) come out of the quota on the resource pool. If the resource pool’s quota has been reached, users won’t be able to start more sessions or jobs in that resource pool (but they may use other resource pools they have access to).
 
 <p class="image-container-l">
-![Untitled](./resource-pools-and-classes-10.png)
-*For custom resource pools granted to users, you may customize the resource classes in you resource pool.*
+![ResourceClass](./resource-pools-and-classes-10.png)
+*For custom resource pools granted to users, you may customize the resource classes in your resource pool.*
 </p>
 
 ## The Public Resource Pool & Classes
@@ -30,7 +30,7 @@ As users run sessions and jobs, their compute resources (the resource class in u
 On RenkuLab, the following resources classes are publicly available (in the “public resource pool”):
 
 <p class="image-container-l">
-![Untitled](./resource-pools-and-classes-20.jpg)
+![ResourcePool](./resource-pools-and-classes-20.jpg)
 </p>
 
 ## Request a Custom Resource Pool {#request-custom-resource-pool}
