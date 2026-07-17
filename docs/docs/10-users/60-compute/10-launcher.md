@@ -4,19 +4,23 @@ A launcher is a component of a project that defines how compute runs on RenkuLab
 
 Renku supports two types of launcher:
 
-1. **Session launcher** — launches an interactive, browser-based [Session](session) for coding and data exploration.
-2. **Job launcher** — runs a non-interactive [Job](job) in the background when you submit it.
+1. **Session launcher:** launches an interactive, browser-based [Session](session) for coding and data exploration.
+2. **Job launcher:** runs a non-interactive [Job](job) in the background when you submit it.
+
+<p class="image-container-l">
+![Launchers](./launcher-10.jpg)
+</p>
 
 A launcher contains:
 
-1. an [Environment](environment), which defines the software installed in the run
-2. a default resource pool (see [Resource Pools & Classes](resource-pools-and-classes)), which determines the compute resources available
+1. an [Environment](environment), which defines the software installed in the run, and
+2. a default resource class (see [Resource Pools & Classes](resource-pools-and-classes)), which determines the compute resources available.
 
 For a Job launcher, you also configure a **job command** that defines what runs when the job is submitted.
 
-A project's launchers are usable to everyone who can see the project. Anyone with access can launch a session or submit a job from a launcher configured in the project.
+Project's launchers are usable to everyone who can see the project. Anyone with access can launch a session or submit a job from a launcher configured in the project.
 
-However, the sessions you launch and the jobs you submit are only accessible to you. They are not shared between users.
+However, the sessions you launch and the jobs you submit are only accessible to you. They are not shared across users.
 
 ## Next steps
 
