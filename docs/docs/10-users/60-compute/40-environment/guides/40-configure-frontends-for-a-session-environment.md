@@ -4,6 +4,8 @@ In order to run a docker image in a session, Renku needs to know some informatio
 
 In this section, you can see example configurations for commonly used images. If you build an image with one of these images as the base, then you can use this provided configuration to make that image run in RenkuLab. The information below can be copied and pasted into the **Advanced Settings** form for creating a **custom environment**.
 
+This page provides reference configurations to use in the **Advanced Settings** step of [How to use your own docker image for a Renku session](./use-your-own-docker-image-for-renku-session),  specifically for images not built by Renku.
+
 <p class="image-container-l">
 ![image.png](./use-your-own-docker-image-for-renku-session-40.png)
 </p>
@@ -19,7 +21,7 @@ In this section, you can see example configurations for commonly used images. If
 ["sh", "-c"]
 ```
 
-- Command Arguments CMD ([learn more](#about-renku-session-urls)):
+- Command Arguments CMD ([learn more](./use-your-own-docker-image-for-renku-session#about-renku-session-urls)):
 
 ```json
 [
@@ -40,7 +42,7 @@ In this section, you can see example configurations for commonly used images. If
 ["sh", "-c"]
 ```
 
-- Command Arguments CMD ([learn more](#about-renku-session-urls)):
+- Command Arguments CMD ([learn more](./use-your-own-docker-image-for-renku-session#about-renku-session-urls)):
 
 ```json
 [
@@ -66,7 +68,7 @@ In this section, you can see example configurations for commonly used images. If
 ["sh", "-c"]
 ```
 
-- Command Arguments CMD ([learn more](#about-renku-session-urls)):
+- Command Arguments CMD ([learn more](./use-your-own-docker-image-for-renku-session#about-renku-session-urls)):
 
 ```json
 [
@@ -84,7 +86,7 @@ In this section, you can see example configurations for commonly used images. If
 ["sh", "-c"]
 ```
 
-- Command Arguments CMD (fill in `<your-repo-name>/<your-app>`) ([learn more](#about-renku-session-urls)):
+- Command Arguments CMD (fill in `<your-repo-name>/<your-app>`) ([learn more](./use-your-own-docker-image-for-renku-session#about-renku-session-urls)):
 
 ```json
 [
@@ -102,7 +104,7 @@ In this section, you can see example configurations for commonly used images. If
 ["sh", "-c"]
 ```
 
-- Command Arguments CMD (fill in `<your-repo-name>/<your-app>`!) ([learn more](#about-renku-session-urls)):
+- Command Arguments CMD (fill in `<your-repo-name>/<your-app>`!) ([learn more](./use-your-own-docker-image-for-renku-session#about-renku-session-urls)):
 
 ```json
 [
@@ -120,7 +122,7 @@ In this section, you can see example configurations for commonly used images. If
 ["sh", "-c"]
 ```
 
-- Command Arguments CMD (fill in `<your-repo-name>/<your-app>`!)([learn more](#about-renku-session-urls)):
+- Command Arguments CMD (fill in `<your-repo-name>/<your-app>`!)([learn more](./use-your-own-docker-image-for-renku-session#about-renku-session-urls)):
 
 ```json
 [
@@ -152,3 +154,7 @@ app.launch(server_port=args.server_port,
 					 server_name=args.server_name,
 					 root_path=args.root_path)
 ```
+
+## Next steps
+
+Once you've copied the configuration for your front end, return to [How to use your own docker image for a Renku session](./use-your-own-docker-image-for-renku-session) to finish creating your launcher.

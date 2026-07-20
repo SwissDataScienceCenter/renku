@@ -32,7 +32,7 @@ In the project page:
      - if the image is hosted on gitlab.renkulab.io:
        - `registry.renkulab.io/laura.kinkead1/n2o-pathway-analysis:980f4a3`
    - The image identifier should be in the format that works with `docker pull`
-4. Depending on the image you’re using, you’ll need to fill in the **Advanced settings**. See the information below for how to fill it in:
+4. Depending on the image you’re using, you’ll need to fill in the **Advanced settings**. See [Example image configurations for common front ends](./configure-frontends-for-a-session-environment) for ready-to-use configurations, or the information below for how to fill it in:
 
    :::danger
 
