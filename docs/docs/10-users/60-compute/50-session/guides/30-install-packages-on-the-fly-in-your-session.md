@@ -1,12 +1,27 @@
 # Install packages on-the-fly in your session
 
+You can install packages directly in a running session's terminal to try them out right away, without editing project files or rebuilding your environment.
+
+:::note
+
+Packages installed this way:
+
+- Are only available to you and they are lost when you stop and restart the session, so you'll need to reinstall them every time you launch or resume the session.
+- Are not shared with anyone else who launches a session from the same launcher.
+
+If you'd like a package to persist and be available to everyone who uses the launcher, add it to your project's environment definition file, rebuild the launcher and restart the session. See [How to create an environment with custom packages installed](../../environment/guides/create-environment-with-custom-packages-installed).
+
+:::
+
 **Choose your language:**
 
 ## Python
 
-Renku can build an environment based on a Python dependencies file for you (no knowledge of Docker required)!
+Open a terminal in your session and run:
 
-To get started, see [How to create an environment with custom packages installed](../../environment/guides/create-environment-with-custom-packages-installed).
+```bash
+pip install <package-name>
+```
 
 ## R {#r}
 
@@ -34,12 +49,6 @@ Every time you start or resume the session, install the packages you listed in t
 **$** R -f install.R
 ```
 
-:::note
-
-You need to install the dependencies every time you launch or resume your session.
-
-:::
-
 ## conda
 
 If your image uses conda as the python package management system, follow the instructions.
@@ -66,9 +75,3 @@ Install the packages you listed in the dependency file by running the following 
 ```bash
 **$** conda env update --file environment.yml  --prune
 ```
-
-:::note
-
-You need to install the dependencies every time you launch or resume your session.
-
-:::
