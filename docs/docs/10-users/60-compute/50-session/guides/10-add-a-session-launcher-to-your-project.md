@@ -3,7 +3,7 @@
 A launcher defines the environment and compute resources for work on your Renku session.
 The basic steps for creating a launcher are:
 
-1. In the **Sessions** section of the project page, click on ➕ to add a new launcher.
+1. In the **Launchers** section of the project page, click on ➕ to add a new launcher.
 2. Choose **Session** in the type selector.
 3. Choose and configure an **environment** (see [Creating an environment for your session](#creating-an-environment-for-your-session))
 4. Select the **Resource class** that best fits your expected computational needs. (see [Resource Pool and Classes](../../resource-pools-and-classes))
