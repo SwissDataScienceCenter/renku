@@ -8,11 +8,7 @@ There are some limitations to what images you can use in Renku sessions. The ima
 
    The image you use needs a user interface web frontend to run so that you can access the session via the browser. Examples of these include JupyterLab, VSCode or RStudio.
 
-2. **The image must be public**
-
-   RenkuLab cannot yet use images that are not publicly accessible.
-
-3. **The image will be run as non-root**
+2. **The image will be run as non-root**
 
    For security reasons, sessions are started with a non-root user.
 
