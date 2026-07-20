@@ -230,7 +230,7 @@ repository](create-environment-with-custom-packages-private-code-repository).
 
 1. Make sure the code repository that contains your environment definition file is added to your
    Renku project.
-2. Create a **new session launcher**
+2. Create a **new session launcher** by clicking the "+" button in the Launchers section, and select either Session Launcher or Job Launcher.
 3. Select the **Create from code** option
 
    ![image.png](./create-environment-with-custom-packages-installed-10.png)
@@ -258,7 +258,7 @@ repository](create-environment-with-custom-packages-private-code-repository).
 7. Click **Next**
 8. Define the **name** of the Session Launcher
 9. Select the default **compute resources**
-10. Click on **Add session launcher**
+10. Click on **Add launcher**
 
 The environment is now being built by RenkuLab. You can see the status on the session launcher.
 
@@ -272,8 +272,8 @@ When the environment is built, you can launch your session.
    update the environment definition file in the code repository where the
    environment is defined.
 2. Then, rebuild the environment in RenkuLab:
-   1. Click on the session launcher to open the session launcher side panel.
-   2. Navigate to the **Session Environment** section.
+   1. Click on the launcher to open the launcher side panel.
+   2. Navigate to the **Environment** section.
    3. Click on **Rebuild**.
 
 ## [experimental] Using a dashboard with a code-based environment
