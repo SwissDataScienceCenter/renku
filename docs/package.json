@@ -33,7 +33,7 @@
     "@docusaurus/tsconfig": "^3.10.2",
     "@docusaurus/types": "^3.9.2",
     "dictionary-en": "^4.0.0",
-    "prettier": "^3.9.4",
+    "prettier": "^3.9.6",
     "remark-parse": "^11.0.0",
     "remark-retext": "^6.0.1",
     "retext-english": "^5.0.0",
