@@ -1302,7 +1302,7 @@ dataService:
         operator: Equal
         value: user
     envidat:
-      exportEnabled: false
+      exportsEnabled: false
       url: https://envidat.ch
       s3:
         ## The secret name that stores the S3 ACCESS_KEY_ID, SECRET_ACCESS_KEY, ENDPOINT, BUCKET for uploading data to Envidat

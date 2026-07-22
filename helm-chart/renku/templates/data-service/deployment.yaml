@@ -210,7 +210,9 @@ spec:
               value: {{ .Values.dataService.dataDeposits.envidat.url | quote }}
             - name: ENVIDAT_RCLONE_IMAGE
               value: {{ .Values.dataService.dataDeposits.envidat.rcloneImage | quote }}
-            {{- if .Values.dataService.dataDeposits.envidat.exportEnabled }}
+            - name: ENVIDAT_EXPORTS_ENABLED
+              value: {{ .Values.dataService.dataDeposits.envidat.exportsEnabled | quote }}
+            {{- if .Values.dataService.dataDeposits.envidat.exportsEnabled }}
             - name: ENVIDAT_S3_ENDPOINT
               valueFrom:
                 secretKeyRef:
