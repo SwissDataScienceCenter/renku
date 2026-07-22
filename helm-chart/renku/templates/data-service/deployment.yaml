@@ -210,14 +210,28 @@ spec:
               value: {{ .Values.dataService.dataDeposits.envidat.url | quote }}
             - name: ENVIDAT_RCLONE_IMAGE
               value: {{ .Values.dataService.dataDeposits.envidat.rcloneImage | quote }}
+            {{- if .Values.dataService.dataDeposits.envidat.exportEnabled }}
             - name: ENVIDAT_S3_ENDPOINT
-              value: {{ .Values.dataService.dataDeposits.envidat.endpoint | quote }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.dataService.dataDeposits.envidat.s3.credentialsSecretName | quote }}
+                  key: ENDPOINT
             - name: ENVIDAT_S3_BUCKET
-              value: {{ .Values.dataService.dataDeposits.envidat.bucket | quote }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.dataService.dataDeposits.envidat.s3.credentialsSecretName | quote }}
+                  key: BUCKET
             - name: ENVIDAT_S3_ACCESS_KEY_ID
-              value: {{ .Values.dataService.dataDeposits.envidat.accessKeyId | quote }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.dataService.dataDeposits.envidat.s3.credentialsSecretName | quote }}
+                  key: ACCESS_KEY_ID
             - name: ENVIDAT_S3_SECRET_ACCESS_KEY
-              value: {{ .Values.dataService.dataDeposits.envidat.secretAccessKey | quote }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.dataService.dataDeposits.envidat.s3.credentialsSecretName | quote }}
+                  key: SECRET_ACCESS_KEY
+            {{- end }}
             - name: RENKU_URL
               value: {{ (include "renku.baseUrl" .) | quote }}
           volumeMounts:

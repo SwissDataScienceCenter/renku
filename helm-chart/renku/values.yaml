@@ -1301,6 +1301,13 @@ dataService:
         key: renku.io/dedicated
         operator: Equal
         value: user
+    envidat:
+      exportEnabled: false
+      url: https://envidat.ch
+      s3:
+        ## The secret name that stores the S3 ACCESS_KEY_ID, SECRET_ACCESS_KEY, ENDPOINT, BUCKET for uploading data to Envidat
+        ## The keys should have the same keys as mentioned above.
+        credentialsSecretName: renku-envidat-s3-credentials
   ## The service account used in the Amalthea session pods for the resource pool(s) that use the local cluster.
   ## The only use for this is if you want to use a different SCC than the default in OpenShift.
   ## The service account is not mounted in the session. Leaving the default value of "" means that
