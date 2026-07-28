@@ -22,11 +22,11 @@ See [How to configure a session secret](../../guides/configure-session-secret) f
 
 2. Review the environment summary in the **Review and submit job** modal.
 
-<p class="image-container-l">
+<p class="image-container-m">
 ![JobLauncher](./job-submission-20.png)
 </p>
 
-3. Enter a **Submission ID**, that is a short unique name for this job run (for example, `run-a1b2c3`). Renku suggests one automatically; you can edit it.
+3. Enter a **Submission ID**, that is a short unique name for this job run (for example, `run-a1b2c3`). Renku suggests one automatically but you can edit it before submitting the job.
 
    The submission ID must:
    - Start with a lowercase letter
@@ -44,7 +44,7 @@ See [How to configure a session secret](../../guides/configure-session-secret) f
 7. Click **Submit job**.
 
 <p class="image-container-l">
-![JobLauncher](./job-submission-30.png)
+![JobLauncher](job-submission-30.png)
 </p>
 
 You can submit multiple jobs from the same launcher at the same time. Each job must have its own submission ID.

@@ -8,7 +8,7 @@ Your active and recent jobs appear in several places:
 
 - **Under the job launcher** on the project page — each row shows the submission ID and status
 - **In the launcher side panel** — open the launcher to see **Your submitted jobs**
-- **On your dashboard** — jobs are listed alongside interactive sessions
+- **On your dashboard** — jobs are listed just below interactive sessions
 
 <p class="image-container-l">
 ![JobLauncher](./job-monitoring-10.png)
@@ -32,8 +32,6 @@ While a job is **Starting**, **Running**, **Completed**, or **Errored**, click *
 ![JobLauncher](./job-monitoring-20.png)
 </p>
 
-<!-- TODO: screenshot monitor-cancel-and-dismiss-jobs-30.png — View logs for a running job -->
-
 Logs are available for 24 hours or until you dismiss the job.
 
 ## Cancel a running job
@@ -54,7 +52,6 @@ When a job has **Completed** or **Errored**, click **Dismiss** to remove it from
 <p class="image-container-l">
 ![JobLauncher](./job-monitoring-40.png)
 </p>
-
 
 :::warning
 

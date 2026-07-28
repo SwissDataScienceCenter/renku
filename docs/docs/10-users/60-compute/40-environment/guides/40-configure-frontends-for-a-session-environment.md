@@ -4,7 +4,7 @@ In order to run a docker image in a session, Renku needs to know some informatio
 
 In this section, you can see example configurations for commonly used images. If you build an image with one of these images as the base, then you can use this provided configuration to make that image run in RenkuLab. The information below can be copied and pasted into the **Advanced Settings** form for creating a **custom environment**.
 
-This page provides reference configurations to use in the **Advanced Settings** step of [How to use your own docker image for a Renku session](./use-your-own-docker-image-for-renku-session),  specifically for images not built by Renku.
+This page provides reference configurations to use in the **Advanced Settings** step of [How to use your own docker image for a Renku session](./use-your-own-docker-image-for-renku-session), specifically for images not built by Renku.
 
 <p class="image-container-l">
 ![image.png](./use-your-own-docker-image-for-renku-session-40.png)

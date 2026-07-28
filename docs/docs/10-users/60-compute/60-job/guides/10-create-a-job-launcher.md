@@ -10,7 +10,7 @@ Job launchers do not support **global environments**. You must use **Create from
 
 ## Create a job launcher
 
-1. In the **Sessions** section of the project page, click **+** to add a new launcher.
+1. In the **Launchers** section of the project page, click **+** to add a new launcher.
 
 <p class="image-container-l">
 ![JobLauncher](./job-creation-10.png)
@@ -18,15 +18,15 @@ Job launchers do not support **global environments**. You must use **Create from
 
 2. In the **Select the type of launcher to create** modal, choose **Job**.
 
-<p class="image-container-l">
+<p class="image-container-m">
 ![JobLauncher](./job-creation-20.png)
 </p>
 
 3. Choose and configure an **environment**:
    - **Create from code** — Renku builds an environment from a code repository (for example, one with an `environment.yml` or `requirements.txt`). See [How to create an environment with custom packages installed](../../environment/guides/create-environment-with-custom-packages-installed).
-   - **Custom image** — use your own Docker image. See [How to use your own docker image for a Renku session](../../environment/guides/use-your-own-docker-image-for-renku-session).
+   - **External environment** — use your own Docker image. See [How to use your own docker image for a Renku session](../../environment/guides/use-your-own-docker-image-for-renku-session).
 
-<p class="image-container-l">
+<p class="image-container-m">
 ![JobLauncher](./job-creation-30.png)
 </p>
 
