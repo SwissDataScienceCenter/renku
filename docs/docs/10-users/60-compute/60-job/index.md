@@ -1,4 +1,4 @@
-# Job
+# Jobs
 
 A Renku job is a non-interactive run that executes a command in the background using a project's [Environment](../environment) and compute resources.
 

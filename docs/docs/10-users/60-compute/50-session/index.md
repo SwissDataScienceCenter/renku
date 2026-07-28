@@ -1,4 +1,4 @@
-# Session
+# Sessions
 
 A Renku session is an interactive run-time environment that can be used to do work on data and code.
 
