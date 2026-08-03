@@ -24,11 +24,11 @@ For alternative workflows for using Renku in your course, see [Renku for Teachin
 
     :::
 
-4.  Create a session launcher for working in your project: 1. Select an environment: 1. Check out the environments available in Renku via [How to add a session launcher to your project](../../sessions/guides/environments/). If these are sufficient for your course, use them! 2. If you need to customize the environment for your course, you can create a custom environment yourself via [How to use your own docker image for a Renku session](../../sessions/guides/environments/use-your-own-docker-image-for-renku-session), or [Contact](../../community) us and we can create a custom environment for your course! 2. Set the session launcher’s **default resource class** to your **course’s resource pool**, as described in [How to select compute resources for your session](../../sessions/guides/select-compute-resources-for-session).
+4.  Create a session launcher for working in your project: 1. Select an environment: 1. Check out the environments available in Renku via [How to add a session launcher to your project](../../compute/session/guides/add-a-session-launcher-to-your-project). If these are sufficient for your course, use them! 2. If you need to customize the environment for your course, you can create a custom environment yourself via [How to use your own docker image for a Renku session](../../compute/environment/guides/use-your-own-docker-image-for-renku-session), or [Contact](../../community) us and we can create a custom environment for your course! 2. Set the session launcher’s **default resource class** to your **course’s resource pool**, as described in [How to select compute resources for your session](../../compute/guides/select-compute-resources-for-session).
 
             :::info
 
-            In order to ensure adequate resources for running the project and to control the consumption of the sessions, remember to assign to the session launcher with the adequate resource class when adding the session launcher to your project. Learn more about custom resource pools for courses: [Request a Custom Resource Pool](../../sessions/resource-pools-and-classes#request-custom-resource-pool).
+            In order to ensure adequate resources for running the project and to control the consumption of the sessions, remember to assign to the session launcher with the adequate resource class when adding the session launcher to your project. Learn more about custom resource pools for courses: [Request a Custom Resource Pool](../../compute/resource-pools-and-classes#request-custom-resource-pool).
 
             :::
 
