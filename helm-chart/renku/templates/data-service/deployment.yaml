@@ -217,14 +217,11 @@ spec:
             - name: RENKU_URL
               value: {{ (include "renku.baseUrl" .) | quote }}
             - name: PERSISTED_LOGS_ENABLED
-              value: "true"
-              # value: TODO
+              value: {{ .Values.dataService.persistedLogs.enabled | default false | quote }}
             - name: PERSISTED_LOGS_LOKI_READ_URL
-              value: "http://loki-read.monitoring.svc.cluster.local:3100/"
-              # value: TODO
+              value: {{ .Values.dataService.persistedLogs.lokiReadUrl | quote }}
             - name: PERSISTED_LOGS_TTL_SECONDS
-              value: "86400"
-              # value: TODO
+              value: {{ .Values.dataService.persistedLogs.ttlSeconds | quote }}
           volumeMounts:
             - name: server-options
               mountPath: /etc/renku-notebooks/server_options

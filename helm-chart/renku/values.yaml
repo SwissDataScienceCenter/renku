@@ -1332,6 +1332,14 @@ dataService:
         key: renku.io/dedicated
         operator: Equal
         value: user
+  # Configuration values for persisted logs
+  persistedLogs:
+    ## If set to true, enables logs to be pulled from Loki into the backend database.
+    enabled: false
+    ## The base URL for the Loki read API
+    lokiReadUrl: "http://loki-read.monitoring.svc.cluster.local:3100/"
+    ## The TTL for persisted logs
+    ttlSeconds: 86400 # 24 hours
   ## The service account used in the Amalthea session pods for the resource pool(s) that use the local cluster.
   ## The only use for this is if you want to use a different SCC than the default in OpenShift.
   ## The service account is not mounted in the session. Leaving the default value of "" means that
