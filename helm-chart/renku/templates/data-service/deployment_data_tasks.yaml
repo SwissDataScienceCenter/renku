@@ -140,6 +140,15 @@ spec:
             {{- end }}
             {{- include "certificates.env.python" . | nindent 12 }}
             {{- include "certificates.env.grpc" . | nindent 12 }}
+            - name: PERSISTED_LOGS_ENABLED
+              value: "true"
+              # value: TODO
+            - name: PERSISTED_LOGS_LOKI_READ_URL
+              value: "http://loki-read.monitoring.svc.cluster.local:3100/"
+              # value: TODO
+            - name: PERSISTED_LOGS_TTL_SECONDS
+              value: "86400"
+              # value: TODO
           volumeMounts:
             {{- include "certificates.volumeMounts.system" . | nindent 12 }}
             {{- if .Values.dataService.remoteClustersKubeconfigSecretName }}
