@@ -4,8 +4,8 @@ title: Persisted Logs
 
 _Introduced in Renku 2.20.0_
 
-By default, logs for user workloads on Renku (interactive sessions, jobs and image builds) are retrieved
-served through the API by querying logs from the corresponding Kubernetes pod.
+By default, logs for user workloads on Renku (interactive sessions, jobs and image builds) are served
+through the API by querying logs from the corresponding Kubernetes pod.
 The persisted logs feature allows administrators to set up log forwarding so that logs are persisted
 to the data services database which allows them to be retrieved even after the pod has been deleted.
 
