@@ -207,6 +207,280 @@ roleRef:
   name: priorityclasses-manager
 ```
 
+If cluster-wide permissions are not available, the roles and their bindings can be bound to the namespace in which Renku will be deployed:
+```yaml
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: amaltheasession-manager
+  namespace: <replace-renku-namespace>
+rules:
+- apiGroups:
+  - amalthea.dev
+  resources:
+  - amaltheasessions
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - amalthea.dev
+  resources:
+  - amaltheasessions/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - amalthea.dev
+  resources:
+  - amaltheasessions/status
+  verbs:
+  - get
+  - patch
+  - update
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: amaltheasession-manager-for-renku-admin
+  namespace: <replace-renku-namespace>
+subjects:
+  - kind: Group
+    apiGroup: rbac.authorization.k8s.io
+    name: renku-admin
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: amaltheasession-manager
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: resourcesquotas-manager-for-renku-admin
+subjects:
+  - kind: Group
+    apiGroup: rbac.authorization.k8s.io
+    name: renku-admin
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: resourcesquotas-manager
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: priorityclasses-manager
+  namespace: <replace-renku-namespace>
+rules:
+- apiGroups:
+  - "scheduling.k8s.io"
+  resources:
+  - priorityclasses
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: priorityclasses-manager-for-renku-admin
+  namespace: <replace-renku-namespace>
+subjects:
+  - kind: User
+    apiGroup: rbac.authorization.k8s.io
+    name: renku-admin
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: priorityclasses-manager
+---
+# Source: renku/templates/data-service/rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: renku-data-service
+  namespace: <replace-renku-namespace>
+  labels:
+    app: renku
+    chart: renku-2.10.0
+    release: renku
+    heritage: Helm
+rules:
+  - apiGroups:
+      - "scheduling.k8s.io"
+    resources:
+      - priorityclasses
+    verbs:
+      - get
+      - list
+      - patch
+      - delete
+      - create
+---
+# Source: renku/templates/data-service/rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: renku-data-service
+  namespace: <replace-renku-namespace>
+  labels:
+    app: renku
+    chart: renku-2.10.0
+    release: renku
+    heritage: Helm
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: renku-data-service
+subjects:
+  - kind: ServiceAccount
+    name: renku-data-service
+    namespace: <replace-renku-namespace>
+---
+# Source: renku/templates/data-service/rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: renku-data-service
+  namespace: <replace-renku-namespace>
+  labels:
+    app: renku
+    chart: renku-2.10.0
+    release: renku
+    heritage: Helm
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - resourcequotas
+    verbs:
+      - get
+      - list
+      - patch
+      - delete
+      - create
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+      - pods/log
+      - services
+      - endpoints
+      - secrets
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+      - secrets
+    verbs:
+      - delete
+  - apiGroups:
+      - apps
+    resources:
+      - statefulsets
+    verbs:
+      - get
+      - list
+      - watch
+      - patch
+  - apiGroups:
+      - ""
+    resources:
+      - secrets
+    verbs:
+      - create
+      - update
+      - delete
+      - patch
+  - apiGroups:
+      - amalthea.dev
+    resources:
+      - amaltheasessions
+    verbs:
+      - create
+      - update
+      - delete
+      - patch
+      - list
+      - get
+      - watch
+---
+# Source: renku/templates/data-service/rbac_k8s_watcher.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: renku-k8s-watcher
+  labels:
+    app: renku
+    chart: renku-2.10.0
+    release: renku
+    heritage: Helm
+rules:
+  - apiGroups:
+      - amalthea.dev
+    resources:
+      - amaltheasessions
+    verbs:
+      - create
+      - update
+      - delete
+      - patch
+      - list
+      - get
+      - watch
+---
+# Source: renku/templates/data-service/rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: renku-data-service
+  labels:
+    app: renku
+    chart: renku-2.10.0
+    release: renku
+    heritage: Helm
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: renku-data-service
+subjects:
+  - kind: ServiceAccount
+    name: renku-data-service
+    namespace: <replace-renku-namespace>
+---
+# Source: renku/templates/data-service/rbac_k8s_watcher.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: renku-k8s-watcher
+  labels:
+    app: renku
+    chart: renku-2.10.0
+    release: renku
+    heritage: Helm
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: renku-k8s-watcher
+subjects:
+  - kind: ServiceAccount
+    name: renku-k8s-watcher
+    namespace: <replace-renku-namespace>
+```
+
 As an admin, setup renku project admin roles:
 
 ```bash
