@@ -121,6 +121,16 @@ spec:
               value: "authorization_code"
             - name: SWAGGER_KC_CLIENT_ATTRIBUTES
               value: '{"pkce.code.challenge.method": "S256"}'
+            - name: MCP_KC_CLIENT_ID
+              value: renku-mcp
+            - name: MCP_KC_CLIENT_PUBLIC
+              value: "true"
+            - name: MCP_KC_CLIENT_OAUTH_FLOW
+              value: "authorization_code"
+            - name: MCP_KC_CLIENT_ATTRIBUTES
+              value: '{"pkce.code.challenge.method": "S256", "access.token.lifespan": "86400"}'
+            - name: MCP_KC_CLIENT_EXTRA_REDIRECT_URIS
+              value: '["https://claude.ai/api/mcp/auth_callback", "http://localhost:8484", "http://localhost:8484/callback", "http://127.0.0.1:8484", "http://127.0.0.1:8484/callback"]'
             - name: DATASERVICE_KC_CLIENT_ID
               value: {{ include "renku.dataService.keycloak.clientId" . | quote }}
             - name: DATASERVICE_KC_CLIENT_SECRET
