@@ -250,6 +250,16 @@ spec:
               value: {{ .Values.dataService.persistedLogs.lokiReadUrl | quote }}
             - name: PERSISTED_LOGS_TTL_SECONDS
               value: {{ .Values.dataService.persistedLogs.ttlSeconds | quote }}
+            - name: PROJECT_STORAGE_ENABLED
+              value: {{ .Values.dataService.projectStorage.enabled | quote }}
+            {{- if .Values.dataService.projectStorage.enabled }}
+            {{- if .Values.dataService.projectStorage.storageClass }}
+            - name: PROJECT_STORAGE_STORAGE_CLASS
+              value: {{ .Values.dataService.projectStorage.storageClass | quote }}
+            {{- end }}
+            - name: PROJECT_STORAGE_MAX_SIZE_GB
+              value: {{ .Values.dataService.projectStorage.storageMaxSizeGb | quote }}
+            {{- end }}
           volumeMounts:
             - name: server-options
               mountPath: /etc/renku-notebooks/server_options
