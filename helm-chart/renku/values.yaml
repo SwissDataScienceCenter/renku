@@ -1352,6 +1352,24 @@ dataService:
   ## If the value is not set then a secret is not mounted.
   ## The secret should be in the same namespace as where all the Renku services are installed.
   remoteClustersKubeconfigSecretName: ""
+  ## Enables long-lived project storage where the same storage is shared among all users of the project.
+  ## This storage lives for the duration of the project, it outlives sessions.
+  ## A read-write-many storage class is required for this.
+  ## Keep in mind that some read-write-many storage classes do not have real limits on the size
+  ## and will keep growing - especially if backed by object storage under the hood.
+  ## The storage class also has to support automatic volume provisioning. Renku will just create a PVC, and will
+  ## except that the PV will be automatically provisioned.
+  ## When you use this feature you should also setup backups for the volumes that are used for project storage.
+  projectStorage:
+    enabled: false
+    ## If you leave the storage class as null, the default storage class will be used.
+    ## NOTE: In many cases the default storage class does not support read-write-many access.
+    storageClass: null
+    ## The max storage that the API will accept when the storage is created.
+    ## This is the upper limit of what the users can request. When they create the project storage
+    ## user have the option to set a lower value. The value cannot be lower than 1 Gb.
+    storageMaxSizeGb: 10
+
 posthog:
   enabled: false
   # the posthog api key
