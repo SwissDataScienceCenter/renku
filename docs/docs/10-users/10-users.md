@@ -17,7 +17,7 @@ Renku is an **open-source platform for researchers and scientists to connect dat
 
 <p class="text-align: center">
 ![image.png](./project_40px.png)
-[**Projects**](/docs/users/projects/projects/) in Renku may contain [**Data**](/docs/users/data/data/), [**Code**](/docs/users/code/code-repository) and [**Sessions**](/docs/users/sessions/environment/) to foster [**Collaboration**](/docs/users/collaboration/). Check each individual building block for understanding the possibilities that Renku offers.
+[**Projects**](/docs/users/projects/projects/) in Renku may contain [**Data**](/docs/users/data/data/), [**Code**](/docs/users/code/code-repository) and [**Sessions**](/docs/users/compute/session/) to foster [**Collaboration**](/docs/users/collaboration/). Check each individual building block for understanding the possibilities that Renku offers.
 </p>
 
 ---
@@ -32,13 +32,6 @@ Renku is an **open-source platform for researchers and scientists to connect dat
 <p class="text-align: center">
 ![image.png](./use-cases_40px.png)
 [**Knowledge Base**](/docs/users/knowledge-base/fair-open-science/) Curiosity about how it works? [Any doubts](/docs/users/knowledge-base/faq/)? Join our channels to keep in touch with us.
-</p>
-
----
-
-<p class="text-align: center">
-![image.png](./sunset_40px.png)
-[**Renku Legacy:**](/docs/users/migrate-v1-v2/) Guidelines on how to migrate your code repositories from Legacy Renkulab Gitlab to your own code repository provider, and keep
 </p>
 
 ## Use cases

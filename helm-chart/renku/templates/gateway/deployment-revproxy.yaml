@@ -71,13 +71,6 @@ spec:
                 secretKeyRef:
                   name: {{ cat (include "renku.fullname" .) "-gateway" | nospace }}
                   key: oidcClientSecret
-            {{- if .Values.enableInternalGitlab }}
-            - name: GATEWAY_LOGIN_PROVIDERS_GITLAB_CLIENTSECRET
-              valueFrom:
-                secretKeyRef:
-                  name: {{ cat (include "renku.fullname" .) "-gateway" | nospace }}
-                  key: gitlabClientSecret
-            {{- end }}
             - name: GATEWAY_LOGIN_TOKENENCRYPTION_SECRETKEY
               valueFrom:
                 secretKeyRef:
@@ -93,18 +86,6 @@ spec:
                 secretKeyRef:
                   name: {{ cat (include "renku.fullname" .) "-gateway" | nospace }}
                   key: cookieHashKey
-            {{- if .Values.enableInternalGitlab }}
-            - name: GATEWAY_LOGIN_PROVIDERS_GITLAB_COOKIEENCODINGKEY
-              valueFrom:
-                secretKeyRef:
-                  name: {{ cat (include "renku.fullname" .) "-gateway" | nospace }}
-                  key: cookieEncodingKey
-            - name: GATEWAY_LOGIN_PROVIDERS_GITLAB_COOKIEHASHKEY
-              valueFrom:
-                secretKeyRef:
-                  name: {{ cat (include "renku.fullname" .) "-gateway" | nospace }}
-                  key: cookieHashKey
-            {{- end }}
             - name: GATEWAY_MONITORING_SENTRY_DSN
               value: {{ .Values.gateway.sentry.dsn }}
             - name: GATEWAY_POSTHOG_ENABLED

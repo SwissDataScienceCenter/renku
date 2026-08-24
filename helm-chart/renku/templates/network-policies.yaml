@@ -157,6 +157,33 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
+  name: {{ template "renku.notebooks.fullname" . }}-sessions-v2-tunnel
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: AmaltheaSession
+      app.kubernetes.io/part-of: amaltheasession-operator
+      # Allow remote access to amalthea's session reverse tunnel
+      renku.io/remote-tunnel: allow
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+      ports:
+        - protocol: TCP
+          # This port is hardcoded in Amalthea as the port for the reverse tunnel endpoint
+          port: 65531
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
   name: {{ template "renku.fullname" . }}-secrets-storage
   labels:
     app: {{ template "renku.name" . }}

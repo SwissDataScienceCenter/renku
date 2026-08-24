@@ -9,49 +9,50 @@ const url = new URL(
 );
 const versionSlug = process.env.READTHEDOCS_VERSION;
 
-const algoliaConfig = process.env.ALGOLIA_APP_ID
-  ? ({
-      // The application ID provided by Algolia
-      appId: process.env.ALGOLIA_APP_ID,
+const algoliaConfig =
+  process.env.ALGOLIA_APP_ID && process.env.ALGOLIA_API_KEY
+    ? ({
+        // The application ID provided by Algolia
+        appId: process.env.ALGOLIA_APP_ID,
 
-      // Public API key: it is safe to commit it
-      apiKey: process.env.ALGOLIA_API_KEY,
+        // Public API key: it is safe to commit it
+        apiKey: process.env.ALGOLIA_API_KEY,
 
-      indexName: "renkulab docs",
+        indexName: "renkulab docs",
 
-      // Optional: see doc section below
-      contextualSearch: !versionSlug,
+        // Optional: see doc section below
+        contextualSearch: !versionSlug,
 
-      // Optional: Specify domains where the navigation should occur through window.location instead on history.push. Useful when our Algolia config crawls multiple documentation sites and we want to navigate with window.location.href to them.
-      // externalUrlRegex: 'external\\.com|domain\\.com',
+        // Optional: Specify domains where the navigation should occur through window.location instead on history.push. Useful when our Algolia config crawls multiple documentation sites and we want to navigate with window.location.href to them.
+        // externalUrlRegex: 'external\\.com|domain\\.com',
 
-      // Optional: Replace parts of the item URLs from Algolia. Useful when using the same search index for multiple deployments using a different baseUrl. You can use regexp or string in the `from` param. For example: localhost:3000 vs myCompany.com/docs
-      replaceSearchResultPathname: {
-        from: "/en/[a-zA-Z0-9_-]+/",
-        to: "/",
-      },
+        // Optional: Replace parts of the item URLs from Algolia. Useful when using the same search index for multiple deployments using a different baseUrl. You can use regexp or string in the `from` param. For example: localhost:3000 vs myCompany.com/docs
+        replaceSearchResultPathname: {
+          from: "/en/[a-zA-Z0-9_-]+/",
+          to: "/",
+        },
 
-      // Optional: Algolia search parameters
-      searchParameters: {
-        ...(versionSlug
-          ? {
-              facetFilters: ["language:en", `rtd_tag:${versionSlug}`],
-            }
-          : {}),
-      },
+        // Optional: Algolia search parameters
+        searchParameters: {
+          ...(versionSlug
+            ? {
+                facetFilters: ["language:en", `rtd_tag:${versionSlug}`],
+              }
+            : {}),
+        },
 
-      // Optional: path for search page that enabled by default (`false` to disable it)
-      // searchPagePath: 'search',
+        // Optional: path for search page that enabled by default (`false` to disable it)
+        // searchPagePath: 'search',
 
-      // Optional: whether the insights feature is enabled or not on Docsearch (`false` by default)
-      insights: false,
+        // Optional: whether the insights feature is enabled or not on Docsearch (`false` by default)
+        insights: false,
 
-      // Optional: whether you want to use the new Ask AI feature (undefined by default)
-      // askAi: 'YOUR_ALGOLIA_ASK_AI_ASSISTANT_ID',
+        // Optional: whether you want to use the new Ask AI feature (undefined by default)
+        // askAi: 'YOUR_ALGOLIA_ASK_AI_ASSISTANT_ID',
 
-      //... other Algolia params
-    } satisfies Preset.ThemeConfig["algolia"])
-  : undefined;
+        //... other Algolia params
+      } satisfies Preset.ThemeConfig["algolia"])
+    : undefined;
 
 const config: Config = {
   title: "Renku",
@@ -60,7 +61,14 @@ const config: Config = {
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
   future: {
-    v4: true, // Improve compatibility with the upcoming Docusaurus v4
+    // Improve compatibility with the upcoming Docusaurus v4
+    v4: {
+      removeLegacyPostBuildHeadAttribute: true,
+      useCssCascadeLayers: true,
+      siteStorageNamespacing: true,
+      fasterByDefault: true,
+      mdx1CompatDisabledByDefault: false, // TODO: Migrate to Strict MDX v3, see https://docusaurus.io/blog/releases/3.10#strict-mdx
+    },
   },
 
   // Set the production url of your site here
@@ -107,6 +115,8 @@ const config: Config = {
         theme: {
           customCss: "./src/css/custom.css",
         },
+        // Do not generate a sitemap if algolia is enabled
+        sitemap: algoliaConfig ? false : {},
       } satisfies Preset.Options,
     ],
   ],

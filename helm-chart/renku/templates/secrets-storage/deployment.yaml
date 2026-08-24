@@ -70,6 +70,15 @@ spec:
               value: /secrets/privateKey/privateKey
             - name: PREVIOUS_SECRETS_SERVICE_PRIVATE_KEY_PATH
               value: /secrets/privateKey/previousPrivateKey
+            {{- if .Values.dataService.remoteClustersKubeconfigSecretName }}
+            - name: K8S_CONFIGS_ROOT
+              value: "/secrets/kube_configs"
+            {{- end }}
+            - name: K8S_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.namespace
             {{- include "certificates.env.python" $ | nindent 12 }}
           livenessProbe:
             httpGet:
@@ -97,11 +106,21 @@ spec:
             - mountPath: "/secrets/privateKey"
               name: secret-service-private-key
               readOnly: true
+            {{- if .Values.dataService.remoteClustersKubeconfigSecretName }}
+            - name: remote-cluster-kubeconfigs
+              mountPath: "/secrets/kube_configs"
+              readOnly: true
+            {{- end }}
             {{- include "certificates.volumeMounts.system" . | nindent 12 }}
       volumes:
         - name: secret-service-private-key
           secret:
             secretName: {{ template "renku.fullname" . }}-secret-service-private-key
+        {{- if .Values.dataService.remoteClustersKubeconfigSecretName }}
+        - name: remote-cluster-kubeconfigs
+          secret:
+            secretName: {{ .Values.dataService.remoteClustersKubeconfigSecretName }}
+        {{- end }}
         {{- include "certificates.volumes" . | nindent 8 }}
     {{- with .Values.secretsStorage.nodeSelector }}
       nodeSelector:

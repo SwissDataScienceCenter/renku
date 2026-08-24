@@ -42,7 +42,7 @@ flowchart TD
 
 ### Working in your local IDE
 
-Do you prefer to code locally in your Renku project, then read the following guide to connect your IDE to your Renku session: [How to connect to a Renku session from your local VSCode](/docs/10-users/60-sessions/guides/50-connect-to-renku-session-from-your-local-vscode.md)
+Do you prefer to code locally in your Renku project, then read the following guide to connect your IDE to your Renku session: [How to connect to a Renku session from your local VSCode](/docs/users/compute/session/guides/connect-to-renku-session-from-your-local-vscode)
 
 ### Work collaboratively using git
 
@@ -50,6 +50,6 @@ Manage the access to your team participants at the source code repository (each 
 
 ### Integrate your GitHub/GitLab repository for code version control in your session
 
-Ensure that these team members have integrated their git account inside Renku. See [How to connect your Renku account to your GitHub or GitLab account](/docs/10-users/50-code/guides/20-connect-renku-account-to-github-or-gitlab-account.md)
+Ensure that these team members have integrated their git account inside Renku. See [How to connect your Renku account to your GitHub or GitLab account](/docs/users/code/guides/connect-renku-account-to-github-or-gitlab-account)
 
 ---

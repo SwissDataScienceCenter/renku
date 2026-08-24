@@ -97,10 +97,8 @@ describe("Anonymous users can only access public resources", () => {
     cy.getDataCy("search-query-input").clear().type(randomString);
     cy.getDataCy("search-query-button").click();
     cy.wait("@searchQuery");
-    cy.getDataCy("search-list-item")
-      .should("have.length", 2);
-    cy.getDataCy("search-list-item")
-      .should("contain.text", randomString);
+    cy.getDataCy("search-list-item").should("have.length", 2);
+    cy.getDataCy("search-list-item").should("contain.text", randomString);
 
     // Log out and search for the projects as an anonymous user
     cy.session(anonymousSession.id, anonymousSession.setup);
@@ -112,7 +110,9 @@ describe("Anonymous users can only access public resources", () => {
     cy.getDataCy("search-query-input").clear().type(randomString);
     cy.getDataCy("search-query-button").click();
     cy.wait("@searchQuery");
-    cy.getDataCy("search-list-item").should("have.length", 1).contains(randomString);
+    cy.getDataCy("search-list-item")
+      .should("have.length", 1)
+      .contains(randomString);
     cy.getDataCy("search-list-item").click();
     cy.getDataCy("project-name").should("contain", publicProjectName);
     cy.getDataCy("project-settings-link").click();
