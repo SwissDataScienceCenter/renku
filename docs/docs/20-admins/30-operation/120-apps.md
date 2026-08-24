@@ -15,7 +15,7 @@ An app serves **user-supplied code to anonymous visitors on the public internet*
 
 ## How Apps Differ From Sessions
 
-See [App](../sessions/app#how-an-app-differs-from-a-session) for the user-facing comparison.
+See [App](../../users/compute/app#how-an-app-differs-from-a-session) for the user-facing comparison.
 The admin perspective adds a few more details:
 
 ## What Renku Creates

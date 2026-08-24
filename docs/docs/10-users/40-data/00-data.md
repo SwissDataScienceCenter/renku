@@ -41,9 +41,11 @@ You can enter or modify the saved credentials for a data connector, and also del
 ![image.png](./data-connectors-00.png)
 </p>
 
-## Share, reuse, and trace your data
+## Share, reuse, publish, and trace your data
 
 Data connectors can be shared among projects. You do not need to create the same data connector for multiple projects. Check [How to link a data connector to your project](/docs/users/data/guides/link-data-connector-to-project)!
+
+You can also [publish files from a data connector to Zenodo](/docs/users/data/guides/export-data-connector-to-zenodo) by creating a Zenodo draft deposit directly from Renku.
 
 ### Track projects linked to your data connector
 

@@ -16,9 +16,9 @@ interface. Though you mostly see examples of Python and R in RenkuLab, you can u
 language in Renku.
 
 You can [configure a custom environment for your Renku
-session](../sessions/guides/environments/create-environment-with-custom-packages-installed), and
+session](../compute/environment/guides/create-environment-with-custom-packages-installed), and
 even [use your own docker image for a Renku
-session](../sessions/guides/environments/use-your-own-docker-image-for-renku-session).
+session](../compute/environment/guides/use-your-own-docker-image-for-renku-session).
 
 ### Can I keep a session running after I close the browser?
 
@@ -32,13 +32,13 @@ shut-down.
 
 ### What is the difference between an app and a session?
 
-See [App](../sessions/app#how-an-app-differs-from-a-session).
+See [App](../compute/app#how-an-app-differs-from-a-session).
 
 ### Why is my app not showing my data or my code?
 
 Code repositories are not cloned into apps. Data connectors are mounted, but only ones that are public and need no stored credentials;
 anything that requires credentials, or is backed by an OAuth integration such as Google Drive or
-Dropbox, is left out. See [What an app can reach](../sessions/app#what-an-app-can-reach).
+Dropbox, is left out. See [What an app can reach](../compute/app#what-an-app-can-reach).
 
 ## Billing
 

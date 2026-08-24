@@ -4,15 +4,16 @@
 
 To run your code and analyze data on RenkuLab, first decide what kind of session environment you would like by creating a session launcher.
 
-1. In the **Sessions** section of your project page, click on **+**.
-2. In the **Global environment** tab, scroll down and select **Python Data Science - Jupyter**. This will give you a pre-configured environment with python and data science packages pre-installed. If you need to install other packages, you can install any necessary packages using the terminal. For a detailed guide for how to install packages, see [How to install packages on-the-fly in your session](../sessions/guides/environments/install-packages-on-the-fly-in-your-session). However, the packages you install on-the-fly in the session will not be shared with other people working with your Renku project. To ensure the adequate dependencies are installed in your environment, follow step 4.3 to create a custom environment from code.
-3. Click **Next**.
-4. Choose the compute resources for your session based on your project’s needs in the drop-down menu, and select the amount of disk space.
+1. In the **Launchers** section of your project page, click on **+**.
+2. Select **Session Launcher** card.
+3. In the **Global environment** tab, scroll down and select **Python Data Science - Jupyter**. This will give you a pre-configured environment with python and data science packages pre-installed. If you need to install other packages, you can install any necessary packages using the terminal. For a detailed guide for how to install packages, see [How to install packages on-the-fly in your session](../compute/session/guides/install-packages-on-the-fly-in-your-session). However, the packages you install on-the-fly in the session will not be shared with other people working with your Renku project. To ensure the adequate dependencies are installed in your environment, follow step 4.3 to create a custom environment from code.
+4. Click **Next**.
+5. Choose the compute resources for your session based on your project’s needs in the drop-down menu, and select the amount of disk space.
 
 ![image.png](./add-session-launcher.png)
 
 :::info
-You can have multiple Session Launchers in your project that run different kinds of sessions. Check out [How to guides to add a session launcher to your project](../sessions/guides/environments)
+You can have multiple Session Launchers in your project that run different kinds of sessions. Check out [How to guides to add a session launcher to your project](../compute/session/guides/add-a-session-launcher-to-your-project)
 :::
 
 :::info
@@ -29,7 +30,7 @@ Once your session has launched, you will see the data and code that you linked t
 
 ## Add a second Session Launcher (optional)
 
-When you want to create a RenkuLab session with a set of packages that’s reproducible and shareable, we recommend defining your package dependencies in code. Then, use the ‘Create from Code’ session launcher option to have Renku create a reproducible session environment for you! See [How to create an environment with custom packages installed](../sessions/guides/environments/create-environment-with-custom-packages-installed) for details.
+When you want to create a RenkuLab session with a set of packages that’s reproducible and shareable, we recommend defining your package dependencies in code. Then, use the ‘Create from Code’ session launcher option to have Renku create a reproducible session environment for you! See [How to create an environment with custom packages installed](../compute/environment/guides/create-environment-with-custom-packages-installed) for details.
 
 ## Run the Code (optional)
 

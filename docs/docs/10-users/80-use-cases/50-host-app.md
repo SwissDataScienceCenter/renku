@@ -5,7 +5,7 @@ a stable public URL that anyone can open, without a Renku account and without
 launching a session. This page walks through creating one.
 
 For what an app is and how it differs from a session, see
-[App](../sessions/app).
+[App](../compute/app).
 
 ## Before you start
 
@@ -78,7 +78,7 @@ response that cannot arrive and then reports an error.
      buildpacks, the same way it builds custom session environments.
    - **External environment**: give the launcher your container image and the
      port your server listens on.
-4. Set a [resource class](../sessions/resource-pools-and-classes) if the default
+4. Set a [resource class](../compute/resource-pools-and-classes) if the default
    is not enough for your app.
 5. Save the launcher. If Renku is building the image, the launcher shows the
    build progress.
@@ -126,7 +126,7 @@ stay, so you can start the app again whenever you like — but apps have no
 persistent storage, so anything the app wrote to its own filesystem is gone.
 
 Deleting the launcher, or changing the project's visibility away from public,
-also stops the app (see [App](../sessions/app#editing-an-app-launcher)).
+also stops the app (see [App](../compute/app#editing-an-app-launcher)).
 
 ## Troubleshooting
 
@@ -146,7 +146,7 @@ build from code means committed to the repository the launcher builds from.
 **A data connector is missing inside the app.**
 Check the launcher's panel: it lists the connectors the app mounts and says how
 many were left out. Only public connectors that need no credentials are mounted;
-see [What an app can reach](../sessions/app#what-an-app-can-reach).
+see [What an app can reach](../compute/app#what-an-app-can-reach).
 
 **"Another launcher in this project already has an app."**
 A project can have one app at a time, across all of its launchers. Stop the

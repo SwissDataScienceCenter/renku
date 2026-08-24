@@ -241,7 +241,37 @@ The file above is just an example you will have to modify the options shown as f
   The example in the yaml snippet above is for a secret called `renku-build-docker-secret` located
   in the same namespace as where Renku is installed.
 
-- Label the node(s) you want to use for the builds with `renku.io/node-purpose: image-build`
+By default, only builds from public repositories are enabled. Building from
+internal or private repositories requires more work:
+
+- An dedicated registry to hold the images
+- Two additional secrets that will hold the credentials to access that
+  registry.
+
+Here is an example on how to configure that:
+
+```yaml
+dataService:
+  imageBuilders:
+    enabled: true
+    privateRepositoryBuilds:
+      enabled: true
+      outputPrivateImagePrefix: "harbor.dev.renku.ch/renku-private-build/"
+      pushPrivateSecretName: "renku-build-private-docker-secret"
+      pullPrivateSecretName: "renku-pull-private-docker-secret"
+```
+
+The same rules applies as for the public builds:
+
+- `outputPrivateImagePrefix` contains the Harbor domain and project name.
+  The prefix **must** be different from `outputImagePrefix`.
+- `pushPrivateSecretName` is the secret to push the image created to the
+  dedicated registry. The corresponding robot account should have the
+  `list`, `pull`, `push` and `read` permissions.
+- `pullPrivateSecretName` is the secret the pod will need to load the image.
+  The corresponding robot account should only have the `pull` permission.
+
+3. Label the node(s) you want to use for the builds with `renku.io/node-purpose: image-build`
 
 ### Build strategy
 
@@ -425,7 +455,7 @@ Setting `apps.enabled` back to `false` does not remove apps that are already run
 
 Every shared app link opens through the UI's lobby page, which polls a sleeping app until it
 wakes rather than handing a visitor a blank page (see
-[Apps sleep when nobody is using them](../../users/sessions/app#apps-sleep-when-nobody-is-using-them)).
+[Apps sleep when nobody is using them](../../users/compute/app#apps-sleep-when-nobody-is-using-them)).
 Three values control how long it waits before giving up:
 
 ```yaml
