@@ -28,6 +28,18 @@ of the session not using CPU resources. When you resume your session, you will h
 work where you left it. A paused session that is not resumed before 14 days will be automatically
 shut-down.
 
+## Apps
+
+### What is the difference between an app and a session?
+
+See [App](../sessions/app#how-an-app-differs-from-a-session).
+
+### Why is my app not showing my data or my code?
+
+Code repositories are not cloned into apps. Data connectors are mounted, but only ones that are public and need no stored credentials;
+anything that requires credentials, or is backed by an OAuth integration such as Google Drive or
+Dropbox, is left out. See [What an app can reach](../sessions/app#what-an-app-can-reach).
+
 ## Billing
 
 ### Is Renku free? When is RenkuLab not free?

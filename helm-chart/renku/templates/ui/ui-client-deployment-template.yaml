@@ -105,8 +105,10 @@ spec:
               value: {{ toJson .Values.ui.client.sessionClassEmailUs | quote }}
             - name: IMAGE_BUILDERS_ENABLED
               value: {{ .Values.dataService.imageBuilders.enabled | quote }}
-            - name: APPS_ENABLED
+            - name: RENKU_APPS_ENABLED
               value: {{ .Values.apps.enabled | quote }}
+            - name: APP_LOBBY
+              value: {{ toJson .Values.apps.appLobby | quote }}
             - name: METRICS_ENABLED
               value: {{ .Values.ui.client.prometheus.enabled | quote }}
             - name: LEGACY_SUPPORT
