@@ -5,11 +5,12 @@ For allowed projects, a project storage provided by Renku can be setup to persis
 ## Project storage setup
 
 In your project’s dashboard:
+
 1. Under **Data** section click on **+** button
 2. Go to the tab **Add project storage** (if it is not visible, this means the project is not allowed for project storage)
 3. Set the properties in the form:  
-  i. **Storage size:** Project storage size to provision (in GB)  
-  ii. **Mount point:** This is where the project storage will be mounted. You can either specify an absolute path (starting with `/`) or a relative path (relative to your session&apos;s working directory).
+   i. **Storage size:** Project storage size to provision (in GB)  
+   ii. **Mount point:** This is where the project storage will be mounted. You can either specify an absolute path (starting with `/`) or a relative path (relative to your session&apos;s working directory).
 4. Click on **+ Add project storage**
 
 <p class="image-container-m">
