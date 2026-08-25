@@ -140,6 +140,12 @@ spec:
             {{- end }}
             {{- include "certificates.env.python" . | nindent 12 }}
             {{- include "certificates.env.grpc" . | nindent 12 }}
+            - name: PERSISTED_LOGS_ENABLED
+              value: {{ .Values.dataService.persistedLogs.enabled | default false | quote }}
+            - name: PERSISTED_LOGS_LOKI_READ_URL
+              value: {{ .Values.dataService.persistedLogs.lokiReadUrl | quote }}
+            - name: PERSISTED_LOGS_TTL_SECONDS
+              value: {{ .Values.dataService.persistedLogs.ttlSeconds | quote }}
           volumeMounts:
             {{- include "certificates.volumeMounts.system" . | nindent 12 }}
             {{- if .Values.dataService.remoteClustersKubeconfigSecretName }}
