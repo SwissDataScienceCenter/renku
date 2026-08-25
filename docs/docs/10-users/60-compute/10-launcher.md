@@ -15,13 +15,13 @@ Renku supports three types of launchers:
 A launcher contains:
 
 1. an [Environment](environment), which defines the software packages and libraries used by the session or job, and
-2. a default resource class (see [Resource Pools & Classes](resource-pools-and-classes)), which determines the availabler compute resources.
+2. a default resource class (see [Resource Pools & Classes](resource-pools-and-classes)), which determines the available compute resources.
 
 For a Job launcher, you also configure a **job command** that defines what runs when the job is submitted.
 
 Project's launchers are usable to everyone who can see the project. Anyone with access to the project can launch a session, submit a job, or start an app from a launcher.
 
-However, the sessions you launch and the jobs you submit are only accessible to you and are not shared across users — an app is the exception, since it is public and shared by the whole project (see [App](app)).
+However, the sessions you launch and the jobs you submit are only accessible to you and are not shared across users. An app is the exception, since it is public and shared by the whole project (see [App](app)).
 
 ## Next steps
 
