@@ -570,7 +570,7 @@ ui:
     replicaCount: 1
     image:
       repository: renku/renku-ui
-      tag: "4.27.2"
+      tag: "4.30.0"
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
       ## Secrets must be manually created in the namespace.
@@ -762,7 +762,7 @@ ui:
     keepCookies: []
     image:
       repository: renku/renku-ui-server
-      tag: "4.27.2"
+      tag: "4.30.0"
       pullPolicy: IfNotPresent
     imagePullSecrets: []
     nameOverride: ""
@@ -844,8 +844,7 @@ dlf-chart:
     enabled: false
   dataset-operator-chart:
     enabled: true
-csi-rclone:
-  {}
+csi-rclone: {}
   # This section is only relevant if you are installing csi-rclone as part of Renku
   ## Name of the csi storage class to use for RClone/Cloudstorage. Should be unique per cluster.
   # storageClassName: csi-rclone
@@ -1215,12 +1214,12 @@ dataService:
     existingPriorityClass: ""
   image:
     repository: renku/renku-data-service
-    tag: "0.80.1"
+    tag: "0.84.1"
     pullPolicy: IfNotPresent
   k8sWatcher:
     image:
       repository: renku/data-service-k8s-watcher
-      tag: "0.80.1"
+      tag: "0.84.1"
       pullPolicy: IfNotPresent
     resources: {}
     sentry:
@@ -1231,7 +1230,7 @@ dataService:
   dataTasks:
     image:
       repository: renku/data-service-data-tasks
-      tag: "0.80.1"
+      tag: "0.84.1"
       pullPolicy: IfNotPresent
     resources: {}
     enableResourceRequestTracking: false
@@ -1287,8 +1286,7 @@ dataService:
     ## The name of the BuildStrategy to use for image builds.
     strategyName: renku-buildpacks-v3
     ## Configuration overrides for specific target platforms
-    platformOverrides:
-      {}
+    platformOverrides: {}
       # linux/arm64:
       #   builderImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/cuda-selector:0.9.1"
       #   runImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/cuda-run-image:0.9.1"
@@ -1332,6 +1330,22 @@ dataService:
         key: renku.io/dedicated
         operator: Equal
         value: user
+    envidat:
+      exportsEnabled: false
+      url: https://envidat.ch
+      rcloneImage: rclone/rclone:1
+      s3:
+        ## The secret name that stores the S3 ACCESS_KEY_ID, SECRET_ACCESS_KEY, ENDPOINT, BUCKET for uploading data to Envidat
+        ## The keys in the Kubernetes secret should have the same names as the terms mentioned above.
+        credentialsSecretName: renku-envidat-s3-credentials
+  # Configuration values for persisted logs
+  persistedLogs:
+    ## If set to true, enables logs to be pulled from Loki into the backend database.
+    enabled: false
+    ## The base URL for the Loki read API
+    lokiReadUrl: "http://loki-read.monitoring.svc.cluster.local:3100/"
+    ## The TTL for persisted logs
+    ttlSeconds: 86400 # 24 hours
   ## The service account used in the Amalthea session pods for the resource pool(s) that use the local cluster.
   ## The only use for this is if you want to use a different SCC than the default in OpenShift.
   ## The service account is not mounted in the session. Leaving the default value of "" means that
@@ -1344,6 +1358,24 @@ dataService:
   ## If the value is not set then a secret is not mounted.
   ## The secret should be in the same namespace as where all the Renku services are installed.
   remoteClustersKubeconfigSecretName: ""
+  ## Enables long-lived project storage where the same storage is shared among all users of the project.
+  ## This storage lives for the duration of the project, it outlives sessions.
+  ## A read-write-many storage class is required for this.
+  ## Keep in mind that some read-write-many storage classes do not have real limits on the size
+  ## and will keep growing - especially if backed by object storage under the hood.
+  ## The storage class also has to support automatic volume provisioning. Renku will just create a PVC, and will
+  ## expect that the PV will be automatically provisioned.
+  ## When you use this feature you should also setup backups for the volumes that are used for project storage.
+  projectStorage:
+    enabled: false
+    ## If you leave the storage class as null, the default storage class will be used.
+    ## NOTE: In many cases the default storage class does not support read-write-many access.
+    storageClass: null
+    ## The max storage that the API will accept when the storage is created.
+    ## This is the upper limit of what the users can request. When they create the project storage
+    ## user have the option to set a lower value. The value cannot be lower than 1 Gb.
+    storageMaxSizeGb: 10
+
 posthog:
   enabled: false
   # the posthog api key
@@ -1372,7 +1404,7 @@ authz:
 secretsStorage:
   image:
     repository: renku/secrets-storage
-    tag: "0.80.1"
+    tag: "0.84.1"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP

@@ -214,8 +214,52 @@ spec:
             {{- end }}
             - name: DATA_DEPOSITS_JOB_IMAGE
               value: {{ .Values.dataService.dataDeposits.image | quote }}
+            - name: ENVIDAT_URL
+              value: {{ .Values.dataService.dataDeposits.envidat.url | quote }}
+            - name: ENVIDAT_RCLONE_IMAGE
+              value: {{ .Values.dataService.dataDeposits.envidat.rcloneImage | quote }}
+            - name: ENVIDAT_EXPORTS_ENABLED
+              value: {{ .Values.dataService.dataDeposits.envidat.exportsEnabled | quote }}
+            {{- if .Values.dataService.dataDeposits.envidat.exportsEnabled }}
+            - name: ENVIDAT_S3_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.dataService.dataDeposits.envidat.s3.credentialsSecretName | quote }}
+                  key: ENDPOINT
+            - name: ENVIDAT_S3_BUCKET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.dataService.dataDeposits.envidat.s3.credentialsSecretName | quote }}
+                  key: BUCKET
+            - name: ENVIDAT_S3_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.dataService.dataDeposits.envidat.s3.credentialsSecretName | quote }}
+                  key: ACCESS_KEY_ID
+            - name: ENVIDAT_S3_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.dataService.dataDeposits.envidat.s3.credentialsSecretName | quote }}
+                  key: SECRET_ACCESS_KEY
+            {{- end }}
             - name: RENKU_URL
               value: {{ (include "renku.baseUrl" .) | quote }}
+            - name: PERSISTED_LOGS_ENABLED
+              value: {{ .Values.dataService.persistedLogs.enabled | default false | quote }}
+            - name: PERSISTED_LOGS_LOKI_READ_URL
+              value: {{ .Values.dataService.persistedLogs.lokiReadUrl | quote }}
+            - name: PERSISTED_LOGS_TTL_SECONDS
+              value: {{ .Values.dataService.persistedLogs.ttlSeconds | quote }}
+            - name: PROJECT_STORAGE_ENABLED
+              value: {{ .Values.dataService.projectStorage.enabled | quote }}
+            {{- if .Values.dataService.projectStorage.enabled }}
+            {{- if .Values.dataService.projectStorage.storageClass }}
+            - name: PROJECT_STORAGE_STORAGE_CLASS
+              value: {{ .Values.dataService.projectStorage.storageClass | quote }}
+            {{- end }}
+            - name: PROJECT_STORAGE_MAX_SIZE_GB
+              value: {{ .Values.dataService.projectStorage.storageMaxSizeGb | quote }}
+            {{- end }}
           volumeMounts:
             - name: server-options
               mountPath: /etc/renku-notebooks/server_options
