@@ -511,4 +511,3 @@ spec:
     domain:
       example-apps.com: ""
 ```
-

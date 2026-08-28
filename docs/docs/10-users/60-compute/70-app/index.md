@@ -14,15 +14,15 @@ To create one, see [Publish an app](../../use-cases/host-app).
 
 ## How an app differs from a session
 
-|                    | Session                           | App                                       |
-| ------------------ | --------------------------------- | ----------------------------------------- |
-| Who can open it    | You, once you launch it           | Anyone with the link                      |
-| How many           | One per person, per launcher      | One per project                           |
-| Lifetime           | Until stopped or timed out        | Until stopped                             |
-| Code repositories  | Cloned into the session           | Not cloned                                |
-| Data connectors    | All of them, with credentials     | Public ones with no stored credentials    |
-| Session secrets    | Available to the session          | Not available                             |
-| Project visibility | Any                               | Public only                               |
+|                    | Session                       | App                                    |
+| ------------------ | ----------------------------- | -------------------------------------- |
+| Who can open it    | You, once you launch it       | Anyone with the link                   |
+| How many           | One per person, per launcher  | One per project                        |
+| Lifetime           | Until stopped or timed out    | Until stopped                          |
+| Code repositories  | Cloned into the session       | Not cloned                             |
+| Data connectors    | All of them, with credentials | Public ones with no stored credentials |
+| Session secrets    | Available to the session      | Not available                          |
+| Project visibility | Any                           | Public only                            |
 
 If you want an interactive environment to work in, you want a session. If you
 want to publish something for other people to look at, you want an app.

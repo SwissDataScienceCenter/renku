@@ -109,7 +109,7 @@ spec:
               value: {{ .Values.dataService.imageBuilders.enabled | quote }}
             - name: BUILD_PRIVATE_REPO_BUILDS_ENABLED
               value: {{ .Values.dataService.imageBuilders.privateRepositoryBuilds.enabled | quote }}
-            - name: RENKU_APPS_ENABLED
+            - name: APPS_ENABLED
               value: {{ .Values.apps.enabled | quote }}
             - name: APP_LOBBY
               value: {{ toJson .Values.apps.appLobby | quote }}
