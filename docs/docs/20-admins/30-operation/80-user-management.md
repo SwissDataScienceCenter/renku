@@ -10,7 +10,11 @@ Renku uses [Keycloak](https://www.keycloak.org/) as its identity provider. When 
 
 ### Accessing Keycloak Admin Console
 
-1. Navigate to your Keycloak instance (at `https://<your-domain>/auth`)
+:::warning
+By default, the Keycloak Admin Console is publicly accessible. We recommend restricting access. Setting `global.keycloak.secureAdminConsole=true` in your Renku Helm values limits access to port-forwarding only (port `8080` on the Keycloak pod), blocking public URL access.
+:::
+
+1. Navigate to your Keycloak instance (at `https://<your-domain>/auth`, or `http://localhost:8080` if `global.keycloak.secureAdminConsole=true` is set and you have port-forwarded)
 2. Click on "Administration Console"
 3. Log in with your admin credentials
 4. Select the Renku realm to manage users and roles
