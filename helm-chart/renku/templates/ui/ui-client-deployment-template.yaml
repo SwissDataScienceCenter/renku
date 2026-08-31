@@ -117,6 +117,12 @@ spec:
               value: {{ .Values.ui.client.prometheus.enabled | quote }}
             - name: LEGACY_SUPPORT
               value: {{ dict "enabled" false "supportLegacySessions" false | toJson | quote }}
+            - name: PERSISTED_LOGS_ENABLED
+              value: {{ .Values.dataService.persistedLogs.enabled | default false | quote }}
+            - name: PERSISTED_LOGS_TTL_SECONDS
+              value: {{ .Values.dataService.persistedLogs.ttlSeconds | quote }}
+            - name: CULLING_THRESHOLDS
+              value: {{ include "notebooks.cullingThresholdsJson" . | quote }}
             {{- include "certificates.env.nodejs" . | nindent 12 }}
           livenessProbe:
             httpGet:
