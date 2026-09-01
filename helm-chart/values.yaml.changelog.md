@@ -5,7 +5,7 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
-## Upgrading to Renku 2.20.0
+## Upgrading to Renku 2.21.0
 
 * NEW `dataService.imageBuilders.insecureOutput.enabled`: it is now possible to configure registries that use e.g. self-signed certificates to push images to. **WARNING** do not use in production. This is a feature that helps for testing and development.
 
