@@ -261,7 +261,7 @@ jobs:
     name: Cleanup
     runs-on: ubuntu-24.04
     needs: [check-deploy]
-    if: github.event.action == 'closed' && needs.check-deploy.outputs.deploy == 'true'
+    if: github.event.action == 'closed' && needs.check-deploy.outputs.deploy == 'true' && !contains(github.event.pull_request.labels.*.name, 'skip-cleanup')
     permissions:
       pull-requests: write
       id-token: write
