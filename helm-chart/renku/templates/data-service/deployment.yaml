@@ -149,7 +149,7 @@ spec:
             - name: BUILD_PULL_PRIVATE_SECRET_NAME
               value: {{ .Values.dataService.imageBuilders.privateRepositoryBuilds.pullPrivateSecretName | default "" | quote }}
             - name: BUILD_INSECURE_OUTPUT_ENABLED
-              value: {{ .Values.data-service.imageBuilders.insecureOutput.enabled | default "false" | quote }}
+              value: {{ .Values.dataService.imageBuilders.insecureOutput.enabled | default "false" | quote }}
             - name: BUILD_INSECURE_REGISTRIES
               value: {{ .Values.dataService.imageBuilders.insecureOutput.registries | default "" | quote }}
             - name: BUILD_RUN_RETENTION_AFTER_FAILED_SECONDS
