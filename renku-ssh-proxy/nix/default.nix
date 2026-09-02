@@ -46,16 +46,16 @@ let
       pname = (lib.importTOML ../Cargo.toml).package.name;
       version = (lib.importTOML ../Cargo.toml).package.version;
       doCheck = false;
-      postInstall = lib.optionalString (pkgsStatic.stdenv.buildPlatform.canExecute pkgsStatic.stdenv.hostPlatform) ''
-        installShellCompletion --cmd renku-ssh-proxy \
-          --bash <($out/bin/renku-ssh-proxy --completions bash) \
-          --fish <($out/bin/renku-ssh-proxy --completions fish) \
-          --zsh <($out/bin/renku-ssh-proxy --completions zsh)
-      '';
+      # postInstall = lib.optionalString (pkgsStatic.stdenv.buildPlatform.canExecute pkgsStatic.stdenv.hostPlatform) ''
+      #   installShellCompletion --cmd renku-ssh-proxy \
+      #     --bash <($out/bin/renku-ssh-proxy --completions bash) \
+      #     --fish <($out/bin/renku-ssh-proxy --completions fish) \
+      #     --zsh <($out/bin/renku-ssh-proxy --completions zsh)
+      # '';
       meta = {
         name = "renku-ssh-proxy";
         homepage = "https://renkulab.io";
-        license = lib.licenses.agpl3Plus;
+        license = lib.licenses.asl20;
         mainProgram = "renku-ssh-proxy";
         platforms = lib.platforms.linux ++ lib.platforms.darwin;
       };
