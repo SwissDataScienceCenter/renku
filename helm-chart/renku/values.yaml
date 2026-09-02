@@ -1387,7 +1387,7 @@ sshProxy:
     # If left empty and createPriorityClass is false, placeholder pods will have no priority class assigned.
     existingPriorityClass: ""
   image:
-    repository: renku/renku-ssh-proxy
+    repository: harbor.dev.renku.ch/dev-images/renku-ssh-proxy
     tag: "0.1.0"
     pullPolicy: IfNotPresent
   service:
