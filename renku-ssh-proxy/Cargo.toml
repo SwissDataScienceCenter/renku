@@ -13,7 +13,7 @@ clap = { version = "4.6.5", features = ["derive", "string"] }
 clap_complete = "4.6.5"
 color-eyre = "0.6.5"
 env_logger = "0.11"
-log = "0.4.11"
+log = "0.4.27"
 rand = { version = "0.10", features = ["thread_rng"] }
 reqwest = { version = "0.13.4", default-features = false, features = [
   "charset",

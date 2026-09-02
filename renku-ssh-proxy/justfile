@@ -7,5 +7,5 @@ test $RUST_LOG="sandhole=debug":
 clippy:
     cargo clippy --all-targets --fix --allow-dirty --allow-staged && cargo fmt --all
 
-flamegraph-test test:
-    cargo flamegraph --profile bench --test integration -- {{ test }}
+image:
+    nix build .#docker && docker load < result
