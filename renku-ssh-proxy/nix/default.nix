@@ -90,7 +90,7 @@ in
       pkgs.just
       pkgs.tack
 
-      # Profiling dependencies
+      # Dev dependencies
       pkgs.cargo-flamegraph
       pkgs.rust-analyzer
 
