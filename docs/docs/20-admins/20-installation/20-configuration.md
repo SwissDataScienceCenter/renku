@@ -281,3 +281,233 @@ for Shipwright](https://github.com/SwissDataScienceCenter/renku-data-services/bl
 ### Configuration without Harbor and Shipwright
 
 This is the default and no further steps are needed.
+
+## Knative
+
+In order to use Renku Apps, Knative needs to be installed and configured prior to installing Renku
+(see [Requirements](requirements#knative)). Apps are served from a domain of their own, so this
+section also covers choosing that domain and giving it the DNS and TLS it needs.
+
+The examples below are the arrangement we run, with the cloud-specific parts replaced by
+placeholders. A Gateway API implementation and a load balancer address usually come from your
+cloud provider, though exactly how varies, so substitute what applies to your environment. Nothing
+here is specific to a cloud, and nothing in Renku depends on which one you use.
+
+### 1. Enable the Knative feature flags
+
+Renku's apps use pod spec fields that Knative rejects at admission unless the corresponding feature
+flag is enabled. Add the following to your `KnativeServing` resource:
+
+```yaml
+apiVersion: operator.knative.dev/v1beta1
+kind: KnativeServing
+metadata:
+  name: knative-serving
+  namespace: knative-serving
+spec:
+  config:
+    features:
+      kubernetes.podspec-persistent-volume-claim: enabled
+      kubernetes.podspec-persistent-volume-write: enabled
+      kubernetes.podspec-node-selector: enabled
+      kubernetes.podspec-affinity: enabled
+      kubernetes.podspec-tolerations: enabled
+```
+
+- The two `persistent-volume` flags are needed to mount data connectors, which apps do through
+  the same `csi-rclone` storage class as sessions.
+- `affinity`, `tolerations` and `node-selector` are needed because an app inherits the node
+  affinity and tolerations of its resource class, exactly as a session does.
+
+### 2. Put a Gateway API gateway in front of Knative
+
+Knative needs a networking layer to turn each app into a route. We use
+[`net-gateway-api`](https://github.com/knative-extensions/net-gateway-api), which programs
+[Gateway API](https://gateway-api.sigs.k8s.io/) `HTTPRoute`s against a gateway you provide, instead
+of the Kourier ingress the operator installs by default.
+
+Broadly, this means:
+
+- Installing `net-gateway-api`'s release manifests for your Knative version, then disabling
+  Kourier and pointing Serving at the new ingress class
+  (`ingress-class: "gateway-api.ingress.networking.knative.dev"`).
+- Creating two `Gateway` objects in `knative-serving`: an external one (TLS-terminating, for your
+  apps domain) and a cluster-local one. Both need `allowedRoutes.namespaces.from: All`, since the
+  `HTTPRoute`s belong to apps living in the sessions namespace, not `knative-serving`.
+- Pointing `net-gateway-api`'s `config-gateway` ConfigMap at those gateways.
+- Giving the external gateway a **stable, pre-allocated load balancer address** (via
+  `spec.infrastructure.annotations`, using your cloud's load-balancer-controller keys). The apps
+  domain's DNS record points at this address, so a floating one means every app becomes
+  unreachable if the gateway is ever recreated.
+
+Which `GatewayClass` and load-balancer annotations apply depends on your Gateway API implementation
+(Istio, Envoy Gateway, Contour, or a cloud-managed one). Consult its docs for the exact manifests.
+
+```mermaid
+flowchart LR
+    Client((Visitor)) -->|"https://*.example-apps.com"| LB[Load balancer]
+    LB --> EGW["External Gateway<br/>(knative-serving)"]
+    EGW -->|"net-gateway-api programs<br/>an HTTPRoute per app"| KSVC["Knative Service<br/>(one per app)"]
+    KSVC --> Pod[App pod]
+```
+
+### 3. Configure the apps domain
+
+Knative routes by hostname, so every app gets its own hostname under a domain you set aside for
+apps. We do this with a wildcard, the simplest arrangement, which the rest of this section assumes:
+
+- A **wildcard DNS record** (for example `*.example-apps.com`) pointing at the load balancer address
+  of the external gateway from the previous step, not the nginx ingress that serves Renku itself.
+- A **wildcard TLS certificate** covering that domain, in the `knative-serving` namespace and
+  referenced by that gateway's HTTPS listener. [cert-manager](https://cert-manager.io/) can issue
+  it, but the solver has to be **DNS-01**, because ACME will not issue a wildcard over HTTP-01:
+
+  ```yaml
+  apiVersion: cert-manager.io/v1
+  kind: Certificate
+  metadata:
+    name: knative-wildcard
+    namespace: knative-serving
+  spec:
+    secretName: knative-wildcard-tls
+    issuerRef:
+      name: letsencrypt-dns01
+      kind: ClusterIssuer
+    dnsNames:
+      - "*.example-apps.com"
+  ```
+
+Other arrangements work as well. If a wildcard certificate is not an option for you, Knative can
+obtain a certificate per app instead: set `external-domain-tls: "enabled"` rather than the
+`"disabled"` shown below, and install a certificate provider for it; note that issuing then happens
+while a user is waiting for their app to come up. If wildcard DNS is the part you would rather
+avoid, something like [external-dns](https://kubernetes-sigs.github.io/external-dns/) can create
+records per app from the Knative routes. Neither path is what we run, so you are on your own for the
+details, but nothing in Renku depends on the wildcard.
+
+:::warning[Prefer a separate registrable domain]
+
+Use a registrable domain that is **not** the one your platform is served on: if Renku is on
+`example.com`, apps on something like `example-apps.com` rather than `apps.example.com`. Otherwise
+a cookie scoped to the shared parent domain is readable by JavaScript running inside an app,
+turning any app into a way to steal a user's platform session. This is what our own deployments do
+(`renkulab.io` for the platform, `*.renkulab.app` for apps). Decide this before the first app is
+launched.
+
+:::
+
+Renku labels every app's Knative Service with `renku.io/project-slug` and `renku.io/project-id-slug`.
+A domain template can use those to produce a hostname that identifies the project rather than
+exposing Renku's internal app name:
+
+```yaml
+apiVersion: operator.knative.dev/v1beta1
+kind: KnativeServing
+metadata:
+  name: knative-serving
+  namespace: knative-serving
+spec:
+  config:
+    network:
+      external-domain-tls: "disabled"
+      domain-template: |-
+        {{- if and (index .Labels "renku.io/project-slug") (index .Labels "renku.io/project-id-slug") -}}
+        {{ index .Labels "renku.io/project-slug" }}-{{ index .Labels "renku.io/project-id-slug" }}.{{.Domain}}
+        {{- else -}}
+        {{.Name}}.{{.Domain}}
+        {{- end -}}
+    domain:
+      example-apps.com: ""
+```
+
+With the example above an app is served at `<project-slug>-<project-id-slug>.example-apps.com`,
+where `project-id-slug` is a short fragment of the project's id that keeps hostnames unique when
+two projects share a slug. The `else` branch matters: it stops any Knative Service that is not one
+of Renku's apps from producing an invalid hostname.
+
+Renku never builds the hostname itself; it reads whatever Knative assigns, so the template above is
+what your users will see and share.
+
+A wildcard covers exactly one label, so keep it in step with your domain template:
+`*.example-apps.com` covers `my-project-01ab23cd.example-apps.com` but not
+`my-project-01ab23cd.team.example-apps.com`. A mismatch shows up as apps that resolve but fail TLS,
+not as an install-time error.
+
+`external-domain-tls: "disabled"` tells Knative not to obtain a certificate per app, which is what
+you want when TLS is terminated at the gateway with a certificate that already covers every app
+hostname. Leave it enabled if you are letting Knative issue them instead.
+
+### 4. Enable apps in the Renku values file
+
+A single value turns the feature on:
+
+```yaml
+apps:
+  enabled: true
+```
+
+:::warning
+Setting `apps.enabled` back to `false` does not remove apps that are already running. See
+[Apps](../operation/apps) for how to remove them.
+:::
+
+### 5. Tune the app lobby (optional)
+
+Every shared app link opens through the UI's lobby page, which polls a sleeping app until it
+wakes rather than handing a visitor a blank page (see
+[Apps sleep when nobody is using them](../../users/compute/app#apps-sleep-when-nobody-is-using-them)).
+Three values control how long it waits before giving up:
+
+```yaml
+apps:
+  appLobby:
+    maxAttempts: 7 # 1-100
+    probeTimeoutMs: 45000 # 1000-300000
+    retryDelayMs: 2000 # 0-60000
+```
+
+- `maxAttempts`: how many probes the lobby makes before offering a manual retry.
+- `probeTimeoutMs`: how long a single probe may hang before it counts as failed.
+- `retryDelayMs`: how long the lobby pauses between probes.
+
+The defaults above give a sleeping app about five and a half minutes to wake. If your gateway's
+read timeout is shorter than `probeTimeoutMs`, raise the timeout rather than lowering this value:
+a probe the gateway kills early looks like a slow app, not a fast failure.
+
+### The `KnativeServing` resource, in one piece
+
+Steps 1 to 3 each patch the same object. This is what they add up to: the shape we run, minus
+`config-gateway`, which is patched separately:
+
+```yaml
+apiVersion: operator.knative.dev/v1beta1
+kind: KnativeServing
+metadata:
+  name: knative-serving
+  namespace: knative-serving
+spec:
+  version: "1.16"
+  high-availability:
+    replicas: 2
+  ingress:
+    kourier:
+      enabled: false
+  config:
+    features:
+      kubernetes.podspec-persistent-volume-claim: enabled
+      kubernetes.podspec-persistent-volume-write: enabled
+      kubernetes.podspec-node-selector: enabled
+      kubernetes.podspec-affinity: enabled
+      kubernetes.podspec-tolerations: enabled
+    network:
+      ingress-class: "gateway-api.ingress.networking.knative.dev"
+      external-domain-tls: "disabled"
+      domain-template: |-
+        {{- if and (index .Labels "renku.io/project-slug") (index .Labels "renku.io/project-id-slug") -}}
+        {{ index .Labels "renku.io/project-slug" }}-{{ index .Labels "renku.io/project-id-slug" }}.{{.Domain}}
+        {{- else -}}
+        {{.Name}}.{{.Domain}}
+        {{- end -}}
+    domain:
+      example-apps.com: ""
+```

@@ -2,6 +2,12 @@
 
 Sometimes you need to share or present the results of your project to stakeholders or other colleagues. In this tutorial, you will learn how to serve dashboards from Renku projects through dedicated session launchers.
 
+:::tip
+
+Whoever you share this with needs a Renku account and has to launch a session to see your dashboard. If you want to hand out a link that anyone can simply open, [publish an app](host-app) instead.
+
+:::
+
 **Contents**
 
 ## Part 1: Create a Renku project and connect data and code
