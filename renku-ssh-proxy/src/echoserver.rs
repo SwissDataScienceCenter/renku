@@ -2,6 +2,8 @@ use std::collections::HashMap;
 use std::sync::Arc;
 
 use crate::config::Settings;
+use crate::proxy_server::ProxyHandler;
+use color_eyre::eyre::Result;
 use russh::keys::{Certificate, *};
 use russh::server::{Msg, Server as _, Session};
 use russh::*;
@@ -24,6 +26,14 @@ pub async fn do_run(settings: &Settings) {
     // });
 
     server.await.unwrap()
+}
+
+pub async fn do_proxy(settings: &Settings) -> Result<()> {
+    let mut ph = ProxyHandler::new();
+    let socket = TcpListener::bind(settings.listen).await?;
+    let server = ph.run_on_socket(settings.ssh_server_config.clone(), &socket);
+    server.await?;
+    Ok(())
 }
 
 #[derive(Clone)]
@@ -51,7 +61,7 @@ impl server::Server for Server {
         s
     }
     fn handle_session_error(&mut self, _error: <Self::Handler as russh::server::Handler>::Error) {
-        eprintln!("Session error: {_error:#?}");
+        log::error!("Session error: {_error:#?}");
     }
 }
 

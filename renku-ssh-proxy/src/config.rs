@@ -30,6 +30,10 @@ struct Cli {
     #[arg(long, value_name = "FILE", env = "RENKU_SSH_PROXY_HOST_KEY")]
     host_key: Option<PathBuf>,
 
+    /// Path to the public key to authenticate at the target ssh
+    #[arg(long, value_name = "FILE", env = "RENKU_SSH_PROXY_TARGET_KEY")]
+    target_key: Option<PathBuf>,
+
     /// Be more verbose when logging. Verbosity increases with each occurrence.
     #[command(flatten)]
     log_level: Option<Verbosity>,
@@ -45,6 +49,7 @@ struct Cli {
 struct FileConfig {
     listen: Option<SocketAddr>,
     host_key: Option<PathBuf>,
+    target_key: Option<PathBuf>,
     #[serde(deserialize_with = "deserialize_verbosity")]
     log_level: Option<Verbosity>,
     #[serde(with = "humantime_serde")]
@@ -84,6 +89,7 @@ impl FileConfig {
 pub struct Settings {
     pub listen: SocketAddr,
     pub host_key_file: PathBuf,
+    pub target_key_file: PathBuf,
     pub log_level: Verbosity,
     pub ssh_server_config: Arc<SshServerConfig>,
 }
@@ -122,11 +128,17 @@ impl Settings {
         };
         let ssh_server_config = Arc::new(ssh_server_config);
 
+        let target_key_file = cli.target_key
+            .or(file.target_key)
+            .ok_or_eyre("missing `target_key`")
+            .suggestion("Pass --target-key, set `target_key` in the config file or env var RENKU_SSH_PROXY_TARGET_KEY")?;
+
         Ok(Settings {
             listen,
             host_key_file,
             log_level,
             ssh_server_config,
+            target_key_file,
         })
     }
 

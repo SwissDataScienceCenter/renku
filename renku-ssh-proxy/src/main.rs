@@ -22,6 +22,6 @@ async fn main() -> color_eyre::Result<()> {
         .init();
 
     log::info!("Hello! Try to connect to port 2222, like ssh -p 2222 <the-host>");
-    echoserver::do_run(&settings).await;
+    let _ = echoserver::do_proxy(&settings).await;
     Ok(())
 }
