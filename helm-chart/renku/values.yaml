@@ -831,19 +831,6 @@ amalthea:
       memory: 200Mi
     limits:
       memory: 200Mi
-## Used only if S3 Mounts are enabled
-dlf-chart:
-  csi-sidecars-rbac:
-    enabled: true
-  csi-nfs-chart:
-    enabled: false
-  csi-s3-chart:
-    mounter: "goofys"
-    enabled: true
-  csi-h3-chart:
-    enabled: false
-  dataset-operator-chart:
-    enabled: true
 csi-rclone: {}
   # This section is only relevant if you are installing csi-rclone as part of Renku
   ## Name of the csi storage class to use for RClone/Cloudstorage. Should be unique per cluster.
@@ -858,10 +845,6 @@ notebooks:
   cloudstorage:
     ## If enabled this will allow mounting of rclone cloudstorage
     enabled: false
-    ## should match csi-rclone.storageClassName if you use a custom name
-    # storageClass: csi-rclone
-    s3:
-      installDatashim: false
   # configuration for user session persistent volumes
   userSessionPersistentVolumes:
     enabled: true
@@ -1122,7 +1105,7 @@ gateway:
   secretKey:
   image:
     repository: renku/renku-gateway
-    tag: "1.10.3"
+    tag: "1.10.4"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
