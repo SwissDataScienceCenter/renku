@@ -1,35 +1,21 @@
 use std::collections::HashMap;
 use std::sync::Arc;
 
+use crate::config::Settings;
 use russh::keys::{Certificate, *};
 use russh::server::{Msg, Server as _, Session};
 use russh::*;
 use tokio::net::TcpListener;
 use tokio::sync::Mutex;
 
-pub async fn do_run() {
-    let config = russh::server::Config {
-        inactivity_timeout: Some(std::time::Duration::from_secs(3600)),
-        auth_rejection_time: std::time::Duration::from_secs(3),
-        auth_rejection_time_initial: Some(std::time::Duration::from_secs(0)),
-        keys: vec![
-            russh::keys::PrivateKey::random(&mut rand::rng(), russh::keys::Algorithm::Ed25519)
-                .unwrap(),
-        ],
-        preferred: Preferred {
-            // kex: std::borrow::Cow::Owned(vec![russh::kex::DH_GEX_SHA256]),
-            ..Preferred::default()
-        },
-        ..Default::default()
-    };
-    let config = Arc::new(config);
+pub async fn do_run(settings: &Settings) {
     let mut sh = Server {
         clients: Arc::new(Mutex::new(HashMap::new())),
         id: 0,
     };
 
-    let socket = TcpListener::bind(("0.0.0.0", 2222)).await.unwrap();
-    let server = sh.run_on_socket(config, &socket);
+    let socket = TcpListener::bind(settings.listen).await.unwrap();
+    let server = sh.run_on_socket(settings.ssh_server_config.clone(), &socket);
     // let handle = server.handle();
 
     // tokio::spawn(async move {
@@ -39,7 +25,6 @@ pub async fn do_run() {
 
     server.await.unwrap()
 }
-
 
 #[derive(Clone)]
 struct Server {
@@ -113,8 +98,9 @@ impl server::Handler for Server {
         if data == [3] {
             return Err(russh::Error::Disconnect);
         }
-
-        let data = format!("Got data: {}\r\n", String::from_utf8_lossy(data)).into_bytes();
+        let input = String::from_utf8_lossy(data);
+        let data = format!("Got data: {}\r\n", input).into_bytes();
+        log::debug!("Sending: {}", input);
         self.post(data.clone()).await;
         session.data(channel, data)?;
         Ok(())
