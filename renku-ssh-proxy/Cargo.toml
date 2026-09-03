@@ -5,14 +5,19 @@ edition = "2024"
 readme = "README.md"
 resolver = "3"
 license = "Apache-2.0"
-repository = "https://github.com/SwissDatascienceCenter/renku-ssh-proxy"
+repository = "https://github.com/SwissDatascienceCenter/renku/renku-ssh-proxy"
 keywords = ["renku", "ssh"]
+build = "build.rs"
 
 [dependencies]
-clap = { version = "4.6.5", features = ["derive", "string"] }
+clap = { version = "4.6.5", features = ["derive", "string", "env"] }
+clap-verbosity-flag = "3.0.4"
 clap_complete = "4.6.5"
 color-eyre = "0.6.5"
+directories = "6.0.0"
 env_logger = "0.11"
+humantime = "2.4.0"
+humantime-serde = "1.1.1"
 log = "0.4.27"
 rand = { version = "0.10", features = ["thread_rng"] }
 reqwest = { version = "0.13.4", default-features = false, features = [
@@ -38,3 +43,16 @@ ssh-key = { version = "=0.7.0-rc.11", features = [
 ] }
 tokio = { version = "1.53.1", features = ["full"] }
 tokio-rustls = "0.26.4"
+toml = "1.1.5"
+
+[build-dependencies]
+vergen-gix = { version = "10.0.1", features = [
+  "build",
+  "cargo",
+  "rustc"
+] }
+
+[profile.release]
+strip = "debuginfo"
+opt-level = "z"
+lto = true
