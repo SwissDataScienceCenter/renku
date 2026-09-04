@@ -55,6 +55,11 @@ Most information related to upgrading from one chart version to another is cover
 in the `values changelog file <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/values.yaml.changelog.md>`_.
 For upgrades that require some steps other than modifying the values files to be executed, we add some instructions here.
 
+Upgrading to 0.xx.x
+*******************
+This version replaces bitnami-redis with the opensource fork valkey as a helm chart dependency.
+It is a drop-in replacement, but the migration will flush the cache, logging out all users.
+
 Upgrading to 0.27.0
 *******************
 This version contains an upgrade to the ``keycloak`` Helm chart dependency from version ``15.0.2`` to ``20.0.1``.
