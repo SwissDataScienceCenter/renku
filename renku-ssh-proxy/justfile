@@ -1,0 +1,11 @@
+list:
+    just --list
+
+test $RUST_LOG="sandhole=debug":
+    cargo nextest run --no-fail-fast
+
+clippy:
+    cargo clippy --all-targets --fix --allow-dirty --allow-staged && cargo fmt --all
+
+image:
+    nix build .#docker && docker load < result

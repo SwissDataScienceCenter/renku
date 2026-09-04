@@ -1,0 +1,59 @@
+[package]
+name = "renku-ssh-proxy"
+version = "0.1.0"
+edition = "2024"
+readme = "README.md"
+resolver = "3"
+license = "Apache-2.0"
+repository = "https://github.com/SwissDatascienceCenter/renku/renku-ssh-proxy"
+keywords = ["renku", "ssh"]
+build = "build.rs"
+
+[dependencies]
+base64 = "0.23.1"
+clap = { version = "4.6.5", features = ["derive", "string", "env"] }
+clap-verbosity-flag = "3.0.4"
+clap_complete = { version = "4.5.61", features = ["unstable-dynamic"] }
+color-eyre = "0.6.5"
+directories = "6.0.0"
+env_logger = "0.11"
+humantime = "2.4.0"
+humantime-serde = "1.1.1"
+log = "0.4.27"
+rand = { version = "0.10", features = ["thread_rng"] }
+reqwest = { version = "0.13.4", default-features = false, features = [
+  "charset",
+  "http2",
+  "json",
+  "rustls",
+] }
+russh = "0.62.6"
+serde = { version = "1.0.229", default-features = false, features = [
+  "serde_derive",
+] }
+serde_json = "1.0.151"
+ssh-encoding = { version = "0.3", features = ["bytes"] }
+ssh-key = { version = "=0.7.0-rc.11", features = [
+    "ed25519",
+    "p256",
+    "p384",
+    "p521",
+    "encryption",
+    "ppk",
+    "sha1",
+] }
+tokio = { version = "1.53.1", features = ["full"] }
+tokio-rustls = "0.26.4"
+toml = "1.1.5"
+
+[build-dependencies]
+vergen-gix = { version = "10.0.1", features = [
+  "build",
+  "cargo",
+  "rustc"
+] }
+
+[profile.release]
+strip = "debuginfo"
+opt-level = "z"
+lto = true

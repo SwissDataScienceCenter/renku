@@ -1376,6 +1376,52 @@ dataService:
     ## user have the option to set a lower value. The value cannot be lower than 1 Gb.
     storageMaxSizeGb: 10
 
+sshProxy:
+  rbac:
+    create: true
+  capacityReservation:
+    # Creates a PriorityClass with value -1 for placeholder pods so they are evicted
+    # when real user session pods need resources.
+    createPriorityClass: true
+    # Name of an existing PriorityClass to use for placeholder pods when createPriorityClass is false.
+    # If left empty and createPriorityClass is false, placeholder pods will have no priority class assigned.
+    existingPriorityClass: ""
+  image:
+    repository: harbor.dev.renku.ch/dev-images/renku-ssh-proxy
+    tag: "0.3.0"
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 2222
+  openSshHostKey:
+  targetIdentity:
+  targetHost:
+  targetUser:
+  targetPort:
+  sentry:
+    enabled: false
+    dsn:
+    environment:
+    sampleRate: 0.1
+  replicaCount: 1
+  podAnnotations: {}
+  resources: {}
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 1
+    targetMemoryUtilizationPercentage: 75
+    targetCPUUtilizationPercentage: 75
+  updateStrategy: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  # Trusted proxies configuration
+  # See: https://sanic.dev/en/guide/advanced/proxy-headers.md
+  trustedProxies:
+    proxiesCount: 1
+    realIpHeader: x-real-ip
+
 posthog:
   enabled: false
   # the posthog api key

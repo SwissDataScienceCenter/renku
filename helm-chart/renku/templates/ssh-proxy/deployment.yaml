@@ -1,0 +1,129 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "renku.fullname" . }}-ssh-proxy
+  labels:
+    app: renku-ssh-proxy
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  {{- if not .Values.sshProxy.autoscaling.enabled }}
+  replicas: {{ .Values.sshProxy.replicaCount }}
+  {{- end }}
+  strategy:
+    {{- toYaml .Values.sshProxy.updateStrategy | nindent 4 }}
+  selector:
+    matchLabels:
+      app: renku-ssh-proxy
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: renku-ssh-proxy
+        release: {{ .Release.Name }}
+      annotations:
+      {{- with .Values.sshProxy.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: ssh-proxy
+          image: "{{ .Values.sshProxy.image.repository }}:{{ .Values.sshProxy.image.tag }}"
+          imagePullPolicy: {{ .Values.sshProxy.image.pullPolicy }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          ports:
+            - name: ssh
+              containerPort: 2222
+              protocol: TCP
+          env:
+            - name: RUST_LOG
+              value: "info,renku_ssh_proxy=debug"
+            - name: RENKU_SSH_PROXY_TARGET_HOST
+              value: {{ .Values.sshProxy.targetHost | quote }}
+            - name: RENKU_SSH_PROXY_TARGET_PORT
+              value: {{ .Values.sshProxy.targetPort | quote }}
+            - name: RENKU_SSH_PROXY_TARGET_USER
+              value: {{ .Values.sshProxy.targetUser | quote }}
+            - name: RENKU_SSH_PROXY_TARGET_KEY
+              value: "/secrets/targetIdentity/targetIdentity"
+            - name: RENKU_SSH_PROXY_HOST_KEY
+              value: "/secrets/openSshHostKey/openSshHostKey"
+            - name: VERSION
+              value: {{ .Values.sshProxy.image.tag | quote }}
+            - name: SENTRY_ENABLED
+              value: {{ .Values.sshProxy.sentry.enabled | quote }}
+            - name: SENTRY_DSN
+              value: {{ .Values.sshProxy.sentry.dsn | quote }}
+            - name: SENTRY_ENVIRONMENT
+              value: {{ .Values.sshProxy.sentry.environment | quote }}
+            - name: SENTRY_SAMPLE_RATE
+              value: {{ .Values.sshProxy.sentry.sampleRate | quote }}
+            - name: RENKU_URL
+              value: {{ (include "renku.baseUrl" .) | quote }}
+          volumeMounts:
+            - mountPath: "/secrets/targetIdentity"
+              name: target-identity
+              readOnly: true
+            - mountPath: "/secrets/openSshHostKey"
+              name: open-ssh-host-key
+              readOnly: true
+            - mountPath: "/secrets/internalSecretKey"
+              name: internal-authn-key
+              readOnly: true
+            {{- include "certificates.volumeMounts.system" . | nindent 12 }}
+          livenessProbe:
+            tcpSocket:
+              port: 2222
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 6
+          readinessProbe:
+            tcpSocket:
+              port: 2222
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 2
+          startupProbe:
+            tcpSocket:
+              port: 2222
+            periodSeconds: 5
+            timeoutSeconds: 5
+            failureThreshold: 24
+          resources:
+            {{ toYaml .Values.sshProxy.resources | nindent 12 }}
+    {{- with .Values.sshProxy.nodeSelector }}
+      nodeSelector:
+        {{ toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.sshProxy.affinity }}
+      affinity:
+        {{ toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.sshProxy.tolerations }}
+      tolerations:
+        {{ toYaml . | nindent 8 }}
+    {{- end }}
+      volumes:
+        - name: open-ssh-host-key
+          secret:
+            secretName: {{ template "renku.fullname" . }}-ssh-proxy
+            items:
+            - key: openSshHostKey
+              path: openSshHostKey
+        - name: target-identity
+          secret:
+            secretName: {{ template "renku.fullname" . }}-ssh-proxy
+            items:
+            - key: targetIdentity
+              path: targetIdentity
+        - name: internal-authn-key
+          secret:
+            secretName: {{ template "renku.fullname" . }}-internal-authn
+            items:
+            - key: secretKey
+              path: secretKey
+        {{- include "certificates.volumes" . | nindent 8 }}
