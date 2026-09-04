@@ -22,7 +22,6 @@ spec:
       labels:
         app: renku-ssh-proxy
         release: {{ .Release.Name }}
-        {{ .Values.global.redis.clientLabel | toYaml | nindent 8 }}
       annotations:
       {{- with .Values.sshProxy.podAnnotations }}
         {{- toYaml . | nindent 8 }}
@@ -30,7 +29,6 @@ spec:
     spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-      automountServiceAccountToken: {{ .Values.global.debug }}
       containers:
         - name: ssh-proxy
           image: "{{ .Values.sshProxy.image.repository }}:{{ .Values.sshProxy.image.tag }}"
@@ -54,8 +52,6 @@ spec:
               value: "/secrets/openSshHostKey"
             - name: VERSION
               value: {{ .Values.sshProxy.image.tag | quote }}
-            - name: K8S_NAMESPACE
-              value: {{ .Release.Namespace | quote }}
             - name: SENTRY_ENABLED
               value: {{ .Values.sshProxy.sentry.enabled | quote }}
             - name: SENTRY_DSN
@@ -64,21 +60,6 @@ spec:
               value: {{ .Values.sshProxy.sentry.environment | quote }}
             - name: SENTRY_SAMPLE_RATE
               value: {{ .Values.sshProxy.sentry.sampleRate | quote }}
-            - name: LOG_FORMAT_STYLE
-              value: {{ .Values.logging.logFormatStyle | quote }}
-            - name: KUBERNETES_NAMESPACE
-              valueFrom:
-                fieldRef:
-                  apiVersion: v1
-                  fieldPath: metadata.namespace
-            {{- if .Values.sshProxy.localClusterSessionServiceAccount }}
-            - name: LOCAL_CLUSTER_SESSION_SERVICE_ACCOUNT
-              value: {{ .Values.sshProxy.localClusterSessionServiceAccount | quote }}
-            {{- end }}
-            {{- if .Values.sshProxy.remoteClustersKubeconfigSecretName }}
-            - name: K8S_CONFIGS_ROOT
-              value: "/secrets/kube_configs"
-            {{- end }}
             - name: RENKU_URL
               value: {{ (include "renku.baseUrl" .) | quote }}
           volumeMounts:
@@ -88,20 +69,9 @@ spec:
             - mountPath: "/secrets/openSshHostKey"
               name: openSshHostKey
               readOnly: true
-            - mountPath: "/secrets/encryptionKey"
-              name: encryption-key
-              readOnly: true
-            - mountPath: "/secrets/publicKey"
-              name: secret-service-public-key
-              readOnly: true
             - mountPath: "/secrets/internalSecretKey"
               name: internal-authn-key
               readOnly: true
-            {{- if .Values.sshProxy.remoteClustersKubeconfigSecretName }}
-            - name: remote-cluster-kubeconfigs
-              mountPath: "/secrets/kube_configs"
-              readOnly: true
-            {{- end }}
             {{- include "certificates.volumeMounts.system" . | nindent 12 }}
           livenessProbe:
             tcpSocket:
@@ -148,31 +118,10 @@ spec:
             items:
             - key: targetIdentity
               path: targetIdentity
-        - name: server-options
-          configMap:
-            name: {{ template "renku.fullname" . }}-server-options
-        - name: encryption-key
-          secret:
-            secretName: {{ template "renku.fullname" . }}-secrets-storage
-            items:
-            - key: encryptionKey
-              path: encryptionKey
-        - name: secret-service-public-key
-          secret:
-            secretName: {{ template "renku.fullname" . }}-secret-service-public-key
-            items:
-            - key: publicKey
-              path: publicKey
         - name: internal-authn-key
           secret:
             secretName: {{ template "renku.fullname" . }}-internal-authn
             items:
             - key: secretKey
               path: secretKey
-        {{- if .Values.sshProxy.remoteClustersKubeconfigSecretName }}
-        - name: remote-cluster-kubeconfigs
-          secret:
-            secretName: {{ .Values.sshProxy.remoteClustersKubeconfigSecretName }}
-        {{- end }}
         {{- include "certificates.volumes" . | nindent 8 }}
-      serviceAccountName: {{ template "renku.fullname" . }}-ssh-proxy
