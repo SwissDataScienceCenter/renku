@@ -28,7 +28,7 @@ in Kubernetes.
 ### Third party
 
 - **Postgres**: Stores all information about projects, users and sessions.
-- **Redis**: Stores user login sessions.
+- **Valkey**: Stores user login sessions.
 - **Authzed (SpiceDB)**: Stores authorization information and is queries for authorization decisions.
 - **Solr**: Stores search documents and indices.
 - **Keycloak**: Stores user information and is used for Authentication.
@@ -49,7 +49,7 @@ flowchart LR
     end
     DS[Data services]
     PG[(Postgres)]
-    Redis[(Redis)]
+    Valkey[(Valkey)]
     Solr(Solr)
     Ingress --/api/*--> Proxy
     Proxy --/api/data/*--> DS
@@ -62,7 +62,7 @@ flowchart LR
     DS -.- K8s(Kubernetes API)
     Solr -.- SolrDB[(Postgres)]
     Authzed -.- AuthzedDB[(Postgres)]
-    Login -.- Redis
+    Login -.- Valkey
     Ingress --/auth/*--> Keycloak(Keycloak)
     Keycloak -.- KeycloakDB[(Postgres)]
     Ingress --/*--> UI

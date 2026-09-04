@@ -55,6 +55,33 @@ Most information related to upgrading from one chart version to another is cover
 in the `values changelog file <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/values.yaml.changelog.md>`_.
 For upgrades that require some steps other than modifying the values files to be executed, we add some instructions here.
 
+Upgrading to Renku 2.21.0
+*************************
+This version replaces the ``redis`` bitnami helm chart dependency (version ``20.3.0``)
+with the official `valkey chart <https://valkey.io/valkey-helm/>`_ (version ``0.12.0``).
+
+Redis ran 3 nodes with a Sentinel, this is not yet supported by the Valkey chart,
+this chart is therefore configured to run a single valkey pod. This means that users will be
+logged when the pod goes down, such as during a migration.
+
+Deployments that need the old behaviour can point ``global.redis`` at an external
+sentinel backed redis instance and set ``valkey.install`` to ``false``.
+
+The values of the two charts vary significantly, hence the ``redis`` section is replaced
+by a ``valkey`` section rather than renamed. The client side settings stay under 
+``global.redis``, because they configure the redis clients in the renku services. See the
+``values.yaml.changelog.md`` for the details.
+
+The password is preserved: the ``redis-secret`` secret is annotated with
+``helm.sh/resource-policy: keep`` and is now used as the password of the valkey
+``default`` ACL user, under the same ``redis-password`` key.
+
+If you scrape valkey with Prometheus: bitnami redis brought its own network policy to open
+the exporter port, and the valkey chart does not. The renku chart's ``ingress-to-valkey-from-services`` 
+policy only admits the renku services, so allow your Prometheus through
+``networkPolicies.allowAllIngressFromNamespaces`` or
+``networkPolicies.allowAllIngressFromPods``, as you would for any other component.
+
 Upgrading to 0.27.0
 *******************
 This version contains an upgrade to the ``keycloak`` Helm chart dependency from version ``15.0.2`` to ``20.0.1``.
