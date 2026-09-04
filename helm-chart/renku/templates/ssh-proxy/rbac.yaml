@@ -16,12 +16,10 @@ rules:
       - pods/log
       - services
       - endpoints
-      - secrets
       - persistentvolumeclaims
     verbs:
       - get
       - list
-      - watch
   - apiGroups:
       - batch
     resources:
@@ -33,38 +31,10 @@ rules:
   - apiGroups:
       - ""
     resources:
-      - pods
       - secrets
     verbs:
-      - delete
-  - apiGroups:
-      - apps
-    resources:
-      - statefulsets
-    verbs:
+      - create
       - get
-      - list
-      - watch
-      - patch
-  - apiGroups:
-      - ""
-    resources:
-      - secrets
-      - persistentvolumeclaims
-    verbs:
-      - create
-      - update
-      - delete
-      - patch
-  - apiGroups:
-      - batch
-    resources:
-      - jobs
-    verbs:
-      - create
-      - update
-      - delete
-      - patch
   - apiGroups:
       - amalthea.dev
     resources:

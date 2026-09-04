@@ -43,15 +43,15 @@ struct Cli {
     target_key: Option<PathBuf>,
 
     /// Host name of the target server
-    #[arg(long)]
+    #[arg(long, env = "RENKU_SSH_PROXY_TARGET_HOST")]
     target_host: String,
 
     /// The ssh port of the target server
-    #[arg(long, default_value_t = 22)]
+    #[arg(long, default_value_t = 22, env = "RENKU_SSH_PROXY_TARGET_PORT")]
     target_port: u16,
 
     /// username of the target user
-    #[arg(long)]
+    #[arg(long, env = "RENKU_SSH_PROXY_TARGET_USER")]
     target_user: String,
 
     /// Be more verbose when logging. Verbosity increases with each occurrence.

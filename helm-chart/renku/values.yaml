@@ -1395,6 +1395,11 @@ sshProxy:
   service:
     type: ClusterIP
     port: 2222
+  openSshHostKey:
+  targetIdentity:
+  targetHost:
+  targetUser:
+  targetPort:
   sentry:
     enabled: false
     dsn:
