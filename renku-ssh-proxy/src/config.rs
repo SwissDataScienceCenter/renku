@@ -1,6 +1,7 @@
 // Reading the configuration from a file and allow override via CLI
 // options and environment variables
 
+use crate::proxy_server::Target;
 use clap::Parser;
 use clap_verbosity_flag::{Verbosity, VerbosityFilter};
 use color_eyre::Help;
@@ -33,6 +34,18 @@ struct Cli {
     /// Path to the public key to authenticate at the target ssh
     #[arg(long, value_name = "FILE", env = "RENKU_SSH_PROXY_TARGET_KEY")]
     target_key: Option<PathBuf>,
+
+    /// Host name of the target server
+    #[arg(long)]
+    target_host: String,
+
+    /// The ssh port of the target server
+    #[arg(long, default_value_t = 22)]
+    target_port: u16,
+
+    /// username of the target user
+    #[arg(long)]
+    target_user: String,
 
     /// Be more verbose when logging. Verbosity increases with each occurrence.
     #[command(flatten)]
@@ -89,9 +102,9 @@ impl FileConfig {
 pub struct Settings {
     pub listen: SocketAddr,
     pub host_key_file: PathBuf,
-    pub target_key_file: PathBuf,
     pub log_level: Verbosity,
     pub ssh_server_config: Arc<SshServerConfig>,
+    pub target: Target, // temporarily use a fixed target host
 }
 
 impl Settings {
@@ -133,12 +146,19 @@ impl Settings {
             .ok_or_eyre("missing `target_key`")
             .suggestion("Pass --target-key, set `target_key` in the config file or env var RENKU_SSH_PROXY_TARGET_KEY")?;
 
+        let target = Target {
+            host: cli.target_host,
+            port: cli.target_port,
+            user: cli.target_user,
+            key_path: target_key_file,
+            expected_host_key: None,
+        };
         Ok(Settings {
             listen,
             host_key_file,
             log_level,
             ssh_server_config,
-            target_key_file,
+            target,
         })
     }
 
