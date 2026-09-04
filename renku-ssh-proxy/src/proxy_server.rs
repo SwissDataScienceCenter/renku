@@ -407,6 +407,7 @@ impl server::Server for ProxyHandler {
 
 impl Drop for ProxyHandler {
     fn drop(&mut self) {
+        log::debug!("Closing client");
         self.channels.clear();
     }
 }
