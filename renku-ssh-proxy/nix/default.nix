@@ -20,6 +20,7 @@ let
       ../Cargo.toml
       ../Cargo.lock
       ../README.md
+      ../build.rs
       ../src
     ];
   };
@@ -46,12 +47,14 @@ let
       pname = (lib.importTOML ../Cargo.toml).package.name;
       version = (lib.importTOML ../Cargo.toml).package.version;
       doCheck = false;
-      # postInstall = lib.optionalString (pkgsStatic.stdenv.buildPlatform.canExecute pkgsStatic.stdenv.hostPlatform) ''
-      #   installShellCompletion --cmd renku-ssh-proxy \
-      #     --bash <($out/bin/renku-ssh-proxy --completions bash) \
-      #     --fish <($out/bin/renku-ssh-proxy --completions fish) \
-      #     --zsh <($out/bin/renku-ssh-proxy --completions zsh)
-      # '';
+      postInstall = lib.optionalString (pkgsStatic.stdenv.buildPlatform.canExecute pkgsStatic.stdenv.hostPlatform) ''
+          for shell in fish zsh bash; do
+              COMPLETE=$shell $out/bin/renku-ssh-proxy > renku-ssh-proxy.$shell
+              installShellCompletion --$shell renku-ssh-proxy.$shell
+          done
+      '';
+
+      env.NIX_GIT_SHA = inputs.self.rev or inputs.self.dirtyRev or "unknown";
       meta = {
         name = "renku-ssh-proxy";
         homepage = "https://renkulab.io";

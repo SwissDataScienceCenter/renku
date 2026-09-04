@@ -4,6 +4,7 @@ use renku_ssh_proxy::buildinfo;
 #[tokio::main]
 async fn main() -> color_eyre::Result<()> {
     color_eyre::install()?;
+    renku_ssh_proxy::generate_completions();
 
     let args: Vec<String> = std::env::args().collect();
 
