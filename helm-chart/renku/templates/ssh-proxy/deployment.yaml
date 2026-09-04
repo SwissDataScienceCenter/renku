@@ -108,13 +108,13 @@ spec:
       volumes:
         - name: openSshHostKey
           secret:
-            secret-name: {{ template "renku.fullname" . }}-ssh-proxy
+            secretName: {{ template "renku.fullname" . }}-ssh-proxy
             items:
             - key: openSshHostKey
               path: openSshHostKey
         - name: targetIdentity
           secret:
-            secret-name: {{ template "renku.fullname" . }}-ssh-proxy
+            secretName: {{ template "renku.fullname" . }}-ssh-proxy
             items:
             - key: targetIdentity
               path: targetIdentity
