@@ -2,7 +2,9 @@
 // options and environment variables
 
 use crate::proxy_server::Target;
+use clap::CommandFactory;
 use clap::Parser;
+use clap_complete::CompleteEnv;
 use clap_verbosity_flag::{Verbosity, VerbosityFilter};
 use color_eyre::Help;
 use color_eyre::eyre::{OptionExt, Result, WrapErr};
@@ -14,6 +16,11 @@ use std::net::SocketAddr;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
 use std::time::Duration;
+
+/// Generates the cli completions and exits.
+pub fn generate_completions() {
+    CompleteEnv::with_factory(Cli::command).complete();
+}
 
 /// Renku SSH proxy service.
 #[derive(Debug, Parser)]
