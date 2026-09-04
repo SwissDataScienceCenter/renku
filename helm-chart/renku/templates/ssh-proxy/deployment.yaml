@@ -64,10 +64,10 @@ spec:
               value: {{ (include "renku.baseUrl" .) | quote }}
           volumeMounts:
             - mountPath: "/secrets/targetIdentity"
-              name: targetIdentity
+              name: target-identity
               readOnly: true
             - mountPath: "/secrets/openSshHostKey"
-              name: openSshHostKey
+              name: open-ssh-host-key
               readOnly: true
             - mountPath: "/secrets/internalSecretKey"
               name: internal-authn-key
@@ -106,13 +106,13 @@ spec:
         {{ toYaml . | nindent 8 }}
     {{- end }}
       volumes:
-        - name: openSshHostKey
+        - name: open-ssh-host-key
           secret:
             secretName: {{ template "renku.fullname" . }}-ssh-proxy
             items:
             - key: openSshHostKey
               path: openSshHostKey
-        - name: targetIdentity
+        - name: target-identity
           secret:
             secretName: {{ template "renku.fullname" . }}-ssh-proxy
             items:
