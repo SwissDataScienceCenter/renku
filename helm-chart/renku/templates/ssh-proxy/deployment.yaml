@@ -49,9 +49,9 @@ spec:
             - name: RENKU_SSH_PROXY_TARGET_USER
               value: {{ .Values.sshProxy.targetUser | quote }}
             - name: RENKU_SSH_PROXY_TARGET_KEY
-              value: "/secrets/targetIdentity"
+              value: "/secrets/targetIdentity/targetIdentity"
             - name: RENKU_SSH_PROXY_HOST_KEY
-              value: "/secrets/openSshHostKey"
+              value: "/secrets/openSshHostKey/openSshHostKey"
             - name: VERSION
               value: {{ .Values.sshProxy.image.tag | quote }}
             - name: SENTRY_ENABLED
