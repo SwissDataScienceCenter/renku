@@ -2,6 +2,7 @@
 // options and environment variables
 
 use crate::proxy_server::Target;
+use base64::{Engine as _, engine::general_purpose::STANDARD};
 use clap::CommandFactory;
 use clap::Parser;
 use clap_complete::CompleteEnv;
@@ -12,6 +13,7 @@ use directories::ProjectDirs;
 use russh::Preferred;
 use russh::server::Config as SshServerConfig;
 use serde::{Deserialize, Deserializer};
+use std::fs;
 use std::net::SocketAddr;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
@@ -20,6 +22,23 @@ use std::time::Duration;
 /// Generates the cli completions and exits.
 pub fn generate_completions() {
     CompleteEnv::with_factory(Cli::command).complete();
+}
+
+fn load_private_key_from_file<P>(file: P) -> Result<russh::keys::PrivateKey>
+where
+    P: AsRef<Path>,
+{
+    match russh::keys::load_secret_key(&file, None) {
+        Ok(pk) => Ok(pk),
+        Err(_) => {
+            // try base64 decoding the contents
+            let contents = fs::read_to_string(&file)?;
+            let decoded = STANDARD.decode(contents.trim())?;
+            let decoded = &String::from_utf8_lossy(&decoded);
+            let pk = russh::keys::decode_secret_key(decoded, None)?;
+            Ok(pk)
+        }
+    }
 }
 
 /// Renku SSH proxy service.
@@ -142,7 +161,7 @@ impl Settings {
             inactivity_timeout: Some(inactivity_timeout),
             auth_rejection_time: Duration::from_secs(3),
             auth_rejection_time_initial: Some(Duration::from_secs(0)),
-            keys: vec![russh::keys::load_secret_key(&host_key_file, None)?],
+            keys: vec![load_private_key_from_file(&host_key_file)?],
             preferred: Preferred::default(),
             ..Default::default()
         };
