@@ -417,118 +417,72 @@ postgresql:
         cpu: 100m
         memory: 300Mi
 
-redis:
-  # If set to true, a HA redis will be included in the Renku release.
+valkey:
+  # If set to true, a valkey instance will be included in the Renku release.
+  # Valkey is a drop-in replacement for redis.
   install: true
   ###########################################################################
-  ### Configuration that is unknown to the redis chart but picked up      ###
+  ### Configuration that is unknown to the valkey chart but picked up     ###
   ### by the renku chart.                                                 ###
   ###########################################################################
-  # If set to true, we'll create a k8s secret to be used as existingSecret
+  # If set to true, we'll create a k8s secret to be used as usersExistingSecret
   # for password auth.
   createSecret: true
   # The actual password, ignored if createSecret is false.
   password: # openssl rand -hex 32
   ###########################################################################
-  ### Configuration that is passed on to the redis chart, for details and ###
-  ### further config options check out                                    ###
-  ### https://github.com/bitnami/charts/tree/master/bitnami/redis         ###
+  ### Configuration that is passed on to the valkey chart, for            ###
+  ### details and further config options check out                        ###
+  ### https://github.com/valkey-io/valkey-helm/tree/main/valkey           ###
   ###########################################################################
 
-  # the values below were taken from the default values for the chart
-  # and adapted to our context. The following contains a mix of specific
-  # customizations plus some higher level defaults which have been
-  # retained here so someone can get some overview of what this values
-  # file can do.
-  fullnameOverride: renku-redis
+  # Must match global.redis.host.
+  fullnameOverride: renku-valkey
   # the image version used is the default specified in the helm chart
   # image:
 
-  # replication is the default; standalone is also an option but this results in
-  # no read only replicas
-  architecture: replication
+  # A single valkey pod: the chart has no sentinel support, so there is no
+  # automatic failover and a restart drops all sessions. See the 2.21.0 upgrade
+  # note in the chart readme.
+  replica:
+    enabled: false
+  # Recreate rather than RollingUpdate, so that two independent valkey
+  # instances never sit behind the same service handing out different sessions.
+  deploymentStrategy: Recreate
+  # No persistent volume gets created; valkey only holds sessions and event
+  # streams.
+  dataStorage:
+    enabled: false
+  # No point snapshotting to a volume that is deleted with the pod. AOF is
+  # already off by default.
+  valkeyConfig: |-
+    save ""
+  # Valkey authenticates through ACL users, so the renku secret becomes the
+  # password of the "default" user. The chart templates usersExistingSecret, so
+  # it is derived; passwordKey is not, so validate-values.yaml checks it.
   auth:
     enabled: true
-    # renku-gateway requires sentinel authentication to be enabled
-    sentinel: true
-    existingSecret: redis-secret
-    existingSecretPasswordKey: redis-password
-    # this is a default but is kept here to highlight the fact that AOF is not used
-    # in this install. Note that having this enabled without a persistent volume
-    # is quite useless as it meant that keys get written to a file (and hence slower writes)
-    # but that file is deleted when the pod is deleted.
-    commonConfiguration: |-
-      # Disable AOF https://redis.io/topics/persistence#append-only-file
-      appendonly no
-      # Disable RDB persistence.
-      save ""
-  # when using sentinel the master block is completely ignored
-  # master:
-  replica:
-    # this controls the amount of redis+sentinel pods which get created
-    # it does relate to sentinel.quorum - if the latter is larger than this,
-    # then clearly things are misconfigured
-    replicaCount: 3
-    resources:
-      limits:
-        cpu: 250m
-        memory: 256Mi
-      requests:
-        cpu: 250m
-        memory: 256Mi
-    updateStrategy:
-      type: RollingUpdate
-    persistence:
-      # pvc will not get created
-      enabled: false
-    autoscaling:
-      enabled: false
-  # when sentinel is enabled, a sentinel container is placed in each
-  # pod and this does checking to ensure that the system always has a
-  # master
-  sentinel:
-    enabled: true
-    # this determines how many nodes must agree before a master
-    # reelection is required
-    quorum: 2
-    service:
-      sentinel: 26379
-    resources:
-      requests:
-        cpu: 200m
-        memory: 64Mi
-    downAfterMilliseconds: 1000
-    failoverTimeout: 2000
-    # the default is 220 which causes redis to take ~4 minutes to fully start
-    getMasterTimeout: 5
-    # Use Bitnami's Redis Sentinel image from Renkulab Harbor registry
-    image:
-      registry: harbor.renkulab.io
-      repository: bitnami-mirror/redis-sentinel
-  # network policies are supported by the chart
-  networkPolicy:
-    enabled: true
-    # this adds a specific ingress rule which allows pods to connect to
-    # this redis instance if they have the label redis-client: true
-    allowExternal: false
+    usersExistingSecret: '{{ .Values.global.redis.existingSecret }}'
+    aclUsers:
+      default:
+        permissions: "~* &* +@all"
+        passwordKey: redis-password
+  resources:
+    limits:
+      cpu: 250m
+      memory: 256Mi
+    requests:
+      cpu: 250m
+      memory: 256Mi
   metrics:
-    # when this is enabled, a metrics container is inserted into each pod
+    # when this is enabled, a metrics container is inserted into the pod
     enabled: true
-    # defaults - included here to be explicit
-    podAnnotations:
-      prometheus.io/scrape: "true"
-      prometheus.io/port: "9121"
-    # Use the bitnami metrics image from the Renkulab Harbor registry
-    image:
-      registry: harbor.renkulab.io
-      repository: bitnami-mirror/redis-exporter
-  # default - making explicit
-  sysctl:
-    enabled: false
-  # Use Bitnami's Redis image from Renkulab Harbor registry
-  image:
-    registry: harbor.renkulab.io
-    repository: bitnami-mirror/redis
+  # Prometheus scrapes the exporter off the pod. 9121 is the valkey chart's
+  # metrics.exporter.port default. The chart renders these unconditionally, so
+  # null the keys individually when disabling metrics (an empty map merges).
+  podAnnotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "9121"
 solr:
   enabled: true
   cloudEnabled: false
