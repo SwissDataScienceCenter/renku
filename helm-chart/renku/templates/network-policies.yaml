@@ -419,12 +419,12 @@ spec:
           port: http
         - protocol: TCP
           port: grpc
-{{- if .Values.redis.install }}
+{{- if .Values.valkey.install }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: ingress-to-redis-from-services
+  name: ingress-to-valkey-from-services
   labels:
     app: {{ template "renku.name" . }}
     chart: {{ template "renku.chart" . }}
@@ -433,7 +433,8 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      app.kubernetes.io/name: redis
+      app.kubernetes.io/name: valkey
+      app.kubernetes.io/instance: {{ .Release.Name }}
   policyTypes:
     - Ingress
   ingress:
@@ -456,7 +457,8 @@ spec:
               release: {{ .Release.Name }}
       ports:
         - protocol: TCP
-          port: redis
+          # the name of the valkey container port, see the valkey chart
+          port: tcp
 {{- end }}
 {{- if .Values.solr.enabled }}
 ---
