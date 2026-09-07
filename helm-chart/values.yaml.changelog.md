@@ -5,6 +5,30 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
+## Upgrading to Renku 2.21.0
+
+Renku now deploys `valkey` instead of the bitnami `redis` chart.
+
+* DELETE `redis`, the whole section. The valkey settings differ differently.
+* NEW `valkey`, replacing the section above. It keeps `install`, `createSecret` and
+  `password` with the same meaning as before, and passes the rest on to the valkey
+  chart. Valkey authenticates through ACL users rather than a single
+  password, so the password key is configured under
+  `valkey.auth.aclUsers.default.passwordKey` instead of
+  `redis.auth.existingSecretPasswordKey`; it still defaults to `redis-password`, so
+  the existing password is kept. The secret *name* no longer needs to be repeated,
+  `valkey.auth.usersExistingSecret` is templated from `global.redis.existingSecret`.
+  The chart fails with an explanatory message if these disagree.
+* EDIT `global.redis.host`, from `renku-redis` to `renku-valkey`. This section is
+  *not* renamed, so that deployments pointing renku at their own redis or valkey
+  keep working across the upgrade.
+* EDIT `global.redis.port`, from `26379` (the sentinel port) to `6379`.
+* EDIT `global.redis.sentinel.enabled`, from `true` to `false`. The valkey chart does
+  not support sentinel. Keep this set to `true` only when pointing `global.redis` at
+  an external sentinel backed instance, together with `valkey.install: false`.
+* DELETE `global.redis.clientLabel`. It labelled the client pods for the network
+  policy that the bitnami chart brought along.
+
 ## Upgrading to Renku 2.18.0
 
 * DELETE `enableInternalGitlab`, it is now not possible to configure Renku to use an "internal" GitLab instance. Admins can set up a GitLab integration instead.
