@@ -97,9 +97,9 @@ global:
   solr:
     port: 8983
 
-  # Connection details for a globally used redis instance for the
-  # entire platform. For specifying an actual instance as part of
-  # this chart, check out the non-global "redis" section.
+  # Connection details for a globally used redis-compatible instance for the
+  # entire platform. Renku ships valkey as a subchart;
+  # for configuring that instance, check out the non-global "valkey" section.
   redis:
     # Specify which renku component should use which DB index
     dbIndex:
@@ -107,28 +107,23 @@ global:
       coreService: "1"
       uiServer: "2"
       events: "3"
-    # Note: these two entries MUST match the ones in the top level redis section.
+    # The valkey section derives its secret name from existingSecret, and the
+    # renku chart checks that its password key agrees with the one below.
     existingSecret: redis-secret
     existingSecretPasswordKey: redis-password
-    ## Specify the redis host and port. Notice that these settings only affect
-    ## the subcharts which represent the applications which are clients to redis,
-    ## but not the redis cluster deployment itself.
-    ## If you're deploying redis through this chart, and you want to deviate from
-    ## the defaults, you'll have to match whatever you set here in the non-global
-    ## redis section below which defines the actual redis cluster.
-    port: 26379
-    ## Not that the host is the same as fullnameOverride only in sentinel mode.
-    ## In other cases the redis service is usually called <fullnameOverride>-headless.
-    host: renku-redis
+    ## Specify the host and port. Notice that these settings only affect
+    ## the subcharts which represent the applications which are clients to valkey,
+    ## but not the valkey deployment itself.
+    port: 6379
+    ## Must match valkey.fullnameOverride when valkey.install is true; the renku
+    ## chart checks that they agree.
+    host: renku-valkey
     sentinel:
-      ## Set to true if redis host/port point to a redis sentinel.
-      enabled: true
+      ## Set to true if host/port point to a redis sentinel. The valkey chart
+      ## bundled here does not support sentinel, so this is only useful when
+      ## pointing renku at an external sentinel-backed instance.
+      enabled: false
       masterSet: mymaster
-    ## The label added to client pods so that they can access redis.
-    ## Needed only if the network policy from the redis helm chart that adds this
-    ## restriction is enabled.
-    clientLabel:
-      renku-redis-client: "true"
   ## Set to true if using https
   useHTTPS: false
   anonymousSessions:
