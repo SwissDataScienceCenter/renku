@@ -353,7 +353,7 @@ start properly.
 Here follows a full configuration based on the minimal deployment values file.
 
 Beside Renku specific elements, customization of child charts are also required.
-Here we can see the changes to be applied to make KeycloakX, PostgreSQL, Redis
+Here we can see the changes to be applied to make KeycloakX, PostgreSQL, Valkey
 and Solr start properly.
 
 Note that these changes are not Renku specific, they need to be applied in any
@@ -468,11 +468,6 @@ global:
   renku:
     domain: renku.apps.my-openshift.ch
   useHTTPS: true
-  redis:
-    port: 6379
-    host: renku-redis-master
-    sentinel:
-      enabled: false
 ingress:
   className: openshift-default
   enabled: true
@@ -535,26 +530,6 @@ postgresql:
   image:
     registry: harbor.renkulab.io
     repository: bitnami-mirror/postgresql
-redis:
-  architecture: standalone
-  master:
-    persistence:
-      enabled: false
-  metrics:
-    # Use the bitnami metrics image from the Renkulab Harbor registry
-    image:
-      registry: harbor.renkulab.io
-      repository: bitnami-mirror/redis-exporter
-  sentinel:
-    enabled: false
-    # Use Bitnami's Redis Sentinel image from Renkulab Harbor registry
-    image:
-      registry: harbor.renkulab.io
-      repository: bitnami-mirror/redis-sentinel
-  # Use Bitnami's Redis image from Renkulab Harbor registry
-  image:
-    registry: harbor.renkulab.io
-    repository: bitnami-mirror/redis
 secretsStorage:
   resources:
     limits:
@@ -598,4 +573,17 @@ ui:
         memory: 75Mi
       requests:
         memory: 75Mi
+valkey:
+  # added
+  # The valkey chart hardcodes UID/GID 1000, which restricted-v2 rejects. The
+  # bitnami charts drop those themselves, through
+  # global.compatibility.openshift.adaptSecurityContext=auto; the valkey chart has
+  # no equivalent. The nulls have to be explicit, helm merges values maps.
+  podSecurityContext:
+    fsGroup: null
+    runAsGroup: null
+    runAsUser: null
+  securityContext:
+    runAsUser: null
+  # end added
 ```
