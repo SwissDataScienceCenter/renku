@@ -50,6 +50,8 @@ spec:
               value: {{ .Values.sshProxy.targetUser | quote }}
             - name: RENKU_SSH_PROXY_HOST_KEY
               value: "/secrets/openSshHostKey/openSshHostKey"
+            - name: RENKU_SSH_PROXY_LISTEN
+              value: "0.0.0.0:2222"
             - name: VERSION
               value: {{ .Values.sshProxy.image.tag | quote }}
             - name: SENTRY_ENABLED
