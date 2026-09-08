@@ -48,8 +48,6 @@ spec:
               value: {{ .Values.sshProxy.targetPort | quote }}
             - name: RENKU_SSH_PROXY_TARGET_USER
               value: {{ .Values.sshProxy.targetUser | quote }}
-            - name: RENKU_SSH_PROXY_TARGET_KEY
-              value: "/secrets/targetIdentity/targetIdentity"
             - name: RENKU_SSH_PROXY_HOST_KEY
               value: "/secrets/openSshHostKey/openSshHostKey"
             - name: VERSION
