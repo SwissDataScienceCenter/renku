@@ -9,6 +9,7 @@ let
     elem
     elemAt
     filter
+    foldl'
     fromJSON
     head
     intersectAttrs
@@ -24,55 +25,47 @@ let
     trace
     ;
 
-  pins = fromTOML (readFile ./pins.toml);
-  lock = fromJSON (readFile ./pins.lock.json);
-  declared = pins.inputs or { };
-  all_follow_raw = pins.all_follow or { };
-
-  # flatten `target = [aliases]` rows alongside `alias = "target"` rows
-  all_follow = listToAttrs (
-    concatMap (
-      key:
-      let
-        val = all_follow_raw.${key};
-      in
-      if isList val then
-        [
-          {
-            name = key;
-            value = key;
-          }
-        ]
-        ++ map (a: {
-          name = a;
-          value = key;
-        }) val
-      else if isString val then
-        [
-          {
-            name = key;
-            value = val;
-          }
-        ]
-      else
-        [ ]
-    ) (attrNames all_follow_raw)
-  );
-
-  knownTypes = [
-    "github"
-    "gitlab"
-    "git"
-    "tarball"
-    "path"
-    "indirect"
-  ];
-
   call =
     {
       overrides ? { },
     }:
     let
+      pins = fromTOML (readFile ./pins.toml);
+      lock = fromJSON (readFile ./pins.lock.json);
+      all_follow_raw = pins.all_follow or { };
+
+      # flatten `target = [aliases]` rows alongside `alias = "target"` rows
+      all_follow = foldl' (
+        acc: key:
+        let
+          val = all_follow_raw.${key};
+        in
+        if isList val then
+          acc
+          // {
+            ${key} = key;
+          }
+          // listToAttrs (
+            map (a: {
+              name = a;
+              value = key;
+            }) val
+          )
+        else if isString val then
+          acc // { ${key} = val; }
+        else
+          acc
+      ) { } (attrNames all_follow_raw);
+
+      knownTypes = [
+        "github"
+        "gitlab"
+        "git"
+        "tarball"
+        "path"
+        "indirect"
+      ];
+
       # path nodes are convenience pins, so return the live local path directly
       # because fetchTree rejects unlocked paths in pure eval
       fetchPin =
@@ -382,6 +375,7 @@ let
         { name, pin }:
         let
           pinType = pin.type or (if pin.flake or true then "flake" else "fetch");
+          subdir = if pin ? dir then "/" + pin.dir else "";
         in
         if pinType == "fixed" then
           fetchFixed {
@@ -391,12 +385,13 @@ let
         else
           let
             sourceInfo = fetchPin name;
-            subdir = if pin ? dir then "/" + pin.dir else "";
           in
           if pinType == "flake" then
             evalTopFlake { inherit sourceInfo pin; }
           else
             evalFetch { inherit sourceInfo pin subdir; };
+
+      declared = pins.inputs or { };
 
       # undeclared lock entries are synthesised into toplevels by auto-dedup
       # only when referenced as [all_follow] targets

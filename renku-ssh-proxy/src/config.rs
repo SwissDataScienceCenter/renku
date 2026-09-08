@@ -57,10 +57,6 @@ struct Cli {
     #[arg(long, value_name = "FILE", env = "RENKU_SSH_PROXY_HOST_KEY")]
     host_key: Option<PathBuf>,
 
-    /// Path to the public key to authenticate at the target ssh
-    #[arg(long, value_name = "FILE", env = "RENKU_SSH_PROXY_TARGET_KEY")]
-    target_key: Option<PathBuf>,
-
     /// Host name of the target server
     #[arg(long, env = "RENKU_SSH_PROXY_TARGET_HOST")]
     target_host: String,
@@ -88,7 +84,6 @@ struct Cli {
 struct FileConfig {
     listen: Option<SocketAddr>,
     host_key: Option<PathBuf>,
-    target_key: Option<PathBuf>,
     #[serde(deserialize_with = "deserialize_verbosity")]
     log_level: Option<Verbosity>,
     #[serde(with = "humantime_serde")]
@@ -167,16 +162,10 @@ impl Settings {
         };
         let ssh_server_config = Arc::new(ssh_server_config);
 
-        let target_key_file = cli.target_key
-            .or(file.target_key)
-            .ok_or_eyre("missing `target_key`")
-            .suggestion("Pass --target-key, set `target_key` in the config file or env var RENKU_SSH_PROXY_TARGET_KEY")?;
-
         let target = Target {
             host: cli.target_host,
             port: cli.target_port,
             user: cli.target_user,
-            key_path: target_key_file,
             expected_host_key: None,
         };
         Ok(Settings {
