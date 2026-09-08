@@ -4,11 +4,9 @@ use std::sync::Arc;
 use crate::Settings;
 use color_eyre::eyre::{OptionExt, Result};
 use russh::keys::ssh_key::PublicKey;
-use russh::keys::{PrivateKeyWithHashAlg, load_secret_key};
 use russh::server::Server as _;
 use russh::{Channel, ChannelId, ChannelMsg, Pty, Sig};
 use russh::{client, server};
-use std::path::PathBuf;
 use tokio::net::TcpListener;
 use tokio::sync::mpsc;
 
@@ -26,7 +24,6 @@ pub struct Target {
     pub host: String,
     pub port: u16,
     pub user: String,
-    pub key_path: PathBuf,
     pub expected_host_key: Option<PublicKey>,
 }
 
@@ -112,23 +109,15 @@ impl ProxyHandler {
             },
         )
         .await?;
-        log::info!(
-            "Created client handle. Loading key from {:?}",
-            target.key_path
-        );
-        let key = load_secret_key(&target.key_path, None)?;
-        let halg = client::Handle::best_supported_rsa_hash(&handle)
-            .await?
-            .unwrap_or(Some(ssh_key::HashAlg::Sha256));
-        log::debug!("Using hash-alg with target host: {:?}", halg);
+        // let halg = client::Handle::best_supported_rsa_hash(&handle)
+        //     .await?
+        //     .unwrap_or(Some(ssh_key::HashAlg::Sha256));
+        // log::debug!("Using hash-alg with target host: {:?}", halg);
         let auth = handle
-            .authenticate_publickey(
-                &target.user,
-                PrivateKeyWithHashAlg::new(Arc::new(key), halg),
-            )
+            .authenticate_password(&target.user, "")
             .await?;
         if !auth.success() {
-            color_eyre::eyre::bail!("proxy failed to authenticate to session host");
+            color_eyre::eyre::bail!("proxy failed to authenticate to session host: {:?}", &auth);
         }
 
         let handle = Arc::new(handle);

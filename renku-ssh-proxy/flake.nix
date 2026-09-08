@@ -56,6 +56,7 @@
           packages
           checks
           shell
+          rpsdevvm
           ;
 
         inherit (pkgs) lib;
@@ -76,6 +77,10 @@
         checks.${system} = checks;
 
         devShells.${system}.default = shell;
+
+        nixosConfigurations = lib.optionalAttrs (system == "x86_64-linux") {
+          inherit rpsdevvm;
+        };
       }
     );
 }

@@ -32,5 +32,9 @@ type = "fetch"
 url = "github:oxalica/rust-overlay/master"
 type = "fetch"
 
+[inputs.devshell-tools]
+url = "github:eikek/devshell-tools/main"
+type = "flake"
+
 [tack]
 recomposable = true
