@@ -78,7 +78,7 @@ spec:
             - name: WEBSOCKET_ENABLED
               value: {{ .Values.ui.server.webSocket.enabled | quote }}
             - name: REDIS_HOST
-              value: {{ .Values.global.redis.host | quote }}
+              value: {{ include "renku.valkeyHost" . | quote }}
             - name: REDIS_IS_SENTINEL
               value: {{ .Values.global.redis.sentinel.enabled | quote }}
             - name: REDIS_MASTER_SET

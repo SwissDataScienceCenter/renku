@@ -81,7 +81,7 @@ spec:
             - name: MAX_PINNED_PROJECTS
               value: {{ .Values.dataService.maxPinnedProjects | quote }}
             - name: REDIS_HOST
-              value: {{ .Values.global.redis.host | quote }}
+              value: {{ include "renku.valkeyHost" . | quote }}
             - name: REDIS_PORT
               value: {{ .Values.global.redis.port | quote }}
             - name: REDIS_DATABASE

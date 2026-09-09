@@ -115,9 +115,9 @@ global:
     ## the subcharts which represent the applications which are clients to valkey,
     ## but not the valkey deployment itself.
     port: 6379
-    ## Must match valkey.fullnameOverride when valkey.install is true; the renku
-    ## chart checks that they agree.
-    host: renku-valkey
+    ## Only used when valkey.install is false. The bundled valkey is named after
+    ## the release, and the renku services derive that name themselves.
+    host:
     sentinel:
       ## Set to true if host/port point to a redis sentinel. The valkey chart
       ## bundled here does not support sentinel, so this is only useful when
@@ -436,8 +436,6 @@ valkey:
   ### https://github.com/valkey-io/valkey-helm/tree/main/valkey           ###
   ###########################################################################
 
-  # Must match global.redis.host.
-  fullnameOverride: renku-valkey
   # the image version used is the default specified in the helm chart
   # image:
 
