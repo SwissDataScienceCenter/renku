@@ -24,9 +24,14 @@ impl Default for BuildInfo {
         }
     }
 }
+
 impl fmt::Display for BuildInfo {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let cc = &self.git_commit[..8];
+        let cc = if self.git_commit.len() >= 40 {
+            &self.git_commit[..8]
+        } else {
+            self.git_commit
+        };
         write!(f, "Renku SSH Proxy {} (#{})", self.build_version, cc)
     }
 }

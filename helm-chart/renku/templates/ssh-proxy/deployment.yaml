@@ -42,8 +42,6 @@ spec:
           env:
             - name: RUST_LOG
               value: "info,renku_ssh_proxy=debug"
-            - name: RENKU_SSH_PROXY_TARGET_HOST
-              value: {{ .Values.sshProxy.targetHost | quote }}
             - name: RENKU_SSH_PROXY_TARGET_PORT
               value: {{ .Values.sshProxy.targetPort | quote }}
             - name: RENKU_SSH_PROXY_TARGET_USER

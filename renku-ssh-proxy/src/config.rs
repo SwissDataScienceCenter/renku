@@ -57,17 +57,13 @@ struct Cli {
     #[arg(long, value_name = "FILE", env = "RENKU_SSH_PROXY_HOST_KEY")]
     host_key: Option<PathBuf>,
 
-    /// Host name of the target server
-    #[arg(long, env = "RENKU_SSH_PROXY_TARGET_HOST")]
-    target_host: String,
-
     /// The ssh port of the target server
-    #[arg(long, default_value_t = 22, env = "RENKU_SSH_PROXY_TARGET_PORT")]
-    target_port: u16,
+    #[arg(long, env = "RENKU_SSH_PROXY_TARGET_PORT")]
+    target_port: Option<u16>,
 
     /// username of the target user
     #[arg(long, env = "RENKU_SSH_PROXY_TARGET_USER")]
-    target_user: String,
+    target_user: Option<String>,
 
     /// Be more verbose when logging. Verbosity increases with each occurrence.
     #[command(flatten)]
@@ -86,6 +82,8 @@ struct FileConfig {
     host_key: Option<PathBuf>,
     #[serde(deserialize_with = "deserialize_verbosity")]
     log_level: Option<Verbosity>,
+    target_port: Option<u16>,
+    target_user: Option<String>,
     #[serde(with = "humantime_serde")]
     inactivity_timeout: Option<Duration>,
 }
@@ -125,7 +123,7 @@ pub struct Settings {
     pub host_key_file: PathBuf,
     pub log_level: Verbosity,
     pub ssh_server_config: Arc<SshServerConfig>,
-    pub target: Target, // temporarily use a fixed target host
+    pub target: Target,
 }
 
 impl Settings {
@@ -162,10 +160,15 @@ impl Settings {
         };
         let ssh_server_config = Arc::new(ssh_server_config);
 
+        let target_user = cli
+            .target_user
+            .or(file.target_user)
+            .unwrap_or("renku".to_string());
+        let target_port = cli.target_port.or(file.target_port).unwrap_or(2222);
         let target = Target {
-            host: cli.target_host,
-            port: cli.target_port,
-            user: cli.target_user,
+            host: "".to_string(),
+            port: target_port,
+            user: target_user,
             expected_host_key: None,
         };
         Ok(Settings {

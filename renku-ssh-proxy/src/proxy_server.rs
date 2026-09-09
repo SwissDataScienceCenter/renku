@@ -91,6 +91,12 @@ impl ProxyHandler {
         self
     }
 
+    fn set_target_host<T: AsRef<str>>(&mut self, host: T) {
+        if let Some(t) = &mut self.target {
+            t.host = host.as_ref().to_string();
+        }
+    }
+
     async fn connect_target(&mut self) -> Result<Arc<client::Handle<TargetHandler>>> {
         if let Some(h) = &self.upstream {
             return Ok(h.clone());
@@ -113,9 +119,7 @@ impl ProxyHandler {
         //     .await?
         //     .unwrap_or(Some(ssh_key::HashAlg::Sha256));
         // log::debug!("Using hash-alg with target host: {:?}", halg);
-        let auth = handle
-            .authenticate_password(&target.user, "")
-            .await?;
+        let auth = handle.authenticate_password(&target.user, "").await?;
         if !auth.success() {
             color_eyre::eyre::bail!("proxy failed to authenticate to session host: {:?}", &auth);
         }
@@ -143,16 +147,21 @@ impl server::Handler for ProxyHandler {
 
     async fn auth_publickey(
         &mut self,
-        _user: &str,
+        user: &str,
         _public_key: &ssh_key::PublicKey,
     ) -> std::prelude::v1::Result<server::Auth, Self::Error> {
-        if self.target.is_none() {
+        if self.target.is_none() || user.trim().is_empty() {
             log::warn!("No target host set!");
             Ok(server::Auth::Reject {
                 proceed_with_methods: None,
                 partial_success: false,
             })
         } else {
+            // The username is the session hostname
+            log::debug!("Setting target host to {user}");
+            self.set_target_host(user);
+            //let pk = public_key.to_openssh();
+
             // todo: reach out to data_services
             Ok(server::Auth::Accept)
         }
