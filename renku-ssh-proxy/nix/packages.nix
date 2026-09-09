@@ -15,6 +15,7 @@
       name = "image-root";
       paths = [
         pkgs.bash
+        pkgs.iputils
         renku-ssh-proxy
       ];
       pathsToLink = [ "/bin" "/sbin" ];
