@@ -61,8 +61,9 @@ This version replaces the ``redis`` bitnami helm chart dependency (version ``20.
 with the official `valkey chart <https://valkey.io/valkey-helm/>`_ (version ``0.12.0``).
 
 Redis ran 3 nodes with a Sentinel, this is not yet supported by the Valkey chart,
-this chart is therefore configured to run a single valkey pod. This means that users will be
-logged when the pod goes down, such as during a migration.
+this chart is therefore configured to run a single valkey pod. Sessions are kept on a
+persistent volume, so restarting that pod does not log users out.
+The migration from redis itself logs everyone out, as the redis data is not carried over.
 
 Deployments that need the old behaviour can point ``global.redis`` at an external
 sentinel backed redis instance and set ``valkey.install`` to ``false``.

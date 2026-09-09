@@ -574,6 +574,11 @@ ui:
       requests:
         memory: 75Mi
 valkey:
+  # No session persistence + volume in throwaway deployments.
+  dataStorage:
+    enabled: false
+  valkeyConfig: |-
+    save ""
   # added
   # The valkey chart hardcodes UID/GID 1000, which restricted-v2 rejects. The
   # bitnami charts drop those themselves, through

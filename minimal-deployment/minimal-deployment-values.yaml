@@ -97,3 +97,11 @@ ui:
         memory: 75Mi
       requests:
         memory: 75Mi
+valkey:
+  # Sessions are not worth a volume in a throwaway deployment, they go away
+  # with the pod. Without a save point valkey writes nothing to disk, so this
+  # also turns off the snapshots that the renku defaults enable.
+  dataStorage:
+    enabled: false
+  valkeyConfig: |-
+    save ""

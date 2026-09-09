@@ -19,6 +19,10 @@ Renku now deploys `valkey` instead of the bitnami `redis` chart.
   the existing password is kept. The secret *name* no longer needs to be repeated,
   `valkey.auth.usersExistingSecret` is templated from `global.redis.existingSecret`.
   The chart fails with an explanatory message if these disagree.
+* NEW `valkey.dataStorage`, on by default with 2Gi from the default storage class.
+  Set `enabled: false` to disable persistence, e.g. in minimal deployments.
+* NEW `valkey.valkeyConfig`, enables AOF and disables RDB snapshots by default (see [docs](https://valkey.io/topics/persistence/)).
+  Set back to `save ""` whenever `dataStorage` is disabled.
 * EDIT `global.redis.host`, from `renku-redis` to `renku-valkey`. This section is
   *not* renamed, so that deployments pointing renku at their own redis or valkey
   keep working across the upgrade.

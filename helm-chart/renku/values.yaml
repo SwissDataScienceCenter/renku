@@ -449,19 +449,24 @@ valkey:
   # Recreate rather than RollingUpdate, so that two independent valkey
   # instances never sit behind the same service handing out different sessions.
   deploymentStrategy: Recreate
-  # No persistent volume gets created; valkey only holds sessions and event
-  # streams.
+  # Sessions and event streams are kept on a ReadWriteOnce volume to survive the pod.
   dataStorage:
-    enabled: false
-  # No point snapshotting to a volume that is deleted with the pod. AOF is
-  # already off by default.
+    enabled: true
+    # Required. With an empty requestedSize the chart falls back to an emptyDir
+    # and nothing is persisted.
+    requestedSize: 2Gi
+    # Empty means the default storage class of the cluster.
+    className: ""
+  # Persistence enabled via append-only file (AOF). RDB snapshots disabled.
+    # Note: valkey periodically compacts AOF to an RDB base. See https://valkey.io/topics/persistence/
   valkeyConfig: |-
+    appendonly yes
     save ""
-  # Valkey authenticates through ACL users, so the renku secret becomes the
-  # password of the "default" user. The chart templates usersExistingSecret, so
-  # it is derived; passwordKey is not, so validate-values.yaml checks it.
+  # Valkey authenticates through ACL users, the renku secret is the
+  # password of the "default" user.
   auth:
     enabled: true
+    # derived by subchart templating.
     usersExistingSecret: '{{ .Values.global.redis.existingSecret }}'
     aclUsers:
       default:
