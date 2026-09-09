@@ -390,7 +390,12 @@ impl server::Server for ProxyHandler {
         self.clone()
     }
     fn handle_session_error(&mut self, error: <Self::Handler as russh::server::Handler>::Error) {
-        log::error!("Session error: {error:#?}");
+        let cause = error.downcast_ref::<russh::Error>();
+        if let Some(russh::Error::Disconnect) = cause {
+            log::debug!("Client disconnected: {error:#?}");
+        } else {
+            log::error!("Session error: {error:#?}");
+        }
     }
 }
 

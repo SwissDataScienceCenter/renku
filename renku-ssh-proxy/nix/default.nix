@@ -110,6 +110,7 @@ in
       RENKU_SSH_PROXY_TARGET_HOST = "localhost";
       RENKU_SSH_PROXY_TARGET_USER = "renku";
       RENKU_SSH_PROXY_TARGET_PORT = "10022";
+      RUST_LOG = "info,renku_ssh_proxy=debug";
     };
   };
 
