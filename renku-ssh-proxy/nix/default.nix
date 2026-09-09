@@ -54,7 +54,7 @@ let
           done
       '';
 
-      env.NIX_GIT_SHA = inputs.self.rev or inputs.self.dirtyRev or "unknown";
+      env.NIX_GIT_SHA = inputs.self.rev or inputs.self.dirtyRev or "unknown-sha";
       meta = {
         name = "renku-ssh-proxy";
         homepage = "https://renkulab.io";

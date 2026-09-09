@@ -1388,13 +1388,12 @@ sshProxy:
     existingPriorityClass: ""
   image:
     repository: harbor.dev.renku.ch/dev-images/renku-ssh-proxy
-    tag: "0.4.0"
+    tag: "0.5.0"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
     port: 2222
   openSshHostKey:
-  targetHost:
   targetUser:
   targetPort:
   sentry:
