@@ -11,6 +11,14 @@
   docker = pkgs.dockerTools.buildImage {
     name = "renku-ssh-proxy";
     tag = "musl";
+    copyToRoot = pkgs.buildEnv {
+      name = "image-root";
+      paths = [
+        pkgs.bash
+        renku-ssh-proxy
+      ];
+      pathsToLink = [ "/bin" "/sbin" ];
+    };
     config.Entrypoint = [ (pkgs.lib.getExe renku-ssh-proxy) ];
   };
 }
