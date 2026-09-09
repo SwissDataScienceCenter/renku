@@ -23,9 +23,8 @@ Renku now deploys `valkey` instead of the bitnami `redis` chart.
   Set `enabled: false` to disable persistence, e.g. in minimal deployments.
 * NEW `valkey.valkeyConfig`, enables AOF and disables RDB snapshots by default (see [docs](https://valkey.io/topics/persistence/)).
   Set back to `save ""` whenever `dataStorage` is disabled.
-* EDIT `global.redis.host`, from `renku-redis` to `renku-valkey`. This section is
-  *not* renamed, so that deployments pointing renku at their own redis or valkey
-  keep working across the upgrade.
+* EDIT `global.redis.host`, now only read when `valkey.install` is `false`. The
+  bundled valkey is named after the release, like every other subchart.
 * EDIT `global.redis.port`, from `26379` (the sentinel port) to `6379`.
 * EDIT `global.redis.sentinel.enabled`, from `true` to `false`. The valkey chart does
   not support sentinel. Keep this set to `true` only when pointing `global.redis` at
