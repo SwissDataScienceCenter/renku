@@ -200,3 +200,8 @@ ui:
         memory: 75Mi
       requests:
         memory: 75Mi
+valkey:
+  dataStorage:
+    enabled: false
+  valkeyConfig: |-
+    save ""
