@@ -128,6 +128,8 @@ spec:
               value: {{ .Values.dataService.trustedProxies.proxiesCount | default "" | quote }}
             - name: REAL_IP_HEADER
               value: {{ .Values.dataService.trustedProxies.realIpHeader | default "" | quote }}
+            - name: APPS_ENABLED
+              value: {{ .Values.apps.enabled | quote }}
             - name: IMAGE_BUILDERS_ENABLED
               value: {{ .Values.dataService.imageBuilders.enabled | quote }}
             - name: BUILD_PRIVATE_REPO_BUILDS_ENABLED

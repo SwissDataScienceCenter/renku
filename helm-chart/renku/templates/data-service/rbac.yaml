@@ -91,6 +91,17 @@ rules:
       - get
       - watch
   {{- end }}
+  {{- if .Values.apps.enabled }}
+  - apiGroups:
+      - serving.knative.dev
+    resources:
+      - services
+    verbs:
+      - create
+      - get
+      - list
+      - delete
+  {{- end }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding

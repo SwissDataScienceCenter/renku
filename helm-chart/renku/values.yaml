@@ -244,6 +244,18 @@ alerts:
     ## Client secret for the Alertmanager webhook OIDC client
     ## Will be auto-generated if not provided
     clientSecret:
+## Apps configuration
+apps:
+  enabled: false
+  # Apps are scaled to zero when idle, so the lobby page probes the app URL until it answers.
+  # These values bound how long a user waits there before being offered a manual retry.
+  appLobby:
+    # How many probes the lobby spends before giving up. Clamped to 1-100.
+    maxAttempts: 7
+    # How long a single probe may hang before it counts as failed. Clamped to 1000-300000.
+    probeTimeoutMs: 45000
+    # How long the lobby pauses between probes. Clamped to 0-60000.
+    retryDelayMs: 2000
 ## Logging configuration (applied to all services that support it)
 logging:
   ## Possible values are "json" and "plain". This defaults to "plain" if it's not set or any other value is provided.
