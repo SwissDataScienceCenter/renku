@@ -52,11 +52,6 @@ global:
   renku:
     domain: <deployment-FQDN>
   useHTTPS: true
-  redis:
-    port: 6379
-    host: renku-redis-master
-    sentinel:
-      enabled: false
 ingress:
   enabled: true
   className: webapprouting.kubernetes.azure.com
@@ -165,23 +160,6 @@ postgresql:
         memory: 300Mi
       requests:
         memory: 300Mi
-redis:
-  architecture: standalone
-  image:
-    registry: harbor.dev.renku.ch
-    repository: bitnami-mirror/redis
-  master:
-    persistence:
-      enabled: false
-  metrics:
-    image:
-      registry: harbor.dev.renku.ch
-      repository: bitnami-mirror/redis-exporter
-  sentinel:
-    enabled: false
-    image:
-      registry: harbor.dev.renku.ch
-      repository: bitnami-mirror/redis-sentinel
 secretsStorage:
   image:
     repository: harbor.dev.renku.ch/dockerhub_cache/renku/secrets-storage
@@ -222,3 +200,8 @@ ui:
         memory: 75Mi
       requests:
         memory: 75Mi
+valkey:
+  dataStorage:
+    enabled: false
+  valkeyConfig: |-
+    save ""

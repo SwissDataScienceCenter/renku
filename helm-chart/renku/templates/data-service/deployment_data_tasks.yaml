@@ -20,7 +20,6 @@ spec:
       labels:
         app: renku-data-tasks
         release: {{ .Release.Name }}
-        {{ .Values.global.redis.clientLabel | toYaml | nindent 8 }}
       annotations:
       {{- with .Values.dataService.podAnnotations }}
         {{- toYaml . | nindent 8 }}
@@ -73,7 +72,7 @@ spec:
             - name: K8S_NAMESPACE
               value: {{ .Release.Namespace | quote }}
             - name: REDIS_HOST
-              value: {{ .Values.global.redis.host | quote }}
+              value: {{ include "renku.valkeyHost" . | quote }}
             - name: REDIS_PORT
               value: {{ .Values.global.redis.port | quote }}
             - name: REDIS_DATABASE

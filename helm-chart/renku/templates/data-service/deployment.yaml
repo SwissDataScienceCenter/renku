@@ -22,7 +22,6 @@ spec:
       labels:
         app: renku-data-service
         release: {{ .Release.Name }}
-        {{ .Values.global.redis.clientLabel | toYaml | nindent 8 }}
       annotations:
         # NOTE: Without this the pod will not restart when the secret values change.
         checksum/config: {{ include (print $.Template.BasePath "/data-service/session-env-secret.yaml") . | sha256sum }}
@@ -82,7 +81,7 @@ spec:
             - name: MAX_PINNED_PROJECTS
               value: {{ .Values.dataService.maxPinnedProjects | quote }}
             - name: REDIS_HOST
-              value: {{ .Values.global.redis.host | quote }}
+              value: {{ include "renku.valkeyHost" . | quote }}
             - name: REDIS_PORT
               value: {{ .Values.global.redis.port | quote }}
             - name: REDIS_DATABASE

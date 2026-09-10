@@ -5,6 +5,33 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
+## Upgrading to Renku 2.21.0
+
+Renku now deploys `valkey` instead of the bitnami `redis` chart.
+
+* DELETE `redis`, the whole section. The valkey settings differ differently.
+* NEW `valkey`, replacing the section above. It keeps `install`, `createSecret` and
+  `password` with the same meaning as before, and passes the rest on to the valkey
+  chart. Valkey authenticates through ACL users rather than a single
+  password, so the password key is configured under
+  `valkey.auth.aclUsers.default.passwordKey` instead of
+  `redis.auth.existingSecretPasswordKey`; it still defaults to `redis-password`, so
+  the existing password is kept. The secret *name* no longer needs to be repeated,
+  `valkey.auth.usersExistingSecret` is templated from `global.redis.existingSecret`.
+  The chart fails with an explanatory message if these disagree.
+* NEW `valkey.dataStorage`, on by default with 2Gi from the default storage class.
+  Set `enabled: false` to disable persistence, e.g. in minimal deployments.
+* NEW `valkey.valkeyConfig`, enables AOF and disables RDB snapshots by default (see [docs](https://valkey.io/topics/persistence/)).
+  Set back to `save ""` whenever `dataStorage` is disabled.
+* EDIT `global.redis.host`, now only read when `valkey.install` is `false`. The
+  bundled valkey is named after the release, like every other subchart.
+* EDIT `global.redis.port`, from `26379` (the sentinel port) to `6379`.
+* EDIT `global.redis.sentinel.enabled`, from `true` to `false`. The valkey chart does
+  not support sentinel. Keep this set to `true` only when pointing `global.redis` at
+  an external sentinel backed instance, together with `valkey.install: false`.
+* DELETE `global.redis.clientLabel`. It labelled the client pods for the network
+  policy that the bitnami chart brought along.
+
 ## Upgrading to Renku 2.18.0
 
 * DELETE `enableInternalGitlab`, it is now not possible to configure Renku to use an "internal" GitLab instance. Admins can set up a GitLab integration instead.

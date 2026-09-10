@@ -7,10 +7,10 @@ dependencies:
     version: 7.3.0
     repository: "https://codecentric.github.io/helm-charts"
     condition: keycloakx.enabled
-  - name: redis
-    repository: "oci://harbor.renkulab.io/bitnami-mirror"
-    version: 20.3.0
-    condition: redis.install
+  - name: valkey
+    repository: "https://valkey.io/valkey-helm/"
+    version: "0.12.0"
+    condition: valkey.install
   - name: amalthea-sessions
     repository: "https://swissdatasciencecenter.github.io/helm-charts/"
     version: "0.31.0"

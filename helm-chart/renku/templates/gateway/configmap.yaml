@@ -65,7 +65,7 @@ data:
     redis:
       type: redis 
       addresses: 
-        - {{ printf "%s:%d" .Values.global.redis.host (.Values.global.redis.port | int) | quote }}
+        - {{ printf "%s:%d" (include "renku.valkeyHost" .) (.Values.global.redis.port | int) | quote }}
       isSentinel: {{ .Values.global.redis.sentinel.enabled }}
       masterName: {{ .Values.global.redis.sentinel.masterSet | quote }}
       dbIndex: {{ .Values.global.redis.dbIndex.gateway }}

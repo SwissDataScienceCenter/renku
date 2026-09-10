@@ -1,0 +1,18 @@
+{{/*
+Validation of the renku values with actionable messages on failure.
+*/}}
+
+{{- if hasKey .Values "redis" }}
+  {{- fail "The 'redis' values section no longer exists: renku now deploys valkey instead of bitnami redis. Move your settings to the 'valkey' section and adapt them (see helm-chart/values.yaml.changelog.md). Client side settings stay in 'global.redis'." }}
+{{- end }}
+
+{{- if .Values.valkey.install }}
+  {{- $valkeyPasswordKey := dig "default" "passwordKey" "default" .Values.valkey.auth.aclUsers }}
+  {{- if ne $valkeyPasswordKey .Values.global.redis.existingSecretPasswordKey }}
+    {{- fail (printf "the passwordKey of the default user in valkey.auth.aclUsers (%s) must match global.redis.existingSecretPasswordKey (%s) to let the renku services authenticate against valkey" $valkeyPasswordKey .Values.global.redis.existingSecretPasswordKey) }}
+  {{- end }}
+{{- end }}
+
+{{- if hasKey .Values "keycloak" }}
+  {{- fail "Values to configure Keycloak should be under `keycloakx`." }}
+{{- end }}
