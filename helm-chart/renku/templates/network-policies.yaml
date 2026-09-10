@@ -70,7 +70,7 @@ spec:
               kubernetes.io/metadata.name: {{ .Release.Namespace }}
         - podSelector:
             matchLabels:
-              app: renku-authz
+              app.kubernetes.io/name: renku-authz
           namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: {{ .Release.Namespace }}
@@ -394,15 +394,18 @@ kind: NetworkPolicy
 metadata:
   name: ingress-to-authz-from-services
   labels:
-    app: {{ template "renku.name" . }}
+    app.kubernetes.io/name: {{ template "renku.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: authentication
+    app.kubernetes.io/part-of: renku
     chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
   podSelector:
     matchLabels:
-      app: renku-authz
-      release: {{ .Release.Name }}
+      app.kubernetes.io/name: renku-authz
+      app.kubernetes.io/instance: {{ .Release.Name }}
   policyTypes:
     - Ingress
   ingress:
