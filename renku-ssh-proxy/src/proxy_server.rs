@@ -119,9 +119,12 @@ impl ProxyHandler {
         //     .await?
         //     .unwrap_or(Some(ssh_key::HashAlg::Sha256));
         // log::debug!("Using hash-alg with target host: {:?}", halg);
-        let auth = handle.authenticate_password(&target.user, "").await?;
+        let auth = handle.authenticate_none(&target.user).await?;
         if !auth.success() {
-            color_eyre::eyre::bail!("proxy failed to authenticate to session host: {:?}", &auth);
+            let auth = handle.authenticate_password(&target.user, "").await?;
+            if !auth.success() {
+                color_eyre::eyre::bail!("proxy failed to authenticate to session host: {:?}", &auth);
+            }
         }
 
         let handle = Arc::new(handle);

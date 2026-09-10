@@ -1393,7 +1393,7 @@ sshProxy:
     tag: "0.5.3"
     pullPolicy: IfNotPresent
   service:
-    type: ClusterIP
+    type: LoadBalancer
     port: 2222
   openSshHostKey:
   targetUser:
