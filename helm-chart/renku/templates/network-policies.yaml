@@ -46,37 +46,6 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: {{ template "renku.notebooks.fullname" . }}-k8s-watcher
-  labels:
-    app: {{ template "renku.name" . }}
-    chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-spec:
-  podSelector:
-    matchLabels:
-      app: {{ template "renku.notebooks.name" . }}-k8s-watcher
-      release: {{ .Release.Name }}
-  policyTypes:
-    - Ingress
-  ingress:
-    - from:
-      # Allow ingress to the k8s watcher from data services and notebooks
-        - podSelector:
-            matchLabels:
-              app: {{ template "renku.notebooks.name" . }}
-              release: {{ .Release.Name }}
-        - podSelector:
-            matchLabels:
-              app.kubernetes.io/name: renku-data-service
-              app.kubernetes.io/instance: {{ .Release.Name }}
-      ports:
-        - protocol: TCP
-          port: http
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
   name: {{ template "renku.notebooks.fullname" . }}-sessions-v2
   labels:
     app: {{ template "renku.name" . }}
