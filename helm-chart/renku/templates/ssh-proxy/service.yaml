@@ -12,12 +12,12 @@ metadata:
     prometheus.io/path: '/metrics'
     prometheus.io/port: '8000'
 spec:
-  type: {{ .Values.sshProxy.service.type }}
+  type: LoadBalancer
   ports:
     - port: {{ .Values.sshProxy.service.port }}
       targetPort: 2222
       protocol: TCP
       name: ssh
   selector:
-    app: {{ template "renku.name" . }}-ssh-proxy
+    app: renku-ssh-proxy
     release: {{ .Release.Name }}
