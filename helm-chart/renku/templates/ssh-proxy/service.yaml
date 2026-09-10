@@ -13,8 +13,9 @@ metadata:
     prometheus.io/port: '8000'
 spec:
   type: LoadBalancer
+  externalTrafficPolicy: Local
   ports:
-    - port: 22
+    - port: {{ .Values.sshProxy.service.port }}
       targetPort: 2222
       protocol: TCP
       name: ssh
