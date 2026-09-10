@@ -14,7 +14,7 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-    - port: {{ .Values.sshProxy.service.port }}
+    - port: 22
       targetPort: 2222
       protocol: TCP
       name: ssh
