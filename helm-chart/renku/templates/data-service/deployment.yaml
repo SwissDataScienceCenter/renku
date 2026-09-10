@@ -242,6 +242,10 @@ spec:
                   name: {{ .Values.dataService.dataDeposits.envidat.s3.credentialsSecretName | quote }}
                   key: SECRET_ACCESS_KEY
             {{- end }}
+            - name: SCICAT_URL
+              value: {{ .Values.dataService.dataDeposits.scicat.url | quote }}
+            - name: SCICAT_JOB_IMAGE
+              value: {{ .Values.dataService.dataDeposits.scicat.image | quote }}
             - name: RENKU_URL
               value: {{ (include "renku.baseUrl" .) | quote }}
             - name: PERSISTED_LOGS_ENABLED
