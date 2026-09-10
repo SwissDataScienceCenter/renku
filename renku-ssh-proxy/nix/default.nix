@@ -93,6 +93,7 @@ in
       pkgs.rust-bin.stable.latest.default
       pkgs.just
       pkgs.tack
+      pkgs.azure-cli
 
       # Dev dependencies
       pkgs.cargo-flamegraph
