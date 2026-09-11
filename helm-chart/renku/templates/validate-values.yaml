@@ -1,0 +1,28 @@
+{{/*
+Validation of the renku values with actionable messages on failure.
+*/}}
+
+{{- if hasKey .Values "postgresql" }}
+  {{- fail "The 'postgresql' values section no longer exists: renku deploys postgres through the CloudNativePG operator instead of the bitnami chart. Move your settings to the 'cnpg' section and adapt them (see helm-chart/values.yaml.changelog.md). Settings for an instance that renku does not deploy stay in 'global.externalServices.postgresql'." }}
+{{- end }}
+
+{{/*
+Guard the section itself before reading into it: a 'cnpg:' key whose body is
+entirely commented out parses as null, and helm treats an explicit null in a
+values file as a deletion of the chart default.
+*/}}
+{{- if not (hasKey .Values "cnpg") }}
+  {{- fail "The 'cnpg' values section is missing. If your values file has a 'cnpg:' key with everything under it commented out, it parses as null and deletes the whole section: remove the key entirely instead." }}
+{{- end }}
+
+{{- if and .Values.global.externalServices.postgresql.enabled .Values.cnpg.install }}
+  {{- fail "External PostgreSQL and the renku bundled PostgreSQL cannot both be enabled. Disable either global.externalServices.postgresql.enabled or cnpg.install." }}
+{{- end }}
+
+{{- if not (or .Values.global.externalServices.postgresql.enabled .Values.cnpg.install) }}
+  {{- fail "Renku needs a PostgreSQL. Enable either global.externalServices.postgresql.enabled, pointing it at your own instance, or cnpg.install to let renku deploy one." }}
+{{- end }}
+
+{{- if and .Values.global.externalServices.postgresql.password .Values.global.externalServices.postgresql.existingSecret }}
+  {{- fail "global.externalServices.postgresql.password and global.externalServices.postgresql.existingSecret cannot both be set, pick one." }}
+{{- end }}
