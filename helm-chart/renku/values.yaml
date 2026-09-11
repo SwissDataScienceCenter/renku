@@ -277,7 +277,7 @@ keycloakx:
     # The following environment variables are provided to keycloak
     # as extraEnvFrom secrets.
   # renku-keycloak-postgres
-  # - DB_ADDR: database host                            value: <RELEASE-NAME>-postgresql
+  # - DB_ADDR: database host                            value: <RELEASE-NAME>-pg-rw
   # - DB_DATABASE: database name for keycloak           value: global.keycloak.postgresDatabase
   # - DB_USER: database username for keycloak database  value: global.keycloak.postgresUser
   # - DB_PASSWORD: database password for keycloak       value: global.keycloak.postgresPassword.value
