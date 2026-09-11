@@ -8,9 +8,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  {{- if not .Values.sshProxy.autoscaling.enabled }}
   replicas: {{ .Values.sshProxy.replicaCount }}
-  {{- end }}
   strategy:
     {{- toYaml .Values.sshProxy.updateStrategy | nindent 4 }}
   selector:
@@ -42,10 +40,14 @@ spec:
           env:
             - name: RUST_LOG
               value: "info,renku_ssh_proxy=debug"
+            {{- if .Values.sshProxy.targetPort }}
             - name: RENKU_SSH_PROXY_TARGET_PORT
               value: {{ .Values.sshProxy.targetPort | quote }}
+            {{- end }}
+            {{- if .Values.sshProxy.targetUser }}
             - name: RENKU_SSH_PROXY_TARGET_USER
               value: {{ .Values.sshProxy.targetUser | quote }}
+            {{- end }}
             - name: RENKU_SSH_PROXY_HOST_KEY
               value: "/secrets/openSshHostKey/openSshHostKey"
             - name: RENKU_SSH_PROXY_LISTEN
