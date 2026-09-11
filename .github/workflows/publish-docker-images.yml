@@ -8,7 +8,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: renku-ssh-proxy
+  IMAGE_NAME: SwissDataScienceCenter/renku-ssh-proxy
 
 jobs:
   build-and-push:
