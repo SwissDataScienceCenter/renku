@@ -3,7 +3,7 @@ use std::sync::Arc;
 
 use crate::Settings;
 use color_eyre::eyre::{OptionExt, Result};
-use russh::keys::ssh_key::PublicKey;
+use russh::keys::ssh_key::{HashAlg, PublicKey};
 use russh::server::Server as _;
 use russh::{Channel, ChannelId, ChannelMsg, Pty, Sig};
 use russh::{client, server};
@@ -75,7 +75,10 @@ pub struct ProxyHandler {
     pub target: Option<Target>,
     upstream: Option<Arc<client::Handle<TargetHandler>>>,
     channels: HashMap<ChannelId, mpsc::Sender<SshMsg>>,
+    fixed_key: PublicKey,
 }
+
+static FIXED_KEY_STR: &str = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDizMVvJFeooFSwv6qovyXn8SyoFkzKXZFwZFyzAgEmwK8h+OOLrI/Wcea9XuMKIh1QOUdi7i9bmTkUUoMAbK4iFGvRP+ScrmZ9y/8asOj25Vvj484ZhRKv6edVCb4PZyebB2+bvURx7fgaxwzTphxz6ilaJ0bR7PEEWeXKAFLoPPY24ClVGc+MnsBXcyaOO7/ekpDRdrsYBxDltMM9fBOvDISdB8UITGM6tdycm6Lb0qwotdtEK8ly58s6BlWyLtQyIAtKpp7Z6ubCGi74wRBiXPe7GaIaGr8GteiG7NQwPnraNtZdyTQ3/KFqULCa9jrIDuCHhPkaS60AiEGJ6qhZWottRgTDSLk1JpWDfXBjC0ISg2cc1PyCsW2lrooIV3Fvfo/048IMH8x6T5oB37AaR6icKzLaW6RaXLm+/bHNv3tFUl+DGfKAVahThEw9al86JTz7npXhV+0Dlx0vxMKSZO+kMCcaqSXmkh5pp8WH5NoxQL3e9ZsSvexGCo2f0Fk=";
 
 impl ProxyHandler {
     pub fn new() -> Self {
@@ -83,6 +86,7 @@ impl ProxyHandler {
             target: None,
             upstream: None,
             channels: HashMap::new(),
+            fixed_key: PublicKey::from_openssh(FIXED_KEY_STR).unwrap(),
         }
     }
 
@@ -123,7 +127,10 @@ impl ProxyHandler {
         if !auth.success() {
             let auth = handle.authenticate_password(&target.user, "").await?;
             if !auth.success() {
-                color_eyre::eyre::bail!("proxy failed to authenticate to session host: {:?}", &auth);
+                color_eyre::eyre::bail!(
+                    "proxy failed to authenticate to session host: {:?}",
+                    &auth
+                );
             }
         }
 
@@ -151,22 +158,28 @@ impl server::Handler for ProxyHandler {
     async fn auth_publickey(
         &mut self,
         user: &str,
-        _public_key: &ssh_key::PublicKey,
+        public_key: &PublicKey,
     ) -> std::prelude::v1::Result<server::Auth, Self::Error> {
         if self.target.is_none() || user.trim().is_empty() {
             log::warn!("No target host set!");
-            Ok(server::Auth::Reject {
-                proceed_with_methods: None,
-                partial_success: false,
-            })
+            Ok(server::Auth::reject())
         } else {
             // The username is the session hostname
             log::debug!("Setting target host to {user}");
             self.set_target_host(user);
             //let pk = public_key.to_openssh();
-
             // todo: reach out to data_services
-            Ok(server::Auth::Accept)
+
+            if self.fixed_key.key_data() == public_key.key_data() {
+                log::info!("Auth successful");
+                Ok(server::Auth::Accept)
+            } else {
+                log::warn!(
+                    "Auth failed due to wrong public key: {}",
+                    public_key.fingerprint(HashAlg::Sha256)
+                );
+                Ok(server::Auth::reject())
+            }
         }
     }
 
