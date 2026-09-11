@@ -55,6 +55,29 @@ Most information related to upgrading from one chart version to another is cover
 in the `values changelog file <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/values.yaml.changelog.md>`_.
 For upgrades that require some steps other than modifying the values files to be executed, we add some instructions here.
 
+Upgrading to x.xx.x
+*************************
+This version drops the bitnami ``postgresql`` chart dependency (version ``14.2.4``).
+The proposed migration path is with `CloudNativePG <https://cloudnative-pg.io/>`_,
+but any external postgres can be used.
+
+CloudNativePG is an operator, and it is **not** a dependency of this chart.
+It is install once for the whole cluster, before upgrading:
+
+.. code-block:: console
+
+    $ helm repo add cnpg https://cloudnative-pg.github.io/charts
+    $ helm repo update
+    $ helm upgrade --install cnpg --namespace cnpg-system --create-namespace cnpg/cloudnative-pg
+
+The ``postgresql`` values section is replaced by a ``cnpg`` section.
+If enabled, Renku creates a ``Cluster`` named ``<release>-pg`` in its own namespace, and the services connect
+to its read-write service, ``<release>-pg-rw``, instead of ``<release>-postgresql``. 
+
+**The data is not migrated automatically.** The bitnami instance and its volume are separate objects
+from the new Cluster, so the databases have to be dumped from the old instance and restored into the
+new one. Plan for downtime, and make a dump before starting.
+
 Upgrading to 0.27.0
 *******************
 This version contains an upgrade to the ``keycloak`` Helm chart dependency from version ``15.0.2`` to ``20.0.1``.
