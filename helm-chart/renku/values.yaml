@@ -388,9 +388,6 @@ cnpg:
   # 1 is a single pod with no failover. 3 gives the operator the quorum it needs
   # to fail over on its own.
   instances: 1
-  # The postgres major version follows the image the operator defaults to. Pin it
-  # here to decide yourself when a major upgrade happens.
-  # imageName:
   storage:
     size: 8Gi
     # Empty means the default storage class of the cluster.
@@ -399,8 +396,6 @@ cnpg:
     requests:
       cpu: 100m
       memory: 300Mi
-  # Merged into the postgresql configuration of the cluster.
-  parameters: {}
 
 redis:
   # If set to true, a HA redis will be included in the Renku release.
