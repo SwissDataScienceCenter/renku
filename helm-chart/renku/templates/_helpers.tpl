@@ -124,21 +124,6 @@ Define subcharts full names
 {{- printf "%s-%s" .Release.Name "core" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
-{{/*
-Catch configuration errors
-*/}}
-{{- if .Values.global.externalServices.postgresql.enabled and .Values.postgresql.enabled -}}
-fail "External PostgreSQL and Renku-bundled PostgreSQL cannot both be enabled. Please disable either global.externalServices.postgresql.enabled or postgresql.enabled"
-{{- end -}}
-
-{{- if not .Values.global.externalServices.postgresql.enabled and not .Values.postgresql.enabled -}}
-fail "External PostgreSQL and Renku-bundled PostgreSQL cannot both be disabled. Please enable either global.externalServices.postgresql.enabled or postgresql.enabled"
-{{- end -}}
-
-{{- if .Values.global.externalServices.postgresql.enabled and .Values.global.externalServices.postgresql.password and .Values.global.externalServices.postgresql.existingSecret -}}
-fail "External PostgreSQL password and existing Secret fields cannot both be populated."
-{{- end -}}
-
 {{- define "keycloak.admin-secret" -}}
 {{- $secretAdmin := lookup "v1" "Secret" .Release.Namespace "keycloak-password-secret" -}}
 {{- if $secretAdmin -}}
