@@ -3,16 +3,7 @@ Validation of the renku values with actionable messages on failure.
 */}}
 
 {{- if hasKey .Values "postgresql" }}
-  {{- fail "The 'postgresql' values section no longer exists: renku deploys postgres through the CloudNativePG operator instead of the bitnami chart. Move your settings to the 'cnpg' section and adapt them (see helm-chart/values.yaml.changelog.md). Settings for an instance that renku does not deploy stay in 'global.externalServices.postgresql'." }}
-{{- end }}
-
-{{/*
-Guard the section itself before reading into it: a 'cnpg:' key whose body is
-entirely commented out parses as null, and helm treats an explicit null in a
-values file as a deletion of the chart default.
-*/}}
-{{- if not (hasKey .Values "cnpg") }}
-  {{- fail "The 'cnpg' values section is missing. If your values file has a 'cnpg:' key with everything under it commented out, it parses as null and deletes the whole section: remove the key entirely instead." }}
+  {{- fail "The 'postgresql' section is gone: renku deploys postgres through the CloudNativePG operator now. Move your settings to 'cnpg', see helm-chart/values.yaml.changelog.md." }}
 {{- end }}
 
 {{- if and .Values.global.externalServices.postgresql.enabled .Values.cnpg.install }}
