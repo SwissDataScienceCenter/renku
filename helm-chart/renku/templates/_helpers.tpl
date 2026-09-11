@@ -62,6 +62,44 @@ read-write service of the Cluster; for an external instance it is what the admin
 {{- end -}}
 {{- end -}}
 
+{{/*
+Host and superuser credentials the database setup jobs need. For the bundled
+postgres these come from the secret cnpg generates alongside the Cluster; for an
+external instance they come from whatever the admin configured.
+*/}}
+{{- define "renku.pgAdminEnv" -}}
+- name: DB_HOST
+  value: {{ include "postgresql.fullname" . }}
+{{- if .Values.global.externalServices.postgresql.enabled }}
+- name: DB_ADMIN_USERNAME
+  value: {{ .Values.global.externalServices.postgresql.username }}
+{{- if .Values.global.externalServices.postgresql.password }}
+- name: DB_ADMIN_PASSWORD
+  value: {{ .Values.global.externalServices.postgresql.password }}
+{{- else if .Values.global.externalServices.postgresql.existingSecret }}
+- name: DB_ADMIN_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.global.externalServices.postgresql.existingSecret }}
+      key: postgres-password
+{{- end }}
+{{- else }}
+- name: DB_ADMIN_USERNAME
+  valueFrom:
+    secretKeyRef:
+      name: {{ include "renku.pgCluster" . }}-superuser
+      key: username
+- name: DB_ADMIN_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: {{ include "renku.pgCluster" . }}-superuser
+      key: password
+{{- end }}
+{{- end -}}
+
+{{/*
+Define subcharts full names
+*/}}
 {{- define "keycloak.fullname" -}}
 {{- printf "%s-%s" .Release.Name "keycloakx" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
