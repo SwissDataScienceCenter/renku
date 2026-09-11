@@ -43,11 +43,20 @@ http
 {{- end -}}
 
 {{/*
-Define subcharts full names
+Name of the CloudNativePG Cluster renku deploys. Truncated to 60 so that the
+service names the operator derives from it ("-rw", "-ro", "-r") still fit in 63.
+*/}}
+{{- define "renku.pgCluster" -}}
+{{- printf "%s-%s" .Release.Name "pg" | replace "+" "_" | trunc 60 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
+Postgres host used by renku services. For the bundled postgres this is the
+read-write service of the Cluster; for an external instance it is what the admin configured.
 */}}
 {{- define "postgresql.fullname" -}}
 {{- if not .Values.global.externalServices.postgresql.enabled -}}
-{{- printf "%s-%s" .Release.Name "postgresql" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- printf "%s-rw" (include "renku.pgCluster" .) -}}
 {{- else -}}
 {{- .Values.global.externalServices.postgresql.host -}}
 {{- end -}}
