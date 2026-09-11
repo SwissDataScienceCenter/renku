@@ -232,8 +232,8 @@ spec:
     - from:
         - podSelector:
             matchLabels:
-              app: {{ template "gateway.name" . }}
-              release: {{ .Release.Name }}
+              app.kubernetes.io/name: {{ template "gateway.name" . }}
+              app.kubernetes.io/instance: {{ .Release.Name }}
       ports:
         - protocol: TCP
           port: http
@@ -258,8 +258,8 @@ spec:
     - from:
         - podSelector:
             matchLabels:
-              app: {{ template "gateway.name" . }}
-              release: {{ .Release.Name }}
+              app.kubernetes.io/name: {{ template "gateway.name" . }}
+              app.kubernetes.io/instance: {{ .Release.Name }}
       ports:
         - protocol: TCP
           port: http
@@ -300,8 +300,8 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      app: {{ template "gateway.name" . }}
-      release: {{ .Release.Name }}
+      app.kubernetes.io/name: {{ template "gateway.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
   policyTypes:
     - Ingress
   ingress:
@@ -444,8 +444,8 @@ spec:
     - from:
         - podSelector:
             matchLabels:
-              app: {{ template "gateway.name" . }}
-              release: {{ .Release.Name }}
+              app.kubernetes.io/name: {{ template "gateway.name" . }}
+              app.kubernetes.io/instance: {{ .Release.Name }}
         - podSelector:
             matchLabels:
               app.kubernetes.io/name: "uiserver"

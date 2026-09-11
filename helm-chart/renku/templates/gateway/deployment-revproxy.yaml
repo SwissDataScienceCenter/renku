@@ -3,9 +3,12 @@ kind: Deployment
 metadata:
   name: {{ template "renku.fullname" . }}-gateway
   labels:
-    app: {{ template "gateway.name" . }}
+    app.kubernetes.io/name: {{ template "gateway.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: gateway
+    app.kubernetes.io/part-of: renku
     chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
   {{- if not .Values.gateway.autoscaling.enabled }}
@@ -15,13 +18,16 @@ spec:
     {{- toYaml .Values.gateway.updateStrategy | nindent 4 }}
   selector:
     matchLabels:
-      app: {{ template "gateway.name" . }}
-      release: {{ .Release.Name }}
+      app.kubernetes.io/name: {{ template "gateway.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ template "gateway.name" . }}
-        release: {{ .Release.Name }}
+        app.kubernetes.io/name: {{ template "gateway.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/component: gateway
+        app.kubernetes.io/part-of: renku
         # The label below enables the gateway to connect to redis
         {{ .Values.global.redis.clientLabel | toYaml | nindent 8 }}
       {{- if .Values.gateway.podAnnotations }}

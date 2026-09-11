@@ -4,9 +4,12 @@ kind: Ingress
 metadata:
   name: gitlab-redirect-{{ template "renku.fullname" . }}
   labels:
-    app: gitlab
+    app.kubernetes.io/name: gitlab
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: gateway
+    app.kubernetes.io/part-of: renku
     chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 {{- with .Values.gateway.redirects.gitlab.ingress.annotations }}
   annotations:
