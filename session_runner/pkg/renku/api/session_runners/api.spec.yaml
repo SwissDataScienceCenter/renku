@@ -1,0 +1,250 @@
+openapi: 3.0.2
+info:
+  title: Renku Data Services API
+  description: |
+    This service is the main backend for Renku. It provides information about users, projects,
+    cloud storage, access to compute resources and many other things.
+  version: v1
+servers:
+  - url: /api/data
+paths:
+  /session_runners:
+    post:
+      summary: Create a new session runner
+      description: TODO
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SessionRunnerPost"
+      responses:
+        "201":
+          description: The session runner was created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionRunner"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - session_runners
+  /session_runners/register:
+    post:
+      summary: Register a session runner
+      description: TODO
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SessionRunnerRegisterPost"
+      responses:
+        "200":
+          description: The session runner was registered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionRunnerRegisterResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - session_runners
+  /session_runners/{session_runner_id}:
+    parameters:
+      - in: path
+        name: session_runner_id
+        required: true
+        schema:
+          $ref: "#/components/schemas/Ulid"
+    get:
+      summary: Get a session runner
+      description: TODO
+      responses:
+        "200":
+          description: The session runner
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionRunner"
+        "404":
+          description: The session runner does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - session_runners
+  /session_runners/{session_runner_id}/contact:
+    parameters:
+      - in: path
+        name: session_runner_id
+        required: true
+        schema:
+          $ref: "#/components/schemas/Ulid"
+    post:
+      summary: Contact endpoint for session runners
+      description: TODO
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SessionRunnerContactPost"
+      responses:
+        "200":
+          description: The desired state of the session runner
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionRunnerContactResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - session_runners
+components:
+  schemas:
+    SessionRunner:
+      description: A session runner
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          $ref: "#/components/schemas/Ulid"
+        resource_pool_id:
+          type: integer
+        status:
+          $ref: "#/components/schemas/SessionRunnerStatus"
+        registration_token:
+          type: string
+      required:
+        - id
+        - resource_pool_id
+        - status
+    SessionRunnerPost:
+      description: Data required to create a session runner
+      type: object
+      additionalProperties: false
+      properties:
+        resource_pool_id:
+          type: integer
+      required:
+        - resource_pool_id
+    SessionRunnerRegisterPost:
+      description: Data required to register a session runner
+      type: object
+      additionalProperties: false
+      properties:
+        registration_token:
+          type: string
+      required:
+        - registration_token
+    SessionRunnerRegisterResponse:
+      description: The result of registering a session runner
+      type: object
+      additionalProperties: false
+      properties:
+        runner:
+          $ref: "#/components/schemas/SessionRunner"
+        auth:
+          type: object
+          additionalProperties: true
+          properties:
+            access_token:
+              type: string
+              example: "some_access_token"
+            token_type:
+              type: string
+              example: "Bearer"
+            expires_in:
+              type: integer
+              example: 600
+            refresh_token:
+              type: string
+              example: "some_refresh_token"
+            refresh_expires_in:
+              type: integer
+              example: 3600
+            scope:
+              type: string
+              example: "api"
+          required:
+            - access_token
+            - token_type
+            - expires_in
+            - refresh_token
+      required:
+        - runner
+        - auth
+    SessionRunnerContactPost:
+      description: Data sent when a session runner contacts the API
+      type: object
+      additionalProperties: false
+      properties:
+        status:
+          type: string
+          enum:
+            - ready
+            - not_ready
+      required:
+        - status
+    SessionRunnerContactResponse:
+      description: Data sent back when a session runner contacts the API
+      type: object
+      additionalProperties: false
+      properties:
+        sessions:
+          $ref: "#/components/schemas/SessionRunnerAssignedSessions"
+    SessionRunnerStatus:
+      description: The status of a session runner
+      type: string
+      enum:
+        - never_contacted
+        - initializing
+        - ready
+        - not_ready
+    SessionRunnerAssignedSessions:
+      description: The list of sessions assigned to a runner
+      type: array
+      items:
+        $ref: "#/components/schemas/SessionRunnerAssignedSession"
+    SessionRunnerAssignedSession:
+      type: string
+    Ulid:
+      description: ULID identifier
+      type: string
+      minLength: 26
+      maxLength: 26
+      pattern: "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" # This is case-insensitive
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+              minimum: 0
+              exclusiveMinimum: true
+              example: 1404
+            detail:
+              type: string
+              example: "A more detailed optional message showing what the problem was"
+            message:
+              type: string
+              example: "Something went wrong - please try again later"
+            trace_id:
+              type: string
+              example: "ac93950e9e114a55c67fb8e5ef519bbe"
+              description: Sentry trace ID for linking to corresponding log entries
+          required: ["code", "message"]
+      required: ["error"]
+  responses:
+    Error:
+      description: The schema for all 4xx and 5xx responses
+      content:
+        "application/json":
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
