@@ -4,9 +4,12 @@ kind: Role
 metadata:
   name: {{ template "renku.fullname" . }}-data-tasks
   labels:
-    app: {{ template "renku.name" . }}
+    app.kubernetes.io/name: {{ template "renku.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: data-services
+    app.kubernetes.io/part-of: renku
     chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 rules:
 {{- if .Values.dataService.dataTasks.enableResourceRequestTracking }}
@@ -48,9 +51,12 @@ kind: RoleBinding
 metadata:
   name: {{ template "renku.fullname" . }}-data-tasks
   labels:
-    app: {{ template "renku.name" . }}
+    app.kubernetes.io/name: {{ template "renku.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: data-services
+    app.kubernetes.io/part-of: renku
     chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -67,9 +73,12 @@ kind: RoleBinding
 metadata:
   name: {{ template "renku.fullname" . }}-data-tasks-cluster-role
   labels:
-    app: {{ template "renku.name" . }}
+    app.kubernetes.io/name: {{ template "renku.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: data-services
+    app.kubernetes.io/part-of: renku
     chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -85,9 +94,12 @@ kind: ClusterRole
 metadata:
   name: {{ template "renku.fullname" . }}-data-tasks
   labels:
-    app: {{ template "renku.name" . }}
+    app.kubernetes.io/name: {{ template "renku.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: data-services
+    app.kubernetes.io/part-of: renku
     chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 rules:
 - apiGroups:

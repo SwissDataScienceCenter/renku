@@ -46,19 +46,19 @@ spec:
               kubernetes.io/metadata.name: {{ .Release.Namespace }}
         - podSelector:
             matchLabels:
-              app: renku-data-service
+              app.kubernetes.io/name: renku-data-service
           namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: {{ .Release.Namespace }}
         - podSelector:
             matchLabels:
-              app: renku-k8s-watcher
+              app.kubernetes.io/name: renku-k8s-watcher
           namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: {{ .Release.Namespace }}
         - podSelector:
             matchLabels:
-              app: renku-data-tasks
+              app.kubernetes.io/name: renku-data-tasks
           namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: {{ .Release.Namespace }}
@@ -112,8 +112,8 @@ spec:
               release: {{ .Release.Name }}
         - podSelector:
             matchLabels:
-              app: renku-data-service
-              release: {{ .Release.Name }}
+              app.kubernetes.io/name: renku-data-service
+              app.kubernetes.io/instance: {{ .Release.Name }}
       ports:
         - protocol: TCP
           port: http
@@ -206,8 +206,8 @@ spec:
               release: {{ .Release.Name }}
         - podSelector:
             matchLabels:
-              app: renku-data-service
-              release: {{ .Release.Name }}
+              app.kubernetes.io/name: renku-data-service
+              app.kubernetes.io/instance: {{ .Release.Name }}
       ports:
         - protocol: TCP
           port: http
@@ -224,8 +224,8 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      app: renku-data-service
-      release: {{ .Release.Name }}
+      app.kubernetes.io/name: renku-data-service
+      app.kubernetes.io/instance: {{ .Release.Name }}
   policyTypes:
     - Ingress
   ingress:
@@ -412,11 +412,12 @@ spec:
     - from:
         - podSelector:
             matchLabels:
-              app: renku-data-service
-              release: {{ .Release.Name }}
+              app.kubernetes.io/name: renku-data-service
+              app.kubernetes.io/instance: {{ .Release.Name }}
         - podSelector:
             matchLabels:
-              app: renku-data-tasks
+              app.kubernetes.io/name: renku-data-tasks
+              app.kubernetes.io/instance: {{ .Release.Name }}
       ports:
         - protocol: TCP
           port: http
@@ -451,12 +452,12 @@ spec:
               app.kubernetes.io/instance: {{ .Release.Name }}
         - podSelector:
             matchLabels:
-              app: renku-data-service
-              release: {{ .Release.Name }}
+              app.kubernetes.io/name: renku-data-service
+              app.kubernetes.io/instance: {{ .Release.Name }}
         - podSelector:
             matchLabels:
-              app: renku-data-tasks
-              release: {{ .Release.Name }}
+              app.kubernetes.io/name: renku-data-tasks
+              app.kubernetes.io/instance: {{ .Release.Name }}
       ports:
         - protocol: TCP
           port: redis
@@ -483,12 +484,12 @@ spec:
     - from:
         - podSelector:
             matchLabels:
-              app: renku-data-service
-              release: {{ .Release.Name }}
+              app.kubernetes.io/name: renku-data-service
+              app.kubernetes.io/instance: {{ .Release.Name }}
         - podSelector:
             matchLabels:
-              app: renku-data-tasks
-              release: {{ .Release.Name }}
+              app.kubernetes.io/name: renku-data-tasks
+              app.kubernetes.io/instance: {{ .Release.Name }}
       ports:
         - protocol: TCP
           port: http
@@ -576,16 +577,16 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      app: renku-data-service
-      release: {{ .Release.Name }}
+      app.kubernetes.io/name: renku-data-service
+      app.kubernetes.io/instance: {{ .Release.Name }}
   policyTypes:
     - Ingress
   ingress:
     - from:
         - podSelector:
             matchLabels:
-              app: renku-data-service
-              release: {{ .Release.Name }}
+              app.kubernetes.io/name: renku-data-service
+              app.kubernetes.io/instance: {{ .Release.Name }}
       ports:
         - protocol: TCP
           port: http
@@ -603,8 +604,8 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      app: renku-data-service
-      release: {{ .Release.Name }}
+      app.kubernetes.io/name: renku-data-service
+      app.kubernetes.io/instance: {{ .Release.Name }}
   policyTypes:
     - Ingress
   ingress:
@@ -654,8 +655,8 @@ spec:
       # Allow access to data service, needed for secret mounting
       - podSelector:
           matchLabels:
-            app: renku-data-service
-            release: {{ .Release.Name }}
+            app.kubernetes.io/name: renku-data-service
+            app.kubernetes.io/instance: {{ .Release.Name }}
   podSelector:
     matchLabels:
       app.kubernetes.io/created-by: controller-manager
