@@ -1,0 +1,24 @@
+{{- if (default dict .Values.cnpg).install }}
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: {{ include "renku.pgCluster" . }}
+  labels:
+    app: renku-postgres
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  instances: {{ .Values.cnpg.instances }}
+  # databases + owners created by renku setup jobs using superuser.
+  enableSuperuserAccess: true
+  storage:
+    size: {{ .Values.cnpg.storage.size }}
+    {{- if not (empty .Values.cnpg.storage.storageClass) }}
+    storageClass: {{ .Values.cnpg.storage.storageClass }}
+    {{- end }}
+  {{- with .Values.cnpg.resources }}
+  resources:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end }}
