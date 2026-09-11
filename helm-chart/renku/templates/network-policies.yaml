@@ -377,8 +377,8 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      app: ui
-      release: {{ .Release.Name }}
+      app.kubernetes.io/name: ui
+      app.kubernetes.io/instance: {{ .Release.Name }}
   policyTypes:
     - Ingress
   ingress:
