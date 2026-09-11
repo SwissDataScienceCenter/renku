@@ -1,6 +1,10 @@
 name: Build and Publish Docker Images
 
-on: workflow_dispatch
+on:
+  push:
+    branches:
+      - build/renku-ssh-proxy
+  workflow_dispatch:
 
 env:
   REGISTRY: ghcr.io
