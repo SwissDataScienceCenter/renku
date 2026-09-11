@@ -3,9 +3,12 @@ kind: Deployment
 metadata:
   name: {{ template "renku.fullname" . }}-secrets-storage
   labels:
-    app: renku-secrets-storage
+    app.kubernetes.io/name: renku-secrets-storage
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: secrets-storage
+    app.kubernetes.io/part-of: renku
     chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
   {{- if not .Values.secretsStorage.autoscaling.enabled }}
@@ -15,13 +18,18 @@ spec:
     {{- toYaml .Values.secretsStorage.updateStrategy | nindent 4 }}
   selector:
     matchLabels:
-      app: renku-secrets-storage
-      release: {{ .Release.Name }}
+      app.kubernetes.io/name: renku-secrets-storage
+      app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: renku-secrets-storage
-        release: {{ .Release.Name }}
+        app.kubernetes.io/name: renku-secrets-storage
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/component: secrets-storage
+        app.kubernetes.io/part-of: renku
+        chart: {{ template "renku.chart" . }}
+        heritage: {{ .Release.Service }}
       {{- with .Values.secretsStorage.podAnnotations }}
       annotations:
         checksum/privateKey: {{ .Values.global.platformConfig | sha256sum }}

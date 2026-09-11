@@ -193,8 +193,8 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      app: renku-secrets-storage
-      release: {{ .Release.Name }}
+      app.kubernetes.io/name: renku-secrets-storage
+      app.kubernetes.io/instance: {{ .Release.Name }}
   policyTypes:
     - Ingress
   ingress:
