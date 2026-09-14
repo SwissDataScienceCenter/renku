@@ -5,6 +5,22 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
+## Upgrading to Renku 2.yy.z
+
+Drops the bitnami `postgresql` chart. Renku instead relies on an external postgres db, or offers
+templates to deploy postgres through the [CloudNativePG](https://cloudnative-pg.io/) operator.
+The operator is **not** part of this chart and has to be installed once per cluster before
+upgrading, see [the chart readme](https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart#upgrading).
+
+* DELETE `postgresql` section. The chart fails with a message if the section is still there.
+* NEW `cnpg`, replacing the section above. It configures a postgres `Cluster` in renku's 
+  namespace. `cnpg.install` takes the role of `postgresql.enabled`.
+* `global.externalServices.postgresql` is unchanged and keeps working for an external postgres.
+
+Note that the hostname of the deployed database changes from `<release>-postgresql` to
+`<release>-pg-rw`, the read-write service of the cnpg Cluster. The renku chart templates it,
+so this only matters for anything outside the chart that referred to the old name.
+
 ## Upgrading to Renku 2.18.0
 
 * DELETE `enableInternalGitlab`, it is now not possible to configure Renku to use an "internal" GitLab instance. Admins can set up a GitLab integration instead.

@@ -1,0 +1,25 @@
+{{- if .Values.cnpg.install }}
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: {{ include "renku.pgCluster" . }}
+  labels:
+    app: renku-postgres
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  instances: {{ .Values.cnpg.instances }}
+  # The setup jobs create the renku, authz and keycloak db and their
+  # owners as superuser (prevents cnpg from deleting the superuser secret).
+  enableSuperuserAccess: true
+  storage:
+    size: {{ .Values.cnpg.storage.size }}
+    {{- if not (empty .Values.cnpg.storage.storageClass) }}
+    storageClass: {{ .Values.cnpg.storage.storageClass }}
+    {{- end }}
+  {{- with .Values.cnpg.resources }}
+  resources:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end }}

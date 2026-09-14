@@ -1,0 +1,19 @@
+{{/*
+Validation of the renku values with actionable messages on failure.
+*/}}
+
+{{- if hasKey .Values "postgresql" }}
+  {{- fail "The 'postgresql' section is gone: renku deploys postgres through the CloudNativePG operator now. Move your settings to 'cnpg', see helm-chart/values.yaml.changelog.md." }}
+{{- end }}
+
+{{- if and .Values.global.externalServices.postgresql.enabled .Values.cnpg.install }}
+  {{- fail "External PostgreSQL and the renku bundled PostgreSQL cannot both be enabled. Disable either global.externalServices.postgresql.enabled or cnpg.install." }}
+{{- end }}
+
+{{- if not (or .Values.global.externalServices.postgresql.enabled .Values.cnpg.install) }}
+  {{- fail "Renku needs a PostgreSQL. Enable either global.externalServices.postgresql.enabled, pointing it at your own instance, or cnpg.install to let renku deploy one." }}
+{{- end }}
+
+{{- if and .Values.global.externalServices.postgresql.password .Values.global.externalServices.postgresql.existingSecret }}
+  {{- fail "global.externalServices.postgresql.password and global.externalServices.postgresql.existingSecret cannot both be set, pick one." }}
+{{- end }}

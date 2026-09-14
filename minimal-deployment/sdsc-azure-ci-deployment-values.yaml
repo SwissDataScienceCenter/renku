@@ -10,6 +10,12 @@ authz:
     requests:
       cpu: 50m
       memory: 75Mi
+cnpg:
+  resources:
+    limits:
+      memory: 300Mi
+    requests:
+      memory: 300Mi
 dataService:
   image:
     repository: harbor.dev.renku.ch/dockerhub_cache/renku/renku-data-service
@@ -155,16 +161,6 @@ notebooks:
       key: renku.io/dedicated
       operator: Equal
       value: user
-postgresql:
-  image:
-    registry: harbor.dev.renku.ch
-    repository: bitnami-mirror/postgresql
-  primary:
-    resources:
-      limits:
-        memory: 300Mi
-      requests:
-        memory: 300Mi
 redis:
   architecture: standalone
   image:
