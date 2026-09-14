@@ -40,12 +40,6 @@ spec:
         {{- end }}
         - podSelector:
             matchLabels:
-              app: post-install-postgres
-          namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: {{ .Release.Namespace }}
-        - podSelector:
-            matchLabels:
               app.kubernetes.io/name: renku-data-service
           namespaceSelector:
             matchLabels:
@@ -59,12 +53,6 @@ spec:
         - podSelector:
             matchLabels:
               app.kubernetes.io/name: renku-data-tasks
-          namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: {{ .Release.Namespace }}
-        - podSelector:
-            matchLabels:
-              app: keycloak-sync
           namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: {{ .Release.Namespace }}
