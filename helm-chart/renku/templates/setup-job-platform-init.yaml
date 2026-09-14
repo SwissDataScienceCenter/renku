@@ -3,9 +3,12 @@ kind: Job
 metadata:
   name: "{{ .Release.Name }}-init-renku-platform-rev{{ .Release.Revision }}-{{ randAlphaNum 5 | lower }}"
   labels:
-    app: platform-init
+    app.kubernetes.io/name: platform-init
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: setup-jobs
+    app.kubernetes.io/part-of: renku
     heritage: {{ .Release.Service }}
-    release: {{ .Release.Name }}
     chart: {{ template "renku.chart" . }}
   annotations:
     "helm.sh/hook": pre-install,pre-upgrade,pre-rollback
@@ -14,9 +17,12 @@ spec:
     metadata:
       name: {{ .Release.Name }}-platform-init
       labels:
-        app: platform-init
+        app.kubernetes.io/name: platform-init
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/component: setup-jobs
+        app.kubernetes.io/part-of: renku
         heritage: {{ .Release.Service }}
-        release: {{ .Release.Name }}
         chart: {{ template "renku.chart" . }}
     spec:
       restartPolicy: Never
@@ -42,10 +48,14 @@ kind: Role
 metadata:
   name: {{ template "renku.fullname" . }}-platform-init
   labels:
-    app: {{ template "renku.name" . }}
-    chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
+    app.kubernetes.io/name: {{ template "renku.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: setup-jobs
+    app.kubernetes.io/part-of: renku
     heritage: {{ .Release.Service }}
+    chart: {{ template "renku.chart" . }}
+
   annotations:
     "helm.sh/hook": pre-install,pre-upgrade,pre-rollback
     "helm.sh/hook-weight": "-5"
@@ -66,10 +76,13 @@ kind: ServiceAccount
 metadata:
   name: {{ template "renku.fullname" . }}-platform-init
   labels:
-    app: {{ template "renku.name" . }}
-    chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
+    app.kubernetes.io/name: {{ template "renku.name" .}}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: setup-jobs
+    app.kubernetes.io/part-of: renku
     heritage: {{ .Release.Service }}
+    chart: {{ template "renku.chart" . }}
   annotations:
     "helm.sh/hook": pre-install,pre-upgrade,pre-rollback
     "helm.sh/hook-weight": "-5"
@@ -79,10 +92,13 @@ kind: RoleBinding
 metadata:
   name: {{ template "renku.fullname" . }}-platform-init
   labels:
-    app: {{ template "renku.name" . }}
-    chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
+    app.kubernetes.io/name: {{ template "renku.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: setup-jobs
+    app.kubernetes.io/part-of: renku
     heritage: {{ .Release.Service }}
+    chart: {{ template "renku.chart" . }}
   annotations:
     "helm.sh/hook": pre-install,pre-upgrade,pre-rollback
     "helm.sh/hook-weight": "-5"

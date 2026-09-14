@@ -7,8 +7,12 @@ kind: Job
 metadata:
   name: "{{ .Release.Name }}-init-keycloak-realms-rev{{ .Release.Revision }}-{{ randAlphaNum 5 | lower }}"
   labels:
+    app.kubernetes.io/name: keycloak-realms-initialisation
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: setup-jobs
+    app.kubernetes.io/part-of: renku
     heritage: {{ .Release.Service }}
-    release: {{ .Release.Name }}
     chart: {{ template "renku.chart" . }}
 spec:
   backoffLimit: 12
@@ -16,8 +20,12 @@ spec:
     metadata:
       name: "{{.Release.Name}}-init-keycloak-realms"
       labels:
+        app.kubernetes.io/name: keycloak-realms-initialisation
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/component: setup-jobs
+        app.kubernetes.io/part-of: renku
         heritage: {{ .Release.Service }}
-        release: {{ .Release.Name }}
         chart: {{ template "renku.chart" . }}
     spec:
       restartPolicy: Never

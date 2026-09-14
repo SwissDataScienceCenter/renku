@@ -76,7 +76,7 @@ spec:
               kubernetes.io/metadata.name: {{ .Release.Namespace }}
         - podSelector:
             matchLabels:
-              app: postgres-setup
+              app.kubernetes.io/name: postgres-setup
           namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: {{ .Release.Namespace }}
