@@ -1,4 +1,4 @@
-{{- if (default dict .Values.cnpg).install }}
+{{- if .Values.cnpg.install }}
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
@@ -10,7 +10,8 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   instances: {{ .Values.cnpg.instances }}
-  # databases + owners created by renku setup jobs using superuser.
+  # The setup jobs create the renku, authz and keycloak db and their
+  # owners as superuser (prevents cnpg from deleting the superuser secret).
   enableSuperuserAccess: true
   storage:
     size: {{ .Values.cnpg.storage.size }}
