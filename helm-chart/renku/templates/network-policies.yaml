@@ -30,41 +30,9 @@ spec:
     - Ingress
   ingress:
     - from:
-        {{- if .Values.keycloakx.enabled }}
         - podSelector:
             matchLabels:
-              app.kubernetes.io/name: keycloakx
-          namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: {{ .Release.Namespace }}
-        {{- end }}
-        - podSelector:
-            matchLabels:
-              app.kubernetes.io/name: renku-data-service
-          namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: {{ .Release.Namespace }}
-        - podSelector:
-            matchLabels:
-              app.kubernetes.io/name: renku-k8s-watcher
-          namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: {{ .Release.Namespace }}
-        - podSelector:
-            matchLabels:
-              app.kubernetes.io/name: renku-data-tasks
-          namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: {{ .Release.Namespace }}
-        - podSelector:
-            matchLabels:
-              app.kubernetes.io/name: renku-authz
-          namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: {{ .Release.Namespace }}
-        - podSelector:
-            matchLabels:
-              app.kubernetes.io/name: postgres-setup
+              renku.io/database-access: "true"
           namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: {{ .Release.Namespace }}

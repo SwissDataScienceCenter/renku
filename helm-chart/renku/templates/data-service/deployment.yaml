@@ -28,6 +28,7 @@ spec:
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/component: data-services
         app.kubernetes.io/part-of: renku
+        renku.io/database-access: "true"
         {{ .Values.global.redis.clientLabel | toYaml | nindent 8 }}
       annotations:
         # NOTE: Without this the pod will not restart when the secret values change.

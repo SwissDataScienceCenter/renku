@@ -20,6 +20,7 @@ spec:
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/component: setup-jobs
         app.kubernetes.io/part-of: renku
+        renku.io/database-access: "true"
         heritage: {{ .Release.Service }}
         chart: {{ template "renku.chart" . }}
     spec:

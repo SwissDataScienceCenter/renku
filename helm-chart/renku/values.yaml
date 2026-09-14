@@ -264,6 +264,8 @@ logging:
 keycloakx:
   ## Spawn a keycloak instance
   enabled: true
+  podLabels:
+    renku.io/database-access: "true"
   postgresql:
     # Disable PostgreSQL dependency
     enabled: false
