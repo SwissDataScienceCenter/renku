@@ -155,11 +155,7 @@ spec:
     - Ingress
   ingress:
     - from:
-        # Only allow ingress to secrets storage from notebooks and data services
-        - podSelector:
-            matchLabels:
-              app: {{ template "renku.notebooks.name" . }}
-              release: {{ .Release.Name }}
+        # Only allow ingress to secrets storage from data services
         - podSelector:
             matchLabels:
               app.kubernetes.io/name: renku-data-service
