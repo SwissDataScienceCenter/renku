@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/url"
+	"time"
 
 	"github.com/SwissDataScienceCenter/renku/session_runner/pkg/renku"
 	"github.com/SwissDataScienceCenter/renku/session_runner/pkg/renku/api/session_runners"
@@ -12,6 +13,10 @@ import (
 type Runner struct {
 	renkuURL          *url.URL
 	registrationToken string
+
+	runnerID string
+
+	renkuClient *renku.RenkuClient
 }
 
 func NewRunner(options ...RunnerOption) (runner *Runner, err error) {
@@ -64,18 +69,31 @@ func WithRegistrationToken(token string) RunnerOption {
 func (r *Runner) Start(ctx context.Context) error {
 	// TODO
 
-	renkuClient, err := renku.NewRenkuClient(r.renkuURL.String())
+	renkuClient, err := renku.NewRenkuClient(r.renkuURL)
 	if err != nil {
 		return err
 	}
+	r.renkuClient = renkuClient
 
-	registerResponse, err := renkuClient.SessionRunners().PostSessionRunnersRegisterWithResponse(ctx, session_runners.SessionRunnerRegisterPost{
+	registerCtx, registerCancel := context.WithTimeout(ctx, time.Minute)
+	defer registerCancel()
+	if err := r.register(registerCtx); err != nil {
+		return err
+	}
+
+	// TODO: this waits until cancellation of ctx
+	<-ctx.Done()
+	return ctx.Err()
+}
+
+func (r *Runner) register(ctx context.Context) error {
+	registerResponse, err := r.renkuClient.SessionRunners().PostSessionRunnersRegisterWithResponse(ctx, session_runners.SessionRunnerRegisterPost{
 		RegistrationToken: r.registrationToken,
 	})
 	if err != nil {
 		return fmt.Errorf("failed to register runner: %w", err)
 	}
-	fmt.Printf("response: %s\n", registerResponse.HTTPResponse.Status)
+	// fmt.Printf("response: %s\n", registerResponse.HTTPResponse.Status)
 	if registerResponse.GetJSON200() == nil {
 		message := ""
 		if res := registerResponse.GetJSONDefault(); res != nil {
@@ -89,7 +107,5 @@ func (r *Runner) Start(ctx context.Context) error {
 	registerResponseJSON := registerResponse.GetJSON200()
 	fmt.Printf("%+v\n", registerResponseJSON.Runner)
 
-	// TODO: this waits until cancellation of ctx
-	<-ctx.Done()
-	return ctx.Err()
+	return fmt.Errorf("not fully implemented")
 }
