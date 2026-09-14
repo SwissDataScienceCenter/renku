@@ -388,6 +388,9 @@ cnpg:
   # 1 is a single pod with no failover. 3 gives the operator the quorum it needs
   # to fail over on its own.
   instances: 1
+  # Where the operator runs. The chart opens a network policy for it, so a wrong
+  # value here leaves the Cluster hanging and never ready.
+  operatorNamespace: cnpg-system
   storage:
     size: 8Gi
     # Empty means the default storage class of the cluster.
