@@ -55,7 +55,7 @@ Most information related to upgrading from one chart version to another is cover
 in the `values changelog file <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/values.yaml.changelog.md>`_.
 For upgrades that require some steps other than modifying the values files to be executed, we add some instructions here.
 
-Upgrading to x.xx.x
+Upgrading to 2.yy.z
 *************************
 This version drops the bitnami ``postgresql`` chart dependency (version ``14.2.4``).
 The proposed migration path is with `CloudNativePG <https://cloudnative-pg.io/>`_,
