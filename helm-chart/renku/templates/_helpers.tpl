@@ -144,29 +144,24 @@ KEYCLOAK_ADMIN_PASSWORD: {{ default (randAlphaNum 64) .Values.global.keycloak.pa
 {{- end -}}
 {{- end -}}
 
+{{/*
+Only the password is read from an existing secret; host, database and user are derived from values. 
+The DB_PASSWORD fallback covers secrets written before the keycloakx upgrade.
+*/}}
 {{- define "keycloak.postgres-secret" -}}
+{{- $password := default (randAlphaNum 64) .Values.global.keycloak.postgresPassword.value | b64enc -}}
 {{- $secretPostgres := lookup "v1" "Secret" .Release.Namespace "renku-keycloak-postgres" -}}
 {{- if $secretPostgres -}}
-{{- if $secretPostgres.data.KC_DB_URL_HOST -}}
-# Post-keycloakx
-KC_DB_URL_HOST: {{ $secretPostgres.data.KC_DB_URL_HOST | quote }}
-KC_DB_URL_DATABASE: {{ $secretPostgres.data.KC_DB_URL_DATABASE | quote }}
-KC_DB_USERNAME: {{ $secretPostgres.data.KC_DB_USERNAME | quote }}
-KC_DB_PASSWORD: {{ $secretPostgres.data.KC_DB_PASSWORD | quote }}
-{{- else -}}
-# Pre-keycloakx
-KC_DB_URL_HOST: {{ $secretPostgres.data.DB_ADDR | quote }}
-KC_DB_URL_DATABASE: {{ $secretPostgres.data.DB_DATABASE | quote }}
-KC_DB_USERNAME: {{ $secretPostgres.data.DB_USER | quote }}
-KC_DB_PASSWORD: {{ $secretPostgres.data.DB_PASSWORD | quote }}
+{{- if $secretPostgres.data.KC_DB_PASSWORD -}}
+{{- $password = $secretPostgres.data.KC_DB_PASSWORD -}}
+{{- else if $secretPostgres.data.DB_PASSWORD -}}
+{{- $password = $secretPostgres.data.DB_PASSWORD -}}
 {{- end -}}
-# No pre-existing secret
-{{- else -}}
-KC_DB_URL_HOST: {{ (include "postgresql.fullname" .) | b64enc | quote }}
+{{- end -}}
+KC_DB_URL_HOST: {{ (include "renku.pgHost" .) | b64enc | quote }}
 KC_DB_URL_DATABASE: {{ .Values.global.keycloak.postgresDatabase | b64enc | quote }}
 KC_DB_USERNAME: {{ .Values.global.keycloak.postgresUser | b64enc | quote }}
-KC_DB_PASSWORD: {{ default (randAlphaNum 64) .Values.global.keycloak.postgresPassword.value | b64enc | quote }}
-{{- end -}}
+KC_DB_PASSWORD: {{ $password | quote }}
 {{- end -}}
 
 {{- define "renku.baseUrl" -}}
