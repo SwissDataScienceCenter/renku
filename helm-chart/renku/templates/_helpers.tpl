@@ -54,7 +54,7 @@ service names the operator derives from it ("-rw", "-ro", "-r") still fit in 63.
 Postgres host used by renku services. For the bundled postgres this is the
 read-write service of the Cluster; for an external instance it is what the admin configured.
 */}}
-{{- define "postgresql.fullname" -}}
+{{- define "renku.pgHost" -}}
 {{- if not .Values.global.externalServices.postgresql.enabled -}}
 {{- printf "%s-rw" (include "renku.pgCluster" .) -}}
 {{- else -}}
@@ -68,19 +68,20 @@ postgres these come from the secret cnpg generates alongside the Cluster; for an
 external instance they come from whatever the admin configured.
 */}}
 {{- define "renku.pgAdminEnv" -}}
+{{- $ext := .Values.global.externalServices.postgresql -}}
 - name: DB_HOST
-  value: {{ include "postgresql.fullname" . }}
-{{- if .Values.global.externalServices.postgresql.enabled }}
+  value: {{ include "renku.pgHost" . }}
+{{- if $ext.enabled }}
 - name: DB_ADMIN_USERNAME
-  value: {{ .Values.global.externalServices.postgresql.username }}
-{{- if .Values.global.externalServices.postgresql.password }}
+  value: {{ $ext.username }}
+{{- if $ext.password }}
 - name: DB_ADMIN_PASSWORD
-  value: {{ .Values.global.externalServices.postgresql.password }}
-{{- else if .Values.global.externalServices.postgresql.existingSecret }}
+  value: {{ $ext.password }}
+{{- else if $ext.existingSecret }}
 - name: DB_ADMIN_PASSWORD
   valueFrom:
     secretKeyRef:
-      name: {{ .Values.global.externalServices.postgresql.existingSecret }}
+      name: {{ $ext.existingSecret }}
       key: postgres-password
 {{- end }}
 {{- else }}
