@@ -1376,6 +1376,29 @@ dataService:
     ## user have the option to set a lower value. The value cannot be lower than 1 Gb.
     storageMaxSizeGb: 10
 
+sshProxy:
+  image:
+    repository: harbor.dev.renku.ch/dev-images/renku-ssh-proxy
+    tag: "0.7.0"
+    pullPolicy: IfNotPresent
+  service:
+    port: 2222
+  openSshHostKey:
+  targetUser:
+  targetPort:
+  sentry:
+    enabled: false
+    dsn:
+    environment:
+    sampleRate: 0.1
+  replicaCount: 1
+  podAnnotations: {}
+  resources: {}
+  updateStrategy: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
 posthog:
   enabled: false
   # the posthog api key
