@@ -17,10 +17,12 @@ const (
 
 func StartCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "start",
-		Short:   "Start the session runner",
-		PreRunE: initialize,
-		RunE:    run,
+		Use:           "start",
+		Short:         "Start the session runner",
+		PreRunE:       initialize,
+		RunE:          run,
+		SilenceUsage:  true,
+		SilenceErrors: true,
 	}
 
 	cmd.Flags().String(urlFlag, "", "URL of the RenkuLab instance")

@@ -3,6 +3,9 @@ package renku
 import (
 	"context"
 	"fmt"
+	"log"
+	"net/http"
+	"net/url"
 	"sync"
 	"time"
 
@@ -11,7 +14,8 @@ import (
 )
 
 const (
-	expiryMargin = 3 * time.Second
+	expiryMargin        = 3 * time.Second
+	refreshExpiryMargin = 3 * time.Minute
 )
 
 type RenkuAuth struct {
@@ -22,10 +26,12 @@ type RenkuAuth struct {
 	tokenType        string
 	mutex            sync.RWMutex
 
+	refreshTicker *time.Ticker
+
 	authClient auth.ClientWithResponsesInterface
 }
 
-func NewRenkuAuth(baseURL string, accessToken string, refreshToken string) (ra *RenkuAuth, err error) {
+func NewRenkuAuth(serverURL *url.URL, accessToken string, refreshToken string) (ra *RenkuAuth, err error) {
 	renkuAuth := RenkuAuth{
 		accessToken:  accessToken,
 		refreshToken: refreshToken,
@@ -44,13 +50,33 @@ func NewRenkuAuth(baseURL string, accessToken string, refreshToken string) (ra *
 		renkuAuth.refreshExpiresAt = claims.ExpiresAt.Time
 	}
 
-	authClient, err := auth.NewClientWithResponses(baseURL)
+	apiURL := serverURL.ResolveReference(&url.URL{Path: "/api/data"})
+	apiURLStr := apiURL.String()
+
+	authClient, err := auth.NewClientWithResponses(apiURLStr)
 	if err != nil {
 		return nil, err
 	}
 	renkuAuth.authClient = authClient
 
+	renkuAuth.refreshTicker = time.NewTicker(time.Minute)
+	go renkuAuth.periodicTokenRefresh()
+
 	return &renkuAuth, nil
+}
+
+func (ra *RenkuAuth) RequestEditor() RequestEditorFn {
+	return func(ctx context.Context, req *http.Request) error {
+		if req.Header.Get("Authorization") != "" {
+			return nil
+		}
+		token, err := ra.GetAccessToken(ctx)
+		if err != nil {
+			return err
+		}
+		req.Header.Add("Authorization", fmt.Sprintf("%s %s", ra.tokenType, token))
+		return nil
+	}
 }
 
 func (ra *RenkuAuth) GetAccessToken(ctx context.Context) (token string, err error) {
@@ -89,7 +115,10 @@ func (ra *RenkuAuth) refreshTokens(ctx context.Context) error {
 		message := ""
 		resJSONDefault := res.GetJSONDefault()
 		if resJSONDefault != nil {
-			message = fmt.Sprintf("%s, detail: %s", resJSONDefault.Error.Message, *resJSONDefault.Error.Detail)
+			message = resJSONDefault.Error.Message
+			if resJSONDefault.Error.Detail != nil {
+				message += fmt.Sprintf(", detail: %s", *resJSONDefault.Error.Detail)
+			}
 		} else {
 			message = res.HTTPResponse.Status
 		}
@@ -115,6 +144,27 @@ func (ra *RenkuAuth) refreshTokens(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+// periodicTokenRefresh keeps the refresh token valid
+func (ra *RenkuAuth) periodicTokenRefresh() {
+	for {
+		<-ra.refreshTicker.C
+		ra.mutex.RLock()
+		refreshExpiresAt := ra.refreshExpiresAt
+		ra.mutex.RUnlock()
+
+		if !IsNotExpired(refreshExpiresAt, refreshExpiryMargin, true /*=required*/) {
+			log.Println("Getting a new renku refresh token from automatic checks")
+			ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
+			err := ra.refreshTokens(ctx)
+			cancel()
+			if err != nil {
+				log.Printf("Could not refresh renku token: %s\n", err.Error())
+			}
+		}
+	}
+
 }
 
 // IsNotExpired returns true if expiresAt is still in the future, with a given margin.

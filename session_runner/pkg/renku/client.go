@@ -5,15 +5,13 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/SwissDataScienceCenter/renku/session_runner/pkg/renku/api/auth"
 	"github.com/SwissDataScienceCenter/renku/session_runner/pkg/renku/api/session_runners"
 )
 
 type RenkuClient struct {
-	authClient           auth.ClientWithResponsesInterface
 	sessionRunnersClient session_runners.ClientWithResponsesInterface
 
-	requestEditors []RequestEditorFn
+	auth *RenkuAuth
 }
 
 // ClientOption allows setting custom parameters during construction
@@ -22,10 +20,10 @@ type ClientOption func(*RenkuClient) error
 // RequestEditorFn is the function signature for the RequestEditor callback function
 type RequestEditorFn func(ctx context.Context, req *http.Request) error
 
-// WithRequestEditorFn allows setting request editors
-func WithRequestEditorFn(fn RequestEditorFn) ClientOption {
+// WithAuth sets the authentication for the Renku client
+func WithAuth(ra *RenkuAuth) ClientOption {
 	return func(rc *RenkuClient) error {
-		rc.requestEditors = append(rc.requestEditors, fn)
+		rc.auth = ra
 		return nil
 	}
 }
@@ -33,7 +31,7 @@ func WithRequestEditorFn(fn RequestEditorFn) ClientOption {
 func NewRenkuClient(serverURL *url.URL, options ...ClientOption) (client *RenkuClient, err error) {
 	rc := RenkuClient{}
 
-	apiURL := serverURL.JoinPath("/api/data")
+	apiURL := serverURL.ResolveReference(&url.URL{Path: "/api/data"})
 	apiURLStr := apiURL.String()
 
 	// Handle options
@@ -43,19 +41,9 @@ func NewRenkuClient(serverURL *url.URL, options ...ClientOption) (client *RenkuC
 		}
 	}
 
-	authOpts := []auth.ClientOption{}
-	for _, fn := range rc.requestEditors {
-		authOpts = append(authOpts, auth.WithRequestEditorFn(auth.RequestEditorFn(fn)))
-	}
-	authClient, err := auth.NewClientWithResponses(apiURLStr, authOpts...)
-	if err != nil {
-		return nil, err
-	}
-	rc.authClient = authClient
-
 	sessionRunnersOpts := []session_runners.ClientOption{}
-	for _, fn := range rc.requestEditors {
-		sessionRunnersOpts = append(sessionRunnersOpts, session_runners.WithRequestEditorFn(session_runners.RequestEditorFn(fn)))
+	if rc.auth != nil {
+		sessionRunnersOpts = append(sessionRunnersOpts, session_runners.WithRequestEditorFn(session_runners.RequestEditorFn(rc.auth.RequestEditor())))
 	}
 	sessionRunnersClient, err := session_runners.NewClientWithResponses(apiURLStr, sessionRunnersOpts...)
 	if err != nil {
@@ -64,10 +52,6 @@ func NewRenkuClient(serverURL *url.URL, options ...ClientOption) (client *RenkuC
 	rc.sessionRunnersClient = sessionRunnersClient
 
 	return &rc, nil
-}
-
-func (rc *RenkuClient) Auth() auth.ClientWithResponsesInterface {
-	return rc.authClient
 }
 
 func (rc *RenkuClient) SessionRunners() session_runners.ClientWithResponsesInterface {
