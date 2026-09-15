@@ -1,0 +1,74 @@
+openapi: 3.0.2
+info:
+  title: Renku SSH Proxy Internal API
+  description: Internal endpoint used by the Renku SSH proxy to authorize a connection from a public key and a session.
+  version: v1
+servers:
+  - url: /api/data
+paths:
+  /internal/sessions/{session_id}/authorize:
+    post:
+      summary: Check whether the owner of a public key may open a session.
+      parameters:
+        - in: path
+          name: session_id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SessionAuthorizeRequest"
+      responses:
+        "204":
+          description: Authorized
+        "404":
+          description: The key is unknown or malformed, or the session does not exist or is not owned by the key's user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags: [ssh]
+components:
+  schemas:
+    SessionAuthorizeRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        public_key:
+          type: string
+      required: [public_key]
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+              minimum: 0
+              exclusiveMinimum: true
+              example: 1404
+            detail:
+              type: string
+              example: "A more detailed optional message showing what the problem was"
+            message:
+              type: string
+              example: "Something went wrong - please try again later"
+            trace_id:
+              type: string
+              example: "ac93950e9e114a55c67fb8e5ef519bbe"
+              description: Sentry trace ID for linking to corresponding log entries
+          required: ["code", "message"]
+      required: ["error"]
+  responses:
+    Error:
+      description: The schema for all 4xx and 5xx responses
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"

@@ -9,3 +9,9 @@ clippy:
 
 image:
     nix build .#docker && docker load < result
+
+openapi-gen:
+    curl -sSL -o api.spec.yaml "https://github.com/SwissDataScienceCenter/renku-data-services/raw/refs/heads/salimkayal/feat/ssh-keys_proxy-api/components/renku_data_services/ssh_proxy/api.spec.yaml"
+    sed 's/exclusiveMinimum: true/exclusiveMinimum: 0/g' api.spec.yaml > api.spec.31.yaml
+    oas3-gen generate -i api.spec.31.yaml -o src/data_service_types.rs --enum-mode relaxed --no-ordered-collections types
+    rm api.spec.*.yaml

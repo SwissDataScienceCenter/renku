@@ -15,6 +15,14 @@
     "narHash": "sha256-0N9nghg3nwzX6b6qc77EzjR9cu/Z+UR66FlfsCqiURs=",
     "lastModified": 1787964612
   },
+  "oas3-gen": {
+    "type": "github",
+    "owner": "eikek",
+    "repo": "oas3-gen",
+    "rev": "4dad67509608bfc8d64f3363e6e80a5cdaa1bd90",
+    "narHash": "sha256-+S2LKgcvch73yLYILCN9eMI591UKSMVheMnrjhEykAI=",
+    "lastModified": 1789484189
+  },
   "rust-overlay": {
     "type": "github",
     "owner": "oxalica",
