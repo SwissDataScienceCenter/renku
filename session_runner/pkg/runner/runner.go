@@ -2,13 +2,18 @@ package runner
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"log"
 	"net/url"
 	"time"
 
 	"github.com/SwissDataScienceCenter/renku/session_runner/pkg/renku"
 	"github.com/SwissDataScienceCenter/renku/session_runner/pkg/renku/api/session_runners"
+	"github.com/SwissDataScienceCenter/renku/session_runner/pkg/runner/reconciler"
 )
+
+var ErrRunnerStopped = errors.New("runner has been stopped")
 
 type Runner struct {
 	renkuURL          *url.URL
@@ -17,10 +22,15 @@ type Runner struct {
 	runnerID string
 
 	renkuClient *renku.RenkuClient
+
+	contactTimer *time.Ticker
+	reconciler   *reconciler.RunnerReconciler
 }
 
 func NewRunner(options ...RunnerOption) (runner *Runner, err error) {
-	r := Runner{}
+	r := Runner{
+		reconciler: &reconciler.RunnerReconciler{},
+	}
 	for _, opt := range options {
 		err := opt(&r)
 		if err != nil {
@@ -69,43 +79,131 @@ func WithRegistrationToken(token string) RunnerOption {
 func (r *Runner) Start(ctx context.Context) error {
 	// TODO
 
-	renkuClient, err := renku.NewRenkuClient(r.renkuURL)
-	if err != nil {
-		return err
-	}
-	r.renkuClient = renkuClient
-
 	registerCtx, registerCancel := context.WithTimeout(ctx, time.Minute)
 	defer registerCancel()
 	if err := r.register(registerCtx); err != nil {
 		return err
 	}
 
-	// TODO: this waits until cancellation of ctx
+	// res, err := r.renkuClient.SessionRunners().PostSessionRunnersSessionRunnerIdContactWithResponse()
+	// res.GetJSON200()
+
+	if err := r.startContactLoop(ctx); err != nil && !errors.Is(err, ErrRunnerStopped) {
+		return err
+	}
+
 	<-ctx.Done()
-	return ctx.Err()
+	if err := ctx.Err(); err != nil && !errors.Is(err, context.Canceled) {
+		return err
+	}
+	return nil
 }
 
 func (r *Runner) register(ctx context.Context) error {
-	registerResponse, err := r.renkuClient.SessionRunners().PostSessionRunnersRegisterWithResponse(ctx, session_runners.SessionRunnerRegisterPost{
+	renkuClient, err := renku.NewRenkuClient(r.renkuURL)
+	if err != nil {
+		return err
+	}
+
+	registerResponse, err := renkuClient.SessionRunners().PostSessionRunnersRegisterWithResponse(ctx, session_runners.SessionRunnerRegisterPost{
 		RegistrationToken: r.registrationToken,
 	})
 	if err != nil {
 		return fmt.Errorf("failed to register runner: %w", err)
 	}
-	// fmt.Printf("response: %s\n", registerResponse.HTTPResponse.Status)
-	if registerResponse.GetJSON200() == nil {
+	registerResponseJSON := registerResponse.GetJSON200()
+	if registerResponseJSON == nil {
 		message := ""
-		if res := registerResponse.GetJSONDefault(); res != nil {
-			message = fmt.Sprintf("%s, detail: %s", res.Error.Message, *res.Error.Detail)
+		resJSONDefault := registerResponse.GetJSONDefault()
+		if resJSONDefault != nil {
+			message = resJSONDefault.Error.Message
+			if resJSONDefault.Error.Detail != nil {
+				message += fmt.Sprintf(", detail: %s", *resJSONDefault.Error.Detail)
+			}
 		} else {
 			message = registerResponse.HTTPResponse.Status
 		}
 		return fmt.Errorf("failed to register runner: %s", message)
 	}
 
-	registerResponseJSON := registerResponse.GetJSON200()
-	fmt.Printf("%+v\n", registerResponseJSON.Runner)
+	r.runnerID = registerResponseJSON.Runner.Id
+	accessToken := registerResponseJSON.Auth.AccessToken
+	refreshToken := registerResponseJSON.Auth.RefreshToken
 
-	return fmt.Errorf("not fully implemented")
+	renkuAuth, err := renku.NewRenkuAuth(r.renkuURL, accessToken, refreshToken)
+	if err != nil {
+		return err
+	}
+	renkuClient, err = renku.NewRenkuClient(r.renkuURL, renku.WithAuth(renkuAuth))
+	if err != nil {
+		return err
+	}
+	r.renkuClient = renkuClient
+
+	fmt.Printf("Registered as runner: %s\n", r.runnerID)
+
+	return nil
+}
+
+func (r *Runner) startContactLoop(ctx context.Context) error {
+	r.contactTimer = time.NewTicker(time.Minute)
+	ch := make(chan error, 1)
+	go r.contactLoop(ctx, ch)
+	err := <-ch
+	r.contactTimer.Stop()
+	return err
+}
+
+func (r *Runner) contactLoop(ctx context.Context, ch chan<- error) {
+	for {
+		select {
+		case <-r.contactTimer.C:
+			contactCtx, contactCancel := context.WithTimeout(ctx, time.Minute)
+			err := r.contact(contactCtx)
+			contactCancel()
+			if err != nil {
+				log.Printf("Could not contact Renku instance: %s\n", err.Error())
+			}
+		case <-ctx.Done():
+			fmt.Printf("\nStopping runner: %s\n", context.Cause(ctx))
+			ch <- ErrRunnerStopped
+			return
+		}
+	}
+}
+
+func (r *Runner) contact(ctx context.Context) error {
+	body := session_runners.SessionRunnerContactPost{
+		// TODO: send ready when we are!
+		Status: session_runners.SessionRunnerContactPostStatusNotReady,
+	}
+	log.Printf("Sending to Renku: %+v\n", body)
+	res, err := r.renkuClient.SessionRunners().PostSessionRunnersSessionRunnerIdContactWithResponse(ctx, r.runnerID, body)
+	if err != nil {
+		return fmt.Errorf("failed to contact Renku: %w", err)
+	}
+	resJSON := res.GetJSON200()
+	if resJSON == nil {
+		message := ""
+		resJSONDefault := res.GetJSONDefault()
+		if resJSONDefault != nil {
+			message = resJSONDefault.Error.Message
+			if resJSONDefault.Error.Detail != nil {
+				message += fmt.Sprintf(", detail: %s", *resJSONDefault.Error.Detail)
+			}
+		} else {
+			message = res.HTTPResponse.Status
+		}
+		return fmt.Errorf("failed to contact Renku: %s", message)
+	}
+	log.Printf("Received from Renku: %+v\n", *resJSON)
+
+	// TODO: also handle sessions from local state
+	if resJSON.Sessions != nil {
+		for _, session := range *resJSON.Sessions {
+			r.reconciler.Reconcile(ctx, reconciler.SessionRef{ID: session})
+		}
+	}
+
+	return nil
 }
