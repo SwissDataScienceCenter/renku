@@ -10,6 +10,7 @@ charts:
       - scripts/init-realm
       - scripts/init-db
       - scripts/platform-init
+      - renku-ssh-proxy
     images:
       init-realm:
         contextPath: scripts/init-realm
@@ -31,3 +32,9 @@ charts:
         valuesPath: platformInit.image
         paths:
           - scripts/platform-init
+      ssh-proxy:
+        contextPath: .
+        dockerfilePath: ./renku-ssh-proxy/Dockerfile
+        valuesPath: sshProxy.image
+        paths:
+          - renku-ssh-proxy
