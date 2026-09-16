@@ -1,5 +1,6 @@
+//! Module for interacting with data services.
+
 use color_eyre::Result;
-/// Module for interacting with data services.
 use reqwest::Url;
 use ssh_key::PublicKey;
 
@@ -43,7 +44,7 @@ impl Client {
         session_name: &str,
     ) -> Result<bool> {
         let url = self.make_url(&["internal", "sessions", session_name, "authorize"]);
-        log::debug!("Call to: {}", &url);
+        log::debug!("Call to: {}", url);
         let openssh_key = public_key.to_openssh()?;
         let payload = SessionAuthorizeRequest {
             public_key: openssh_key,

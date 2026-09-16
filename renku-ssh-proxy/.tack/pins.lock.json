@@ -11,24 +11,16 @@
     "type": "github",
     "owner": "NixOS",
     "repo": "nixpkgs",
-    "rev": "e8be7818e19ada32105a8af937a6a473b38167ca",
-    "narHash": "sha256-0N9nghg3nwzX6b6qc77EzjR9cu/Z+UR66FlfsCqiURs=",
-    "lastModified": 1787964612
-  },
-  "oas3-gen": {
-    "type": "github",
-    "owner": "eikek",
-    "repo": "oas3-gen",
-    "rev": "4dad67509608bfc8d64f3363e6e80a5cdaa1bd90",
-    "narHash": "sha256-+S2LKgcvch73yLYILCN9eMI591UKSMVheMnrjhEykAI=",
-    "lastModified": 1789484189
+    "rev": "c7def046b9a883d46974757852106483d741586f",
+    "narHash": "sha256-6RSEDHIWQtesQKWSu5qRai8L2h4KgCgMEfJHstW99G4=",
+    "lastModified": 1789370336
   },
   "rust-overlay": {
     "type": "github",
     "owner": "oxalica",
     "repo": "rust-overlay",
-    "rev": "860d7c835ab91bfc8972b67092f5f2db8e9390a0",
-    "narHash": "sha256-BTFrmyh0oaVDsvA9NNw0YpbbeppTwU0t70iVx672Ew8=",
-    "lastModified": 1788332415
+    "rev": "35ca0490d13a3d38c4602d0eb9600a30fa63a367",
+    "narHash": "sha256-45ikFmtfgBZgMePIm4GevJ9VjDSWO3PGQgOuuwHDpes=",
+    "lastModified": 1789543870
   }
 }

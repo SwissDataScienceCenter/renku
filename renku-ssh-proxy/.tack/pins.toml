@@ -36,8 +36,5 @@ type = "fetch"
 url = "github:eikek/devshell-tools/main"
 type = "flake"
 
-[inputs.oas3-gen]
-url = "github:eikek/oas3-gen/fix-nix-build"
-
 [tack]
 recomposable = true

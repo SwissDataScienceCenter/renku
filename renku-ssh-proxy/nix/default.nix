@@ -94,7 +94,6 @@ in
       pkgs.just
       pkgs.tack
       pkgs.azure-cli
-      inputs.oas3-gen.packages.${system}.oas3-gen
 
       # Dev dependencies
       pkgs.cargo-flamegraph
