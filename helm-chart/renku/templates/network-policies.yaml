@@ -284,6 +284,9 @@ spec:
     - from:
         - ipBlock:
             cidr: 0.0.0.0/0
+        - podSelector:
+            matchLabels:
+              renku.io/keycloak-access: "true"
       ports:
         - protocol: TCP
           port: http
