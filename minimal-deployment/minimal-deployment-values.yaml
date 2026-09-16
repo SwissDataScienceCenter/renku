@@ -75,6 +75,9 @@ redis:
   master:
     persistence:
       enabled: false
+    pdb:
+      # CI deployments don't need a PodDisruptionBudget for redis, we don't care if it gets restarted
+      create: false
   metrics:
     # Use the bitnami metrics image from the Renkulab Harbor registry
     image:
