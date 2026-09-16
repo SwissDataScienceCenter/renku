@@ -8,10 +8,10 @@ pub struct Client {
     client: reqwest::Client,
 }
 
-#[derive(serde::Deserialize, serde::Serialize, Clone, Debug)]
+#[derive(serde::Serialize, Clone, Debug)]
 #[serde(deny_unknown_fields)]
 struct SessionAuthorizeRequest {
-    pub public_key: ::std::string::String,
+    pub public_key: String,
 }
 
 impl Client {
@@ -24,17 +24,26 @@ impl Client {
         })
     }
 
+    fn make_url<I>(&self, items: I) -> Url
+    where
+        I: IntoIterator,
+        I::Item: AsRef<str>,
+    {
+        let mut url = self.base_url.clone();
+        {
+            let mut path = url.path_segments_mut().unwrap();
+            path.extend(items);
+        }
+        url
+    }
+
     pub async fn authorize_session(
         &self,
         public_key: &PublicKey,
         session_name: &str,
     ) -> Result<bool> {
-        let url = self
-            .base_url
-            .join("internal")?
-            .join("sessions")?
-            .join(session_name)?
-            .join("authorize")?;
+        let url = self.make_url(&["internal", "sessions", session_name, "authorize"]);
+        log::debug!("Call to: {}", &url);
         let openssh_key = public_key.to_openssh()?;
         let payload = SessionAuthorizeRequest {
             public_key: openssh_key,
@@ -42,10 +51,7 @@ impl Client {
         let resp = self.client.post(url).json(&payload).send().await?;
         let success = resp.status().is_success();
         if success {
-            log::debug!(
-                "Call to {} authorized session {session_name}",
-                self.base_url
-            );
+            log::debug!("Authorized session {session_name} via public-key");
         } else {
             log::debug!("Failed to authorize public key: {}", payload.public_key);
             log::info!(
@@ -56,4 +62,14 @@ impl Client {
         }
         Ok(success)
     }
+}
+
+#[test]
+fn test_encode_session_authorize_request() {
+    let req = SessionAuthorizeRequest {
+        public_key: "blablabla".into(),
+    };
+    let x = serde_json::to_vec(&req).unwrap();
+    let y = String::from_utf8_lossy(&x);
+    assert_eq!(y, "{\"public_key\":\"blablabla\"}");
 }
