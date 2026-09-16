@@ -391,7 +391,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: ingress-to-solr-from-services
+  name: ingress-to-solr
   labels:
     app: {{ template "renku.name" . }}
     chart: {{ template "renku.chart" . }}
@@ -408,11 +408,7 @@ spec:
     - from:
         - podSelector:
             matchLabels:
-              app.kubernetes.io/name: renku-data-service
-              app.kubernetes.io/instance: {{ .Release.Name }}
-        - podSelector:
-            matchLabels:
-              app.kubernetes.io/name: renku-data-tasks
+              renku.io/solr-access: "true"
               app.kubernetes.io/instance: {{ .Release.Name }}
       ports:
         - protocol: TCP
