@@ -27,6 +27,7 @@ spec:
         app.kubernetes.io/component: data-services
         app.kubernetes.io/part-of: renku
         renku.io/database-access: "true"
+        renku.io/authz-access: "true"
         {{- if .Values.solr.enabled }}
         renku.io/solr-access: "true"
         {{- end }}
