@@ -28,8 +28,10 @@ spec:
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/component: gateway
         app.kubernetes.io/part-of: renku
-        # The label below enables the gateway to connect to redis
+        {{- if .Values.redis.install }}
+        renku.io/redis-access: "true"
         {{ .Values.global.redis.clientLabel | toYaml | nindent 8 }}
+        {{- end }}
       {{- if .Values.gateway.podAnnotations }}
       {{- with .Values.gateway.podAnnotations }}
       annotations:

@@ -21,8 +21,10 @@ spec:
       labels:
         app.kubernetes.io/name: "uiserver"
         app.kubernetes.io/instance: {{ .Release.Name }}
-        # The label below enables the gateway to connect to redis
+        {{- if .Values.redis.install }}
+        renku.io/redis-access: "true"
         {{ .Values.global.redis.clientLabel | toYaml | nindent 8 }}
+        {{- end }}
     spec:
     {{- with .Values.ui.server.imagePullSecrets }}
       imagePullSecrets:

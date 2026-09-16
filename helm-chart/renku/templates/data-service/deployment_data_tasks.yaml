@@ -30,7 +30,10 @@ spec:
         {{- if .Values.solr.enabled }}
         renku.io/solr-access: "true"
         {{- end }}
+        {{- if .Values.redis.install }}
+        renku.io/redis-access: "true"
         {{ .Values.global.redis.clientLabel | toYaml | nindent 8 }}
+        {{- end }}
       annotations:
       {{- with .Values.dataService.podAnnotations }}
         {{- toYaml . | nindent 8 }}
