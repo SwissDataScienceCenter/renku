@@ -35,20 +35,22 @@ impl Client {
             .join("sessions")?
             .join(session_name)?
             .join("authorize")?;
+        let openssh_key = public_key.to_openssh()?;
         let payload = SessionAuthorizeRequest {
-            public_key: public_key.to_openssh()?,
+            public_key: openssh_key,
         };
         let resp = self.client.post(url).json(&payload).send().await?;
         let success = resp.status().is_success();
         if success {
             log::debug!(
                 "Call to {} authorized session {session_name}",
-                &self.base_url
+                self.base_url
             );
         } else {
+            log::debug!("Failed to authorize public key: {}", payload.public_key);
             log::info!(
                 "Call to {} denied access to session {session_name}: {}",
-                &self.base_url,
+                self.base_url,
                 resp.status()
             );
         }
