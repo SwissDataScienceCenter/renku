@@ -86,3 +86,40 @@ Other tools for operation and monitoring that are not mandatory but really usefu
 - [kubens and kubectx](https://github.com/ahmetb/kubectx)
 - Shell prompt that shows the currently active Kubernetes context and namespace,
   for example there is [starship](https://starship.rs/) but there are also many others.
+
+## Knative
+
+[Knative](https://knative.dev/) is only required to be installed if you intend to use Renku Apps.
+Renku creates one Knative `Service` per app, so both the CRDs and the Knative **Serving** control
+plane have to be present before you enable the feature. Knative Eventing and Functions are not
+used.
+
+We install Knative through the [Knative operator](https://knative.dev/docs/install/operator/knative-with-operators/)
+and currently run Serving 1.16.
+
+Knative needs a networking layer of its own to program routes for apps. The operator does not
+install one, so this is a separate step. We recommend
+[`net-gateway-api`](https://github.com/knative-extensions/net-gateway-api), which puts apps behind a
+[Gateway API](https://gateway-api.sigs.k8s.io/) gateway with Kourier disabled. That is what we run.
+Knative's other supported layers work too, but the apps documentation assumes this one.
+
+You will therefore need a Gateway API implementation in the cluster, either one you run yourself
+or a managed one from your cloud provider. The nginx ingress that serves Renku itself is **not** a Knative
+networking layer, and apps do not pass through it, so it cannot be reused for this.
+
+:::warning
+
+Install and verify Knative _before_ you enable apps in the Helm chart. The k8s watcher starts
+watching Knative Services as soon as the feature is enabled, and it cannot establish that watch
+in a cluster where the CRD does not exist.
+
+:::
+
+Knative also gates several pod spec fields behind feature flags that Renku's apps rely on. See
+[Configuration](configuration#knative) for the flags and how to set them.
+
+Apps are served from a domain of their own, with a hostname per app, so that domain needs DNS and
+TLS that cover names created on the fly. How you arrange that is a Knative concern rather than a
+Renku one, so it is covered in
+[Configuration](configuration#3-configure-the-apps-domain). Read that section before you provision
+anything, because the choice of domain has security consequences that are awkward to undo.
