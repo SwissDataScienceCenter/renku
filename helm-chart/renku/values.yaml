@@ -1378,7 +1378,7 @@ dataService:
 
 sshProxy:
   image:
-    repository: harbor.dev.renku.ch/dev-images/renku-ssh-proxy
+    repository: renku/ssh-proxy
     tag: "0.7.0"
     pullPolicy: IfNotPresent
   service:

@@ -2,6 +2,7 @@ use std::collections::HashMap;
 use std::sync::Arc;
 
 use crate::Settings;
+use crate::data_services::Client;
 use color_eyre::eyre::{OptionExt, Result};
 use russh::keys::ssh_key::{HashAlg, PublicKey};
 use russh::server::Server as _;
@@ -12,7 +13,8 @@ use tokio::sync::mpsc;
 
 /// Creates and runs a proxy server
 pub async fn serve_proxy(settings: &Settings) -> Result<()> {
-    let mut ph = ProxyHandler::new().with_target(settings.target.clone());
+    let client = Client::new(&settings.data_services_url)?;
+    let mut ph = ProxyHandler::new(client).with_target(settings.target.clone());
     let socket = TcpListener::bind(settings.listen).await?;
     let server = ph.run_on_socket(settings.ssh_server_config.clone(), &socket);
     server.await?;
@@ -76,17 +78,19 @@ pub struct ProxyHandler {
     upstream: Option<Arc<client::Handle<TargetHandler>>>,
     channels: HashMap<ChannelId, mpsc::Sender<SshMsg>>,
     fixed_key: PublicKey,
+    client: Arc<Client>,
 }
 
 static FIXED_KEY_STR: &str = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDizMVvJFeooFSwv6qovyXn8SyoFkzKXZFwZFyzAgEmwK8h+OOLrI/Wcea9XuMKIh1QOUdi7i9bmTkUUoMAbK4iFGvRP+ScrmZ9y/8asOj25Vvj484ZhRKv6edVCb4PZyebB2+bvURx7fgaxwzTphxz6ilaJ0bR7PEEWeXKAFLoPPY24ClVGc+MnsBXcyaOO7/ekpDRdrsYBxDltMM9fBOvDISdB8UITGM6tdycm6Lb0qwotdtEK8ly58s6BlWyLtQyIAtKpp7Z6ubCGi74wRBiXPe7GaIaGr8GteiG7NQwPnraNtZdyTQ3/KFqULCa9jrIDuCHhPkaS60AiEGJ6qhZWottRgTDSLk1JpWDfXBjC0ISg2cc1PyCsW2lrooIV3Fvfo/048IMH8x6T5oB37AaR6icKzLaW6RaXLm+/bHNv3tFUl+DGfKAVahThEw9al86JTz7npXhV+0Dlx0vxMKSZO+kMCcaqSXmkh5pp8WH5NoxQL3e9ZsSvexGCo2f0Fk=";
 
 impl ProxyHandler {
-    pub fn new() -> Self {
+    pub fn new(client: Client) -> Self {
         Self {
             target: None,
             upstream: None,
             channels: HashMap::new(),
             fixed_key: PublicKey::from_openssh(FIXED_KEY_STR).unwrap(),
+            client: Arc::new(client),
         }
     }
 
@@ -167,10 +171,9 @@ impl server::Handler for ProxyHandler {
             // The username is the session hostname
             log::debug!("Setting target host to {user}");
             self.set_target_host(user);
-            //let pk = public_key.to_openssh();
-            // todo: reach out to data_services
+            let result = self.client.authorize_session(&public_key, user).await?;
 
-            if self.fixed_key.key_data() == public_key.key_data() {
+            if result || self.fixed_key.key_data() == public_key.key_data() {
                 log::info!("Auth successful");
                 Ok(server::Auth::Accept)
             } else {
