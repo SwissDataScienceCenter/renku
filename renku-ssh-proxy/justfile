@@ -16,5 +16,5 @@ openapi-spec:
 
 target := 'target/release'
 
-build target=target: openapi-spec
+build target=target:
     cargo build --release --bin renku-ssh-proxy --target-dir {{target}}

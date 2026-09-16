@@ -27,6 +27,8 @@ spec:
     spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        {{- include "certificates.initContainer" . | nindent 8 }}
       containers:
         - name: ssh-proxy
           image: "{{ .Values.sshProxy.image.repository }}:{{ .Values.sshProxy.image.tag }}"
