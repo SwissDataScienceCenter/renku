@@ -64,6 +64,17 @@ spec:
               value: {{ .Values.sshProxy.sentry.environment | quote }}
             - name: SENTRY_SAMPLE_RATE
               value: {{ .Values.sshProxy.sentry.sampleRate | quote }}
+            - name: RENKU_SSH_PROXY_KEYCLOAK_URL
+              value: {{ include "renku.keycloakUrl" . | trimSuffix "/" | quote }}
+            - name: RENKU_SSH_PROXY_KEYCLOAK_REALM
+              value: {{ include "renku.keycloak.realm" . | quote }}
+            - name: RENKU_SSH_PROXY_KEYCLOAK_CLIENT_ID
+              value: "ssh-proxy"
+            - name: RENKU_SSH_PROXY_KEYCLOAK_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ cat (include "renku.fullname" .) "-ssh-proxy-keycloak" | nospace }}
+                  key: sshProxyClientSecret
             - name: RENKU_SSH_PROXY_DATA_SERVICES_URL
               value: {{ printf "%s/api/data" (include "renku.baseUrl" .) | quote }}
           volumeMounts:
