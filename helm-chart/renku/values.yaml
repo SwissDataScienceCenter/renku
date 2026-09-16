@@ -1383,6 +1383,10 @@ sshProxy:
     pullPolicy: IfNotPresent
   service:
     port: 2222
+  keycloak:
+    # Secret for the "ssh-proxy" Keycloak client. If empty, a random one is
+    # generated on first install and reused on later upgrades.
+    clientSecret:
   openSshHostKey:
   targetUser:
   targetPort:
