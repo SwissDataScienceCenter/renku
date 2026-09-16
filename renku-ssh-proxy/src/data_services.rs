@@ -1,6 +1,7 @@
 //! Module for interacting with data services.
 
 use color_eyre::Result;
+use color_eyre::eyre::eyre;
 use reqwest::Url;
 use ssh_key::PublicKey;
 
@@ -25,17 +26,19 @@ impl Client {
         })
     }
 
-    fn make_url<I>(&self, items: I) -> Url
+    fn make_url<I>(&self, items: I) -> Result<Url>
     where
         I: IntoIterator,
         I::Item: AsRef<str>,
     {
         let mut url = self.base_url.clone();
         {
-            let mut path = url.path_segments_mut().unwrap();
+            let mut path = url
+                .path_segments_mut()
+                .map_err(|_| eyre!("Cannot extends base url: {}", self.base_url))?;
             path.extend(items);
         }
-        url
+        Ok(url)
     }
 
     pub async fn authorize_session(
@@ -43,7 +46,7 @@ impl Client {
         public_key: &PublicKey,
         session_name: &str,
     ) -> Result<bool> {
-        let url = self.make_url(&["internal", "sessions", session_name, "authorize"]);
+        let url = self.make_url(&["internal", "sessions", session_name, "authorize"])?;
         log::debug!("Call to: {}", url);
         let openssh_key = public_key.to_openssh()?;
         let payload = SessionAuthorizeRequest {
