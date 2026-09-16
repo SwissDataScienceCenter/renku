@@ -81,9 +81,6 @@ spec:
             - mountPath: "/secrets/openSshHostKey"
               name: open-ssh-host-key
               readOnly: true
-            - mountPath: "/secrets/internalSecretKey"
-              name: internal-authn-key
-              readOnly: true
             {{- include "certificates.volumeMounts.system" . | nindent 12 }}
           livenessProbe:
             tcpSocket:
@@ -124,10 +121,4 @@ spec:
             items:
             - key: openSshHostKey
               path: openSshHostKey
-        - name: internal-authn-key
-          secret:
-            secretName: {{ template "renku.fullname" . }}-internal-authn
-            items:
-            - key: secretKey
-              path: secretKey
         {{- include "certificates.volumes" . | nindent 8 }}
