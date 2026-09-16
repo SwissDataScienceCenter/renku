@@ -278,6 +278,7 @@ class OIDCClientsConfig:
     notebooks: OIDCClient
     swagger: OIDCClient
     data_service: OIDCClient
+    ssh_proxy: OIDCClient
 
     @classmethod
     def from_env(cls) -> "OIDCClientsConfig":
@@ -288,6 +289,7 @@ class OIDCClientsConfig:
             notebooks=OIDCClient.from_env(prefix="NOTEBOOKS_KC_CLIENT_"),
             swagger=OIDCClient.from_env(prefix="SWAGGER_KC_CLIENT_"),
             data_service=OIDCClient.from_env(prefix="DATASERVICE_KC_CLIENT_"),
+            ssh_proxy=OIDCClient.from_env(prefix="SSHPROXY_KC_CLIENT_"),
         )
 
     def to_list(self) -> List[OIDCClient]:
@@ -298,4 +300,5 @@ class OIDCClientsConfig:
             self.notebooks,
             self.swagger,
             self.data_service,
+            self.ssh_proxy,
         ]
