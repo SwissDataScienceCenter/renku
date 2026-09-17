@@ -406,6 +406,15 @@ alertmanager_webhook_realm_role_payload = {
 }
 keycloak_admin.create_realm_role(alertmanager_webhook_realm_role_payload, skip_exists=True)
 
+# Create ssh-proxy realm role
+logging.info("Creating ssh-proxy realm role, skipping if it already exists...")
+ssh_proxy_realm_role_payload = {
+    "name": "ssh-proxy",
+    "composite": False,
+    "clientRole": False,
+}
+keycloak_admin.create_realm_role(ssh_proxy_realm_role_payload, skip_exists=True)
+
 logging.info("done")
 
 for client in OIDCClientsConfig.from_env().to_list():
