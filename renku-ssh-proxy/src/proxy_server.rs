@@ -187,7 +187,7 @@ impl server::Handler for ProxyHandler {
         channel: Channel<server::Msg>,
         reply: server::ChannelOpenHandle,
         session: &mut server::Session,
-    ) -> std::prelude::v1::Result<(), Self::Error> {
+    ) -> Result<()> {
         log::debug!("Entering channel_open_session");
         let client_id = channel.id();
         let upstream = self.connect_target().await?;
@@ -195,8 +195,9 @@ impl server::Handler for ProxyHandler {
         let (tx, rx) = mpsc::channel::<SshMsg>(64);
         self.channels.insert(client_id, tx);
         log::debug!(
-            "Connected. Open ssh session to target host: {:?}",
-            self.target
+            "Connected. Open ssh session to target host: {:?} on channel {}",
+            self.target,
+            client_id
         );
 
         let serve_handle = session.handle();
@@ -211,7 +212,7 @@ impl server::Handler for ProxyHandler {
         channel: ChannelId,
         data: &[u8],
         _session: &mut server::Session,
-    ) -> std::prelude::v1::Result<(), Self::Error> {
+    ) -> Result<()> {
         log::debug!("Sending data...");
         self.forward(&channel, SshMsg::Data(data.to_vec())).await
     }
@@ -231,7 +232,7 @@ impl server::Handler for ProxyHandler {
         &mut self,
         channel: ChannelId,
         _session: &mut server::Session,
-    ) -> std::prelude::v1::Result<(), Self::Error> {
+    ) -> Result<()> {
         log::debug!("Sending eof...");
         self.forward(&channel, SshMsg::Eof).await
     }
@@ -240,8 +241,8 @@ impl server::Handler for ProxyHandler {
         &mut self,
         channel: ChannelId,
         _session: &mut server::Session,
-    ) -> std::prelude::v1::Result<(), Self::Error> {
-        log::debug!("Sending channel_close...");
+    ) -> Result<()> {
+        log::debug!("Remove channel {} on channel_close...", channel);
         self.channels.remove(&channel);
         Ok(())
     }
@@ -261,7 +262,7 @@ impl server::Handler for ProxyHandler {
         channel: ChannelId,
         data: &[u8],
         session: &mut server::Session,
-    ) -> std::prelude::v1::Result<(), Self::Error> {
+    ) -> Result<()> {
         log::debug!("Sending exec...");
         self.forward(&channel, SshMsg::Exec(data.to_vec())).await?;
         session.channel_success(channel)?;
@@ -278,7 +279,7 @@ impl server::Handler for ProxyHandler {
         pix_height: u32,
         modes: &[(russh::Pty, u32)],
         _session: &mut server::Session,
-    ) -> std::prelude::v1::Result<(), Self::Error> {
+    ) -> Result<()> {
         log::debug!("Sending pty request...");
         self.forward(
             &channel,
@@ -302,7 +303,7 @@ impl server::Handler for ProxyHandler {
         pix_width: u32,
         pix_height: u32,
         session: &mut server::Session,
-    ) -> std::prelude::v1::Result<(), Self::Error> {
+    ) -> Result<()> {
         log::debug!("Sending window_change request...");
         self.forward(
             &channel,
@@ -323,11 +324,47 @@ impl server::Handler for ProxyHandler {
         channel: ChannelId,
         name: &str,
         session: &mut server::Session,
-    ) -> std::prelude::v1::Result<(), Self::Error> {
+    ) -> Result<()> {
         log::debug!("Sending subsystem request...");
         self.forward(&channel, SshMsg::Subsystem(name.to_string()))
             .await?;
         session.channel_success(channel)?;
+        Ok(())
+    }
+
+    async fn channel_open_direct_tcpip(
+        &mut self,
+        channel: Channel<server::Msg>,
+        host_to_connect: &str,
+        port_to_connect: u32,
+        originator_address: &str,
+        originator_port: u32,
+        reply: server::ChannelOpenHandle,
+        session: &mut server::Session,
+    ) -> Result<()> {
+        let client_id = channel.id();
+        log::debug!(
+            "Open direct tcpip channel ({}) to {}:{}...",
+            client_id,
+            host_to_connect,
+            port_to_connect
+        );
+        let upstream = self.connect_target().await?;
+        let up_channel = upstream
+            .channel_open_direct_tcpip(
+                host_to_connect,
+                port_to_connect,
+                originator_address,
+                originator_port,
+            )
+            .await?;
+        let (tx, rx) = mpsc::channel::<SshMsg>(64);
+        self.channels.insert(client_id, tx);
+
+        let serve_handle = session.handle();
+        tokio::spawn(proxy_channel(up_channel, rx, serve_handle, client_id));
+
+        reply.accept().await;
         Ok(())
     }
 }
@@ -425,7 +462,7 @@ impl server::Server for ProxyHandler {
 
 impl Drop for ProxyHandler {
     fn drop(&mut self) {
-        log::debug!("Closing client");
+        log::debug!("Closing client. Clear all channels");
         self.channels.clear();
     }
 }

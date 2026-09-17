@@ -111,7 +111,7 @@ in
       RENKU_SSH_PROXY_TARGET_HOST = "localhost";
       RENKU_SSH_PROXY_TARGET_USER = "renku";
       RENKU_SSH_PROXY_TARGET_PORT = "10022";
-      RENKU_SSH_PROXY_DATA_SERVICES_URL = "http://localhost:8000";
+      RENKU_SSH_PROXY_DATA_SERVICES_URL = "http://localhost:8111";
       RENKU_SSH_PROXY_LISTEN = "0.0.0.0:2221";
       RUST_LOG = "info,renku_ssh_proxy=debug";
     };
@@ -143,7 +143,7 @@ in
         };
         networking.firewall.allowedTCPPorts = [ 8000 ];
         virtualisation.forwardPorts = [
-          { from = "host"; host.port = 8000; guest.port = 8000; }
+          { from = "host"; host.port = 8111; guest.port = 8000; }
         ];
       }
     ];
