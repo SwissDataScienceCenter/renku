@@ -26,6 +26,11 @@ upgrading, see [the chart readme](https://github.com/SwissDataScienceCenter/renk
 Note that the hostname of the deployed database changes from `<release>-postgresql` to
 `<release>-pg-rw`, the read-write service of the cnpg Cluster. The renku chart templates it,
 so this only matters for anything outside the chart that referred to the old name.
+## Upgrading to Renku 2.21.0
+
+* NEW `dataService.imageBuilders.insecureOutput.enabled`: it is now possible to configure registries that use e.g. self-signed certificates to push images to. **WARNING** do not use in production. This is a feature that helps for testing and development.
+
+* NEW `dataService.imageBuilders.insecureOutput.registries`: a comma separated list of insecure registries (e.g. behind a self-signed certificate).
 
 ## Upgrading to Renku 2.18.0
 
