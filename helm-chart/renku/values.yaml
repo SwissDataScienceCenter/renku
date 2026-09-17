@@ -1378,8 +1378,8 @@ dataService:
 
 sshProxy:
   image:
-    repository: harbor.dev.renku.ch/dev-images/renku-ssh-proxy
-    tag: "0.7.0"
+    repository: renku/ssh-proxy
+    tag:
     pullPolicy: IfNotPresent
   service:
     port: 2222
