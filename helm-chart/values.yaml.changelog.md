@@ -7,15 +7,21 @@ Please follow this convention when adding a new row
 
 ## Upgrading to Renku 2.yy.z
 
-Drops the bitnami `postgresql` chart. Renku instead relies on an external postgres db, or offers
-templates to deploy postgres through the [CloudNativePG](https://cloudnative-pg.io/) operator.
+Renku no longer uses the bitnami `postgresql` chart as its database. It relies on an external
+postgres db, or deploys one through the [CloudNativePG](https://cloudnative-pg.io/) operator.
 The operator is **not** part of this chart and has to be installed once per cluster before
 upgrading, see [the chart readme](https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart#upgrading).
 
-* DELETE `postgresql` section. The chart fails with a message if the section is still there.
-* NEW `cnpg`, replacing the section above. It configures a postgres `Cluster` in renku's 
-  namespace. `cnpg.install` takes the role of `postgresql.enabled`.
-* `global.externalServices.postgresql` is unchanged and keeps working for an external postgres.
+* NEW `cnpg`. It configures a CloudNativePG `Cluster` in renku's namespace. `cnpg.install` takes the
+  role that `postgresql.enabled` used to play.
+* NEW `cnpg.operatorNamespace`, defaults to `cnpg-system`. Opens a network policy letting the
+  operator reach the instances
+* NEW `cnpg.autoMigration`, setting it to true imports every database and role from the
+  legacy instance into the cnpg Cluster on **creation**. Fails if the Cluster already exists.
+* EDIT `postgresql`. The section stays, but only as a migration source: renku never connects to it
+  again. Keep `enabled: true` for as long as you need the old data reachable.
+* `global.externalServices.postgresql` is unchanged and keeps working for an external postgres. It
+  stays mutually exclusive with `cnpg.install`.
 
 Note that the hostname of the deployed database changes from `<release>-postgresql` to
 `<release>-pg-rw`, the read-write service of the cnpg Cluster. The renku chart templates it,
