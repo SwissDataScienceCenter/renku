@@ -52,7 +52,7 @@ spec:
             - name: VERSION
               value: {{ .Values.dataService.image.tag | quote }}
             - name: DB_HOST
-              value: {{ template "postgresql.fullname" . }}
+              value: {{ template "renku.pgHost" . }}
             - name: DB_USER
               value: {{ .Values.global.db.common.username }}
             - name: DB_PASSWORD
