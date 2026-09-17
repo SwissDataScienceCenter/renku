@@ -354,21 +354,41 @@ impl server::Handler for ProxyHandler {
                 port_to_connect
             );
             let upstream = self.connect_target().await?;
-            let up_channel = upstream
+            let up_channel_r = upstream
                 .channel_open_direct_tcpip(
                     host_to_connect,
                     port_to_connect,
                     originator_address,
                     originator_port,
                 )
-                .await?;
-            let (tx, rx) = mpsc::channel::<SshMsg>(64);
-            self.channels.insert(client_id, tx);
+                .await;
+            match up_channel_r {
+                Ok(up_channel) => {
+                    let (tx, rx) = mpsc::channel::<SshMsg>(64);
+                    self.channels.insert(client_id, tx);
 
-            let serve_handle = session.handle();
-            tokio::spawn(proxy_channel(up_channel, rx, serve_handle, client_id));
+                    let serve_handle = session.handle();
+                    tokio::spawn(proxy_channel(up_channel, rx, serve_handle, client_id));
 
-            reply.accept().await;
+                    reply.accept().await;
+                }
+                Err(russh::Error::ChannelOpenFailure(cause)) => {
+                    log::info!(
+                        "Attempt to forward to port {} failed: {:?}",
+                        port_to_connect,
+                        cause
+                    );
+                    reply.reject(cause).await;
+                }
+                Err(err) => {
+                    log::info!(
+                        "Attempt to forward to port {} failed: {}",
+                        port_to_connect,
+                        err
+                    );
+                    reply.reject(russh::ChannelOpenFailure::ConnectFailed).await;
+                }
+            }
         } else {
             log::info!(
                 "Don't allow forwarding to non-local host {}",
@@ -478,4 +498,14 @@ impl Drop for ProxyHandler {
         log::debug!("Closing client. Clear all channels");
         self.channels.clear();
     }
+}
+
+#[test]
+fn test_forward_allow_host() {
+    assert!(ProxyHandler::is_allowed_forward_target("localhost"));
+    assert!(ProxyHandler::is_allowed_forward_target("127.0.0.1"));
+    assert!(ProxyHandler::is_allowed_forward_target("::1"));
+
+    assert!(!ProxyHandler::is_allowed_forward_target("google.com"));
+    assert!(!ProxyHandler::is_allowed_forward_target("80.17.21.131"));
 }
