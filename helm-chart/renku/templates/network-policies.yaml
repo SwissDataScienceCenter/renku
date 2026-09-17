@@ -158,60 +158,12 @@ spec:
       ports:
         - protocol: TCP
           port: http
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: ingress-to-uiserver-from-anywhere
-  labels:
-    app: {{ template "renku.name" . }}
-    chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-spec:
-  podSelector:
-    matchLabels:
-      app.kubernetes.io/name: "uiserver"
-      app.kubernetes.io/instance: {{ .Release.Name }}
-  policyTypes:
-    - Ingress
-  ingress:
-    - from:
-        - ipBlock:
-            cidr: 0.0.0.0/0
-      ports:
-        - protocol: TCP
-          port: http
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: ingress-to-gateway-from-anywhere
-  labels:
-    app: {{ template "renku.name" . }}
-    chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-spec:
-  podSelector:
-    matchLabels:
-      app.kubernetes.io/name: {{ template "gateway.name" . }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
-  policyTypes:
-    - Ingress
-  ingress:
-    - from:
-        - ipBlock:
-            cidr: 0.0.0.0/0
-      ports:
-        - protocol: TCP
-          port: http
 {{- if .Values.keycloakx.enabled }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: ingress-to-keycloak-from-anywhere
+  name: ingress-to-keycloak
   labels:
     app: {{ template "renku.name" . }}
     chart: {{ template "renku.chart" . }}
@@ -225,8 +177,6 @@ spec:
     - Ingress
   ingress:
     - from:
-        - ipBlock:
-            cidr: 0.0.0.0/0
         - podSelector:
             matchLabels:
               renku.io/keycloak-access: "true"
@@ -236,56 +186,6 @@ spec:
         - protocol: TCP
           port: https
 {{- end }}
-{{- if .Values.swagger.enabled }}
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: ingress-to-swagger-from-anywhere
-  labels:
-    app: {{ template "renku.name" . }}
-    chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-spec:
-  podSelector:
-    matchLabels:
-      app.kubernetes.io/name: {{ include "renku.name" . }}-swagger
-      app.kubernetes.io/instance: {{ .Release.Name }}
-  policyTypes:
-    - Ingress
-  ingress:
-    - from:
-        - ipBlock:
-            cidr: 0.0.0.0/0
-      ports:
-        - protocol: TCP
-          port: http
-{{- end }}
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: ingress-to-ui-assets-from-anywhere
-  labels:
-    app: {{ template "renku.name" . }}
-    chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-spec:
-  podSelector:
-    matchLabels:
-      app.kubernetes.io/name: ui
-      app.kubernetes.io/instance: {{ .Release.Name }}
-  policyTypes:
-    - Ingress
-  ingress:
-    - from:
-        - ipBlock:
-            cidr: 0.0.0.0/0
-      ports:
-        - protocol: TCP
-          port: http
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -541,3 +441,25 @@ spec:
       app.kubernetes.io/name: AmaltheaSession
   policyTypes:
   - Egress
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ingress-from-ingress-controller
+spec:
+  podSelector:
+    matchLabels:
+      renku.io/ingress-access: "true"
+  ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app.kubernetes.io/name: ingress-nginx
+        namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: ingress-nginx
+      ports:
+        - protocol: TCP
+          port: http
+        - protocol: TCP
+          port: https
