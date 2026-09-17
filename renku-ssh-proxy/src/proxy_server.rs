@@ -170,17 +170,22 @@ impl server::Handler for ProxyHandler {
             // The username is the session hostname
             log::debug!("Setting target host to {user}");
             self.set_target_host(user);
-            let result = self.client.authorize_session(public_key, user).await?;
-
-            if result {
-                log::info!("Auth successful");
-                Ok(server::Auth::Accept)
-            } else {
-                log::warn!(
-                    "Auth failed due to wrong public key: {}",
-                    public_key.fingerprint(HashAlg::Sha256)
-                );
-                Ok(server::Auth::reject())
+            match self.client.authorize_session(public_key, user).await {
+                Ok(true) => {
+                    log::info!("Auth successful");
+                    Ok(server::Auth::Accept)
+                }
+                Ok(false) => {
+                    log::warn!(
+                        "Auth failed for {}",
+                        public_key.fingerprint(HashAlg::Sha256)
+                    );
+                    Ok(server::Auth::reject())
+                }
+                Err(err) => {
+                    log::error!("Error obtaining authorization from data-services: {}", err);
+                    Ok(server::Auth::reject())
+                }
             }
         }
     }
