@@ -296,6 +296,10 @@ keycloakx:
   # keycloak-password-secret
   # - KEYCLOAK_USER: keycloak admin username            value: global.keycloak.user
   # - KEYCLOAK_PASSWORD: keycloak admin password        value: global.keycloak.password.value
+  # Keycloak reads the database host from a secret via extraEnvFrom, which is
+  # fixed at pod start. Rolling on host change keeps it from dialling a dead service.
+  podAnnotations:
+    renku.io/db-host: '{{ include "renku.pgHost" . }}'
   extraEnvFrom: |
     - secretRef:
         name: renku-keycloak-postgres
