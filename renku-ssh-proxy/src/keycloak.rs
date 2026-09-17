@@ -9,7 +9,7 @@ use std::time::{Duration, Instant};
 use tokio::sync::RwLock;
 
 #[cfg(test)]
-use wiremock::matchers::{method, path};
+use wiremock::matchers::{body_string_contains, method, path};
 #[cfg(test)]
 use wiremock::{Mock, MockServer, ResponseTemplate};
 
@@ -121,7 +121,10 @@ impl TokenProvider {
         let expires_in = body.expires_in.unwrap_or(DEFAULT_EXPIRES_IN);
         Ok(CachedToken {
             access_token: body.access_token,
-            expires_at: Instant::now() + Duration::from_secs(expires_in),
+            // A bad `expires_in` must not panic; fall back to an immediately-expired token.
+            expires_at: Instant::now()
+                .checked_add(Duration::from_secs(expires_in))
+                .unwrap_or_else(Instant::now),
         })
     }
 }
@@ -141,6 +144,7 @@ fn test_provider(server: &MockServer) -> TokenProvider {
 fn token_mock(expires_in: u64) -> Mock {
     Mock::given(method("POST"))
         .and(path("/realms/test/protocol/openid-connect/token"))
+        .and(body_string_contains("grant_type=client_credentials"))
         .respond_with(ResponseTemplate::new(200).set_body_raw(
             format!(r#"{{"access_token":"abc","expires_in":{expires_in}}}"#),
             "application/json",
@@ -178,4 +182,17 @@ async fn test_token_error_on_non_success() {
 
     let provider = test_provider(&server);
     assert!(provider.token().await.is_err());
+}
+
+#[test]
+fn test_settings_debug_redacts_secret() {
+    let settings = KeycloakSettings {
+        url: "http://localhost:8080".to_string(),
+        realm: "renku".to_string(),
+        client_id: "ssh-proxy".to_string(),
+        client_secret: "super-secret".to_string(),
+    };
+    let debug = format!("{settings:?}");
+    assert!(!debug.contains("super-secret"));
+    assert!(debug.contains("***"));
 }
