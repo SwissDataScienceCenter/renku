@@ -372,11 +372,34 @@ keycloakx:
     {{- end -}}
   ingress:
     enabled: false
+# Legacy bitnami postgres. Renku never connects to it. It exists only so an
+# existing database can keep running while its data is migrated into the cnpg
+# cluster. Set enabled to false and drop the section once the migration is done.
+postgresql:
+  enabled: false
+  auth:
+    username: postgres
+    database: postgres
+    ## Use an existing secret instead of creating a new one. It must have a
+    ## postgres-password key containing the password for the postgres user.
+    # existingSecret:
+  ## Use Bitnami's PostgreSQL image from Renkulab Harbor registry
+  image:
+    registry: harbor.renkulab.io
+    repository: bitnami-mirror/postgresql
+  primary:
+    persistence:
+      enabled: true
+      size: 8Gi
+      ## Provide an existing PersistentVolumeClaim to be reused.
+      # existingClaim:
+    resources:
+      requests:
+        cpu: 100m
+        memory: 300Mi
+
 # Postgresql configuration
-# Renku deploys postgres through the CloudNativePG operator. The operator itself
-# is NOT part of this chart: it is cluster scoped (CRDs, ClusterRoles and two
-# webhook configurations with fixed, non-templated names) and has to be installed
-# once per cluster, like an ingress controller. See the chart readme.
+# Renku deploys postgres through the CloudNativePG operator, which must be installed separately.
 # This section configures the Cluster that renku creates in its own namespace.
 # For all options see
 # https://cloudnative-pg.io/documentation/current/cloudnative-pg.v1/
@@ -391,6 +414,10 @@ cnpg:
   # Where the operator runs. The chart opens a network policy for it, so a wrong
   # value here leaves the Cluster hanging and never ready.
   operatorNamespace: cnpg-system
+  # Import the databases and roles from the legacy postgresql section when
+  # the Cluster is first created. Bootstrap only runs at creation: setting this
+  # on a Cluster that already exists does nothing, so the chart refuses it.
+  autoMigration: false
   storage:
     size: 8Gi
     # Empty means the default storage class of the cluster.
