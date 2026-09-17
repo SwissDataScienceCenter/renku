@@ -13,7 +13,7 @@ use tokio::sync::mpsc;
 
 /// Creates and runs a proxy server
 pub async fn serve_proxy(settings: &Settings) -> Result<()> {
-    let client = Client::new(&settings.data_services_url)?;
+    let client = Client::new(&settings.data_services_url, &settings.data_services_timeout)?;
     let mut ph = ProxyHandler::new(client).with_target(settings.target.clone());
     let socket = TcpListener::bind(settings.listen).await?;
     let server = ph.run_on_socket(settings.ssh_server_config.clone(), &socket);
@@ -155,11 +155,7 @@ impl ProxyHandler {
 impl server::Handler for ProxyHandler {
     type Error = color_eyre::eyre::Error;
 
-    async fn auth_publickey(
-        &mut self,
-        user: &str,
-        public_key: &PublicKey,
-    ) -> std::prelude::v1::Result<server::Auth, Self::Error> {
+    async fn auth_publickey(&mut self, user: &str, public_key: &PublicKey) -> Result<server::Auth> {
         if self.target.is_none() || user.trim().is_empty() {
             log::warn!("No target host set!");
             Ok(server::Auth::reject())

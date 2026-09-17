@@ -10,10 +10,6 @@ clippy:
 image:
     nix build .#docker && docker load < result
 
-openapi-spec:
-    mkdir -p target
-    curl -sSL -o target/api.spec.yaml "https://github.com/SwissDataScienceCenter/renku-data-services/raw/refs/heads/salimkayal/feat/ssh-keys_proxy-api/components/renku_data_services/ssh_proxy/api.spec.yaml"
-
 target := 'target/release'
 
 build target=target:

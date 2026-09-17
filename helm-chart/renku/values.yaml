@@ -1379,7 +1379,7 @@ dataService:
 sshProxy:
   image:
     repository: renku/ssh-proxy
-    tag: "0.7.0"
+    tag:
     pullPolicy: IfNotPresent
   service:
     port: 2222

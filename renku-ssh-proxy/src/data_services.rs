@@ -4,6 +4,7 @@ use color_eyre::Result;
 use color_eyre::eyre::eyre;
 use reqwest::Url;
 use ssh_key::PublicKey;
+use std::time::Duration;
 
 pub struct Client {
     base_url: Url,
@@ -17,9 +18,9 @@ struct SessionAuthorizeRequest {
 }
 
 impl Client {
-    pub fn new(base_url: &str) -> Result<Client> {
+    pub fn new(base_url: &str, timeout: &Duration) -> Result<Client> {
         let uri = Url::parse(base_url)?;
-        let client = reqwest::Client::builder().build()?;
+        let client = reqwest::Client::builder().timeout(*timeout).build()?;
         Ok(Client {
             base_url: uri,
             client,

@@ -3,7 +3,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends git
 
 WORKDIR /app
 COPY renku-ssh-proxy ./renku-ssh-proxy
-COPY --from=ghcr.io/casey/just:latest /just /usr/local/bin/
+COPY --from=ghcr.io/casey/just:1.58.0 /just /usr/local/bin/
 
 RUN --mount=type=bind,source=.git,target=/app/.git \
     cd renku-ssh-proxy && \
