@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"log/slog"
 	"net/url"
 	"time"
 
@@ -23,8 +24,8 @@ type Runner struct {
 
 	renkuClient *renku.RenkuClient
 
-	contactTimer *time.Ticker
-	reconciler   *reconciler.RunnerReconciler
+	contactTicker *time.Ticker
+	reconciler    *reconciler.RunnerReconciler
 }
 
 func NewRunner(options ...RunnerOption) (runner *Runner, err error) {
@@ -146,18 +147,26 @@ func (r *Runner) register(ctx context.Context) error {
 }
 
 func (r *Runner) startContactLoop(ctx context.Context) error {
-	r.contactTimer = time.NewTicker(time.Minute)
+	r.contactTicker = time.NewTicker(time.Minute)
 	ch := make(chan error, 1)
 	go r.contactLoop(ctx, ch)
 	err := <-ch
-	r.contactTimer.Stop()
+	r.contactTicker.Stop()
 	return err
 }
 
 func (r *Runner) contactLoop(ctx context.Context, ch chan<- error) {
+	// Immediately contact the API (the ticker delays the first loop)
+	contactCtx, contactCancel := context.WithTimeout(ctx, time.Minute)
+	err := r.contact(contactCtx)
+	contactCancel()
+	if err != nil {
+		log.Printf("Could not contact Renku instance: %s\n", err.Error())
+	}
+
 	for {
 		select {
-		case <-r.contactTimer.C:
+		case <-r.contactTicker.C:
 			contactCtx, contactCancel := context.WithTimeout(ctx, time.Minute)
 			err := r.contact(contactCtx)
 			contactCancel()
@@ -174,10 +183,10 @@ func (r *Runner) contactLoop(ctx context.Context, ch chan<- error) {
 
 func (r *Runner) contact(ctx context.Context) error {
 	body := session_runners.SessionRunnerContactPost{
-		// TODO: send ready when we are!
-		Status: session_runners.SessionRunnerContactPostStatusNotReady,
+		// TODO: handle status (?)
+		Status: session_runners.SessionRunnerContactPostStatusReady,
 	}
-	log.Printf("Sending to Renku: %+v\n", body)
+	slog.Info("Sending to Renku", "body", body)
 	res, err := r.renkuClient.SessionRunners().PostSessionRunnersSessionRunnerIdContactWithResponse(ctx, r.runnerID, body)
 	if err != nil {
 		return fmt.Errorf("failed to contact Renku: %w", err)
@@ -196,7 +205,7 @@ func (r *Runner) contact(ctx context.Context) error {
 		}
 		return fmt.Errorf("failed to contact Renku: %s", message)
 	}
-	log.Printf("Received from Renku: %+v\n", *resJSON)
+	slog.Info("Received from Renku", "response", *resJSON)
 
 	// TODO: also handle sessions from local state
 	if resJSON.Sessions != nil {
