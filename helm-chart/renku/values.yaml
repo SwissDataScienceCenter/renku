@@ -1339,7 +1339,8 @@ dataService:
         ## The keys in the Kubernetes secret should have the same names as the terms mentioned above.
         credentialsSecretName: renku-envidat-s3-credentials
     scicat:
-      url: https://dacat-qa.psi.ch
+      url: https://discovery.psi.ch
+      apiUrl: https://dacat.psi.ch/api/v3
       image: ghcr.io/swissdatasciencecenter/scicat-cli:latest
   # Configuration values for persisted logs
   persistedLogs:

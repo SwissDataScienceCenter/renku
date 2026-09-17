@@ -244,6 +244,8 @@ spec:
             {{- end }}
             - name: SCICAT_URL
               value: {{ .Values.dataService.dataDeposits.scicat.url | quote }}
+            - name: SCICAT_API_URL
+              value: {{ .Values.dataService.dataDeposits.scicat.apiUrl | quote }}
             - name: SCICAT_JOB_IMAGE
               value: {{ .Values.dataService.dataDeposits.scicat.image | quote }}
             - name: RENKU_URL
