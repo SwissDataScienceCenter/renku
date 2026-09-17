@@ -150,6 +150,13 @@ impl ProxyHandler {
         }
         Ok(())
     }
+
+    fn is_allowed_forward_target(host: &str) -> bool {
+        host.eq_ignore_ascii_case("localhost")
+            || host
+                .parse::<std::net::IpAddr>()
+                .is_ok_and(|ip| ip.is_loopback())
+    }
 }
 
 impl server::Handler for ProxyHandler {
@@ -338,29 +345,39 @@ impl server::Handler for ProxyHandler {
         reply: server::ChannelOpenHandle,
         session: &mut server::Session,
     ) -> Result<()> {
-        let client_id = channel.id();
-        log::debug!(
-            "Open direct tcpip channel ({}) to {}:{}...",
-            client_id,
-            host_to_connect,
-            port_to_connect
-        );
-        let upstream = self.connect_target().await?;
-        let up_channel = upstream
-            .channel_open_direct_tcpip(
+        if ProxyHandler::is_allowed_forward_target(host_to_connect) {
+            let client_id = channel.id();
+            log::debug!(
+                "Open direct tcpip channel ({}) to {}:{}...",
+                client_id,
                 host_to_connect,
-                port_to_connect,
-                originator_address,
-                originator_port,
-            )
-            .await?;
-        let (tx, rx) = mpsc::channel::<SshMsg>(64);
-        self.channels.insert(client_id, tx);
+                port_to_connect
+            );
+            let upstream = self.connect_target().await?;
+            let up_channel = upstream
+                .channel_open_direct_tcpip(
+                    host_to_connect,
+                    port_to_connect,
+                    originator_address,
+                    originator_port,
+                )
+                .await?;
+            let (tx, rx) = mpsc::channel::<SshMsg>(64);
+            self.channels.insert(client_id, tx);
 
-        let serve_handle = session.handle();
-        tokio::spawn(proxy_channel(up_channel, rx, serve_handle, client_id));
+            let serve_handle = session.handle();
+            tokio::spawn(proxy_channel(up_channel, rx, serve_handle, client_id));
 
-        reply.accept().await;
+            reply.accept().await;
+        } else {
+            log::info!(
+                "Don't allow forwarding to non-local host {}",
+                host_to_connect
+            );
+            reply
+                .reject(russh::ChannelOpenFailure::AdministrativelyProhibited)
+                .await;
+        }
         Ok(())
     }
 }
