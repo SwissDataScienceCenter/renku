@@ -17,6 +17,7 @@ clap_complete = { version = "4.5.61", features = ["unstable-dynamic"] }
 color-eyre = "0.6.5"
 directories = "6.0.0"
 env_logger = "0.11"
+form_urlencoded = "1"
 humantime = "2.4.0"
 humantime-serde = "1.1.1"
 log = "0.4.27"
@@ -45,6 +46,9 @@ ssh-key = { version = "=0.7.0-rc.11", features = [
 tokio = { version = "1.53.1", features = ["full"] }
 tokio-rustls = "0.26.4"
 toml = "1.1.5"
+
+[dev-dependencies]
+wiremock = "0.6"
 
 [build-dependencies]
 vergen-gix = { version = "10.0.1", features = [
