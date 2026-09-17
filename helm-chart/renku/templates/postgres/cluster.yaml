@@ -22,4 +22,30 @@ spec:
   resources:
     {{- toYaml . | nindent 4 }}
   {{- end }}
+  {{- if .Values.cnpg.autoMigration }}
+  # Copies databases and roles from the legacy bitnami instance on initialization.
+  bootstrap:
+    # only runs at creation!
+    initdb:
+      import:
+        # Monolith keeps ownership and privileges.
+        type: monolith 
+        databases:
+          - "*"
+        roles:
+          - "*"
+        source:
+          externalCluster: legacy-bitnami
+  externalClusters:
+    - name: legacy-bitnami
+      connectionParameters:
+        host: {{ .Release.Name }}-postgresql
+        user: {{ .Values.postgresql.auth.username }}
+        dbname: {{ .Values.postgresql.auth.database }}
+        # bitnami postgres serves plaintext by default here.
+        sslmode: prefer
+      password:
+        name: {{ .Release.Name }}-postgresql
+        key: postgres-password
+  {{- end }}
 {{- end }}
