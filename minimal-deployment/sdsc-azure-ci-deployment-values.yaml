@@ -11,6 +11,7 @@ authz:
       cpu: 50m
       memory: 75Mi
 cnpg:
+  autoMigration: true
   extraSpec:
     resources:
       limits:
@@ -162,6 +163,12 @@ notebooks:
       key: renku.io/dedicated
       operator: Equal
       value: user
+postgresql:
+  enabled: true
+  image:
+    registry: harbor.dev.renku.ch
+    repository: bitnami-mirror/postgresql
+
 redis:
   architecture: standalone
   image:
