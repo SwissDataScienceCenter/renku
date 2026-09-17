@@ -433,11 +433,12 @@ authz:
       cpu: 50m
       memory: 75Mi
 cnpg:
-  resources:
-    limits:
-      memory: 300Mi
-    requests:
-      memory: 300Mi
+  extraSpec:
+    resources:
+      limits:
+        memory: 300Mi
+      requests:
+        memory: 300Mi
 dataService:
   # added
   rbac:

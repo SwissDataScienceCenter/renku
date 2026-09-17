@@ -9,19 +9,10 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  instances: {{ .Values.cnpg.instances }}
   # The setup jobs create the renku, authz and keycloak db and their
   # owners as superuser (prevents cnpg from deleting the superuser secret).
   enableSuperuserAccess: true
-  storage:
-    size: {{ .Values.cnpg.storage.size }}
-    {{- if not (empty .Values.cnpg.storage.storageClass) }}
-    storageClass: {{ .Values.cnpg.storage.storageClass }}
-    {{- end }}
-  {{- with .Values.cnpg.resources }}
-  resources:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
+  {{- toYaml .Values.cnpg.extraSpec | nindent 2 }}
   {{- if .Values.cnpg.autoMigration }}
   # Copies databases and roles from the legacy bitnami instance on initialization.
   bootstrap:

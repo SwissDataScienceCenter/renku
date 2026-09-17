@@ -20,6 +20,7 @@ upgrading, see [the chart readme](https://github.com/SwissDataScienceCenter/renk
   legacy instance into the cnpg Cluster on **creation**. Fails if the Cluster already exists.
 * EDIT `postgresql`. The section stays, but only as a migration source: renku never connects to it
   again. Keep `enabled: true` for as long as you need the old data reachable.
+* NEW `cnpg.extraSpec`, the Cluster spec itself. Useful to set e.g. `instances`, `storage` or `backup`.
 * `global.externalServices.postgresql` is unchanged and keeps working for an external postgres. It
   stays mutually exclusive with `cnpg.install`.
 
