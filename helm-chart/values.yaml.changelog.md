@@ -5,28 +5,6 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
-## Upgrading to Renku 2.yy.z
-
-Renku no longer uses the bitnami `postgresql` chart as its database. It relies on an external
-postgres db, or deploys one through the [CloudNativePG](https://cloudnative-pg.io/) operator.
-The operator is **not** part of this chart and has to be installed once per cluster before
-upgrading, see [the chart readme](https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart#upgrading).
-
-* NEW `cnpg`. It configures a CloudNativePG `Cluster` in renku's namespace. `cnpg.install` takes the
-  role that `postgresql.enabled` used to play.
-* NEW `cnpg.operatorNamespace`, defaults to `cnpg-system`. Opens a network policy letting the
-  operator reach the instances
-* NEW `cnpg.autoMigration`, setting it to true imports every database and role from the
-  legacy instance into the cnpg Cluster on **creation**. Fails if the Cluster already exists.
-* EDIT `postgresql`. The section stays, but only as a migration source: renku never connects to it
-  again. Keep `enabled: true` for as long as you need the old data reachable.
-* NEW `cnpg.extraSpec`, the Cluster spec itself. Useful to set e.g. `instances`, `storage` or `backup`.
-* `global.externalServices.postgresql` is unchanged and keeps working for an external postgres. It
-  stays mutually exclusive with `cnpg.install`.
-
-Note that the hostname of the deployed database changes from `<release>-postgresql` to
-`<release>-pg-rw`, the read-write service of the cnpg Cluster. The renku chart templates it,
-so this only matters for anything outside the chart that referred to the old name.
 ## Upgrading to Renku 2.21.0
 
 * NEW `dataService.imageBuilders.insecureOutput.enabled`: it is now possible to configure registries that use e.g. self-signed certificates to push images to. **WARNING** do not use in production. This is a feature that helps for testing and development.

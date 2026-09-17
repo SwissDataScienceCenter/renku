@@ -40,7 +40,7 @@ spec:
             - name: VERSION
               value: {{ .Values.dataService.image.tag | quote }}
             - name: DB_HOST
-              value: {{ template "renku.pgHost" . }}
+              value: {{ template "postgresql.fullname" . }}
             - name: DB_USER
               value: {{ .Values.global.db.common.username }}
             - name: DB_PASSWORD
