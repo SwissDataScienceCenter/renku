@@ -21,6 +21,7 @@ spec:
       labels:
         app.kubernetes.io/name: "uiserver"
         app.kubernetes.io/instance: {{ .Release.Name }}
+        renku.io/ingress-access: "true"
         {{- if .Values.redis.install }}
         renku.io/redis-access: "true"
         {{ .Values.global.redis.clientLabel | toYaml | nindent 8 }}

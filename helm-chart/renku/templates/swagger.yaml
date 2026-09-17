@@ -16,6 +16,7 @@ spec:
       labels:
         app.kubernetes.io/name: {{ include "renku.name" . }}-swagger
         app.kubernetes.io/instance: {{ .Release.Name }}
+        renku.io/ingress-access: "true"
     spec:
       containers:
         - name: swagger
