@@ -372,8 +372,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  # Needed for secret mounting
-  name: ingress-to-data-service-from-v2-sessions
+  name: ingress-from-sessions
   labels:
     app: {{ template "renku.name" . }}
     chart: {{ template "renku.chart" . }}
@@ -381,9 +380,13 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   podSelector:
-    matchLabels:
-      app.kubernetes.io/name: renku-data-service
-      app.kubernetes.io/instance: {{ .Release.Name }}
+    matchExpressions:
+      - key: app.kubernetes.io/name
+        operator: In
+        values: [renku-data-service, keycloakx, {{ template "gateway.name" . }}]
+      - key: app.kubernetes.io/instance
+        operator: In
+        values: [{{ .Release.Name }}]
   policyTypes:
     - Ingress
   ingress:
@@ -434,6 +437,14 @@ spec:
       - podSelector:
           matchLabels:
             app.kubernetes.io/name: renku-data-service
+            app.kubernetes.io/instance: {{ .Release.Name }}
+      - podSelector:
+          matchLabels:
+            app.kubernetes.io/name: keycloakx
+            app.kubernetes.io/instance: {{ .Release.Name }}
+      - podSelector:
+          matchLabels:
+            app.kubernetes.io/name: {{ template "gateway.name" . }}
             app.kubernetes.io/instance: {{ .Release.Name }}
   podSelector:
     matchLabels:
