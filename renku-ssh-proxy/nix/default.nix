@@ -112,6 +112,10 @@ in
       RENKU_SSH_PROXY_TARGET_USER = "renku";
       RENKU_SSH_PROXY_TARGET_PORT = "10022";
       RENKU_SSH_PROXY_DATA_SERVICES_URL = "http://localhost:8111";
+      RENKU_SSH_PROXY_KEYCLOAK_URL = "http://localhost:8080";
+      RENKU_SSH_PROXY_KEYCLOAK_REALM = "renku";
+      RENKU_SSH_PROXY_KEYCLOAK_CLIENT_ID = "ssh-proxy";
+      RENKU_SSH_PROXY_KEYCLOAK_CLIENT_SECRET = "dummy";
       RENKU_SSH_PROXY_LISTEN = "0.0.0.0:2221";
       RUST_LOG = "info,renku_ssh_proxy=debug";
     };

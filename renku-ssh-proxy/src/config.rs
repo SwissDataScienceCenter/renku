@@ -1,6 +1,7 @@
 // Reading the configuration from a file and allow override via CLI
 // options and environment variables
 
+use crate::keycloak::KeycloakSettings;
 use crate::proxy_server::Target;
 use base64::{Engine as _, engine::general_purpose::STANDARD};
 use clap::CommandFactory;
@@ -71,6 +72,18 @@ struct Cli {
     #[arg(long)]
     data_services_timeout: Option<humantime::Duration>,
 
+    #[arg(long, env = "RENKU_SSH_PROXY_KEYCLOAK_URL")]
+    keycloak_url: Option<String>,
+
+    #[arg(long, env = "RENKU_SSH_PROXY_KEYCLOAK_REALM")]
+    keycloak_realm: Option<String>,
+
+    #[arg(long, env = "RENKU_SSH_PROXY_KEYCLOAK_CLIENT_ID")]
+    keycloak_client_id: Option<String>,
+
+    #[arg(long, env = "RENKU_SSH_PROXY_KEYCLOAK_CLIENT_SECRET")]
+    keycloak_client_secret: Option<String>,
+
     /// Be more verbose when logging. Verbosity increases with each occurrence.
     #[command(flatten)]
     log_level: Option<Verbosity>,
@@ -94,6 +107,10 @@ struct FileConfig {
     inactivity_timeout: Option<Duration>,
     data_services_url: Option<String>,
     data_services_timeout: Option<Duration>,
+    keycloak_url: Option<String>,
+    keycloak_realm: Option<String>,
+    keycloak_client_id: Option<String>,
+    keycloak_client_secret: Option<String>,
 }
 
 fn deserialize_verbosity<'de, D>(
@@ -134,6 +151,7 @@ pub struct Settings {
     pub target: Target,
     pub data_services_url: String,
     pub data_services_timeout: Duration,
+    pub keycloak: KeycloakSettings,
 }
 
 impl Settings {
@@ -193,6 +211,37 @@ impl Settings {
             .or(file.data_services_timeout)
             .unwrap_or_else(|| Duration::from_mins(1));
 
+        let keycloak_url = cli
+            .keycloak_url
+            .or(file.keycloak_url)
+            .ok_or_eyre("missing `keycloak_url`")
+            .suggestion("pass --keycloak-url or set `keycloak_url` in the config file")?;
+        let keycloak_realm = cli
+            .keycloak_realm
+            .or(file.keycloak_realm)
+            .ok_or_eyre("missing `keycloak_realm`")
+            .suggestion("pass --keycloak-realm or set `keycloak_realm` in the config file")?;
+        let keycloak_client_id = cli
+            .keycloak_client_id
+            .or(file.keycloak_client_id)
+            .ok_or_eyre("missing `keycloak_client_id`")
+            .suggestion(
+                "pass --keycloak-client-id or set `keycloak_client_id` in the config file",
+            )?;
+        let keycloak_client_secret = cli
+            .keycloak_client_secret
+            .or(file.keycloak_client_secret)
+            .ok_or_eyre("missing `keycloak_client_secret`")
+            .suggestion(
+                "pass --keycloak-client-secret or set `keycloak_client_secret` in the config file",
+            )?;
+        let keycloak = KeycloakSettings {
+            url: keycloak_url,
+            realm: keycloak_realm,
+            client_id: keycloak_client_id,
+            client_secret: keycloak_client_secret,
+        };
+
         Ok(Settings {
             listen,
             host_key_file,
@@ -201,6 +250,7 @@ impl Settings {
             target,
             data_services_url,
             data_services_timeout,
+            keycloak,
         })
     }
 

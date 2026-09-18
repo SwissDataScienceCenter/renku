@@ -3,6 +3,7 @@ use std::sync::Arc;
 
 use crate::Settings;
 use crate::data_services::Client;
+use crate::keycloak::TokenProvider;
 use color_eyre::eyre::{OptionExt, Result};
 use russh::keys::ssh_key::{HashAlg, PublicKey};
 use russh::server::Server as _;
@@ -13,7 +14,15 @@ use tokio::sync::mpsc;
 
 /// Creates and runs a proxy server
 pub async fn serve_proxy(settings: &Settings) -> Result<()> {
-    let client = Client::new(&settings.data_services_url, &settings.data_services_timeout)?;
+    let tokens = Arc::new(TokenProvider::new(
+        &settings.keycloak,
+        &settings.data_services_timeout,
+    )?);
+    let client = Client::new(
+        &settings.data_services_url,
+        &settings.data_services_timeout,
+        tokens,
+    )?;
     let mut ph = ProxyHandler::new(client).with_target(settings.target.clone());
     let socket = TcpListener::bind(settings.listen).await?;
     let server = ph.run_on_socket(settings.ssh_server_config.clone(), &socket);
