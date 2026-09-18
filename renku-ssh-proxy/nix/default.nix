@@ -116,6 +116,10 @@ in
       RENKU_SSH_PROXY_KEYCLOAK_REALM = "renku";
       RENKU_SSH_PROXY_KEYCLOAK_CLIENT_ID = "ssh-proxy";
       RENKU_SSH_PROXY_KEYCLOAK_CLIENT_SECRET = "dummy";
+      # Proxy-to-session (hop 2): the dev VM uses the same throwaway key as its
+      # host key and as the proxy's client credential. Dev only.
+      RENKU_SSH_PROXY_SESSION_AUTH_KEY = "${inputs.devshell-tools}/internal/dev-vm-key";
+      RENKU_SSH_PROXY_SESSION_HOST_KEY = "${inputs.devshell-tools}/internal/dev-vm-key.pub";
       RENKU_SSH_PROXY_LISTEN = "0.0.0.0:2221";
       RUST_LOG = "info,renku_ssh_proxy=debug";
     };
@@ -136,7 +140,19 @@ in
           password = "";
           isNormalUser = true;
           group = "nogroup";
+          # accept the proxy's proxy-to-session public key
+          openssh.authorizedKeys.keyFiles = [ "${inputs.devshell-tools}/internal/dev-vm-key.pub" ];
         };
+        # pin a fixed host key so the proxy's check_server_key pin is stable.
+        # This assumes dev-vm-key is ed25519; if it is not, generate a dedicated
+        # dev ed25519 key and point both this and
+        # RENKU_SSH_PROXY_SESSION_{AUTH,HOST}_KEY at it.
+        services.openssh.hostKeys = [
+          {
+            type = "ed25519";
+            path = "${inputs.devshell-tools}/internal/dev-vm-key";
+          }
+        ];
         services.nginx = {
           enable = true;
           virtualHosts."_" = {
