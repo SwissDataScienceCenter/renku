@@ -89,9 +89,11 @@ global:
       ## Alternatively an existing secret can be provided. Note that postgres
       ## DOES NOT tolerate a change of the admin password when upgrading.
       # password:
-  ## Use an existing secret instead of creating a new one. It must have a
-  ## postgres-password key containing the password for the postgres user.
-  # existingSecret:
+      ## Use an existing secret instead of setting the password above.
+      # existingSecret:
+      ## Key in that secret holding the admin password. A CloudNativePG cluster
+      ## keeps it in <cluster>-superuser under "password".
+      existingSecretPasswordKey: postgres-password
 
   # Globally available solr (TBD)
   solr:

@@ -21,6 +21,8 @@ upgrading, see [the chart readme](https://github.com/SwissDataScienceCenter/renk
 * EDIT `postgresql`. The section stays, but only as a migration source: renku never connects to it
   again. Keep `enabled: true` for as long as you need the old data reachable.
 * NEW `cnpg.extraSpec`, the Cluster spec itself. Useful to set e.g. `instances`, `storage` or `backup`.
+* NEW `global.externalServices.postgresql.existingSecretPasswordKey`, defaults to
+  `postgres-password`. Set to `password` to point at a CNPG `<cluster>-superuser` secret.
 * `global.externalServices.postgresql` is unchanged and keeps working for an external postgres. It
   stays mutually exclusive with `cnpg.install`.
 
