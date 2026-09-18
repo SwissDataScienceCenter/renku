@@ -173,7 +173,7 @@ notebooks:
       operator: Equal
       value: user
 postgresql:
-  enabled: true
+  enabled: false
   image:
     registry: harbor.dev.renku.ch
     repository: bitnami-mirror/postgresql
