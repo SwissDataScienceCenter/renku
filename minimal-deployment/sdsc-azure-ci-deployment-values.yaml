@@ -11,7 +11,8 @@ authz:
       cpu: 50m
       memory: 75Mi
 cnpg:
-  autoMigration: true
+  # The data is already across and the Cluster exists, so an import can no longer run.
+  autoMigration: false
   extraSpec:
     instances: 3
     resources:
