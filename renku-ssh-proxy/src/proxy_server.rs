@@ -6,6 +6,7 @@ use crate::data_services::Client;
 use crate::keycloak::TokenProvider;
 use color_eyre::eyre::{OptionExt, Result};
 use russh::keys::ssh_key::{HashAlg, PublicKey};
+use russh::keys::{PrivateKey, PrivateKeyWithHashAlg};
 use russh::server::Server as _;
 use russh::{Channel, ChannelId, ChannelMsg, Pty, Sig};
 use russh::{client, server};
@@ -23,7 +24,9 @@ pub async fn serve_proxy(settings: &Settings) -> Result<()> {
         &settings.data_services_timeout,
         tokens,
     )?;
-    let mut ph = ProxyHandler::new(client).with_target(settings.target.clone());
+    let mut ph = ProxyHandler::new(client)
+        .with_target(settings.target.clone())
+        .with_auth_key(settings.session_auth_key.0.clone());
     let socket = TcpListener::bind(settings.listen).await?;
     let server = ph.run_on_socket(settings.ssh_server_config.clone(), &socket);
     server.await?;
@@ -49,10 +52,10 @@ impl client::Handler for TargetHandler {
         &mut self,
         server_public_key: &PublicKey,
     ) -> Result<bool, Self::Error> {
-        if let Some(pk) = &self.expected_host_key {
-            Ok(server_public_key == pk)
-        } else {
-            Ok(true) //todo: don't allow that irl
+        match &self.expected_host_key {
+            // compare key data only: the wire key carries no comment and the pinned key may
+            Some(pk) => Ok(server_public_key.key_data() == pk.key_data()),
+            None => Ok(false),
         }
     }
 }
@@ -87,6 +90,7 @@ pub struct ProxyHandler {
     upstream: Option<Arc<client::Handle<TargetHandler>>>,
     channels: HashMap<ChannelId, mpsc::Sender<SshMsg>>,
     client: Arc<Client>,
+    auth_key: Option<Arc<PrivateKey>>,
 }
 
 impl ProxyHandler {
@@ -96,11 +100,17 @@ impl ProxyHandler {
             upstream: None,
             channels: HashMap::new(),
             client: Arc::new(client),
+            auth_key: None,
         }
     }
 
     pub fn with_target(mut self, target: Target) -> Self {
         self.target = Some(target);
+        self
+    }
+
+    pub fn with_auth_key(mut self, key: Arc<PrivateKey>) -> Self {
+        self.auth_key = Some(key);
         self
     }
 
@@ -128,19 +138,16 @@ impl ProxyHandler {
             },
         )
         .await?;
-        // let halg = client::Handle::best_supported_rsa_hash(&handle)
-        //     .await?
-        //     .unwrap_or(Some(ssh_key::HashAlg::Sha256));
-        // log::debug!("Using hash-alg with target host: {:?}", halg);
-        let auth = handle.authenticate_none(&target.user).await?;
+        let auth_key = self
+            .auth_key
+            .clone()
+            .ok_or_eyre("no session auth key configured")?;
+        let hash_alg = handle.best_supported_rsa_hash().await?.flatten();
+        let auth = handle
+            .authenticate_publickey(&target.user, PrivateKeyWithHashAlg::new(auth_key, hash_alg))
+            .await?;
         if !auth.success() {
-            let auth = handle.authenticate_password(&target.user, "").await?;
-            if !auth.success() {
-                color_eyre::eyre::bail!(
-                    "proxy failed to authenticate to session host: {:?}",
-                    &auth
-                );
-            }
+            color_eyre::eyre::bail!("proxy failed to authenticate to session host: {:?}", &auth);
         }
 
         let handle = Arc::new(handle);
@@ -522,4 +529,43 @@ fn test_forward_allow_host() {
 
     assert!(!ProxyHandler::is_allowed_forward_target("google.com"));
     assert!(!ProxyHandler::is_allowed_forward_target("80.17.21.131"));
+}
+
+#[tokio::test]
+async fn test_check_server_key_pins_expected_and_rejects_other() {
+    use russh::client::Handler as _;
+    use russh::keys::ssh_key::PublicKey;
+    // the pinned key is loaded from a .pub file and carries a comment; the key presented on the
+    // wire has none, so the comparison must ignore comments
+    let pinned = PublicKey::from_openssh(
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHSWqeaS0b8NVxqu8dzb3fXmQzH/Kd5ClsYNMrXA9E+I pinned-comment",
+    )
+    .unwrap();
+    let presented = PublicKey::from_openssh(
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHSWqeaS0b8NVxqu8dzb3fXmQzH/Kd5ClsYNMrXA9E+I",
+    )
+    .unwrap();
+    let other = PublicKey::from_openssh(
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII+9SqY9JGLCxxsjnsNJKtwwNVYjjfd1VTHXHNZ/truJ t2",
+    )
+    .unwrap();
+    let mut handler = TargetHandler {
+        expected_host_key: Some(pinned),
+    };
+    assert!(handler.check_server_key(&presented).await.unwrap());
+    assert!(!handler.check_server_key(&other).await.unwrap());
+}
+
+#[tokio::test]
+async fn test_check_server_key_fails_closed_without_pin() {
+    use russh::client::Handler as _;
+    use russh::keys::ssh_key::PublicKey;
+    let key = PublicKey::from_openssh(
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHSWqeaS0b8NVxqu8dzb3fXmQzH/Kd5ClsYNMrXA9E+I t1",
+    )
+    .unwrap();
+    let mut handler = TargetHandler {
+        expected_host_key: None,
+    };
+    assert!(!handler.check_server_key(&key).await.unwrap());
 }
