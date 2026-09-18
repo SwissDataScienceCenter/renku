@@ -13,6 +13,7 @@ authz:
 cnpg:
   autoMigration: true
   extraSpec:
+    instances: 3
     resources:
       limits:
         memory: 300Mi
