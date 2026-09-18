@@ -1,4 +1,6 @@
 dependencies:
+  # Legacy. Renku does not connect to it; it is deployable only so that an
+  # existing database can stay up while its data moves to the cnpg cluster.
   - name: postgresql
     version: "14.2.4"
     repository: "oci://harbor.renkulab.io/bitnami-mirror"

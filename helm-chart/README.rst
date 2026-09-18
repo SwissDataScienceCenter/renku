@@ -55,6 +55,45 @@ Most information related to upgrading from one chart version to another is cover
 in the `values changelog file <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/values.yaml.changelog.md>`_.
 For upgrades that require some steps other than modifying the values files to be executed, we add some instructions here.
 
+Upgrading to 2.yy.z
+*************************
+This version deprecates bitnami ``postgresql`` (version ``14.2.4``).
+The proposed migration path is with `CloudNativePG <https://cloudnative-pg.io/>`_,
+but any external postgres can be used.
+
+CloudNativePG is an operator, and it is **not** a dependency of this chart.
+It is install once for the whole cluster, before upgrading:
+
+.. code-block:: console
+
+    $ helm repo add cnpg https://cloudnative-pg.github.io/charts
+    $ helm repo update
+    $ helm upgrade --install cnpg --namespace cnpg-system --create-namespace cnpg/cloudnative-pg
+
+A new ``cnpg`` section creates a ``Cluster`` named ``<release>-pg`` in the release namespace, and the services
+connect to its read-write service, ``<release>-pg-rw``, instead of ``<release>-postgresql``.
+
+The ``postgresql`` section stays, but only as a migration source: renku never connects to it again.
+Keep ``postgresql.enabled: true`` for as long as you need the old data reachable, so that nothing is
+deleted while you move it.
+
+Data migration
++++++++++++++++
+
+There are two ways of migrating the data from the old bitnami instance+volume to the new CNPG Cluster.
+Both need the old instance still running.
+
+**Automatic.** Set ``cnpg.autoMigration: true`` alongside ``postgresql.enabled: true``. The new
+Cluster will import every database and role from the old instance on creation, before any renku
+service can connect.
+
+**By hand.** Leave ``cnpg.autoMigration: false`` and follow
+``utils/postgres_migrations/bitnami-to-cnpg.md``, which dumps the databases from the old instance and
+restores them into the new one. Use this when the Cluster already exists, or for non-cnpg external databases.
+
+Either way, keep the old volume until you have verified the new database. Once you are satisfied, set
+``postgresql.enabled: false`` and delete the section.
+
 Upgrading to 0.27.0
 *******************
 This version contains an upgrade to the ``keycloak`` Helm chart dependency from version ``15.0.2`` to ``20.0.1``.

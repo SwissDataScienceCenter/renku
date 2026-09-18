@@ -10,6 +10,16 @@ authz:
     requests:
       cpu: 50m
       memory: 75Mi
+cnpg:
+  # The data is already across and the Cluster exists, so an import can no longer run.
+  install: false
+  autoMigration: false
+  extraSpec:
+    resources:
+      limits:
+        memory: 300Mi
+      requests:
+        memory: 300Mi
 dataService:
   image:
     repository: harbor.dev.renku.ch/dockerhub_cache/renku/renku-data-service
@@ -44,6 +54,13 @@ gateway:
     repository: harbor.dev.renku.ch/dockerhub_cache/renku/renku-gateway
   replicaCount: 1
 global:
+  externalServices:
+    postgresql:
+      enabled: true
+      host: mypg-rw
+      username: postgres
+      existingSecret: mypg-superuser
+      existingSecretPasswordKey: password
   anonymousSessions:
     enabled: true
   certificates:
@@ -156,15 +173,10 @@ notebooks:
       operator: Equal
       value: user
 postgresql:
+  enabled: false
   image:
     registry: harbor.dev.renku.ch
     repository: bitnami-mirror/postgresql
-  primary:
-    resources:
-      limits:
-        memory: 300Mi
-      requests:
-        memory: 300Mi
 redis:
   architecture: standalone
   image:

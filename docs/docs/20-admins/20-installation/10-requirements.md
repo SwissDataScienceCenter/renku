@@ -52,6 +52,19 @@ performance is not sufficient to host the local filesystem for a session.
 
 :::
 
+## PostgreSQL
+
+Renku stores its data in PostgreSQL, which it deploys through the
+[CloudNativePG](https://cloudnative-pg.io/) operator. The operator is **not** part of the
+Renku Helm chart and has to be installed once per cluster, before installing Renku.
+
+Renku then creates a `Cluster` resource in its own namespace and the operator turns that into
+a running database. Configure it under the `cnpg` section of the Renku values.
+
+If you would rather run PostgreSQL yourself, or use a managed database from your cloud
+provider, set `cnpg.install` to `false` and point Renku at it through
+`global.externalServices.postgresql` instead. In that case the operator is not needed.
+
 ## Ingress
 
 You should have a functioning ingress controller in your cluster. If you use managed
