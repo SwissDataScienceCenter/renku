@@ -48,6 +48,24 @@ impl std::fmt::Debug for SessionAuthKey {
     }
 }
 
+fn load_public_key_from_file<P>(file: P) -> Result<russh::keys::PublicKey>
+where
+    P: AsRef<Path>,
+{
+    russh::keys::load_public_key(&file)
+        .with_context(|| format!("reading public key {}", file.as_ref().display()))
+}
+
+/// The private key the proxy uses to authenticate to session hosts.
+/// Its `Debug` redacts the key material.
+pub struct SessionAuthKey(pub Arc<russh::keys::PrivateKey>);
+
+impl std::fmt::Debug for SessionAuthKey {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("SessionAuthKey(***)")
+    }
+}
+
 /// Renku SSH proxy service.
 #[derive(Debug, Parser)]
 #[command(name = "renku-ssh-proxy", about)]
