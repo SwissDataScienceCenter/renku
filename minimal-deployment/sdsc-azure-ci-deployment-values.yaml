@@ -12,6 +12,7 @@ authz:
       memory: 75Mi
 cnpg:
   # The data is already across and the Cluster exists, so an import can no longer run.
+  install: false
   autoMigration: false
   extraSpec:
     resources:
@@ -53,6 +54,13 @@ gateway:
     repository: harbor.dev.renku.ch/dockerhub_cache/renku/renku-gateway
   replicaCount: 1
 global:
+  externalServices:
+    postgresql:
+      enabled: true
+      host: mypg-rw
+      username: postgres
+      existingSecret: mypg-superuser
+      existingSecretPasswordKey: password
   anonymousSessions:
     enabled: true
   certificates:
