@@ -1,16 +1,18 @@
-# Manual Migration from Bitnami postgresql to CloudNativePG
-
+# Migration from Bitnami postgresql to CloudNativePG
 
 > [!IMPORTANT]
 >
 > The recommended route is to use CNPG. Either with the chart's built-in `cnpg.autoMigration: true`
 > or with an out-of-band CNPG cluster you manage (See [Ouf of Band CNPG cluster](#out-of-band-cnpg-cluster)),
-> together with `postgresql.enabled: true`. The new Cluster then imports every database and role 
-> on creation and none of this is needed. The procedure below is the manual alternative.
+> together with `postgresql.enabled: true`. The new Cluster can then import every database and role 
+> on creation and none of this is needed. The procedure below is the manual alternative, for a CNPG 
+> cluster or any external postgres instance.
 
 > [!WARNING]
 >
 > **UNTESTED.** Try on a scratch namespace first.
+
+## Manual migration
 
 Without `cnpg.autoMigration`, The upgrade creates an **empty** cnpg cluster: the setup jobs create
 the databases and roles, the services create their schema, but the rows are not copied. Plan for
@@ -21,7 +23,7 @@ NS=renku
 REL=renku
 ```
 
-## 1. Quiesce and dump
+### 1. Quiesce and dump
 
 The old instance has to still be running, so keep `postgresql.enabled: true`.
 
@@ -41,7 +43,7 @@ same passwords. `--clean --if-exists` lets the restore overwrite the schema the 
 
 **Check the dumps before going on.** Setting `postgresql.enabled: false` removes the StatefulSet.
 
-## 2. Upgrade
+### 2. Upgrade
 
 Keep `postgresql.enabled: true`, leave `cnpg.autoMigration: false`, and set `cnpg.operatorNamespace`
 if the operator does not run in `cnpg-system`.
@@ -52,7 +54,7 @@ kubectl -n $NS get cluster $REL-pg -w     # until healthy
 kubectl -n $NS get jobs
 ```
 
-## 3. Restore
+### 3. Restore
 
 The upgrade restarted the services, so stop them again first.
 
@@ -69,7 +71,7 @@ done
 
 `ON_ERROR_STOP=1` prevents `psql` from exiting 0 after skipping statements that failed.
 
-## 4. Start up and verify
+### 4. Start up and verify
 
 ```bash
 helm -n $NS upgrade $REL renku/renku -f my-values.yaml
@@ -81,7 +83,7 @@ In order:
 * keycloak starts and its realm is there
 * you can log in and see the projects.
 
-## 5. Clean up
+### 5. Clean up
 
 Only once verified. This is the last copy of the old state, and the volume goes with the claim when
 the storage class reclaim policy is `Delete`.
