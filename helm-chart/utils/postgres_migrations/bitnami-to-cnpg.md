@@ -8,11 +8,16 @@
 > on creation and none of this is needed. The procedure below is the manual alternative, for a CNPG 
 > cluster or any external postgres instance.
 
+> [!NOTE]
+>
+> For large databases, prefer an out-of-band cluster. With `cnpg.autoMigration` the setup jobs start
+> before the Cluster and give up after 10 minutes, which has to cover the whole import.
+
+## Manual migration
+
 > [!WARNING]
 >
 > **UNTESTED.** Try on a scratch namespace first.
-
-## Manual migration
 
 Without `cnpg.autoMigration`, The upgrade creates an **empty** cnpg cluster: the setup jobs create
 the databases and roles, the services create their schema, but the rows are not copied. Plan for

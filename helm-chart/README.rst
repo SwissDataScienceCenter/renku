@@ -89,7 +89,7 @@ service can connect.
 
 **By hand.** Leave ``cnpg.autoMigration: false`` and follow
 ``utils/postgres_migrations/bitnami-to-cnpg.md``, which dumps the databases from the old instance and
-restores them into the new one. Use this when the Cluster already exists, or for non-cnpg external databases.
+restores them into the new one. Use this when the Cluster already exists, or for non-cnpg databases.
 
 Either way, keep the old volume until you have verified the new database. Once you are satisfied, set
 ``postgresql.enabled: false`` and delete the section.
