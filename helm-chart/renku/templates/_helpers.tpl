@@ -82,7 +82,7 @@ external instance they come from whatever the admin configured.
   valueFrom:
     secretKeyRef:
       name: {{ $ext.existingSecret }}
-      key: postgres-password
+      key: {{ $ext.existingSecretPasswordKey }}
 {{- end }}
 {{- else }}
 - name: DB_ADMIN_USERNAME

@@ -14,7 +14,6 @@ cnpg:
   # The data is already across and the Cluster exists, so an import can no longer run.
   autoMigration: false
   extraSpec:
-    instances: 3
     resources:
       limits:
         memory: 300Mi
@@ -170,7 +169,6 @@ postgresql:
   image:
     registry: harbor.dev.renku.ch
     repository: bitnami-mirror/postgresql
-
 redis:
   architecture: standalone
   image:
