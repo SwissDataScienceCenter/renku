@@ -25,6 +25,9 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
+      # The proxy never calls the Kubernetes API; do not project the default
+      # ServiceAccount token into this internet-facing pod.
+      automountServiceAccountToken: false
       securityContext:
         {{- toYaml (mergeOverwrite (deepCopy .Values.podSecurityContext) (.Values.sshProxy.podSecurityContext | default dict)) | nindent 8 }}
       initContainers:
