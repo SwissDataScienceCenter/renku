@@ -211,10 +211,20 @@ impl Settings {
             .or(file.inactivity_timeout)
             .unwrap_or_else(|| Duration::from_mins(30));
 
+        // expose as config if ops ever need tuning.
+        // Keepalives reap half-open clients and keep NAT/LB idle-timeouts from
+        // silently dropping long-lived interactive sessions.
+        const MAX_AUTH_ATTEMPTS: usize = 3;
+        const KEEPALIVE_INTERVAL: Duration = Duration::from_secs(30);
+        const KEEPALIVE_MAX: usize = 3;
+
         let ssh_server_config = russh::server::Config {
             inactivity_timeout: Some(inactivity_timeout),
             auth_rejection_time: Duration::from_secs(3),
             auth_rejection_time_initial: Some(Duration::from_secs(0)),
+            max_auth_attempts: MAX_AUTH_ATTEMPTS,
+            keepalive_interval: Some(KEEPALIVE_INTERVAL),
+            keepalive_max: KEEPALIVE_MAX,
             keys: vec![load_private_key_from_file(&host_key_file)?],
             preferred: Preferred::default(),
             ..Default::default()
