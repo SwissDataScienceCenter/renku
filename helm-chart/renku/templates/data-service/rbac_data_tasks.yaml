@@ -38,6 +38,10 @@ rules:
       - get
       - list
       - watch
+      {{- if .Values.dataService.dataTasks.enableResourceRequestTracking }}
+      # Patch is needed for the data tasks to pause sessions when usage limits are enforced
+      - patch
+      {{- end }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding

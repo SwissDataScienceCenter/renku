@@ -10,6 +10,7 @@ with GitHub/GitLab](connect-renku-account-to-github-or-gitlab-account).
 In the project page:
 
 1. Click on ➕ in the Code Repositories section.
+
 <p class="image-container-m">
 ![image.png](./add-code-repository-to-project-10.png)
 </p>
