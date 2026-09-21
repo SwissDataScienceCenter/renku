@@ -1194,6 +1194,11 @@ platformInit:
   image:
     repository: renku/platform-init
     tag: "latest"
+## The image used by the startup job that generates the static proxy-to-session SSH keypairs
+sshProxySessionKeys:
+  image:
+    repository: renku/ssh-proxy-session-keys
+    tag: "latest"
 dataService:
   rbac:
     create: true
