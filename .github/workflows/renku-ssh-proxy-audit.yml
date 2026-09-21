@@ -1,0 +1,36 @@
+name: renku-ssh-proxy audit
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    paths:
+      - "renku-ssh-proxy/**"
+      - ".github/workflows/renku-ssh-proxy-audit.yml"
+  schedule:
+    # Mondays 06:00 UTC
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+jobs:
+  cargo-audit:
+    name: cargo-audit
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: renku-ssh-proxy
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+      - name: Cache cargo
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: renku-ssh-proxy
+      - name: Install cargo-audit
+        uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-audit
+      - name: Run cargo audit
+        run: cargo audit

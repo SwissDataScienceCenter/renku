@@ -1,0 +1,6 @@
+[advisories]
+# rsa 0.10.0-rc.18 (RUSTSEC-2023-0071, Marvin timing sidechannel) is pulled
+# transitively via russh/ssh-key and has no fixed upgrade. The proxy uses
+# ed25519 keys only, so the RSA code path is never exercised. Remove this
+# ignore once russh/ssh-key drops rsa or a fixed release exists.
+ignore = ["RUSTSEC-2023-0071"]
