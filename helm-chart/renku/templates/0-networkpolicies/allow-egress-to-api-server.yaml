@@ -1,0 +1,26 @@
+# Allow access to kube api server
+# Needs to be configurable:
+# - The kubernetes service address in default might different
+# - The endpoints might be different
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-egress-to-apiserver
+spec:
+  podSelector:
+    matchLabels:
+      renku.io/kubeapi-access: "true"
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - ipBlock:
+            cidr: 10.96.0.1/32
+        - ipBlock:
+            cidr: 10.201.0.0/24
+      ports:
+        - protocol: TCP
+          port: 443
+        - protocol: TCP
+          port: 6443

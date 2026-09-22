@@ -1,0 +1,14 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress

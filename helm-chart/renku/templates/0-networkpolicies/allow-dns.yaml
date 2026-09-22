@@ -1,0 +1,18 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-dns
+spec:
+  policyTypes:
+    - Egress
+  podSelector: {}
+  egress:
+    # Allow DNS resolution
+    - to:
+        - namespaceSelector: {}
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
