@@ -52,6 +52,10 @@ spec:
             {{- end }}
             - name: RENKU_SSH_PROXY_HOST_KEY
               value: "/secrets/openSshHostKey/openSshHostKey"
+            - name: RENKU_SSH_PROXY_SESSION_HOST_KEY
+              value: "/secrets/sessionHostKey/hostKeyPub"
+            - name: RENKU_SSH_PROXY_SESSION_AUTH_KEY
+              value: "/secrets/sessionAuthKey/authKey"
             - name: RENKU_SSH_PROXY_LISTEN
               value: "0.0.0.0:2222"
             - name: VERSION
@@ -80,6 +84,12 @@ spec:
           volumeMounts:
             - mountPath: "/secrets/openSshHostKey"
               name: open-ssh-host-key
+              readOnly: true
+            - mountPath: "/secrets/sessionHostKey"
+              name: session-host-key
+              readOnly: true
+            - mountPath: "/secrets/sessionAuthKey"
+              name: session-auth-key
               readOnly: true
             {{- include "certificates.volumeMounts.system" . | nindent 12 }}
           livenessProbe:
@@ -121,4 +131,16 @@ spec:
             items:
             - key: openSshHostKey
               path: openSshHostKey
+        - name: session-host-key
+          secret:
+            secretName: {{ template "renku.fullname" . }}-ssh-session-host-key
+            items:
+            - key: hostKeyPub
+              path: hostKeyPub
+        - name: session-auth-key
+          secret:
+            secretName: {{ template "renku.fullname" . }}-ssh-proxy-session-auth-key
+            items:
+            - key: authKey
+              path: authKey
         {{- include "certificates.volumes" . | nindent 8 }}

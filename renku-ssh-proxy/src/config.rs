@@ -3,7 +3,6 @@
 
 use crate::keycloak::KeycloakSettings;
 use crate::proxy_server::Target;
-use base64::{Engine as _, engine::general_purpose::STANDARD};
 use clap::CommandFactory;
 use clap::Parser;
 use clap_complete::CompleteEnv;
@@ -14,7 +13,6 @@ use directories::ProjectDirs;
 use russh::Preferred;
 use russh::server::Config as SshServerConfig;
 use serde::{Deserialize, Deserializer};
-use std::fs;
 use std::net::SocketAddr;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
@@ -29,16 +27,25 @@ fn load_private_key_from_file<P>(file: P) -> Result<russh::keys::PrivateKey>
 where
     P: AsRef<Path>,
 {
-    match russh::keys::load_secret_key(&file, None) {
-        Ok(pk) => Ok(pk),
-        Err(_) => {
-            // try base64 decoding the contents
-            let contents = fs::read_to_string(&file)?;
-            let decoded = STANDARD.decode(contents.trim())?;
-            let decoded = &String::from_utf8_lossy(&decoded);
-            let pk = russh::keys::decode_secret_key(decoded, None)?;
-            Ok(pk)
-        }
+    russh::keys::load_secret_key(&file, None)
+        .with_context(|| format!("reading private key {}", file.as_ref().display()))
+}
+
+fn load_public_key_from_file<P>(file: P) -> Result<russh::keys::PublicKey>
+where
+    P: AsRef<Path>,
+{
+    russh::keys::load_public_key(&file)
+        .with_context(|| format!("reading public key {}", file.as_ref().display()))
+}
+
+/// The private key the proxy uses to authenticate to session hosts.
+/// Its `Debug` redacts the key material.
+pub struct SessionAuthKey(pub Arc<russh::keys::PrivateKey>);
+
+impl std::fmt::Debug for SessionAuthKey {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("SessionAuthKey(***)")
     }
 }
 
@@ -57,6 +64,14 @@ struct Cli {
     /// Path to the server host key.
     #[arg(long, value_name = "FILE", env = "RENKU_SSH_PROXY_HOST_KEY")]
     host_key: Option<PathBuf>,
+
+    /// Path to the pinned session host public key.
+    #[arg(long, value_name = "FILE", env = "RENKU_SSH_PROXY_SESSION_HOST_KEY")]
+    session_host_key: Option<PathBuf>,
+
+    /// Path to the private key used to authenticate to session hosts.
+    #[arg(long, value_name = "FILE", env = "RENKU_SSH_PROXY_SESSION_AUTH_KEY")]
+    session_auth_key: Option<PathBuf>,
 
     /// The ssh port of the target server
     #[arg(long, env = "RENKU_SSH_PROXY_TARGET_PORT")]
@@ -99,6 +114,8 @@ struct Cli {
 struct FileConfig {
     listen: Option<SocketAddr>,
     host_key: Option<PathBuf>,
+    session_host_key: Option<PathBuf>,
+    session_auth_key: Option<PathBuf>,
     #[serde(deserialize_with = "deserialize_verbosity")]
     log_level: Option<Verbosity>,
     target_port: Option<u16>,
@@ -146,6 +163,7 @@ impl FileConfig {
 pub struct Settings {
     pub listen: SocketAddr,
     pub host_key_file: PathBuf,
+    pub(crate) session_auth_key: SessionAuthKey,
     pub log_level: Verbosity,
     pub ssh_server_config: Arc<SshServerConfig>,
     pub target: Target,
@@ -172,6 +190,21 @@ impl Settings {
             .ok_or_eyre("missing `host_key`")
             .suggestion("pass --host-key or set `host_key` in the config file")?;
 
+        let session_host_key_file = cli
+            .session_host_key
+            .or(file.session_host_key)
+            .ok_or_eyre("missing `session_host_key`")
+            .suggestion("pass --session-host-key or set `session_host_key` in the config file")?;
+        let session_auth_key_file = cli
+            .session_auth_key
+            .or(file.session_auth_key)
+            .ok_or_eyre("missing `session_auth_key`")
+            .suggestion("pass --session-auth-key or set `session_auth_key` in the config file")?;
+        let session_host_key = load_public_key_from_file(&session_host_key_file)?;
+        let session_auth_key = SessionAuthKey(Arc::new(load_private_key_from_file(
+            &session_auth_key_file,
+        )?));
+
         let inactivity_timeout = cli
             .inactivity_timeout
             .map(|e| e.into())
@@ -197,7 +230,7 @@ impl Settings {
             host: "".to_string(),
             port: target_port,
             user: target_user,
-            expected_host_key: None,
+            expected_host_key: Some(session_host_key),
         };
         let data_services_url = cli
             .data_services_url
@@ -245,6 +278,7 @@ impl Settings {
         Ok(Settings {
             listen,
             host_key_file,
+            session_auth_key,
             log_level,
             ssh_server_config,
             target,
@@ -269,4 +303,23 @@ impl Settings {
 
 fn default_config_path() -> Option<PathBuf> {
     ProjectDirs::from("io", "renku", "ssh-proxy").map(|dirs| dirs.config_dir().join("config.toml"))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_load_public_key_from_file() {
+        let path =
+            std::env::temp_dir().join(format!("session-host-pub-{}.pub", std::process::id()));
+        std::fs::write(
+            &path,
+            "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHSWqeaS0b8NVxqu8dzb3fXmQzH/Kd5ClsYNMrXA9E+I t1\n",
+        )
+        .unwrap();
+        let key = load_public_key_from_file(&path).unwrap();
+        std::fs::remove_file(&path).ok();
+        assert_eq!(key.algorithm(), russh::keys::Algorithm::Ed25519);
+    }
 }
