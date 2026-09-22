@@ -111,6 +111,7 @@ class OIDCClient:
     consent_required: bool = False
     client_extra_web_origins: List[str] = field(default_factory=list)
     client_extra_redirect_uris: List[str] = field(default_factory=list)
+    client_extra_audiences: List[str] = field(default_factory=list)
 
     def __post_init__(self):
         self.base_url = self.base_url.rstrip("/")
@@ -198,6 +199,24 @@ class OIDCClient:
                         "userinfo.token.claim": False,
                     },
                 }
+            ]
+            + [
+                # Lets a resource server check that a token was issued for it, instead of
+                # accepting any Renku token. Additive: the "renku" audience above stays, so
+                # the token still passes the data API's own audience check when forwarded.
+                {
+                    "name": f"{audience} audience",
+                    "protocol": "openid-connect",
+                    "protocolMapper": "oidc-audience-mapper",
+                    "consentRequired": False,
+                    "config": {
+                        "included.client.audience": audience,
+                        "id.token.claim": False,
+                        "access.token.claim": True,
+                        "userinfo.token.claim": False,
+                    },
+                }
+                for audience in self.client_extra_audiences
             ],
         }
         if self.secret is not None:
@@ -231,7 +250,10 @@ class OIDCClient:
             ),
             client_extra_web_origins=json.loads(
                 os.environ.get(f"{prefix}EXTRA_WEB_ORIGINS", "[]")
-            )
+            ),
+            client_extra_audiences=json.loads(
+                os.environ.get(f"{prefix}EXTRA_AUDIENCES", "[]")
+            ),
         )
 
 
