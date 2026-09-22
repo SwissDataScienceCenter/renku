@@ -12,6 +12,7 @@ import (
 	"github.com/SwissDataScienceCenter/renku/session_runner/pkg/renku"
 	"github.com/SwissDataScienceCenter/renku/session_runner/pkg/renku/api/session_runners"
 	"github.com/SwissDataScienceCenter/renku/session_runner/pkg/runner/reconciler"
+	"github.com/SwissDataScienceCenter/renku/session_runner/pkg/state"
 )
 
 var ErrRunnerStopped = errors.New("runner has been stopped")
@@ -25,19 +26,23 @@ type Runner struct {
 	renkuClient *renku.RenkuClient
 
 	contactTicker *time.Ticker
+	state         *state.LocalSessionState
 	reconciler    *reconciler.RunnerReconciler
 }
 
 func NewRunner(options ...RunnerOption) (runner *Runner, err error) {
-	r := Runner{
-		reconciler: &reconciler.RunnerReconciler{},
-	}
+	r := Runner{}
 	for _, opt := range options {
 		err := opt(&r)
 		if err != nil {
 			return nil, err
 		}
 	}
+	state, err := state.NewLocalSessionState()
+	if err != nil {
+		return nil, err
+	}
+	r.state = state
 	if err := r.validateNewRunner(); err != nil {
 		return nil, err
 	}
@@ -85,9 +90,6 @@ func (r *Runner) Start(ctx context.Context) error {
 	if err := r.register(registerCtx); err != nil {
 		return err
 	}
-
-	// res, err := r.renkuClient.SessionRunners().PostSessionRunnersSessionRunnerIdContactWithResponse()
-	// res.GetJSON200()
 
 	if err := r.startContactLoop(ctx); err != nil && !errors.Is(err, ErrRunnerStopped) {
 		return err
@@ -140,6 +142,11 @@ func (r *Runner) register(ctx context.Context) error {
 		return err
 	}
 	r.renkuClient = renkuClient
+	rec, err := reconciler.NewRunnerReconciler(r.state, renkuClient, r.runnerID)
+	if err != nil {
+		return err
+	}
+	r.reconciler = rec
 
 	fmt.Printf("Registered as runner: %s\n", r.runnerID)
 
@@ -147,6 +154,10 @@ func (r *Runner) register(ctx context.Context) error {
 }
 
 func (r *Runner) startContactLoop(ctx context.Context) error {
+	if r.reconciler == nil {
+		return fmt.Errorf("reconciler is not set")
+	}
+
 	r.contactTicker = time.NewTicker(time.Minute)
 	ch := make(chan error, 1)
 	go r.contactLoop(ctx, ch)
@@ -207,11 +218,17 @@ func (r *Runner) contact(ctx context.Context) error {
 	}
 	slog.Info("Received from Renku", "response", *resJSON)
 
-	// TODO: also handle sessions from local state
-	if resJSON.Sessions != nil {
-		for _, session := range *resJSON.Sessions {
-			r.reconciler.Reconcile(ctx, reconciler.SessionRef{ID: session})
-		}
+	// Merge existing session IDs with new ones from the POST response
+	existingSessionIDs := r.state.GetSessionIDs(ctx)
+	sessionIDs := make(map[string]struct{}, len(existingSessionIDs)+len(resJSON.Sessions))
+	for _, sessionID := range existingSessionIDs {
+		sessionIDs[sessionID] = struct{}{}
+	}
+	for _, sessionID := range resJSON.Sessions {
+		sessionIDs[sessionID] = struct{}{}
+	}
+	for sessionID := range sessionIDs {
+		r.reconciler.Reconcile(ctx, reconciler.SessionRef{ID: sessionID})
 	}
 
 	return nil
