@@ -25,8 +25,11 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
+      # The proxy never calls the Kubernetes API; do not project the default
+      # ServiceAccount token into this internet-facing pod.
+      automountServiceAccountToken: false
       securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+        {{- toYaml (mergeOverwrite (deepCopy .Values.podSecurityContext) (.Values.sshProxy.podSecurityContext | default dict)) | nindent 8 }}
       initContainers:
         {{- include "certificates.initContainer" . | nindent 8 }}
       containers:
@@ -34,7 +37,7 @@ spec:
           image: "{{ .Values.sshProxy.image.repository }}:{{ .Values.sshProxy.image.tag }}"
           imagePullPolicy: {{ .Values.sshProxy.image.pullPolicy }}
           securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
+            {{- toYaml (mergeOverwrite (deepCopy .Values.securityContext) (.Values.sshProxy.securityContext | default dict)) | nindent 12 }}
           ports:
             - name: ssh
               containerPort: 2222

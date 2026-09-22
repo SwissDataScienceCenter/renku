@@ -708,3 +708,62 @@ spec:
     - from:
         - ipBlock:
             cidr: 0.0.0.0/0
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: egress-from-ssh-proxy
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app: renku-ssh-proxy
+      release: {{ .Release.Name }}
+  policyTypes:
+    - Egress
+  egress:
+    {{- with .Values.networkPolicies.sshProxy.egress }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    - to:
+        # Access needed to authorize and locate sessions.
+        - podSelector:
+            matchLabels:
+              app: renku-data-service
+              release: {{ .Release.Name }}
+      ports:
+        - protocol: TCP
+          port: http
+    - to:
+        # Access to the SSH port of user sessions.
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/created-by: controller-manager
+              app.kubernetes.io/name: AmaltheaSession
+      ports:
+        - protocol: TCP
+          port: 2222
+    - to:
+        # Keycloak is reached through the cluster's public ingress, which
+        # hairpins back to the ingress controller on a private IP. Allow the
+        # ingress controller so the private-range exclusion above does not drop
+        # the token request. Other controllers can be added via
+        # networkPolicies.sshProxy.egress.
+        - namespaceSelector: {}
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/component: ingress-controller
+        - namespaceSelector: {}
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: ingress-nginx
+              app.kubernetes.io/component: controller
+      ports:
+        - protocol: TCP
+          port: 80
+        - protocol: TCP
+          port: 443
