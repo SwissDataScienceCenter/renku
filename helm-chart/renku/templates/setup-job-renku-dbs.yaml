@@ -12,9 +12,13 @@ spec:
     metadata:
       name: {{ .Release.Name }}-init-postgres-renku
       labels:
-        app: postgres-setup
+        app.kubernetes.io/name: postgres-setup
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/component: setup-jobs
+        app.kubernetes.io/part-of: renku
+        renku.io/database-access: "true"
         heritage: {{ .Release.Service }}
-        release: {{ .Release.Name }}
         chart: {{ template "renku.chart" . }}
     spec:
       restartPolicy: Never

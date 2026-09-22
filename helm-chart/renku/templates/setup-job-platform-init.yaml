@@ -24,6 +24,7 @@ spec:
         app.kubernetes.io/part-of: renku
         heritage: {{ .Release.Service }}
         chart: {{ template "renku.chart" . }}
+        renku.io/kubeapi-access: "true"
     spec:
       restartPolicy: Never
       securityContext:

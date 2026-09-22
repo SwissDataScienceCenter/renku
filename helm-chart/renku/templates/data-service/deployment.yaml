@@ -28,8 +28,11 @@ spec:
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/component: data-services
         app.kubernetes.io/part-of: renku
+        renku.io/allow-external: "true"
+        renku.io/kubeapi-access: "true"
         renku.io/database-access: "true"
         renku.io/authz-access: "true"
+        renku.io/secrets-storage-access: "true"
         {{- if .Values.solr.enabled }}
         renku.io/solr-access: "true"
         {{- end }}

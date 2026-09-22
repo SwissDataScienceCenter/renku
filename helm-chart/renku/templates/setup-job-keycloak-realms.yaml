@@ -28,6 +28,7 @@ spec:
         heritage: {{ .Release.Service }}
         chart: {{ template "renku.chart" . }}
         renku.io/keycloak-access: "true"
+        renku.io/ingress-access: "true"
     spec:
       restartPolicy: Never
       securityContext:

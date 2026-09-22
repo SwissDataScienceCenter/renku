@@ -267,6 +267,7 @@ keycloakx:
   podLabels:
     renku.io/database-access: "true"
     renku.io/ingress-access: "true"
+    renku.io/keycloak-access: "true"
   postgresql:
     # Disable PostgreSQL dependency
     enabled: false

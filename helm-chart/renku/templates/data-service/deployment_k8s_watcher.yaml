@@ -26,6 +26,7 @@ spec:
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/component: data-services
         app.kubernetes.io/part-of: renku
+        renku.io/kubeapi-access: "true"
         renku.io/database-access: "true"
       annotations:
       {{- with .Values.dataService.podAnnotations }}

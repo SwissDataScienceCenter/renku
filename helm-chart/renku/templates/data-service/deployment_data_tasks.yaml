@@ -26,8 +26,12 @@ spec:
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/component: data-services
         app.kubernetes.io/part-of: renku
+        renku.io/kubeapi-access: "true"
         renku.io/database-access: "true"
         renku.io/authz-access: "true"
+        {{- if .Values.keycloakx.enabled}}
+        renku.io/keycloak-access: "true"
+        {{- end }}
         {{- if .Values.solr.enabled }}
         renku.io/solr-access: "true"
         {{- end }}
@@ -74,7 +78,7 @@ spec:
               value: "/secrets/kube_configs"
             {{- end }}
             - name: KEYCLOAK_URL
-              value: {{ include "renku.keycloakUrl" . | quote}}
+              value: {{ include "renku.keycloakUrl" . | quote }}
             - name: KEYCLOAK_REALM
               value: {{ include "renku.keycloak.realm" . | quote}}
             - name: KEYCLOAK_CLIENT_ID

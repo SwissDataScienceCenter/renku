@@ -31,6 +31,9 @@ spec:
         app.kubernetes.io/component: ui
         app.kubernetes.io/part-of: renku
         renku.io/ingress-access: "true"
+        {{- if .Values.keycloakx.enabled}}
+        renku.io/keycloak-access: "true"
+        {{- end }}
         chart: {{ template "renku.chart" . }}
         heritage: {{ .Release.Service }}
     spec:

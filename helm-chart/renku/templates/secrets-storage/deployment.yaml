@@ -28,6 +28,11 @@ spec:
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/component: secrets-storage
         app.kubernetes.io/part-of: renku
+        renku.io/kubeapi-access: "true"
+        renku.io/database-access: "true"
+        {{- if .Values.keycloakx.enabled}}
+        renku.io/keycloak-access: "true"
+        {{- end }}
         chart: {{ template "renku.chart" . }}
         heritage: {{ .Release.Service }}
       {{- with .Values.secretsStorage.podAnnotations }}
