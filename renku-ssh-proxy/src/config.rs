@@ -3,7 +3,6 @@
 
 use crate::keycloak::KeycloakSettings;
 use crate::proxy_server::Target;
-use base64::{Engine as _, engine::general_purpose::STANDARD};
 use clap::CommandFactory;
 use clap::Parser;
 use clap_complete::CompleteEnv;
@@ -14,7 +13,6 @@ use directories::ProjectDirs;
 use russh::Preferred;
 use russh::server::Config as SshServerConfig;
 use serde::{Deserialize, Deserializer};
-use std::fs;
 use std::net::SocketAddr;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
@@ -29,17 +27,8 @@ fn load_private_key_from_file<P>(file: P) -> Result<russh::keys::PrivateKey>
 where
     P: AsRef<Path>,
 {
-    match russh::keys::load_secret_key(&file, None) {
-        Ok(pk) => Ok(pk),
-        Err(_) => {
-            // try base64 decoding the contents
-            let contents = fs::read_to_string(&file)?;
-            let decoded = STANDARD.decode(contents.trim())?;
-            let decoded = &String::from_utf8_lossy(&decoded);
-            let pk = russh::keys::decode_secret_key(decoded, None)?;
-            Ok(pk)
-        }
-    }
+    russh::keys::load_secret_key(&file, None)
+        .with_context(|| format!("reading private key {}", file.as_ref().display()))
 }
 
 fn load_public_key_from_file<P>(file: P) -> Result<russh::keys::PublicKey>
