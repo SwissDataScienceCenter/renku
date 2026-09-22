@@ -2,6 +2,10 @@
 
 Long-running activities, such as model training runs, are often better suited to a Renku [Job](../../job) than to an interactive session. Jobs run your command in the background without relying on a browser window or notebook kernel staying open. See [How to submit a job](submit-a-job) to get started.
 
+:::tip
+You can also monitor job logs from the command line with `rnk job logs <submission-id> --follow` for live tailing without needing a browser.
+:::
+
 The rest of this guide describes a workflow for long-running work **inside an interactive session** when a Job is not the right fit, or when you need to keep using a session you already have open.
 
 Long-running activities in a session can benefit from a special workflow. Sessions will stay running as long as there is user activity in the window or the CPU is used, but in some cases the front-end application (e.g., JupyterLab or VSCode) may stop long-running processes.

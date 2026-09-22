@@ -28,6 +28,19 @@ Once your session has launched, you will see the data and code that you linked t
 
 ![image.png](./launch_session.png)
 
+:::tip
+Prefer the command line? You can achieve the same result with the Renku CLI (`rnk`). After [installing](/docs/users/cli/cli-reference), run:
+
+```bash
+rnk login
+rnk session start --launcher <launcher-id>
+```
+
+Make sure to enable shell completions for an easier time picking the launcher id!
+
+See the [CLI reference](/docs/users/cli/cli-reference) for more commands.
+:::
+
 ## Add a second Session Launcher (optional)
 
 When you want to create a RenkuLab session with a set of packages that’s reproducible and shareable, we recommend defining your package dependencies in code. Then, use the ‘Create from Code’ session launcher option to have Renku create a reproducible session environment for you! See [How to create an environment with custom packages installed](../compute/environment/guides/create-environment-with-custom-packages-installed) for details.

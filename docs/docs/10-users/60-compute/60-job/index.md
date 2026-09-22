@@ -10,6 +10,17 @@ A job has access to compute resources (CPU, GPU, RAM, and storage) determined by
 
 The jobs you submit are always private to you. Jobs are not shared between users.
 
+### Managing jobs from the command line
+
+You can also manage jobs from the terminal using the [Renku CLI](/docs/users/cli/cli-reference). For example:
+
+```bash
+rnk job list          # list all jobs
+rnk job logs <id>     # view logs for a specific job
+```
+
+See the [CLI reference](/docs/users/cli/cli-reference) for the full list of job commands.
+
 ## Job lifecycle
 
 A job moves through states such as **Starting**, **Running**, **Completed**, and **Errored**. While a job is starting or running, you can view its logs or cancel it. When a job has completed or errored, you can view its logs and then **Dismiss** it to remove it from your project and dashboard.
