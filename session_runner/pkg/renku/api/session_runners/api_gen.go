@@ -62,6 +62,37 @@ func (e SessionRunnerStatus) Valid() bool {
 	}
 }
 
+// AssignedSession The details of a session which needs a runner
+type AssignedSession struct {
+	// RunnerId ULID identifier
+	RunnerId *Ulid `json:"runner_id,omitempty"`
+
+	// SessionId A session ID
+	//
+	// Example: my-session-name
+	SessionId AssignedSessionId `json:"session_id"`
+}
+
+// AssignedSessionId A session ID
+//
+// Example: my-session-name
+type AssignedSessionId = string
+
+// AssignedSessionIds A list of session IDs assigned to a runner
+type AssignedSessionIds = []AssignedSessionId
+
+// AssignedSessionSecret A secret used in an assigned session
+type AssignedSessionSecret struct {
+	// Name Example: my_secret
+	Name string `json:"name"`
+
+	// Value Example: some_value
+	Value string `json:"value"`
+}
+
+// AssignedSessionSecrets The secrets used in an assigned session
+type AssignedSessionSecrets = []AssignedSessionSecret
+
 // ErrorResponse defines model for ErrorResponse.
 type ErrorResponse struct {
 	Error struct {
@@ -109,7 +140,7 @@ type SessionRunnerContactPostStatus string
 // SessionRunnerContactResponse Data sent back when a session runner contacts the API
 type SessionRunnerContactResponse struct {
 	// Sessions The list of sessions assigned to a runner
-	Sessions *SessionRunnerAssignedSessions `json:"sessions,omitempty"`
+	Sessions SessionRunnerAssignedSessions `json:"sessions"`
 }
 
 // SessionRunnerPost Data required to create a session runner
@@ -155,6 +186,9 @@ type SessionRunnerRegisterResponse_Auth struct {
 // SessionRunnerStatus The status of a session runner
 type SessionRunnerStatus string
 
+// SessionRunners A list of session runners
+type SessionRunners = []SessionRunner
+
 // Ulid ULID identifier
 type Ulid = string
 
@@ -169,6 +203,9 @@ type PostSessionRunnersRegisterJSONRequestBody = SessionRunnerRegisterPost
 
 // PostSessionRunnersSessionRunnerIdContactJSONRequestBody defines body for PostSessionRunnersSessionRunnerIdContact for application/json ContentType.
 type PostSessionRunnersSessionRunnerIdContactJSONRequestBody = SessionRunnerContactPost
+
+// PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecretsJSONRequestBody defines body for PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecrets for application/json ContentType.
+type PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecretsJSONRequestBody = AssignedSessionSecrets
 
 // Getter for additional properties for SessionRunnerRegisterResponse_Auth. Returns the specified
 // element and whether it was found
@@ -379,6 +416,13 @@ func WithRequestEditorFn(fn RequestEditorFn) ClientOption {
 // The interface specification for the client above.
 type ClientInterface interface {
 
+	// GetSessionRunners Get all session runners
+	//
+	// TODO.
+	//
+	// Corresponds with GET /session_runners (the `GetSessionRunners` operationId).
+	GetSessionRunners(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// PostSessionRunnersWithBody Create a new session runner
 	//
 	// TODO.
@@ -415,6 +459,20 @@ type ClientInterface interface {
 	// Corresponds with POST /session_runners/register (the `PostSessionRunnersRegister` operationId).
 	PostSessionRunnersRegister(ctx context.Context, body PostSessionRunnersRegisterJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// GetSessionRunnersSessionsSessionId Get the details of a session
+	//
+	// TODO.
+	//
+	// Corresponds with GET /session_runners/sessions/{session_id} (the `GetSessionRunnersSessionsSessionId` operationId).
+	GetSessionRunnersSessionsSessionId(ctx context.Context, sessionId AssignedSessionId, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteSessionRunnersSessionRunnerId Remove a session runner
+	//
+	// TODO.
+	//
+	// Corresponds with DELETE /session_runners/{session_runner_id} (the `DeleteSessionRunnersSessionRunnerId` operationId).
+	DeleteSessionRunnersSessionRunnerId(ctx context.Context, sessionRunnerId Ulid, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetSessionRunnersSessionRunnerId Get a session runner
 	//
 	// TODO.
@@ -439,6 +497,69 @@ type ClientInterface interface {
 	//
 	// Corresponds with POST /session_runners/{session_runner_id}/contact (the `PostSessionRunnersSessionRunnerIdContact` operationId).
 	PostSessionRunnersSessionRunnerIdContact(ctx context.Context, sessionRunnerId Ulid, body PostSessionRunnersSessionRunnerIdContactJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetSessionRunnersSessionRunnerIdSessions List sessions assigned to a runner
+	//
+	// TODO.
+	//
+	// Corresponds with GET /session_runners/{session_runner_id}/sessions (the `GetSessionRunnersSessionRunnerIdSessions` operationId).
+	GetSessionRunnersSessionRunnerIdSessions(ctx context.Context, sessionRunnerId Ulid, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetSessionRunnersSessionRunnerIdSessionsSessionId Get the details of a session assigned to a given runner
+	//
+	// TODO.
+	//
+	// Corresponds with GET /session_runners/{session_runner_id}/sessions/{session_id} (the `GetSessionRunnersSessionRunnerIdSessionsSessionId` operationId).
+	GetSessionRunnersSessionRunnerIdSessionsSessionId(ctx context.Context, sessionRunnerId Ulid, sessionId AssignedSessionId, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PatchSessionRunnersSessionRunnerIdSessionsSessionId Update a session assigned to a given runner
+	//
+	// TODO.
+	//
+	// Corresponds with PATCH /session_runners/{session_runner_id}/sessions/{session_id} (the `PatchSessionRunnersSessionRunnerIdSessionsSessionId` operationId).
+	PatchSessionRunnersSessionRunnerIdSessionsSessionId(ctx context.Context, sessionRunnerId Ulid, sessionId AssignedSessionId, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetSessionRunnersSessionRunnerIdSessionsSessionIdSecrets Get the secrets necessary to run a session assigned to a given runner
+	//
+	// TODO.
+	//
+	// Corresponds with GET /session_runners/{session_runner_id}/sessions/{session_id}/secrets (the `GetSessionRunnersSessionRunnerIdSessionsSessionIdSecrets` operationId).
+	GetSessionRunnersSessionRunnerIdSessionsSessionIdSecrets(ctx context.Context, sessionRunnerId Ulid, sessionId AssignedSessionId, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecretsWithBody Update the secrets used in an assigned session
+	//
+	// TODO.
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with PATCH /session_runners/{session_runner_id}/sessions/{session_id}/secrets (the `PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecrets` operationId).
+	PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecretsWithBody(ctx context.Context, sessionRunnerId Ulid, sessionId AssignedSessionId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecrets Update the secrets used in an assigned session
+	//
+	// TODO.
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with PATCH /session_runners/{session_runner_id}/sessions/{session_id}/secrets (the `PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecrets` operationId).
+	PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecrets(ctx context.Context, sessionRunnerId Ulid, sessionId AssignedSessionId, body PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecretsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+}
+
+// GetSessionRunners Get all session runners
+//
+// TODO.
+//
+// Corresponds with GET /session_runners (the `GetSessionRunners` operationId).
+func (c *Client) GetSessionRunners(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetSessionRunnersRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
 }
 
 // PostSessionRunnersWithBody Create a new session runner
@@ -517,6 +638,40 @@ func (c *Client) PostSessionRunnersRegister(ctx context.Context, body PostSessio
 	return c.Client.Do(req)
 }
 
+// GetSessionRunnersSessionsSessionId Get the details of a session
+//
+// TODO.
+//
+// Corresponds with GET /session_runners/sessions/{session_id} (the `GetSessionRunnersSessionsSessionId` operationId).
+func (c *Client) GetSessionRunnersSessionsSessionId(ctx context.Context, sessionId AssignedSessionId, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetSessionRunnersSessionsSessionIdRequest(c.Server, sessionId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// DeleteSessionRunnersSessionRunnerId Remove a session runner
+//
+// TODO.
+//
+// Corresponds with DELETE /session_runners/{session_runner_id} (the `DeleteSessionRunnersSessionRunnerId` operationId).
+func (c *Client) DeleteSessionRunnersSessionRunnerId(ctx context.Context, sessionRunnerId Ulid, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteSessionRunnersSessionRunnerIdRequest(c.Server, sessionRunnerId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 // GetSessionRunnersSessionRunnerId Get a session runner
 //
 // TODO.
@@ -570,6 +725,139 @@ func (c *Client) PostSessionRunnersSessionRunnerIdContact(ctx context.Context, s
 		return nil, err
 	}
 	return c.Client.Do(req)
+}
+
+// GetSessionRunnersSessionRunnerIdSessions List sessions assigned to a runner
+//
+// TODO.
+//
+// Corresponds with GET /session_runners/{session_runner_id}/sessions (the `GetSessionRunnersSessionRunnerIdSessions` operationId).
+func (c *Client) GetSessionRunnersSessionRunnerIdSessions(ctx context.Context, sessionRunnerId Ulid, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetSessionRunnersSessionRunnerIdSessionsRequest(c.Server, sessionRunnerId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// GetSessionRunnersSessionRunnerIdSessionsSessionId Get the details of a session assigned to a given runner
+//
+// TODO.
+//
+// Corresponds with GET /session_runners/{session_runner_id}/sessions/{session_id} (the `GetSessionRunnersSessionRunnerIdSessionsSessionId` operationId).
+func (c *Client) GetSessionRunnersSessionRunnerIdSessionsSessionId(ctx context.Context, sessionRunnerId Ulid, sessionId AssignedSessionId, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetSessionRunnersSessionRunnerIdSessionsSessionIdRequest(c.Server, sessionRunnerId, sessionId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// PatchSessionRunnersSessionRunnerIdSessionsSessionId Update a session assigned to a given runner
+//
+// TODO.
+//
+// Corresponds with PATCH /session_runners/{session_runner_id}/sessions/{session_id} (the `PatchSessionRunnersSessionRunnerIdSessionsSessionId` operationId).
+func (c *Client) PatchSessionRunnersSessionRunnerIdSessionsSessionId(ctx context.Context, sessionRunnerId Ulid, sessionId AssignedSessionId, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPatchSessionRunnersSessionRunnerIdSessionsSessionIdRequest(c.Server, sessionRunnerId, sessionId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// GetSessionRunnersSessionRunnerIdSessionsSessionIdSecrets Get the secrets necessary to run a session assigned to a given runner
+//
+// TODO.
+//
+// Corresponds with GET /session_runners/{session_runner_id}/sessions/{session_id}/secrets (the `GetSessionRunnersSessionRunnerIdSessionsSessionIdSecrets` operationId).
+func (c *Client) GetSessionRunnersSessionRunnerIdSessionsSessionIdSecrets(ctx context.Context, sessionRunnerId Ulid, sessionId AssignedSessionId, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetSessionRunnersSessionRunnerIdSessionsSessionIdSecretsRequest(c.Server, sessionRunnerId, sessionId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecretsWithBody Update the secrets used in an assigned session
+//
+// TODO.
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with PATCH /session_runners/{session_runner_id}/sessions/{session_id}/secrets (the `PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecrets` operationId).
+func (c *Client) PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecretsWithBody(ctx context.Context, sessionRunnerId Ulid, sessionId AssignedSessionId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPatchSessionRunnersSessionRunnerIdSessionsSessionIdSecretsRequestWithBody(c.Server, sessionRunnerId, sessionId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecrets Update the secrets used in an assigned session
+//
+// TODO.
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with PATCH /session_runners/{session_runner_id}/sessions/{session_id}/secrets (the `PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecrets` operationId).
+func (c *Client) PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecrets(ctx context.Context, sessionRunnerId Ulid, sessionId AssignedSessionId, body PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecretsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPatchSessionRunnersSessionRunnerIdSessionsSessionIdSecretsRequest(c.Server, sessionRunnerId, sessionId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// NewGetSessionRunnersRequest constructs an http.Request for the GetSessionRunners method
+func NewGetSessionRunnersRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/session_runners")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
 }
 
 // NewPostSessionRunnersRequest calls the generic PostSessionRunners builder with application/json body
@@ -648,6 +936,74 @@ func NewPostSessionRunnersRegisterRequestWithBody(server string, contentType str
 	}
 
 	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewGetSessionRunnersSessionsSessionIdRequest constructs an http.Request for the GetSessionRunnersSessionsSessionId method
+func NewGetSessionRunnersSessionsSessionIdRequest(server string, sessionId AssignedSessionId) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "session_id", sessionId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/session_runners/sessions/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewDeleteSessionRunnersSessionRunnerIdRequest constructs an http.Request for the DeleteSessionRunnersSessionRunnerId method
+func NewDeleteSessionRunnersSessionRunnerIdRequest(server string, sessionRunnerId Ulid) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "session_runner_id", sessionRunnerId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/session_runners/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodDelete, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	return req, nil
 }
@@ -733,6 +1089,217 @@ func NewPostSessionRunnersSessionRunnerIdContactRequestWithBody(server string, s
 	return req, nil
 }
 
+// NewGetSessionRunnersSessionRunnerIdSessionsRequest constructs an http.Request for the GetSessionRunnersSessionRunnerIdSessions method
+func NewGetSessionRunnersSessionRunnerIdSessionsRequest(server string, sessionRunnerId Ulid) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "session_runner_id", sessionRunnerId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/session_runners/%s/sessions", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetSessionRunnersSessionRunnerIdSessionsSessionIdRequest constructs an http.Request for the GetSessionRunnersSessionRunnerIdSessionsSessionId method
+func NewGetSessionRunnersSessionRunnerIdSessionsSessionIdRequest(server string, sessionRunnerId Ulid, sessionId AssignedSessionId) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "session_runner_id", sessionRunnerId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "session_id", sessionId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/session_runners/%s/sessions/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewPatchSessionRunnersSessionRunnerIdSessionsSessionIdRequest constructs an http.Request for the PatchSessionRunnersSessionRunnerIdSessionsSessionId method
+func NewPatchSessionRunnersSessionRunnerIdSessionsSessionIdRequest(server string, sessionRunnerId Ulid, sessionId AssignedSessionId) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "session_runner_id", sessionRunnerId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "session_id", sessionId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/session_runners/%s/sessions/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPatch, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetSessionRunnersSessionRunnerIdSessionsSessionIdSecretsRequest constructs an http.Request for the GetSessionRunnersSessionRunnerIdSessionsSessionIdSecrets method
+func NewGetSessionRunnersSessionRunnerIdSessionsSessionIdSecretsRequest(server string, sessionRunnerId Ulid, sessionId AssignedSessionId) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "session_runner_id", sessionRunnerId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "session_id", sessionId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/session_runners/%s/sessions/%s/secrets", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewPatchSessionRunnersSessionRunnerIdSessionsSessionIdSecretsRequest calls the generic PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecrets builder with application/json body
+func NewPatchSessionRunnersSessionRunnerIdSessionsSessionIdSecretsRequest(server string, sessionRunnerId Ulid, sessionId AssignedSessionId, body PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecretsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPatchSessionRunnersSessionRunnerIdSessionsSessionIdSecretsRequestWithBody(server, sessionRunnerId, sessionId, "application/json", bodyReader)
+}
+
+// NewPatchSessionRunnersSessionRunnerIdSessionsSessionIdSecretsRequestWithBody constructs an http.Request for the PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecrets method, with any body, and a specified content type
+func NewPatchSessionRunnersSessionRunnerIdSessionsSessionIdSecretsRequestWithBody(server string, sessionRunnerId Ulid, sessionId AssignedSessionId, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "session_runner_id", sessionRunnerId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "session_id", sessionId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/session_runners/%s/sessions/%s/secrets", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPatch, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 func (c *Client) applyEditors(ctx context.Context, req *http.Request, additionalEditors []RequestEditorFn) error {
 	for _, r := range c.RequestEditors {
 		if err := r(ctx, req); err != nil {
@@ -777,6 +1344,15 @@ func WithBaseURL(baseURL string) ClientOption {
 // ClientWithResponsesInterface is the interface specification for the client with responses above.
 type ClientWithResponsesInterface interface {
 
+	// GetSessionRunnersWithResponse Get all session runners
+	//
+	// TODO.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /session_runners (the `GetSessionRunners` operationId).
+	GetSessionRunnersWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetSessionRunnersResponse, error)
+
 	// PostSessionRunnersWithBodyWithResponse Create a new session runner
 	//
 	// TODO.
@@ -813,6 +1389,24 @@ type ClientWithResponsesInterface interface {
 	// Corresponds with POST /session_runners/register (the `PostSessionRunnersRegister` operationId).
 	PostSessionRunnersRegisterWithResponse(ctx context.Context, body PostSessionRunnersRegisterJSONRequestBody, reqEditors ...RequestEditorFn) (*PostSessionRunnersRegisterResponse, error)
 
+	// GetSessionRunnersSessionsSessionIdWithResponse Get the details of a session
+	//
+	// TODO.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /session_runners/sessions/{session_id} (the `GetSessionRunnersSessionsSessionId` operationId).
+	GetSessionRunnersSessionsSessionIdWithResponse(ctx context.Context, sessionId AssignedSessionId, reqEditors ...RequestEditorFn) (*GetSessionRunnersSessionsSessionIdResponse, error)
+
+	// DeleteSessionRunnersSessionRunnerIdWithResponse Remove a session runner
+	//
+	// TODO.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with DELETE /session_runners/{session_runner_id} (the `DeleteSessionRunnersSessionRunnerId` operationId).
+	DeleteSessionRunnersSessionRunnerIdWithResponse(ctx context.Context, sessionRunnerId Ulid, reqEditors ...RequestEditorFn) (*DeleteSessionRunnersSessionRunnerIdResponse, error)
+
 	// GetSessionRunnersSessionRunnerIdWithResponse Get a session runner
 	//
 	// TODO.
@@ -839,6 +1433,108 @@ type ClientWithResponsesInterface interface {
 	//
 	// Corresponds with POST /session_runners/{session_runner_id}/contact (the `PostSessionRunnersSessionRunnerIdContact` operationId).
 	PostSessionRunnersSessionRunnerIdContactWithResponse(ctx context.Context, sessionRunnerId Ulid, body PostSessionRunnersSessionRunnerIdContactJSONRequestBody, reqEditors ...RequestEditorFn) (*PostSessionRunnersSessionRunnerIdContactResponse, error)
+
+	// GetSessionRunnersSessionRunnerIdSessionsWithResponse List sessions assigned to a runner
+	//
+	// TODO.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /session_runners/{session_runner_id}/sessions (the `GetSessionRunnersSessionRunnerIdSessions` operationId).
+	GetSessionRunnersSessionRunnerIdSessionsWithResponse(ctx context.Context, sessionRunnerId Ulid, reqEditors ...RequestEditorFn) (*GetSessionRunnersSessionRunnerIdSessionsResponse, error)
+
+	// GetSessionRunnersSessionRunnerIdSessionsSessionIdWithResponse Get the details of a session assigned to a given runner
+	//
+	// TODO.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /session_runners/{session_runner_id}/sessions/{session_id} (the `GetSessionRunnersSessionRunnerIdSessionsSessionId` operationId).
+	GetSessionRunnersSessionRunnerIdSessionsSessionIdWithResponse(ctx context.Context, sessionRunnerId Ulid, sessionId AssignedSessionId, reqEditors ...RequestEditorFn) (*GetSessionRunnersSessionRunnerIdSessionsSessionIdResponse, error)
+
+	// PatchSessionRunnersSessionRunnerIdSessionsSessionIdWithResponse Update a session assigned to a given runner
+	//
+	// TODO.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with PATCH /session_runners/{session_runner_id}/sessions/{session_id} (the `PatchSessionRunnersSessionRunnerIdSessionsSessionId` operationId).
+	PatchSessionRunnersSessionRunnerIdSessionsSessionIdWithResponse(ctx context.Context, sessionRunnerId Ulid, sessionId AssignedSessionId, reqEditors ...RequestEditorFn) (*PatchSessionRunnersSessionRunnerIdSessionsSessionIdResponse, error)
+
+	// GetSessionRunnersSessionRunnerIdSessionsSessionIdSecretsWithResponse Get the secrets necessary to run a session assigned to a given runner
+	//
+	// TODO.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /session_runners/{session_runner_id}/sessions/{session_id}/secrets (the `GetSessionRunnersSessionRunnerIdSessionsSessionIdSecrets` operationId).
+	GetSessionRunnersSessionRunnerIdSessionsSessionIdSecretsWithResponse(ctx context.Context, sessionRunnerId Ulid, sessionId AssignedSessionId, reqEditors ...RequestEditorFn) (*GetSessionRunnersSessionRunnerIdSessionsSessionIdSecretsResponse, error)
+
+	// PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecretsWithBodyWithResponse Update the secrets used in an assigned session
+	//
+	// TODO.
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with PATCH /session_runners/{session_runner_id}/sessions/{session_id}/secrets (the `PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecrets` operationId).
+	PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecretsWithBodyWithResponse(ctx context.Context, sessionRunnerId Ulid, sessionId AssignedSessionId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecretsResponse, error)
+
+	// PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecretsWithResponse Update the secrets used in an assigned session
+	//
+	// TODO.
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with PATCH /session_runners/{session_runner_id}/sessions/{session_id}/secrets (the `PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecrets` operationId).
+	PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecretsWithResponse(ctx context.Context, sessionRunnerId Ulid, sessionId AssignedSessionId, body PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecretsJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecretsResponse, error)
+}
+
+type GetSessionRunnersResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *SessionRunners
+	// JSONDefault the response for an HTTP default `application/json` response
+	JSONDefault *Error
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r GetSessionRunnersResponse) GetJSON200() *SessionRunners {
+	return r.JSON200
+}
+
+// GetJSONDefault returns the response for an HTTP default `application/json` response
+func (r GetSessionRunnersResponse) GetJSONDefault() *Error {
+	return r.JSONDefault
+}
+
+// GetBody returns the raw response body bytes
+func (r GetSessionRunnersResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r GetSessionRunnersResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetSessionRunnersResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetSessionRunnersResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
 }
 
 type PostSessionRunnersResponse struct {
@@ -931,6 +1627,95 @@ func (r PostSessionRunnersRegisterResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r PostSessionRunnersRegisterResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetSessionRunnersSessionsSessionIdResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *AssignedSession
+	// JSONDefault the response for an HTTP default `application/json` response
+	JSONDefault *Error
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r GetSessionRunnersSessionsSessionIdResponse) GetJSON200() *AssignedSession {
+	return r.JSON200
+}
+
+// GetJSONDefault returns the response for an HTTP default `application/json` response
+func (r GetSessionRunnersSessionsSessionIdResponse) GetJSONDefault() *Error {
+	return r.JSONDefault
+}
+
+// GetBody returns the raw response body bytes
+func (r GetSessionRunnersSessionsSessionIdResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r GetSessionRunnersSessionsSessionIdResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetSessionRunnersSessionsSessionIdResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetSessionRunnersSessionsSessionIdResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type DeleteSessionRunnersSessionRunnerIdResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSONDefault the response for an HTTP default `application/json` response
+	JSONDefault *Error
+}
+
+// GetJSONDefault returns the response for an HTTP default `application/json` response
+func (r DeleteSessionRunnersSessionRunnerIdResponse) GetJSONDefault() *Error {
+	return r.JSONDefault
+}
+
+// GetBody returns the raw response body bytes
+func (r DeleteSessionRunnersSessionRunnerIdResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteSessionRunnersSessionRunnerIdResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteSessionRunnersSessionRunnerIdResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r DeleteSessionRunnersSessionRunnerIdResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -1040,6 +1825,247 @@ func (r PostSessionRunnersSessionRunnerIdContactResponse) ContentType() string {
 	return ""
 }
 
+type GetSessionRunnersSessionRunnerIdSessionsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *AssignedSessionIds
+	// JSONDefault the response for an HTTP default `application/json` response
+	JSONDefault *Error
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r GetSessionRunnersSessionRunnerIdSessionsResponse) GetJSON200() *AssignedSessionIds {
+	return r.JSON200
+}
+
+// GetJSONDefault returns the response for an HTTP default `application/json` response
+func (r GetSessionRunnersSessionRunnerIdSessionsResponse) GetJSONDefault() *Error {
+	return r.JSONDefault
+}
+
+// GetBody returns the raw response body bytes
+func (r GetSessionRunnersSessionRunnerIdSessionsResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r GetSessionRunnersSessionRunnerIdSessionsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetSessionRunnersSessionRunnerIdSessionsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetSessionRunnersSessionRunnerIdSessionsResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetSessionRunnersSessionRunnerIdSessionsSessionIdResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSONDefault the response for an HTTP default `application/json` response
+	JSONDefault *Error
+}
+
+// GetJSONDefault returns the response for an HTTP default `application/json` response
+func (r GetSessionRunnersSessionRunnerIdSessionsSessionIdResponse) GetJSONDefault() *Error {
+	return r.JSONDefault
+}
+
+// GetBody returns the raw response body bytes
+func (r GetSessionRunnersSessionRunnerIdSessionsSessionIdResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r GetSessionRunnersSessionRunnerIdSessionsSessionIdResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetSessionRunnersSessionRunnerIdSessionsSessionIdResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetSessionRunnersSessionRunnerIdSessionsSessionIdResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type PatchSessionRunnersSessionRunnerIdSessionsSessionIdResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSONDefault the response for an HTTP default `application/json` response
+	JSONDefault *Error
+}
+
+// GetJSONDefault returns the response for an HTTP default `application/json` response
+func (r PatchSessionRunnersSessionRunnerIdSessionsSessionIdResponse) GetJSONDefault() *Error {
+	return r.JSONDefault
+}
+
+// GetBody returns the raw response body bytes
+func (r PatchSessionRunnersSessionRunnerIdSessionsSessionIdResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r PatchSessionRunnersSessionRunnerIdSessionsSessionIdResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PatchSessionRunnersSessionRunnerIdSessionsSessionIdResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r PatchSessionRunnersSessionRunnerIdSessionsSessionIdResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetSessionRunnersSessionRunnerIdSessionsSessionIdSecretsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *AssignedSessionSecrets
+	// JSONDefault the response for an HTTP default `application/json` response
+	JSONDefault *Error
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r GetSessionRunnersSessionRunnerIdSessionsSessionIdSecretsResponse) GetJSON200() *AssignedSessionSecrets {
+	return r.JSON200
+}
+
+// GetJSONDefault returns the response for an HTTP default `application/json` response
+func (r GetSessionRunnersSessionRunnerIdSessionsSessionIdSecretsResponse) GetJSONDefault() *Error {
+	return r.JSONDefault
+}
+
+// GetBody returns the raw response body bytes
+func (r GetSessionRunnersSessionRunnerIdSessionsSessionIdSecretsResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r GetSessionRunnersSessionRunnerIdSessionsSessionIdSecretsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetSessionRunnersSessionRunnerIdSessionsSessionIdSecretsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetSessionRunnersSessionRunnerIdSessionsSessionIdSecretsResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecretsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *AssignedSessionSecrets
+	// JSONDefault the response for an HTTP default `application/json` response
+	JSONDefault *Error
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecretsResponse) GetJSON200() *AssignedSessionSecrets {
+	return r.JSON200
+}
+
+// GetJSONDefault returns the response for an HTTP default `application/json` response
+func (r PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecretsResponse) GetJSONDefault() *Error {
+	return r.JSONDefault
+}
+
+// GetBody returns the raw response body bytes
+func (r PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecretsResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecretsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecretsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecretsResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+// GetSessionRunnersWithResponse Get all session runners
+//
+// TODO.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /session_runners (the `GetSessionRunners` operationId).
+func (c *ClientWithResponses) GetSessionRunnersWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetSessionRunnersResponse, error) {
+	rsp, err := c.GetSessionRunners(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetSessionRunnersResponse(rsp)
+}
+
 // PostSessionRunnersWithBodyWithResponse Create a new session runner
 //
 // TODO.
@@ -1100,6 +2126,36 @@ func (c *ClientWithResponses) PostSessionRunnersRegisterWithResponse(ctx context
 	return ParsePostSessionRunnersRegisterResponse(rsp)
 }
 
+// GetSessionRunnersSessionsSessionIdWithResponse Get the details of a session
+//
+// TODO.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /session_runners/sessions/{session_id} (the `GetSessionRunnersSessionsSessionId` operationId).
+func (c *ClientWithResponses) GetSessionRunnersSessionsSessionIdWithResponse(ctx context.Context, sessionId AssignedSessionId, reqEditors ...RequestEditorFn) (*GetSessionRunnersSessionsSessionIdResponse, error) {
+	rsp, err := c.GetSessionRunnersSessionsSessionId(ctx, sessionId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetSessionRunnersSessionsSessionIdResponse(rsp)
+}
+
+// DeleteSessionRunnersSessionRunnerIdWithResponse Remove a session runner
+//
+// TODO.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with DELETE /session_runners/{session_runner_id} (the `DeleteSessionRunnersSessionRunnerId` operationId).
+func (c *ClientWithResponses) DeleteSessionRunnersSessionRunnerIdWithResponse(ctx context.Context, sessionRunnerId Ulid, reqEditors ...RequestEditorFn) (*DeleteSessionRunnersSessionRunnerIdResponse, error) {
+	rsp, err := c.DeleteSessionRunnersSessionRunnerId(ctx, sessionRunnerId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteSessionRunnersSessionRunnerIdResponse(rsp)
+}
+
 // GetSessionRunnersSessionRunnerIdWithResponse Get a session runner
 //
 // TODO.
@@ -1143,6 +2199,129 @@ func (c *ClientWithResponses) PostSessionRunnersSessionRunnerIdContactWithRespon
 		return nil, err
 	}
 	return ParsePostSessionRunnersSessionRunnerIdContactResponse(rsp)
+}
+
+// GetSessionRunnersSessionRunnerIdSessionsWithResponse List sessions assigned to a runner
+//
+// TODO.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /session_runners/{session_runner_id}/sessions (the `GetSessionRunnersSessionRunnerIdSessions` operationId).
+func (c *ClientWithResponses) GetSessionRunnersSessionRunnerIdSessionsWithResponse(ctx context.Context, sessionRunnerId Ulid, reqEditors ...RequestEditorFn) (*GetSessionRunnersSessionRunnerIdSessionsResponse, error) {
+	rsp, err := c.GetSessionRunnersSessionRunnerIdSessions(ctx, sessionRunnerId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetSessionRunnersSessionRunnerIdSessionsResponse(rsp)
+}
+
+// GetSessionRunnersSessionRunnerIdSessionsSessionIdWithResponse Get the details of a session assigned to a given runner
+//
+// TODO.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /session_runners/{session_runner_id}/sessions/{session_id} (the `GetSessionRunnersSessionRunnerIdSessionsSessionId` operationId).
+func (c *ClientWithResponses) GetSessionRunnersSessionRunnerIdSessionsSessionIdWithResponse(ctx context.Context, sessionRunnerId Ulid, sessionId AssignedSessionId, reqEditors ...RequestEditorFn) (*GetSessionRunnersSessionRunnerIdSessionsSessionIdResponse, error) {
+	rsp, err := c.GetSessionRunnersSessionRunnerIdSessionsSessionId(ctx, sessionRunnerId, sessionId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetSessionRunnersSessionRunnerIdSessionsSessionIdResponse(rsp)
+}
+
+// PatchSessionRunnersSessionRunnerIdSessionsSessionIdWithResponse Update a session assigned to a given runner
+//
+// TODO.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with PATCH /session_runners/{session_runner_id}/sessions/{session_id} (the `PatchSessionRunnersSessionRunnerIdSessionsSessionId` operationId).
+func (c *ClientWithResponses) PatchSessionRunnersSessionRunnerIdSessionsSessionIdWithResponse(ctx context.Context, sessionRunnerId Ulid, sessionId AssignedSessionId, reqEditors ...RequestEditorFn) (*PatchSessionRunnersSessionRunnerIdSessionsSessionIdResponse, error) {
+	rsp, err := c.PatchSessionRunnersSessionRunnerIdSessionsSessionId(ctx, sessionRunnerId, sessionId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePatchSessionRunnersSessionRunnerIdSessionsSessionIdResponse(rsp)
+}
+
+// GetSessionRunnersSessionRunnerIdSessionsSessionIdSecretsWithResponse Get the secrets necessary to run a session assigned to a given runner
+//
+// TODO.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /session_runners/{session_runner_id}/sessions/{session_id}/secrets (the `GetSessionRunnersSessionRunnerIdSessionsSessionIdSecrets` operationId).
+func (c *ClientWithResponses) GetSessionRunnersSessionRunnerIdSessionsSessionIdSecretsWithResponse(ctx context.Context, sessionRunnerId Ulid, sessionId AssignedSessionId, reqEditors ...RequestEditorFn) (*GetSessionRunnersSessionRunnerIdSessionsSessionIdSecretsResponse, error) {
+	rsp, err := c.GetSessionRunnersSessionRunnerIdSessionsSessionIdSecrets(ctx, sessionRunnerId, sessionId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetSessionRunnersSessionRunnerIdSessionsSessionIdSecretsResponse(rsp)
+}
+
+// PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecretsWithBodyWithResponse Update the secrets used in an assigned session
+//
+// TODO.
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with PATCH /session_runners/{session_runner_id}/sessions/{session_id}/secrets (the `PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecrets` operationId).
+func (c *ClientWithResponses) PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecretsWithBodyWithResponse(ctx context.Context, sessionRunnerId Ulid, sessionId AssignedSessionId, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecretsResponse, error) {
+	rsp, err := c.PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecretsWithBody(ctx, sessionRunnerId, sessionId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePatchSessionRunnersSessionRunnerIdSessionsSessionIdSecretsResponse(rsp)
+}
+
+// PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecretsWithResponse Update the secrets used in an assigned session
+//
+// TODO.
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with PATCH /session_runners/{session_runner_id}/sessions/{session_id}/secrets (the `PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecrets` operationId).
+func (c *ClientWithResponses) PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecretsWithResponse(ctx context.Context, sessionRunnerId Ulid, sessionId AssignedSessionId, body PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecretsJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecretsResponse, error) {
+	rsp, err := c.PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecrets(ctx, sessionRunnerId, sessionId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePatchSessionRunnersSessionRunnerIdSessionsSessionIdSecretsResponse(rsp)
+}
+
+// ParseGetSessionRunnersResponse parses an HTTP response from a GetSessionRunnersWithResponse call
+func ParseGetSessionRunnersResponse(rsp *http.Response) (*GetSessionRunnersResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetSessionRunnersResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest SessionRunners
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
 }
 
 // ParsePostSessionRunnersResponse parses an HTTP response from a PostSessionRunnersWithResponse call
@@ -1198,6 +2377,68 @@ func ParsePostSessionRunnersRegisterResponse(rsp *http.Response) (*PostSessionRu
 			return nil, err
 		}
 		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetSessionRunnersSessionsSessionIdResponse parses an HTTP response from a GetSessionRunnersSessionsSessionIdWithResponse call
+func ParseGetSessionRunnersSessionsSessionIdResponse(rsp *http.Response) (*GetSessionRunnersSessionsSessionIdResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetSessionRunnersSessionsSessionIdResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AssignedSession
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteSessionRunnersSessionRunnerIdResponse parses an HTTP response from a DeleteSessionRunnersSessionRunnerIdWithResponse call
+func ParseDeleteSessionRunnersSessionRunnerIdResponse(rsp *http.Response) (*DeleteSessionRunnersSessionRunnerIdResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteSessionRunnersSessionRunnerIdResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case rsp.StatusCode == 204:
+		break // No content-type
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest Error
@@ -1284,34 +2525,193 @@ func ParsePostSessionRunnersSessionRunnerIdContactResponse(rsp *http.Response) (
 	return response, nil
 }
 
+// ParseGetSessionRunnersSessionRunnerIdSessionsResponse parses an HTTP response from a GetSessionRunnersSessionRunnerIdSessionsWithResponse call
+func ParseGetSessionRunnersSessionRunnerIdSessionsResponse(rsp *http.Response) (*GetSessionRunnersSessionRunnerIdSessionsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetSessionRunnersSessionRunnerIdSessionsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AssignedSessionIds
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetSessionRunnersSessionRunnerIdSessionsSessionIdResponse parses an HTTP response from a GetSessionRunnersSessionRunnerIdSessionsSessionIdWithResponse call
+func ParseGetSessionRunnersSessionRunnerIdSessionsSessionIdResponse(rsp *http.Response) (*GetSessionRunnersSessionRunnerIdSessionsSessionIdResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetSessionRunnersSessionRunnerIdSessionsSessionIdResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePatchSessionRunnersSessionRunnerIdSessionsSessionIdResponse parses an HTTP response from a PatchSessionRunnersSessionRunnerIdSessionsSessionIdWithResponse call
+func ParsePatchSessionRunnersSessionRunnerIdSessionsSessionIdResponse(rsp *http.Response) (*PatchSessionRunnersSessionRunnerIdSessionsSessionIdResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PatchSessionRunnersSessionRunnerIdSessionsSessionIdResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetSessionRunnersSessionRunnerIdSessionsSessionIdSecretsResponse parses an HTTP response from a GetSessionRunnersSessionRunnerIdSessionsSessionIdSecretsWithResponse call
+func ParseGetSessionRunnersSessionRunnerIdSessionsSessionIdSecretsResponse(rsp *http.Response) (*GetSessionRunnersSessionRunnerIdSessionsSessionIdSecretsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetSessionRunnersSessionRunnerIdSessionsSessionIdSecretsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AssignedSessionSecrets
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePatchSessionRunnersSessionRunnerIdSessionsSessionIdSecretsResponse parses an HTTP response from a PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecretsWithResponse call
+func ParsePatchSessionRunnersSessionRunnerIdSessionsSessionIdSecretsResponse(rsp *http.Response) (*PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecretsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PatchSessionRunnersSessionRunnerIdSessionsSessionIdSecretsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AssignedSessionSecrets
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
 // Base64 encoded, compressed with deflate, json marshaled OpenAPI spec.
 // Stored as a slice of fixed-width chunks rather than one concatenated
 // const string: with thousands of chunks the chained `+` fold is several
 // times slower for the Go compiler than parsing a slice literal.
 var swaggerSpec = []string{
-	"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",
+	"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",
+	"//8=",
 }
 
 // decodeSpec returns the embedded OpenAPI spec as raw JSON bytes,
