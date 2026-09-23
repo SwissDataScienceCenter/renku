@@ -173,6 +173,9 @@ func (ae *ApptainerEngine) reconcileSessionContainer(ctx context.Context, sessio
 			"--bind", "/home/flora/test:/workspace", // TODO
 			"--env", "RENKU_SESSION_PORT=9999",
 			"--env", fmt.Sprintf("RENKU_BASE_URL_PATH=%s", session.Spec.URL.EscapedPath()),
+			"--env", "RENKU_MOUNT_DIR=/workspace",
+			"--env", "RENKU_WORKING_DIR=/workspace",
+			"--env", "CNB_APP_DIR=/workspace",
 			"--no-init", "--no-eval",
 			apptainerImage,
 			handle.apptainerInstance,
