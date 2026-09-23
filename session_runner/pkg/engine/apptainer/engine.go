@@ -15,7 +15,8 @@ import (
 )
 
 const (
-	wstunnel = "wstunnel"
+	apptainer = "apptainer"
+	wstunnel  = "wstunnel"
 )
 
 var ErrEngineStopped = errors.New("engine has been stopped")
@@ -29,7 +30,8 @@ type ApptainerEngine struct {
 }
 
 type sessionHandle struct {
-	wstunnelCmd *exec.Cmd
+	apptainerInstance string
+	wstunnelCmd       *exec.Cmd
 }
 
 func NewApptainerEngine(state *state.LocalSessionState) (ae *ApptainerEngine, err error) {
@@ -42,6 +44,11 @@ func NewApptainerEngine(state *state.LocalSessionState) (ae *ApptainerEngine, er
 		return nil, fmt.Errorf("state not provided")
 	}
 
+	apptainerPath, err := exec.LookPath(apptainer)
+	if err != nil {
+		return nil, err
+	}
+	slog.Info("Found apptainer CLI", "path", apptainerPath)
 	wstunnelPath, err := exec.LookPath(wstunnel)
 	if err != nil {
 		return nil, err
@@ -105,6 +112,10 @@ func (ae *ApptainerEngine) reconcile(ctx context.Context) error {
 
 func (ae *ApptainerEngine) reconcileSession(ctx context.Context, session state.LocalSession) error {
 	// TODO: container handling
+	err := ae.reconcileSessionContainer(ctx, session)
+	if err != nil {
+		return err
+	}
 
 	// wstunnel handling
 	wstunnelSecret := session.Spec.Secrets["RENKU_WSTUNNEL_SECRET"]
@@ -144,5 +155,37 @@ func (ae *ApptainerEngine) reconcileSession(ctx context.Context, session state.L
 		}
 	}
 
+	return nil
+}
+
+func (ae *ApptainerEngine) reconcileSessionContainer(ctx context.Context, session state.LocalSession) error {
+	ae.handlesMutex.Lock()
+	defer ae.handlesMutex.Unlock()
+	handle, found := ae.handles[session.ID]
+	if !found || handle.apptainerInstance == "" {
+		handle.apptainerInstance = fmt.Sprintf("renku-%s", session.ID)
+		ae.handles[session.ID] = handle
+
+		// TODO: pull as a separate step?
+		apptainerImage := fmt.Sprintf("docker://%s", session.Spec.Image)
+		cmd := exec.Command(apptainer, "instance", "run",
+			"--writable-tmpfs", "--contain",
+			"--bind", "/home/flora/test:/workspace", // TODO
+			"--env", "RENKU_SESSION_PORT=9999",
+			"--env", fmt.Sprintf("RENKU_BASE_URL_PATH=%s", session.Spec.URL.EscapedPath()),
+			"--no-init", "--no-eval",
+			apptainerImage,
+			handle.apptainerInstance,
+		)
+		cmd.Env = append(cmd.Env, "APPTAINER_TMPDIR=/home/flora/tmp") // TODO
+		slog.Info("apptainer command", "command", cmd.String())
+
+		// TODO: show logs?
+		// TODO: detach?
+		go func() {
+			out, err := cmd.Output()
+			slog.Info("apptainer", "out", string(out), "err", err)
+		}()
+	}
 	return nil
 }
