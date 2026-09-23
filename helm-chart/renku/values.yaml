@@ -1313,7 +1313,7 @@ dataService:
       pullPrivateSecretName: "renku-pull-private-docker-secret"
 
     ## The builder image (see https://buildpacks.io/docs/for-platform-operators/concepts/builder/)
-    builderImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/selector:0.9.1"
+    builderImage: "olevski90/selector:ssh-0.0.1"
     ## The run image (see https://buildpacks.io/docs/for-platform-operators/concepts/base-images/)
     runImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/run-image:0.9.1"
     ## The name of the BuildStrategy to use for image builds.
