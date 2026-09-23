@@ -53,12 +53,13 @@ ingress:
     - hosts:
         - <deployment-FQDN>
       secretName: <certificate-secret-name>
-keycloakx:
-  resources:
-    requests:
-      memory: 600Mi
-    limits:
-      memory: 600Mi
+keycloak:
+  extraSpec:
+    resources:
+      requests:
+        memory: 600Mi
+      limits:
+        memory: 600Mi
 postgresql:
   primary:
     resources:
