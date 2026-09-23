@@ -9,6 +9,7 @@ import (
 	"net/url"
 	"time"
 
+	apptainerEngine "github.com/SwissDataScienceCenter/renku/session_runner/pkg/engine/apptainer"
 	"github.com/SwissDataScienceCenter/renku/session_runner/pkg/renku"
 	"github.com/SwissDataScienceCenter/renku/session_runner/pkg/renku/api/session_runners"
 	"github.com/SwissDataScienceCenter/renku/session_runner/pkg/runner/reconciler"
@@ -28,6 +29,7 @@ type Runner struct {
 	contactTicker *time.Ticker
 	state         *state.LocalSessionState
 	reconciler    *reconciler.RunnerReconciler
+	engine        *apptainerEngine.ApptainerEngine
 }
 
 func NewRunner(options ...RunnerOption) (runner *Runner, err error) {
@@ -43,6 +45,11 @@ func NewRunner(options ...RunnerOption) (runner *Runner, err error) {
 		return nil, err
 	}
 	r.state = state
+	engine, err := apptainerEngine.NewApptainerEngine(state)
+	if err != nil {
+		return nil, err
+	}
+	r.engine = engine
 	if err := r.validateNewRunner(); err != nil {
 		return nil, err
 	}
@@ -90,6 +97,13 @@ func (r *Runner) Start(ctx context.Context) error {
 	if err := r.register(registerCtx); err != nil {
 		return err
 	}
+
+	// TODO: use wait group?
+	go func() {
+		if err := r.engine.Start(ctx); err != nil && !errors.Is(err, apptainerEngine.ErrEngineStopped) {
+			panic(err)
+		}
+	}()
 
 	if err := r.startContactLoop(ctx); err != nil && !errors.Is(err, ErrRunnerStopped) {
 		return err
@@ -158,7 +172,7 @@ func (r *Runner) startContactLoop(ctx context.Context) error {
 		return fmt.Errorf("reconciler is not set")
 	}
 
-	r.contactTicker = time.NewTicker(time.Minute)
+	r.contactTicker = time.NewTicker(10 * time.Second)
 	ch := make(chan error, 1)
 	go r.contactLoop(ctx, ch)
 	err := <-ch
@@ -228,7 +242,10 @@ func (r *Runner) contact(ctx context.Context) error {
 		sessionIDs[sessionID] = struct{}{}
 	}
 	for sessionID := range sessionIDs {
-		r.reconciler.Reconcile(ctx, reconciler.SessionRef{ID: sessionID})
+		err := r.reconciler.Reconcile(ctx, reconciler.SessionRef{ID: sessionID})
+		if err != nil {
+			slog.Error("Failed to reconcile", "sessionID", sessionID, "error", err)
+		}
 	}
 
 	return nil
