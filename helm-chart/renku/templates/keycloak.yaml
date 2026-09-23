@@ -1,0 +1,94 @@
+{{/* Default spec of the Keycloak resource.
+keycloak.extraSpec values deep merged into the yaml defined here. */}}
+{{- define "keycloak.spec" -}}
+db:
+  vendor: postgres
+  host: {{ include "postgresql.fullname" . }}
+  database: {{ .Values.global.keycloak.postgresDatabase | quote }}
+  poolMaxSize: 10
+  usernameSecret:
+    name: renku-keycloak-postgres
+    key: KC_DB_USERNAME
+  passwordSecret:
+    name: renku-keycloak-postgres
+    key: KC_DB_PASSWORD
+bootstrapAdmin:
+  user:
+    secret: keycloak-password-secret
+hostname:
+  strict: false  # resolve the hostname from the forwarded request headers
+ingress:
+  enabled: false  # Renku routes /auth to Keycloak through its own ingress
+http:
+  httpEnabled: true
+proxy:
+  headers: xforwarded
+additionalOptions:
+  # Renku serves Keycloak under /auth on the main ingress.
+  - name: http-relative-path
+    value: /auth
+{{- with .Values.global.certificates.customCAs }}
+truststores:
+  {{- range $index, $customCA := . }}
+  renku-custom-ca-{{ $index }}:
+    {{- if $customCA.secret }}
+    secret:
+      name: {{ $customCA.secret }}
+    {{- else if $customCA.configMap }}
+    configMap:
+      name: {{ $customCA.configMap }}
+    {{- end }}
+  {{- end }}
+{{- end }}
+# The Renku login theme  is copied into an emptyDir by an init container using the pod template.
+unsupported:
+  podTemplate:
+    spec:
+      initContainers:
+        - name: theme-provider
+          image: "{{ .Values.keycloak.themeImage.repository }}:{{ .Values.keycloak.themeImage.tag }}"
+          imagePullPolicy: IfNotPresent
+          command:
+            - sh
+          args:
+            - -c
+            - |
+              echo "Copying theme..."
+              cp -Rfv /renku_theme/* /theme
+          volumeMounts:
+            - name: theme
+              mountPath: /theme
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+      containers:
+        - volumeMounts:
+            - name: theme
+              mountPath: /opt/keycloak/themes/renku-theme
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+      volumes:
+        - name: theme
+          emptyDir: {}
+{{- end -}}
+
+{{- if .Values.keycloak.install }}
+apiVersion: k8s.keycloak.org/v2alpha1
+kind: Keycloak
+metadata:
+  name: {{ include "keycloak.fullname" . }}
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  {{- $extraSpec := default dict .Values.keycloak.extraSpec -}}
+  {{/* Lists are replaced rather than merged, so a podTemplate with its own 
+  containers drops the theme mount below. Refuse to render to prevent bad surprises. */}}
+  {{- $containers := dig "unsupported" "podTemplate" "spec" "containers" list $extraSpec -}}
+  {{- if and $containers (not (contains "renku-theme" (toYaml $containers))) -}}
+  {{- fail "keycloak.extraSpec.unsupported.podTemplate.spec.containers replaces the chart's own entry, which mounts the Renku login theme. Re-add it alongside your settings: volumeMounts: [{name: theme, mountPath: /opt/keycloak/themes/renku-theme}]" -}}
+  {{- end -}}
+  {{- $spec := include "keycloak.spec" . | fromYaml -}}
+  {{- toYaml (mergeOverwrite $spec $extraSpec) | nindent 2 }}
+{{- end }}
