@@ -33,7 +33,8 @@ spec:
         {{- if .Values.keycloak.install }}
         - podSelector:
             matchLabels:
-              app.kubernetes.io/name: keycloakx
+              app: keycloak
+              app.kubernetes.io/instance: {{ include "keycloak.fullname" . }}
           namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: {{ .Release.Namespace }}
@@ -311,33 +312,6 @@ spec:
       ports:
         - protocol: TCP
           port: http
-{{- if .Values.keycloakx.enabled }}
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: ingress-to-keycloak-from-anywhere
-  labels:
-    app: {{ template "renku.name" . }}
-    chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-spec:
-  podSelector:
-    matchLabels:
-      app.kubernetes.io/name: keycloakx
-  policyTypes:
-    - Ingress
-  ingress:
-    - from:
-        - ipBlock:
-            cidr: 0.0.0.0/0
-      ports:
-        - protocol: TCP
-          port: http
-        - protocol: TCP
-          port: https
-{{- end }}
 {{- if .Values.swagger.enabled }}
 ---
 apiVersion: networking.k8s.io/v1
