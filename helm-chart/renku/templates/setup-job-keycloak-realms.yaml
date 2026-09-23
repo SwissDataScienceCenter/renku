@@ -1,5 +1,5 @@
-{{- if hasKey .Values "keycloak" -}}
-{{- fail "Values to configure Keycloak should be under `keycloakx`." -}}
+{{- if hasKey .Values "keycloakx" -}}
+{{- fail "The `keycloakx` subchart has been replaced by the Keycloak Operator. Move your values under `keycloak` and remove the `keycloakx` section." -}}
 {{- end -}}
 {{- if .Values.keycloak.install }}
 apiVersion: batch/v1
