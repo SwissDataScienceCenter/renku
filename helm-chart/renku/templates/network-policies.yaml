@@ -30,7 +30,7 @@ spec:
     - Ingress
   ingress:
     - from:
-        {{- if .Values.keycloakx.enabled }}
+        {{- if .Values.keycloak.install }}
         - podSelector:
             matchLabels:
               app.kubernetes.io/name: keycloakx

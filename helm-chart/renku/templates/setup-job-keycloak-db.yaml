@@ -1,4 +1,4 @@
-{{- if .Values.keycloakx.enabled }}
+{{- if .Values.keycloak.install }}
 apiVersion: batch/v1
 kind: Job
 metadata:
