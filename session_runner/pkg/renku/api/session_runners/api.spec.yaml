@@ -138,6 +138,12 @@ paths:
       summary: Get the details of a session assigned to a given runner
       description: TODO
       responses:
+        "200":
+          description: The secrets used in an assigned session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssignedSessionDetails"
         default:
           $ref: "#/components/responses/Error"
       tags:
@@ -398,6 +404,41 @@ components:
           $ref: "#/components/schemas/Ulid"
       required:
         - session_id
+    AssignedSessionDetails:
+      description: The details of a session which needs a runner
+      type: object
+      additionalProperties: false
+      properties:
+        session_id:
+          $ref: "#/components/schemas/AssignedSessionId"
+        runner_id:
+          $ref: "#/components/schemas/Ulid"
+        spec:
+          type: object
+          additionalProperties: false
+          properties:
+            image:
+              type: string
+            url:
+              type: string
+            session_type:
+              type: string
+            command:
+              type: array
+              items:
+                type: string
+            args:
+              type: array
+              items:
+                type: string
+          required:
+            - image
+            - session_type
+            - command
+            - args
+      required:
+        - session_id
+        - spec
     Ulid:
       description: ULID identifier
       type: string
