@@ -5,7 +5,7 @@ a stable public URL that anyone can open, without a Renku account and without
 launching a session. This page walks through creating one.
 
 For what an app is and how it differs from a session, see
-[App](../index).
+[App](/docs/users/compute/app/index).
 
 ## Before you start
 
