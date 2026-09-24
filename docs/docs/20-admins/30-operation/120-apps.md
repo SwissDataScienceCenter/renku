@@ -166,7 +166,7 @@ might report, see [Publish an app § Troubleshooting](../../users/compute/app/gu
 
 | Symptom                                               | Likely cause                                                                                                                                                                  |
 | ----------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| App stays `pending`, then reports `failed`            | See [Publish an app](../../users/compute/app/guides/host-app#troubleshooting), most often the port or bind address is wrong.                                                           |
+| App stays `pending`, then reports `failed`            | See [Publish an app](../../users/compute/app/guides/host-app#troubleshooting), most often the port or bind address is wrong.                                                  |
 | `Service` rejected at creation                        | A Knative [feature flag](../installation/configuration#1-enable-the-knative-feature-flags) is missing; check the admission error for the disallowed pod spec field            |
 | App has no URL in `status.url`                        | Knative networking has not programmed a route; check the ingress layer and the domain configuration                                                                           |
 | App URL resolves but times out                        | DNS or the TLS certificate does not cover this app's hostname; check the depth if you are relying on a wildcard                                                               |
