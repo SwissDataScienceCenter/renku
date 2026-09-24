@@ -4,10 +4,7 @@ metadata:
   # Allow egress to get to the dev machine
   name: allow-egress-to-own-machine
   labels:
-    app: {{ template "renku.name" . }}
-    chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    {{- include "netpol.labels" . | nindent 4 }}
 spec:
   podSelector: {}
   policyTypes:
@@ -16,3 +13,5 @@ spec:
     - to:
         - ipBlock:
             cidr: 172.29.21.238/32
+        - ipBlock:
+            cidr: 192.168.1.241/32

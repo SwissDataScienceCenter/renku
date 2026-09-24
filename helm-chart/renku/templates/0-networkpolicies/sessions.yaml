@@ -4,10 +4,7 @@ kind: NetworkPolicy
 metadata:
   name: ingress-from-sessions
   labels:
-    app: {{ template "renku.name" . }}
-    chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    {{- include "netpol.labels" . | nindent 4 }}
 spec:
   podSelector:
     matchExpressions:
@@ -34,10 +31,7 @@ kind: NetworkPolicy
 metadata:
   name: amalthea-sessions-v2
   labels:
-    app: {{ template "renku.name" . }}
-    chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    {{- include "netpol.labels" . | nindent 4 }}
 spec:
   podSelector:
     matchLabels:
@@ -74,10 +68,7 @@ kind: NetworkPolicy
 metadata:
   name: amalthea-sessions-v2-tunnel
   labels:
-    app: {{ template "renku.name" . }}
-    chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    {{- include "netpol.labels" . | nindent 4 }}
 spec:
   podSelector:
     matchLabels:

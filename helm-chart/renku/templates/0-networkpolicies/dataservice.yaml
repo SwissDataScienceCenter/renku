@@ -4,10 +4,7 @@ kind: NetworkPolicy
 metadata:
   name: ingress-to-data-service
   labels:
-    app: {{ template "renku.name" . }}
-    chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    {{- include "netpol.labels" . | nindent 4 }}
 spec:
   podSelector:
     matchLabels:
@@ -28,10 +25,7 @@ kind: NetworkPolicy
 metadata:
   name: egress-to-data-service
   labels:
-    app: {{ template "renku.name" . }}
-    chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    {{- include "netpol.labels" . | nindent 4 }}
 spec:
   podSelector:
     matchLabels:

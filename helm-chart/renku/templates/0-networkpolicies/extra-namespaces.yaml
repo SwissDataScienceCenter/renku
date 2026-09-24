@@ -8,10 +8,7 @@ kind: NetworkPolicy
 metadata:
   name: allow-all-ingress-from-some-namespaces
   labels:
-    app: {{ template "renku.name" . }}
-    chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    {{- include "netpol.labels" . | nindent 4 }}
 spec:
   podSelector: {}
   policyTypes:

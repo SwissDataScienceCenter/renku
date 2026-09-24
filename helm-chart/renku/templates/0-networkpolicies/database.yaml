@@ -4,6 +4,8 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: ingress-to-database
+  labels:
+    {{- include "netpol.labels" . | nindent 4 }}
 spec:
   policyTypes:
     - Ingress
@@ -25,6 +27,8 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: egress-to-database
+  labels:
+    {{- include "netpol.labels" . | nindent 4 }}
 spec:
   policyTypes:
     - Egress
