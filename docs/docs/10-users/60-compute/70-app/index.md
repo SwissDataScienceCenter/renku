@@ -10,7 +10,7 @@ configured on that launcher. Unlike a [Session](../session), an app belongs to t
 project rather than to you: there is one of it, it stays up between visits, and
 everyone who opens the link sees the same running app.
 
-To create one, see [Publish an app](../../use-cases/host-app).
+To create one, see [Publish an app](../../compute/app/guides/host-app).
 
 ## How an app differs from a session
 
@@ -67,4 +67,4 @@ An app launcher is edited like any other session launcher: its environment,
 resource class, and environment variables. Changes do **not** reach a running
 app: it keeps its old definition until it is stopped and started again.
 
-Deleting an app launcher stops its app (see [Publish an app](../../use-cases/host-app#stopping-an-app)).
+Deleting an app launcher stops its app (see [Publish an app](../../compute/app/guides/host-app#stopping-an-app)).

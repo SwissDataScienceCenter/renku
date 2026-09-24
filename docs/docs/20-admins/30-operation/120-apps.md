@@ -27,7 +27,7 @@ One `Service` per app, built from the session launcher's environment. It is crea
 - **Name**: `<project-slug>-<launcher-id-suffix>`, where the suffix is the last eight characters of the launcher's id. The slug is coerced to a DNS-1035 label and the whole name is capped at 50 characters. It is stable for a given launcher, so stopping and starting an app returns the same name and the same URL.
 - **Image**: the launcher's container image, built by Renku or supplied by the user.
 - **Port**: the launcher's configured port, as `containerPort`. Knative routes and probes exactly this port.
-- **Environment**: Injected first and cannot be overridden. See [Publish an app](../../users/use-cases/host-app#1-listen-on-the-port-renku-assigns). The launcher's own variables are appended after.
+- **Environment**: Injected first and cannot be overridden. See [Publish an app](../../users/compute/app/guides/host-app#1-listen-on-the-port-renku-assigns). The launcher's own variables are appended after.
 - **Security context**: `runAsUser` and `runAsGroup` from the environment's UID and GID.
 - **Resources**: if the launcher has a resource class: CPU and memory requests from it, plus a memory limit. There is no CPU limit. A launcher with no resource class gets no resource block at all, and Knative's own defaults apply.
 - **Scheduling**: node affinity and tolerations derived from the resource class, falling back to the session defaults, the same as sessions.
@@ -104,7 +104,7 @@ Apps are public by construction, and the platform enforces that in several indep
 
 **An app launcher can only exist in a public project.** Creating or updating one in a private project is rejected at the API layer, and copying a project into a non-public namespace silently drops its app launchers rather than carrying them over.
 
-**Making a project private deletes its apps.** Patching a project's visibility to private triggers deletion of every app deployment belonging to that project, immediately. Deleting an app launcher likewise deletes its app (see [Publish an app](../../users/use-cases/host-app#stopping-an-app)).
+**Making a project private deletes its apps.** Patching a project's visibility to private triggers deletion of every app deployment belonging to that project, immediately. Deleting an app launcher likewise deletes its app (see [Publish an app](../../users/compute/app/guides/host-app#stopping-an-app)).
 
 **Only credential-free public data connectors are mounted.** An app runs as an anonymous identity, so a connector is mounted only when all three hold:
 
@@ -162,11 +162,11 @@ Deleting the `Service` also removes its owned `Secret` and `PersistentVolumeClai
 ### Troubleshooting
 
 This covers cluster-level causes. For symptoms a project member without `kubectl` access
-might report, see [Publish an app § Troubleshooting](../../users/use-cases/host-app#troubleshooting).
+might report, see [Publish an app § Troubleshooting](../../users/compute/app/guides/host-app#troubleshooting).
 
 | Symptom                                               | Likely cause                                                                                                                                                                  |
 | ----------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| App stays `pending`, then reports `failed`            | See [Publish an app](../../users/use-cases/host-app#troubleshooting), most often the port or bind address is wrong.                                                           |
+| App stays `pending`, then reports `failed`            | See [Publish an app](../../users/compute/app/guides/host-app#troubleshooting), most often the port or bind address is wrong.                                                           |
 | `Service` rejected at creation                        | A Knative [feature flag](../installation/configuration#1-enable-the-knative-feature-flags) is missing; check the admission error for the disallowed pod spec field            |
 | App has no URL in `status.url`                        | Knative networking has not programmed a route; check the ingress layer and the domain configuration                                                                           |
 | App URL resolves but times out                        | DNS or the TLS certificate does not cover this app's hostname; check the depth if you are relying on a wildcard                                                               |
