@@ -1,0 +1,12 @@
+{{/*
+Validation of values with actionable messages on failure.
+*/}}
+
+
+{{/*
+Keycloak checks.
+*/}}
+
+{{- if hasKey .Values "keycloakx" }}
+  {{- fail "The `keycloakx` subchart has been replaced by the Keycloak Operator. Move your values under `keycloak` and remove the `keycloakx` section." }}
+{{- end }}

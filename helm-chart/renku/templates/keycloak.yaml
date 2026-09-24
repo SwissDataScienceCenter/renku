@@ -83,7 +83,7 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   {{- $extraSpec := default dict .Values.keycloak.extraSpec -}}
-  {{/* Lists are replaced rather than merged, so a podTemplate with its own 
+  {{/* Lists are replaced rather than merged, so a podTemplate with its own
   containers drops the theme mount below. Refuse to render to prevent bad surprises. */}}
   {{- $containers := dig "unsupported" "podTemplate" "spec" "containers" list $extraSpec -}}
   {{- if and $containers (not (contains "renku-theme" (toYaml $containers))) -}}
