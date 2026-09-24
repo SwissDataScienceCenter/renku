@@ -292,7 +292,6 @@ keycloak:
   ## volumeMount the chart puts there.
   ## See https://www.keycloak.org/operator/advanced-configuration
   extraSpec:
-    instances: 1
     resources:
       requests:
         cpu: 100m
