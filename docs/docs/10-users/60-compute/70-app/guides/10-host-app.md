@@ -5,7 +5,7 @@ a stable public URL that anyone can open, without a Renku account and without
 launching a session. This page walks through creating one.
 
 For what an app is and how it differs from a session, see
-[App](/docs/users/compute/app/index).
+[App](../index.md).
 
 ## Before you start
 
@@ -126,12 +126,12 @@ stay, so you can start the app again whenever you like — but apps have no
 persistent storage, so anything the app wrote to its own filesystem is gone.
 
 Deleting the launcher, or changing the project's visibility away from public,
-also stops the app (see [App](../index#editing-an-app-launcher)).
+also stops the app (see [App](../index.md#editing-an-app-launcher)).
 
 ## Troubleshooting
 
 Cluster operators diagnosing from the Kubernetes side should see
-[Apps § Troubleshooting](../../../../../admins/operation/apps#troubleshooting) instead.
+[Apps § Troubleshooting](../../../../20-admins/30-operation/120-apps.md#troubleshooting) instead.
 
 **The app reports an error after starting.**
 Almost always the port. Check that your server (the `web:` command in your
@@ -146,7 +146,7 @@ build from code means committed to the repository the launcher builds from.
 **A data connector is missing inside the app.**
 Check the launcher's panel: it lists the connectors the app mounts and says how
 many were left out. Only public connectors that need no credentials are mounted;
-see [What an app can reach](../compute/app#what-an-app-can-reach).
+see [What an app can reach](../index.md#what-an-app-can-reach).
 
 **"Another launcher in this project already has an app."**
 A project can have one app at a time, across all of its launchers. Stop the
