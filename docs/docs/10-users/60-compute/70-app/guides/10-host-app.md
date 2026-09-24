@@ -5,7 +5,7 @@ a stable public URL that anyone can open, without a Renku account and without
 launching a session. This page walks through creating one.
 
 For what an app is and how it differs from a session, see
-[App](../compute/app).
+[App](../index).
 
 ## Before you start
 
@@ -15,7 +15,7 @@ To create an app launcher you need:
   for now.
 - **Write permission** on that project. Starting and stopping an app is an
   editor or owner action; opening it is not. See [Project
-  Permissions](../collaboration/permissions#project-permissions).
+  Permissions](../../../collaboration/permissions#project-permissions).
 - **An image to run.** Either Renku builds it for you from a code repository
   (see the `Procfile` section [below](#1-listen-on-the-port-renku-assigns)), or
   you supply a container image you have already built and pushed.
@@ -78,7 +78,7 @@ response that cannot arrive and then reports an error.
      buildpacks, the same way it builds custom session environments.
    - **External environment**: give the launcher your container image and the
      port your server listens on.
-4. Set a [resource class](../compute/resource-pools-and-classes) if the default
+4. Set a [resource class](../../resource-pools-and-classes) if the default
    is not enough for your app.
 5. Save the launcher. If Renku is building the image, the launcher shows the
    build progress.
@@ -126,12 +126,12 @@ stay, so you can start the app again whenever you like — but apps have no
 persistent storage, so anything the app wrote to its own filesystem is gone.
 
 Deleting the launcher, or changing the project's visibility away from public,
-also stops the app (see [App](../compute/app#editing-an-app-launcher)).
+also stops the app (see [App](../index#editing-an-app-launcher)).
 
 ## Troubleshooting
 
 Cluster operators diagnosing from the Kubernetes side should see
-[Apps § Troubleshooting](../../admins/operation/apps#troubleshooting) instead.
+[Apps § Troubleshooting](../../../../../admins/operation/apps#troubleshooting) instead.
 
 **The app reports an error after starting.**
 Almost always the port. Check that your server (the `web:` command in your

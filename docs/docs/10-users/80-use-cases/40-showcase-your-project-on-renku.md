@@ -4,7 +4,7 @@ Sometimes you need to share or present the results of your project to stakeholde
 
 :::tip
 
-Whoever you share this with needs a Renku account and has to launch a session to see your dashboard. If you want to hand out a link that anyone can simply open, [publish an app](host-app) instead.
+Whoever you share this with needs a Renku account and has to launch a session to see your dashboard. If you want to hand out a link that anyone can simply open, [publish an app](../compute/app/guides/host-app) instead.
 
 :::
 
