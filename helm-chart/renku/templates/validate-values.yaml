@@ -45,3 +45,11 @@ Postgres instance checks.
     {{- fail (printf "cnpg.autoMigration only works while the Cluster is being created, and %s already exists. Set it back to false and migrate the data by hand (helm-chart/utils/postgres_migrations/bitnami-to-cnpg.md), or delete the Cluster to import from scratch." (include "renku.pgCluster" .)) }}
   {{- end }}
 {{- end }}
+
+{{/*
+Keycloak checks.
+*/}}
+
+{{- if hasKey .Values "keycloakx" }}
+  {{- fail "The `keycloakx` subchart has been replaced by the Keycloak Operator. Move your values under `keycloak` and remove the `keycloakx` section." }}
+{{- end }}

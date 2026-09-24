@@ -131,7 +131,6 @@ operator appends resources (longest is -network-policy.) */}}
 {{- printf "%s-%s" .Release.Name "core" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
-
 {{/* Admin credentials are under: 
 * KEYCLOAK_ADMIN + KEYCLOAK_ADMIN_PASSWORD -> read by realm init job reads
 * and username and password -> keys used by Keycloak operator in secret spec.bootstrapAdmin. */}}
