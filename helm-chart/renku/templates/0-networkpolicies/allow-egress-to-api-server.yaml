@@ -1,7 +1,7 @@
 # Allow access to kube api server
-# Needs to be configurable:
-# - The kubernetes service address in default might different
-# - The endpoints might be different
+# Add --dry-run=server when calling helm template
+# otherwise, kubeapiEndpointSlice will be empty
+{{- $kubeapiEndpointSlice := lookup "discovery.k8s.io/v1" "EndpointSlice" "default" "kubernetes" }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -16,16 +16,18 @@ spec:
   policyTypes:
     - Egress
   egress:
+    {{- range $kubeapiEndpointSlice.endpoints }}
     - to:
+        {{- range .addresses }}
         - ipBlock:
-            cidr: 10.96.0.1/32
-        - ipBlock:
-            cidr: 10.201.0.0/24
+            cidr: {{ . }}/32
+        {{- end }}
       ports:
-        - protocol: TCP
-          port: 443
-        - protocol: TCP
-          port: 6443
+        {{- range $kubeapiEndpointSlice.ports }}
+        - protocol: {{ .protocol }}
+          port: {{ .port }}
+        {{- end }}
+    {{- end }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -40,13 +42,15 @@ spec:
   policyTypes:
     - Egress
   egress:
+    {{- range $kubeapiEndpointSlice.endpoints }}
     - to:
+        {{- range .addresses }}
         - ipBlock:
-            cidr: 10.96.0.1/32
-        - ipBlock:
-            cidr: 10.201.0.0/24
+            cidr: {{ . }}/32
+        {{- end }}
       ports:
-        - protocol: TCP
-          port: 443
-        - protocol: TCP
-          port: 6443
+        {{- range $kubeapiEndpointSlice.ports }}
+        - protocol: {{ .protocol }}
+          port: {{ .port }}
+        {{- end }}
+    {{- end }}
