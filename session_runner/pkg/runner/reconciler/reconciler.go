@@ -2,14 +2,18 @@ package reconciler
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log/slog"
+	"net/http"
 	"net/url"
 
 	"github.com/SwissDataScienceCenter/renku/session_runner/pkg/renku"
 	"github.com/SwissDataScienceCenter/renku/session_runner/pkg/renku/api/session_runners"
 	"github.com/SwissDataScienceCenter/renku/session_runner/pkg/state"
 )
+
+var ErrSessionNotFound = errors.New("session not found")
 
 type RunnerReconciler struct {
 	state    *state.LocalSessionState
@@ -41,7 +45,10 @@ type SessionRef struct {
 
 func (r *RunnerReconciler) Reconcile(ctx context.Context, session SessionRef) error {
 	sessionDetails, err := r.getSession(ctx, session.ID)
-	if err != nil {
+	// If we get a 404, then the session has been shut down and we remove it from the local state
+	if err != nil && errors.Is(err, ErrSessionNotFound) {
+		return r.state.DeleteSession(ctx, session.ID)
+	} else if err != nil {
 		return err
 	}
 	sessionURLStr := ""
@@ -94,6 +101,9 @@ func (r *RunnerReconciler) getSession(ctx context.Context, sessionID string) (se
 			}
 		} else {
 			message = res.HTTPResponse.Status
+		}
+		if res.StatusCode() == http.StatusNotFound {
+			return session, fmt.Errorf("failed to get session: %s, %w", message, ErrSessionNotFound)
 		}
 		return session, fmt.Errorf("failed to get session: %s", message)
 	}

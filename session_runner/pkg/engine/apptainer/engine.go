@@ -96,10 +96,13 @@ func (ae *ApptainerEngine) reconcileLoop(ctx context.Context, ch chan<- error) {
 }
 
 func (ae *ApptainerEngine) reconcile(ctx context.Context) error {
-	for _, sessionID := range ae.state.GetSessionIDs(ctx) {
+	sessionIDs := ae.state.GetSessionIDs(ctx)
+	// Handle new sessions and existing sessions
+	for _, sessionID := range sessionIDs {
 		session, err := ae.state.GetSession(ctx, sessionID)
 		if err != nil {
 			slog.Warn("Error getting session local state", "sessionID", sessionID, "error", err)
+			continue
 		}
 		slog.Info("Engine reconcile", "session", session)
 		err = ae.reconcileSession(ctx, session)
@@ -107,16 +110,77 @@ func (ae *ApptainerEngine) reconcile(ctx context.Context) error {
 			slog.Warn("Error handling session", "sessionID", sessionID, "error", err, "session", session)
 		}
 	}
+	// Handle deleted sessions
+	sessionIDsSet := make(map[string]struct{})
+	for _, sessionID := range sessionIDs {
+		sessionIDsSet[sessionID] = struct{}{}
+	}
+	ae.handlesMutex.Lock()
+	defer ae.handlesMutex.Unlock()
+	for sessionID := range ae.handles {
+		_, found := sessionIDsSet[sessionID]
+		if !found {
+			err := ae.reconcileDeletedSession(ctx, sessionID)
+			if err != nil {
+				slog.Warn("Error handling session deletion", "sessionID", sessionID, "error", err)
+				continue
+			}
+			delete(ae.handles, sessionID)
+		}
+	}
 	return nil
 }
 
 func (ae *ApptainerEngine) reconcileSession(ctx context.Context, session state.LocalSession) error {
-	// TODO: container handling
 	err := ae.reconcileSessionContainer(ctx, session)
 	if err != nil {
 		return err
 	}
 
+	err = ae.reconcileSessionTunnel(ctx, session)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (ae *ApptainerEngine) reconcileSessionContainer(ctx context.Context, session state.LocalSession) error {
+	ae.handlesMutex.Lock()
+	defer ae.handlesMutex.Unlock()
+	handle, found := ae.handles[session.ID]
+	if !found || handle.apptainerInstance == "" {
+		handle.apptainerInstance = fmt.Sprintf("renku-%s", session.ID)
+		ae.handles[session.ID] = handle
+
+		// TODO: pull as a separate step?
+		apptainerImage := fmt.Sprintf("docker://%s", session.Spec.Image)
+		cmd := exec.Command(apptainer, "instance", "run",
+			"--writable-tmpfs", "--contain",
+			"--bind", "/home/flora/test:/workspace", // TODO
+			"--env", "RENKU_SESSION_PORT=9999",
+			"--env", fmt.Sprintf("RENKU_BASE_URL_PATH=%s", session.Spec.URL.EscapedPath()),
+			"--env", "RENKU_MOUNT_DIR=/workspace",
+			"--env", "RENKU_WORKING_DIR=/workspace",
+			"--env", "CNB_APP_DIR=/workspace",
+			"--no-init", "--no-eval",
+			apptainerImage,
+			handle.apptainerInstance,
+		)
+		cmd.Env = append(cmd.Env, "APPTAINER_TMPDIR=/home/flora/tmp") // TODO
+		slog.Info("apptainer command", "command", cmd.String())
+
+		// TODO: show logs?
+		// TODO: detach?
+		go func() {
+			out, err := cmd.Output()
+			slog.Info("apptainer", "out", string(out), "err", err)
+		}()
+	}
+	return nil
+}
+
+func (ae *ApptainerEngine) reconcileSessionTunnel(ctx context.Context, session state.LocalSession) error {
 	// wstunnel handling
 	wstunnelSecret := session.Spec.Secrets["RENKU_WSTUNNEL_SECRET"]
 	if wstunnelSecret == "" {
@@ -154,41 +218,42 @@ func (ae *ApptainerEngine) reconcileSession(ctx context.Context, session state.L
 			// }
 		}
 	}
-
 	return nil
 }
 
-func (ae *ApptainerEngine) reconcileSessionContainer(ctx context.Context, session state.LocalSession) error {
-	ae.handlesMutex.Lock()
-	defer ae.handlesMutex.Unlock()
-	handle, found := ae.handles[session.ID]
-	if !found || handle.apptainerInstance == "" {
-		handle.apptainerInstance = fmt.Sprintf("renku-%s", session.ID)
-		ae.handles[session.ID] = handle
-
-		// TODO: pull as a separate step?
-		apptainerImage := fmt.Sprintf("docker://%s", session.Spec.Image)
-		cmd := exec.Command(apptainer, "instance", "run",
-			"--writable-tmpfs", "--contain",
-			"--bind", "/home/flora/test:/workspace", // TODO
-			"--env", "RENKU_SESSION_PORT=9999",
-			"--env", fmt.Sprintf("RENKU_BASE_URL_PATH=%s", session.Spec.URL.EscapedPath()),
-			"--env", "RENKU_MOUNT_DIR=/workspace",
-			"--env", "RENKU_WORKING_DIR=/workspace",
-			"--env", "CNB_APP_DIR=/workspace",
-			"--no-init", "--no-eval",
-			apptainerImage,
-			handle.apptainerInstance,
-		)
-		cmd.Env = append(cmd.Env, "APPTAINER_TMPDIR=/home/flora/tmp") // TODO
+func (ae *ApptainerEngine) reconcileDeletedSession(ctx context.Context, sessionID string) error {
+	handle, found := ae.handles[sessionID]
+	if !found {
+		slog.Warn("Deleted session has no handle", "sessionID", sessionID)
+		return nil
+	}
+	errs := make([]error, 0, 2)
+	if handle.apptainerInstance != "" {
+		// apptainer instance stop hello
+		cmd := exec.Command(apptainer, "instance", "stop", handle.apptainerInstance)
 		slog.Info("apptainer command", "command", cmd.String())
 
-		// TODO: show logs?
-		// TODO: detach?
-		go func() {
-			out, err := cmd.Output()
-			slog.Info("apptainer", "out", string(out), "err", err)
-		}()
+		out, err := cmd.Output()
+		slog.Info("apptainer", "out", string(out), "err", err)
+		if err == nil {
+			handle.apptainerInstance = ""
+			ae.handles[sessionID] = handle
+		} else {
+			errs = append(errs, err)
+		}
+	}
+	if handle.wstunnelCmd != nil {
+		err := handle.wstunnelCmd.Cancel()
+		slog.Info("wstunnel cancel", "err", err)
+		if err == nil {
+			handle.wstunnelCmd = nil
+			ae.handles[sessionID] = handle
+		} else {
+			errs = append(errs, err)
+		}
+	}
+	if len(errs) > 0 {
+		return fmt.Errorf("could not delete session: %w", errors.Join(errs...))
 	}
 	return nil
 }
