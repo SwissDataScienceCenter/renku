@@ -54,7 +54,8 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      app.kubernetes.io/name: {{ .Release.Name }}-amalthea-sessions-controller-manager
+      app.kubernetes.io/name: amalthea-sessions
+      control-plane: controller-manager
   policyTypes:
     - Egress
   egress:
