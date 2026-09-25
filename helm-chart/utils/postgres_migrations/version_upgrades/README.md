@@ -1,5 +1,11 @@
 # Upgrading PostgreSQL
 
+> [!WARNING]
+>
+> **OBSOLETE.** Renku no longer deploys PostgreSQL. Kept for deployments still
+> running the old bundled instance. On CloudNativePG the operator handles major version upgrades,
+> see [its documentation](https://cloudnative-pg.io/documentation/current/postgres_upgrades/).
+
 Here we describe how the version of a PostgreSQL instance which is installed through the Renku chart can be upgraded. While the naming of resources in these instructions suggest that the PostgreSQL instance to be upgraded was deployed as a component of a RenkuLab deployment, there is nothing else that is Renku-specific about these instructions. Minor version upgrades are usually unproblematic and do not need any manual intervention. Major version upgrades on the other hand require some care. There are two recommended ways of performing this task:
 
 1) Dump all the data in the old instance using `pd_dumpall`, start a fresh instance using the target version and import the previous data dump. You can find detailed instructions on this below.

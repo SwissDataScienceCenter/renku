@@ -5,6 +5,21 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
+## Upgrading to Renku 2.yy.z
+
+Renku no longer deploys a database. The bundled bitnami `postgresql` chart is removed and
+renku expects to be pointed at an external postgres. Any PostgreSQL works, CloudNativePG
+is the recommended provider, which we run and document. Make sure to migrate your data
+before upgrading, as disabling postgresql on the upgrade will result in data loss. See
+[the chart readme](https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart#upgrading)
+for the migration.
+
+* DELETE `postgresql`. The bitnami subchart is no longer a dependency. Keeping that value on upgrade raises an error.
+* EDIT `global.externalServices.postgresql` is now the only way to configure the database, and
+  `host` is required. The `enabled` flag is gone.
+* NEW `global.externalServices.postgresql.existingSecretPasswordKey`, defaults to
+  `postgres-password`. Set to `password` to point at a CloudNativePG `<cluster>-superuser` secret.
+
 ## Upgrading to Renku 2.21.0
 
 * NEW `dataService.imageBuilders.insecureOutput.enabled`: it is now possible to configure registries that use e.g. self-signed certificates to push images to. **WARNING** do not use in production. This is a feature that helps for testing and development.

@@ -43,16 +43,36 @@ http
 {{- end -}}
 
 {{/*
-Define subcharts full names
+Postgres host Renku connects to.
 */}}
-{{- define "postgresql.fullname" -}}
-{{- if not .Values.global.externalServices.postgresql.enabled -}}
-{{- printf "%s-%s" .Release.Name "postgresql" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
-{{- else -}}
+{{- define "renku.pgHost" -}}
 {{- .Values.global.externalServices.postgresql.host -}}
 {{- end -}}
+
+{{/*
+Host and admin credentials the database setup jobs need.
+*/}}
+{{- define "renku.pgAdminEnv" -}}
+{{- $ext := .Values.global.externalServices.postgresql -}}
+- name: DB_HOST
+  value: {{ include "renku.pgHost" . }}
+- name: DB_ADMIN_USERNAME
+  value: {{ $ext.username }}
+{{- if $ext.password }}
+- name: DB_ADMIN_PASSWORD
+  value: {{ $ext.password }}
+{{- else if $ext.existingSecret }}
+- name: DB_ADMIN_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: {{ $ext.existingSecret }}
+      key: {{ $ext.existingSecretPasswordKey }}
+{{- end }}
 {{- end -}}
 
+{{/*
+Define subcharts full names
+*/}}
 {{- define "keycloak.fullname" -}}
 {{- printf "%s-%s" .Release.Name "keycloakx" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
@@ -77,21 +97,6 @@ Define subcharts full names
 {{- printf "%s-%s" .Release.Name "core" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
-{{/*
-Catch configuration errors
-*/}}
-{{- if .Values.global.externalServices.postgresql.enabled and .Values.postgresql.enabled -}}
-fail "External PostgreSQL and Renku-bundled PostgreSQL cannot both be enabled. Please disable either global.externalServices.postgresql.enabled or postgresql.enabled"
-{{- end -}}
-
-{{- if not .Values.global.externalServices.postgresql.enabled and not .Values.postgresql.enabled -}}
-fail "External PostgreSQL and Renku-bundled PostgreSQL cannot both be disabled. Please enable either global.externalServices.postgresql.enabled or postgresql.enabled"
-{{- end -}}
-
-{{- if .Values.global.externalServices.postgresql.enabled and .Values.global.externalServices.postgresql.password and .Values.global.externalServices.postgresql.existingSecret -}}
-fail "External PostgreSQL password and existing Secret fields cannot both be populated."
-{{- end -}}
-
 {{- define "keycloak.admin-secret" -}}
 {{- $secretAdmin := lookup "v1" "Secret" .Release.Namespace "keycloak-password-secret" -}}
 {{- if $secretAdmin -}}
@@ -111,29 +116,24 @@ KEYCLOAK_ADMIN_PASSWORD: {{ default (randAlphaNum 64) .Values.global.keycloak.pa
 {{- end -}}
 {{- end -}}
 
+{{/*
+Only the password is read from an existing secret; host, database and user are derived from values. 
+The DB_PASSWORD fallback covers secrets written before the keycloakx upgrade.
+*/}}
 {{- define "keycloak.postgres-secret" -}}
+{{- $password := default (randAlphaNum 64) .Values.global.keycloak.postgresPassword.value | b64enc -}}
 {{- $secretPostgres := lookup "v1" "Secret" .Release.Namespace "renku-keycloak-postgres" -}}
 {{- if $secretPostgres -}}
-{{- if $secretPostgres.data.KC_DB_URL_HOST -}}
-# Post-keycloakx
-KC_DB_URL_HOST: {{ $secretPostgres.data.KC_DB_URL_HOST | quote }}
-KC_DB_URL_DATABASE: {{ $secretPostgres.data.KC_DB_URL_DATABASE | quote }}
-KC_DB_USERNAME: {{ $secretPostgres.data.KC_DB_USERNAME | quote }}
-KC_DB_PASSWORD: {{ $secretPostgres.data.KC_DB_PASSWORD | quote }}
-{{- else -}}
-# Pre-keycloakx
-KC_DB_URL_HOST: {{ $secretPostgres.data.DB_ADDR | quote }}
-KC_DB_URL_DATABASE: {{ $secretPostgres.data.DB_DATABASE | quote }}
-KC_DB_USERNAME: {{ $secretPostgres.data.DB_USER | quote }}
-KC_DB_PASSWORD: {{ $secretPostgres.data.DB_PASSWORD | quote }}
+{{- if $secretPostgres.data.KC_DB_PASSWORD -}}
+{{- $password = $secretPostgres.data.KC_DB_PASSWORD -}}
+{{- else if $secretPostgres.data.DB_PASSWORD -}}
+{{- $password = $secretPostgres.data.DB_PASSWORD -}}
 {{- end -}}
-# No pre-existing secret
-{{- else -}}
-KC_DB_URL_HOST: {{ (include "postgresql.fullname" .) | b64enc | quote }}
+{{- end -}}
+KC_DB_URL_HOST: {{ (include "renku.pgHost" .) | b64enc | quote }}
 KC_DB_URL_DATABASE: {{ .Values.global.keycloak.postgresDatabase | b64enc | quote }}
 KC_DB_USERNAME: {{ .Values.global.keycloak.postgresUser | b64enc | quote }}
-KC_DB_PASSWORD: {{ default (randAlphaNum 64) .Values.global.keycloak.postgresPassword.value | b64enc | quote }}
-{{- end -}}
+KC_DB_PASSWORD: {{ $password | quote }}
 {{- end -}}
 
 {{- define "renku.baseUrl" -}}

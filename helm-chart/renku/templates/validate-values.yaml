@@ -1,0 +1,33 @@
+{{/*
+Validation of values with actionable messages on failure.
+*/}}
+
+
+{{/*
+Postgres instance checks.
+*/}}
+
+{{- $ext := .Values.global.externalServices.postgresql -}}
+
+{{/* Migration from bitnami-postgresql: Prevents a leftover 
+"postgresql.enabled: true" from being silently ignored. */}}
+{{- if hasKey .Values "postgresql" }}
+  {{- fail "Renku no longer deploys a database. Migrate your data to an external postgres, then drop the postgresql from your values and point global.externalServices.postgresql at it." }}
+{{- end }}
+
+{{- if not $ext.host }}
+  {{- fail "Renku needs a PostgreSQL. Set global.externalServices.postgresql.host to an instance the services can reach." }}
+{{- end }}
+
+{{- if and $ext.password $ext.existingSecret }}
+  {{- fail "global.externalServices.postgresql.password and global.externalServices.postgresql.existingSecret cannot both be set, pick one." }}
+{{- end }}
+
+
+{{/*
+Keycloak checks.
+*/}}
+
+{{- if hasKey .Values "keycloak" }}
+  {{- fail "Values to configure Keycloak should be under `keycloakx`." }}
+{{- end }}

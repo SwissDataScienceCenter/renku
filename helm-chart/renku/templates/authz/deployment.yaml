@@ -21,6 +21,10 @@ spec:
       app: renku-authz
   template:
     metadata:
+      annotations:
+        # The connection URI arrives as an env var, fixed at pod start. 
+        # A database move needs to roll the pod to update the host.
+        renku.io/db-host: {{ include "renku.pgHost" . | quote }}
       labels:
         app: renku-authz
         chart: {{ template "renku.chart" . }}

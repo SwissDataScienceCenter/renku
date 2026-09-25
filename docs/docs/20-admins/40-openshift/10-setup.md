@@ -353,8 +353,11 @@ start properly.
 Here follows a full configuration based on the minimal deployment values file.
 
 Beside Renku specific elements, customization of child charts are also required.
-Here we can see the changes to be applied to make KeycloakX, PostgreSQL, Redis
-and Solr start properly.
+Here we can see the changes to be applied to make KeycloakX, Redis and Solr start
+properly.
+
+The database is not part of this, Renku does not deploy one. Set it up as described under
+[Requirements](/docs/admins/installation/requirements#postgresql) before installing.
 
 Note that these changes are not Renku specific, they need to be applied in any
 cases when deployed in OpenShift.
@@ -465,6 +468,12 @@ gitlab:
 global:
   anonymousSessions:
     enabled: false # Changed from default
+  externalServices:
+    postgresql:
+      host: renku-pg-rw
+      username: postgres
+      existingSecret: renku-pg-superuser
+      existingSecretPasswordKey: password
   renku:
     domain: renku.apps.my-openshift.ch
   useHTTPS: true
@@ -509,32 +518,6 @@ notebooks:
     host: renku.apps.my-openshift.ch
     tlsSecret: renku-renku-ch-tls
     ingressClassName: openshift-default
-postgresql:
-  primary:
-    # added
-    volumePermissions:
-      enabled: false
-      securityContext:
-        runAsUser: "auto"
-    podSecurityContext:
-      enabled: false
-
-    shmVolume:
-      chmod:
-        enabled: false
-
-    containerSecurityContext:
-      enabled: false
-    # end added
-    resources:
-      limits:
-        memory: 300Mi
-      requests:
-        memory: 300Mi
-  # Use Bitnami's PostgreSQL image from Renkulab Harbor registry
-  image:
-    registry: harbor.renkulab.io
-    repository: bitnami-mirror/postgresql
 redis:
   architecture: standalone
   master:

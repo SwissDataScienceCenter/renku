@@ -52,6 +52,143 @@ performance is not sufficient to host the local filesystem for a session.
 
 :::
 
+## PostgreSQL
+
+Renku stores its data in PostgreSQL, but does not deploy one. You provide the instance and point
+Renku at it through `global.externalServices.postgresql`. It can live in the Renku namespace,
+elsewhere in the cluster, or be a managed database from your cloud provider. 
+
+### What Renku needs
+
+- The instance is reachable from the Renku namespace on port 5432.
+- The configured user is a superuser. Renku creates its own databases and roles, it does not
+  expect them to exist.
+- If the database runs *in* the Renku namespace, it needs a NetworkPolicy of its own. Renku
+  installs a `default-deny-all-ingress` policy that selects **every** pod in the namespace, so
+  without one nothing will be able to connect.
+
+Then point Renku at it:
+
+```yaml
+global:
+  externalServices:
+    postgresql:
+      host: postgres.example.org
+      username: postgres
+      # either an inline password, or a secret that holds one, not both
+      existingSecret: my-postgres-credentials
+      existingSecretPasswordKey: password
+```
+
+### Running it with CloudNativePG
+
+The rest of this section is the recommended setup, and is one way of satisfying the
+above. [CloudNativePG](https://cloudnative-pg.io/) manages PostgreSQL through an operator.
+Skip it if you already have a database.
+
+#### The operator
+
+CloudNativePG is cluster-wide and installed once, independently of Renku:
+
+```console
+$ helm repo add cnpg https://cloudnative-pg.github.io/charts
+$ helm upgrade --install cnpg --namespace cnpg-system --create-namespace cnpg/cloudnative-pg
+```
+
+#### The cluster
+
+`enableSuperuserAccess` is off by default, and CloudNativePG *deletes* the superuser secret when
+it is off. Renku's setup jobs need that user, so turn it on.
+
+```yaml
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: renku-pg
+spec:
+  instances: 1
+  enableSuperuserAccess: true
+  storage:
+    size: 8Gi
+```
+
+Size the storage, instance count and [backups](https://cloudnative-pg.io/documentation/current/backup/)
+for your deployment.
+
+#### Network policy
+
+The policy to make the cluster reachable in the Renku namespace. The operator rule is
+CloudNativePG specific, the rest is just the list of Renku pods that talk to the database.
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: renku-pg-ingress
+spec:
+  podSelector:
+    matchLabels:
+      cnpg.io/cluster: renku-pg
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchExpressions:
+              - key: app
+                operator: In
+                values:
+                  - renku-data-service
+                  - renku-data-tasks
+                  - renku-k8s-watcher
+                  - renku-authz
+                  - renku-secrets-storage
+                  # the three jobs that create the databases and roles
+                  - postgres-setup
+        - podSelector: {matchLabels: {app.kubernetes.io/name: keycloakx}}
+        # peer instances, when spec.instances > 1
+        - podSelector: {matchLabels: {cnpg.io/cluster: renku-pg}}
+      ports:
+        - {protocol: TCP, port: 5432}
+    # the operator polls each instance on 8000, without this the Cluster never reports ready
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: cnpg-system
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: cloudnative-pg
+      ports:
+        - {protocol: TCP, port: 5432}
+        - {protocol: TCP, port: 8000}
+```
+
+Create the policy before the `Cluster` to let the operator reach the instance it is starting.
+
+#### Renku values
+
+Point Renku at the read-write service and the secret the operator generates. CloudNativePG keeps
+the superuser password in `<cluster>-superuser` under the key `password`, hence
+`existingSecretPasswordKey` below.
+
+```yaml
+global:
+  externalServices:
+    postgresql:
+      host: renku-pg-rw
+      username: postgres
+      existingSecret: renku-pg-superuser
+      existingSecretPasswordKey: password
+```
+
+:::note
+
+Coming from a Renku version that bundled the bitnami `postgresql` chart? Follow
+[the migration guide](https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/utils/postgres_migrations/bitnami-to-cnpg.md)
+before upgrading, it covers moving the existing data into the new cluster.
+
+:::
+
 ## Ingress
 
 You should have a functioning ingress controller in your cluster. If you use managed

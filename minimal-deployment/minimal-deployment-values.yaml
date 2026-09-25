@@ -1,6 +1,8 @@
 # NOTE: Any resource requests and replica counts here are used only for development and testing purposes
 # and likely will not be able to support more than 5 concurrent users.
 # Therefore the resource requests, limits, replica counts here and are NOT SUITABLE FOR PRODUCTION.
+# NOTE: The chart does not deploy a database. Apply postgres.yaml next to this file
+# in the release namespace first, the values below point at the cluster it creates.
 ---
 authz:
   resources:
@@ -37,6 +39,12 @@ gateway:
 global:
   anonymousSessions:
     enabled: true
+  externalServices:
+    postgresql:
+      host: renku-pg-rw
+      username: postgres
+      existingSecret: renku-pg-superuser
+      existingSecretPasswordKey: password
   renku:
     domain: <deployment-FQDN>
   useHTTPS: true
@@ -59,17 +67,6 @@ keycloakx:
       memory: 600Mi
     limits:
       memory: 600Mi
-postgresql:
-  primary:
-    resources:
-      limits:
-        memory: 300Mi
-      requests:
-        memory: 300Mi
-  # Use Bitnami's PostgreSQL image from Renkulab Harbor registry
-  image:
-    registry: harbor.renkulab.io
-    repository: bitnami-mirror/postgresql
 redis:
   architecture: standalone
   master:

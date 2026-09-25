@@ -55,6 +55,19 @@ Most information related to upgrading from one chart version to another is cover
 in the `values changelog file <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/values.yaml.changelog.md>`_.
 For upgrades that require some steps other than modifying the values files to be executed, we add some instructions here.
 
+Upgrading to 2.yy.z
+*************************
+This version drops the bundled bitnami ``postgresql`` (version ``14.2.4``). Renku no longer deploys a
+database at all: run one yourself and point ``global.externalServices.postgresql`` at it.
+
+Any PostgreSQL will do. We run `CloudNativePG <https://cloudnative-pg.io/>`_ and recommend it, so
+that is what the
+`requirements docs <https://docs.renkulab.io/en/latest/docs/admins/installation/requirements#postgresql>`_
+give manifests for, next to what Renku needs from a database in general.
+``utils/postgres_migrations/bitnami-to-cnpg.md`` covers moving the existing data over. Do this
+**before** upgrading the chart, the upgrade takes the old instance down.
+
+
 Upgrading to 0.27.0
 *******************
 This version contains an upgrade to the ``keycloak`` Helm chart dependency from version ``15.0.2`` to ``20.0.1``.
