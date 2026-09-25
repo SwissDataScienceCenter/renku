@@ -27,6 +27,8 @@ spec:
     spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        {{- include "certificates.initContainer" . | nindent 8 }}
       containers:
         - name: ssh-proxy
           image: "{{ .Values.sshProxy.image.repository }}:{{ .Values.sshProxy.image.tag }}"
@@ -62,8 +64,8 @@ spec:
               value: {{ .Values.sshProxy.sentry.environment | quote }}
             - name: SENTRY_SAMPLE_RATE
               value: {{ .Values.sshProxy.sentry.sampleRate | quote }}
-            - name: RENKU_URL
-              value: {{ (include "renku.baseUrl" .) | quote }}
+            - name: RENKU_SSH_PROXY_DATA_SERVICES_URL
+              value: {{ printf "%s/api/data" (include "renku.baseUrl" .) | quote }}
           volumeMounts:
             - mountPath: "/secrets/openSshHostKey"
               name: open-ssh-host-key

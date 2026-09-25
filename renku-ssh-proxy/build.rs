@@ -1,6 +1,6 @@
 use vergen_gix::{Build, Cargo, Emitter, Gix, Rustc};
 
-pub fn main() {
+fn emit_build_info() {
     if let Ok(val) = std::env::var("RSP_RELEASE_VERSION") {
         println!("cargo:rustc-env=CARGO_PKG_VERSION={}", val);
     }
@@ -25,4 +25,8 @@ pub fn main() {
             .emit()
             .unwrap();
     }
+}
+
+pub fn main() {
+    emit_build_info();
 }
