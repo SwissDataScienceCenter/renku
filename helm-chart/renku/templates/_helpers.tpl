@@ -83,45 +83,24 @@ operator appends resources (longest is -network-policy.) */}}
 * KEYCLOAK_ADMIN + KEYCLOAK_ADMIN_PASSWORD -> read by realm init job reads
 * and username and password -> keys used by Keycloak operator in secret spec.bootstrapAdmin. */}}
 {{- define "keycloak.admin-secret" -}}
-{{- $secretAdmin := lookup "v1" "Secret" .Release.Namespace "keycloak-password-secret" -}}
-{{- $user := "" -}}
-{{- $password := "" -}}
-{{- if $secretAdmin -}}
-{{- if $secretAdmin.data.KEYCLOAK_ADMIN -}}
-{{- $user = $secretAdmin.data.KEYCLOAK_ADMIN -}}
-{{- $password = $secretAdmin.data.KEYCLOAK_ADMIN_PASSWORD -}}
-{{- else -}}
-{{- $user = $secretAdmin.data.KEYCLOAK_USER -}}
-{{- $password = $secretAdmin.data.KEYCLOAK_PASSWORD -}}
-{{- end -}}
-{{- else -}}
-{{- $user = .Values.global.keycloak.user | b64enc -}}
-{{- $password = default (randAlphaNum 64) .Values.global.keycloak.password.value | b64enc -}}
-{{- end -}}
+{{- $d := (lookup "v1" "Secret" .Release.Namespace "keycloak-password-secret").data | default dict -}}
+{{- $user := $d.KEYCLOAK_ADMIN | default $d.KEYCLOAK_USER | default (b64enc .Values.global.keycloak.user) -}}
+{{- $password := $d.KEYCLOAK_ADMIN_PASSWORD | default $d.KEYCLOAK_PASSWORD | default (b64enc (default (randAlphaNum 64) .Values.global.keycloak.password.value)) -}}
 KEYCLOAK_ADMIN: {{ $user | quote }}
 KEYCLOAK_ADMIN_PASSWORD: {{ $password | quote }}
 username: {{ $user | quote }}
 password: {{ $password | quote }}
 {{- end -}}
 
-{{/* Only define credentials: Host and database are set on the Keycloak resource.*/}}
 {{- define "keycloak.postgres-secret" -}}
-{{- $secretPostgres := lookup "v1" "Secret" .Release.Namespace "renku-keycloak-postgres" -}}
-{{- if $secretPostgres -}}
-{{- if $secretPostgres.data.KC_DB_USERNAME -}}
-# Post-keycloakx
-KC_DB_USERNAME: {{ $secretPostgres.data.KC_DB_USERNAME | quote }}
-KC_DB_PASSWORD: {{ $secretPostgres.data.KC_DB_PASSWORD | quote }}
-{{- else -}}
-# Pre-keycloakx
-KC_DB_USERNAME: {{ $secretPostgres.data.DB_USER | quote }}
-KC_DB_PASSWORD: {{ $secretPostgres.data.DB_PASSWORD | quote }}
+{{- $d := (lookup "v1" "Secret" .Release.Namespace "renku-keycloak-postgres").data | default dict -}}
+KC_DB_USERNAME: {{ $d.KC_DB_USERNAME | default $d.DB_USER | default (b64enc .Values.global.keycloak.postgresUser) | quote }}
+KC_DB_PASSWORD: {{ $d.KC_DB_PASSWORD | default $d.DB_PASSWORD | default (b64enc (default (randAlphaNum 64) .Values.global.keycloak.postgresPassword.value)) | quote }}
 {{- end -}}
-# No pre-existing secret
-{{- else -}}
-KC_DB_USERNAME: {{ .Values.global.keycloak.postgresUser | b64enc | quote }}
-KC_DB_PASSWORD: {{ default (randAlphaNum 64) .Values.global.keycloak.postgresPassword.value | b64enc | quote }}
-{{- end -}}
+
+{{/* The bundled Keycloak, or an external one we were handed admin credentials for. */}}
+{{- define "renku.keycloak.provisionRealm" -}}
+{{- if or .Values.keycloak.install .Values.global.keycloak.password.value -}}true{{- end -}}
 {{- end -}}
 
 {{- define "renku.baseUrl" -}}
