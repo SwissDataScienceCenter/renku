@@ -1,4 +1,4 @@
-{{- if .Values.keycloak.install }}
+{{- if include "renku.keycloak.provisionRealm" . }}
 apiVersion: batch/v1
 kind: Job
 metadata:
