@@ -7,28 +7,19 @@ Please follow this convention when adding a new row
 
 ## Upgrading to Renku 2.yy.z
 
-Renku no longer uses the bitnami `postgresql` chart as its database. It relies on an external
-postgres db, or deploys one through the [CloudNativePG](https://cloudnative-pg.io/) operator.
-The operator is **not** part of this chart and has to be installed once per cluster before
-upgrading, see [the chart readme](https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart#upgrading).
+Renku no longer deploys a database. The bundled bitnami `postgresql` chart is removed and
+renku expects to be pointed at an external postgres. Any PostgreSQL works, CloudNativePG
+is the recommended provider, which we run and document. Make sure to migrate your data
+before upgrading, as disabling postgresql on the upgrade will result in data loss. See
+[the chart readme](https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart#upgrading)
+for the migration.
 
-* NEW `cnpg`. It configures a CloudNativePG `Cluster` in renku's namespace. `cnpg.install` takes the
-  role that `postgresql.enabled` used to play.
-* NEW `cnpg.operatorNamespace`, defaults to `cnpg-system`. Opens a network policy letting the
-  operator reach the instances
-* NEW `cnpg.autoMigration`, setting it to true imports every database and role from the
-  legacy instance into the cnpg Cluster on **creation**. Fails if the Cluster already exists.
-* EDIT `postgresql`. The section stays, but only as a migration source: renku never connects to it
-  again. Keep `enabled: true` for as long as you need the old data reachable.
-* NEW `cnpg.extraSpec`, the Cluster spec itself. Useful to set e.g. `instances`, `storage` or `backup`.
+* DELETE `postgresql`. The bitnami subchart is no longer a dependency. Keeping that value on upgrade raises an error.
+* EDIT `global.externalServices.postgresql` is now the only way to configure the database, and
+  `host` is required. The `enabled` flag is gone.
 * NEW `global.externalServices.postgresql.existingSecretPasswordKey`, defaults to
-  `postgres-password`. Set to `password` to point at a CNPG `<cluster>-superuser` secret.
-* `global.externalServices.postgresql` is unchanged and keeps working for an external postgres. It
-  stays mutually exclusive with `cnpg.install`.
+  `postgres-password`. Set to `password` to point at a CloudNativePG `<cluster>-superuser` secret.
 
-Note that the hostname of the deployed database changes from `<release>-postgresql` to
-`<release>-pg-rw`, the read-write service of the cnpg Cluster. The renku chart templates it,
-so this only matters for anything outside the chart that referred to the old name.
 ## Upgrading to Renku 2.21.0
 
 * NEW `dataService.imageBuilders.insecureOutput.enabled`: it is now possible to configure registries that use e.g. self-signed certificates to push images to. **WARNING** do not use in production. This is a feature that helps for testing and development.
