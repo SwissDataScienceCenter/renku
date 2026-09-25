@@ -3,9 +3,12 @@ kind: Deployment
 metadata:
   name: {{ template "renku.fullname" . }}-data-service
   labels:
-    app: renku-data-service
+    app.kubernetes.io/name: renku-data-service
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: data-services
+    app.kubernetes.io/part-of: renku
     chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
   {{- if not .Values.dataService.autoscaling.enabled }}
@@ -15,14 +18,28 @@ spec:
     {{- toYaml .Values.dataService.updateStrategy | nindent 4 }}
   selector:
     matchLabels:
-      app: renku-data-service
-      release: {{ .Release.Name }}
+      app.kubernetes.io/name: renku-data-service
+      app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: renku-data-service
-        release: {{ .Release.Name }}
+        app.kubernetes.io/name: renku-data-service
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/component: data-services
+        app.kubernetes.io/part-of: renku
+        renku.io/allow-external: "true"
+        renku.io/kubeapi-access: "true"
+        renku.io/database-access: "true"
+        renku.io/authz-access: "true"
+        renku.io/secrets-storage-access: "true"
+        {{- if .Values.solr.enabled }}
+        renku.io/solr-access: "true"
+        {{- end }}
+        {{- if .Values.redis.install }}
+        renku.io/redis-access: "true"
         {{ .Values.global.redis.clientLabel | toYaml | nindent 8 }}
+        {{- end }}
       annotations:
         # NOTE: Without this the pod will not restart when the secret values change.
         checksum/config: {{ include (print $.Template.BasePath "/data-service/session-env-secret.yaml") . | sha256sum }}

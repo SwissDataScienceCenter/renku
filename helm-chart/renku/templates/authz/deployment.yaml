@@ -3,9 +3,12 @@ kind: Deployment
 metadata:
   name: {{ template "renku.fullname" . }}-authz
   labels:
-    app: renku-authz
+    app.kubernetes.io/name: renku-authz
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: authentication
+    app.kubernetes.io/part-of: renku
     chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
   {{- if not .Values.authz.autoscaling.enabled }}
@@ -18,13 +21,18 @@ spec:
       maxUnavailable: 1
   selector:
     matchLabels:
-      app: renku-authz
+      app.kubernetes.io/name: renku-authz
+      app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: renku-authz
+        app.kubernetes.io/name: renku-authz
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/component: authentication
+        app.kubernetes.io/part-of: renku
+        renku.io/database-access: "true"
         chart: {{ template "renku.chart" . }}
-        release: {{ .Release.Name }}
         heritage: {{ .Release.Service }}
     spec:
       securityContext:

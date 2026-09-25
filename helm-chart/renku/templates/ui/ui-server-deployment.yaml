@@ -21,8 +21,15 @@ spec:
       labels:
         app.kubernetes.io/name: "uiserver"
         app.kubernetes.io/instance: {{ .Release.Name }}
-        # The label below enables the gateway to connect to redis
+        renku.io/ingress-access: "true"
+        renku.io/gateway-access: "true"
+        {{- if .Values.keycloakx.enabled}}
+        renku.io/keycloak-access: "true"
+        {{- end }}
+        {{- if .Values.redis.install }}
+        renku.io/redis-access: "true"
         {{ .Values.global.redis.clientLabel | toYaml | nindent 8 }}
+        {{- end }}
     spec:
     {{- with .Values.ui.server.imagePullSecrets }}
       imagePullSecrets:
@@ -58,7 +65,7 @@ spec:
             - name: GATEWAY_LOGOUT_PATH
               value: {{ .Values.gateway.logoutSuffix | default (printf "/auth/logout") | quote }}
             - name: AUTH_SERVER_URL
-              value: {{ printf "%s/auth/realms/%s" (include "renku.baseUrl" .) (include "renku.keycloak.realm" .) | quote }}
+              value: {{ include "renku.keycloakIssuerUrl" . }}
             - name: AUTH_CLIENT_ID
               value: {{ .Values.ui.server.authentication.id | default (printf "renku-ui") | quote }}
             - name: AUTH_CLIENT_SECRET

@@ -4,9 +4,12 @@ kind: PriorityClass
 metadata:
   name: {{ printf "%s-capacity-placeholder" (include "renku.fullname" . | trunc 42 | trimSuffix "-") }}
   labels:
-    app: {{ template "renku.name" . }}
+    app.kubernetes.io/name: {{ template "renku.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: data-services
+    app.kubernetes.io/part-of: renku
     chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 value: -1
 globalDefault: false

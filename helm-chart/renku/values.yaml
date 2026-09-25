@@ -233,6 +233,23 @@ networkPolicies:
       #   ports:
       #     - port: 443
       #       protocol: TCP
+  # The name of the pod and the namespace may vary based on which ingress controller
+  # is used in production.
+  # only created if ingress above is enabled
+  ingressController:
+    ingress:
+      - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: ingress-nginx
+          namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ingress-nginx
+        ports:
+          - protocol: TCP
+            port: http
+          - protocol: TCP
+            port: https
 ## Alerts configuration
 alerts:
   ## Alertmanager webhook authentication
@@ -264,6 +281,10 @@ logging:
 keycloakx:
   ## Spawn a keycloak instance
   enabled: true
+  podLabels:
+    renku.io/database-access: "true"
+    renku.io/ingress-access: "true"
+    renku.io/keycloak-access: "true"
   postgresql:
     # Disable PostgreSQL dependency
     enabled: false

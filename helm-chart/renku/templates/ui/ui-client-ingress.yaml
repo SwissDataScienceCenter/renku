@@ -4,9 +4,12 @@ kind: Ingress
 metadata:
   name: {{ template "ui.fullname" . }}
   labels:
-    app: ui
+    app.kubernetes.io/name: ui
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: ui
+    app.kubernetes.io/part-of: renku
     chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 {{- with .Values.ui.client.ingress.annotations }}
   annotations:
@@ -44,9 +47,12 @@ kind: Ingress
 metadata:
   name: {{ template "ui.canary.fullname" . }}
   labels:
-    app: "ui-canary"
+    app.kubernetes.io/name: ui-canary
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: ui
+    app.kubernetes.io/part-of: renku
     chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   annotations:
     nginx.ingress.kubernetes.io/canary: "true"

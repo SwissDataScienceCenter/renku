@@ -3,9 +3,12 @@ kind: Service
 metadata:
   name: {{ include "renku.fullname" . }}-authz
   labels:
-    app: renku-authz
+    app.kubernetes.io/name: renku-authz
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: authentication
+    app.kubernetes.io/part-of: renku
     chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   annotations:
     {{- if and .Values.authz.metrics.enabled .Values.authz.metrics.addPrometheusAnnotations }}
@@ -31,4 +34,5 @@ spec:
       name: metrics 
     {{- end }}
   selector:
-    app: renku-authz
+    app.kubernetes.io/name: renku-authz
+    app.kubernetes.io/instance: {{ .Release.Name }}

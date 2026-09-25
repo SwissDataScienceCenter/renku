@@ -1,0 +1,19 @@
+{{- if .Values.ingress.enabled }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ingress-from-ingress-controller
+  labels:
+    {{- include "netpol.labels" . | nindent 4 }}
+spec:
+  policyTypes:
+    - Ingress
+  podSelector:
+    matchLabels:
+      renku.io/ingress-access: "true"
+  ingress:
+  {{- with .Values.networkPolicies.ingressController.ingress }}
+  {{- toYaml . | nindent 2 }}
+  {{- end }}
+{{- end }}

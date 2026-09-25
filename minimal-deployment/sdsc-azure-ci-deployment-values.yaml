@@ -121,6 +121,20 @@ networkPolicies:
         ports:
           - port: 443
             protocol: TCP
+  ingressController:
+    ingress:
+      - from:
+        - podSelector:
+            matchLabels:
+              app: nginx
+          namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: app-routing-system
+        ports:
+          - protocol: TCP
+            port: http
+          - protocol: TCP
+            port: https
 notebooks:
   gitRpcServer:
     image:

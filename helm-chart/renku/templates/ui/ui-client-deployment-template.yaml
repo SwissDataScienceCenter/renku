@@ -4,16 +4,19 @@ kind: Deployment
 metadata:
   name: {{ .deploymentName }}
   labels:
-    app: ui
+    app.kubernetes.io/name: ui
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: ui
+    app.kubernetes.io/part-of: renku
     chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
   replicas: {{ .Values.ui.client.replicaCount }}
   selector:
     matchLabels:
-      app: ui
-      release: {{ .Release.Name }}
+      app.kubernetes.io/name: ui
+      app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
       annotations:
@@ -22,8 +25,17 @@ spec:
         # from configmaps do not update automatically.
         reloader: {{ randAlphaNum 16 | quote }}
       labels:
-        app: ui
-        release: {{ .Release.Name }}
+        app.kubernetes.io/name: ui
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/component: ui
+        app.kubernetes.io/part-of: renku
+        renku.io/ingress-access: "true"
+        {{- if .Values.keycloakx.enabled}}
+        renku.io/keycloak-access: "true"
+        {{- end }}
+        chart: {{ template "renku.chart" . }}
+        heritage: {{ .Release.Service }}
     spec:
       automountServiceAccountToken: {{ .Values.global.debug }}
       initContainers:

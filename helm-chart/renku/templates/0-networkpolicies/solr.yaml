@@ -1,0 +1,48 @@
+{{- if .Values.solr.enabled }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ingress-to-solr
+  labels:
+    {{- include "netpol.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: solr
+      app.kubernetes.io/name: solr
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              renku.io/solr-access: "true"
+              app.kubernetes.io/instance: {{ .Release.Name }}
+      ports:
+        - protocol: TCP
+          port: http
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: egress-to-solr
+  labels:
+    {{- include "netpol.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      renku.io/solr-access: "true"
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/component: solr
+              app.kubernetes.io/name: solr
+      ports:
+        - protocol: TCP
+          port: http
+{{- end }}
