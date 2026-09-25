@@ -3,10 +3,6 @@ dependencies:
     version: "14.2.4"
     repository: "oci://harbor.renkulab.io/bitnami-mirror"
     condition: postgresql.enabled
-  - name: keycloakx
-    version: 7.3.1
-    repository: "https://codecentric.github.io/helm-charts"
-    condition: keycloakx.enabled
   - name: redis
     repository: "oci://harbor.renkulab.io/bitnami-mirror"
     version: 20.3.0

@@ -55,6 +55,12 @@ Most information related to upgrading from one chart version to another is cover
 in the `values changelog file <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/values.yaml.changelog.md>`_.
 For upgrades that require some steps other than modifying the values files to be executed, we add some instructions here.
 
+Upgrading to 2.22.0
+*******************
+Keycloak is deployed through the `Keycloak Operator
+<https://www.keycloak.org/operator/installation>`_ from this version on. The operator is cluster
+scoped and is **not** part of this chart, install it before upgrading.
+
 Upgrading to 0.27.0
 *******************
 This version contains an upgrade to the ``keycloak`` Helm chart dependency from version ``15.0.2`` to ``20.0.1``.

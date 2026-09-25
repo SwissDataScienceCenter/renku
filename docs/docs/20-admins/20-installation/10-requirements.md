@@ -72,6 +72,22 @@ get TLS certificates provisioned and renewed automatically.
 However, there are many alternatives to Let's Encrypt and ACME
 (some requiring more manual intervention than others) which are also acceptable.
 
+## Keycloak Operator
+
+Renku deploys Keycloak as a `Keycloak` custom resource, so the
+[Keycloak Operator](https://www.keycloak.org/operator/installation) has to be installed on the cluster.
+
+The chart does not pin `spec.image`, so the operator version determines which Keycloak version you
+run. Keep the two in step when you upgrade.
+
+:::warning
+
+Install the operator _before_ installing or upgrading Renku. Without it the `Keycloak` resource is
+created but never reconciled, so Keycloak never starts and the realm initialization job keeps
+retrying until it fails.
+
+:::
+
 ## Local CLI and similar useful tools
 
 - [kubectl](https://kubernetes.io/docs/reference/kubectl/)

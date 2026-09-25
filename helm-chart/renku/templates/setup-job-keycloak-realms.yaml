@@ -1,7 +1,4 @@
-{{- if hasKey .Values "keycloak" -}}
-{{- fail "Values to configure Keycloak should be under `keycloakx`." -}}
-{{- end -}}
-{{- if .Values.keycloakx.enabled }}
+{{- if include "renku.keycloak.provisionRealm" . }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -27,7 +24,7 @@ spec:
         {{- include "certificates.initContainer" . | nindent 8 }}
       containers:
         - name: init-keycloak
-          image: "{{ .Values.keycloakx.initRealm.image.repository }}:{{ .Values.keycloakx.initRealm.image.tag }}"
+          image: "{{ .Values.keycloak.initRealm.image.repository }}:{{ .Values.keycloak.initRealm.image.tag }}"
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           command: ["python"]
@@ -58,8 +55,8 @@ spec:
                   name: keycloak-password-secret
                   key: KEYCLOAK_ADMIN_PASSWORD
             - name: CREATE_DEMO_USER
-              value: {{ .Values.keycloakx.createDemoUser | toString | lower | quote }}
-            {{- if .Values.keycloakx.createDemoUser }}
+              value: {{ .Values.keycloak.createDemoUser | toString | lower | quote }}
+            {{- if .Values.keycloak.createDemoUser }}
             - name: DEMO_USER_PASSWORD
               valueFrom:
                 secretKeyRef:

@@ -5,6 +5,25 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
+## Upgrading to Renku 2.22.0
+
+Keycloak is now deployed as a `Keycloak` resource reconciled by the
+[Keycloak Operator](https://www.keycloak.org/operator/installation) instead of the `keycloakx`
+subchart.
+
+* DELETE `keycloakx`, the whole section. The chart refuses to render while it is present.
+* NEW `keycloak.install`, replaces `keycloakx.enabled`.
+* NEW `keycloak.extraSpec`, deep merged into the `Keycloak` resource spec.
+* NEW `keycloak.themeImage`, replaces the `theme-provider` init container that used to be spelled
+out in `keycloakx.extraInitContainers`.
+* DELETE `keycloakx.securityContext` and `keycloakx.podSecurityContext`. Keycloak now uses 
+the chart-wide `securityContext`.
+* EDIT `keycloakx.createDemoUser` and `keycloakx.initRealm` move to `keycloak.*`.
+* DELETE `keycloakx.test`, it was only read by the subchart's helm test.
+* EDIT `global.keycloak.password.value` now also drives realm provisioning on an external
+Keycloak. Set it alongside `global.keycloak.url` and the realm job creates the Renku realm and
+its clients there, on every upgrade. Leave it empty to manage the realm yourself.
+
 ## Upgrading to Renku 2.21.0
 
 * NEW `dataService.imageBuilders.insecureOutput.enabled`: it is now possible to configure registries that use e.g. self-signed certificates to push images to. **WARNING** do not use in production. This is a feature that helps for testing and development.
