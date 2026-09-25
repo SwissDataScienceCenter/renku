@@ -14,9 +14,8 @@ You may need to customize privacy values for your RenkuLab deployment (E.G. the 
 Please refer to the following documentation: https://renku.readthedocs.io/en/latest/admin/index.html#additional-configurations
 {{ end }}
 
-{{ if .Values.global.externalServices.postgresql.enabled -}}
-You have configured RenkuLab to connect to an external PostgreSQL instance.
-The databases and users RenkuLab requires have automatically been created on the external PostgreSQL instance.
+RenkuLab connects to the PostgreSQL instance at {{ include "renku.pgHost" . }}.
+The databases and users RenkuLab requires have automatically been created on it.
 
 CAUTION WHEN CHANGING POSTGRESQL PASSWORDS:
 
@@ -25,4 +24,4 @@ RenkuLab will not modify the user passwords on your PostgreSQL instance if you e
 
 If you change the PostgreSQL password Helm value for a RenkuLab service WITHOUT also updating the password on the PostgreSQL instance, 
 RenkuLab will not be able to connect to the database, and will fail to run.
-{{ end }}
+
