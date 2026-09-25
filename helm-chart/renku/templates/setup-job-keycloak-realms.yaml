@@ -134,6 +134,21 @@ spec:
               value: "client_credentials"
             - name: "DATASERVICE_KC_CLIENT_SERVICE_ACCOUNT_ROLES"
               value: '["view-users", "query-users", "view-events", "view-realm"]'
+            - name: SSHPROXY_KC_CLIENT_ID
+              value: "ssh-proxy"
+            - name: SSHPROXY_KC_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ cat (include "renku.fullname" .) "-ssh-proxy-keycloak" | nospace }}
+                  key: sshProxyClientSecret
+            - name: SSHPROXY_KC_CLIENT_PUBLIC
+              value: "false"
+            - name: SSHPROXY_KC_CLIENT_OAUTH_FLOW
+              value: "client_credentials"
+            - name: SSHPROXY_KC_CLIENT_SERVICE_ACCOUNT_REALM_ROLES
+              value: '["ssh-proxy"]'
+            - name: SSHPROXY_KC_CLIENT_DIRECT_ACCESS_GRANTS_ENABLED
+              value: "false"
             - name: ALERTMANAGER_WEBHOOK_OIDC_ENABLED
               value: {{ .Values.alerts.alertmanager.enabled | toString | lower | quote }}
             {{- if .Values.alerts.alertmanager.enabled }}

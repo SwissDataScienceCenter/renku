@@ -95,6 +95,8 @@ class OIDCClient:
     public_client: bool = False
     client_extra_web_origins: List[str] = field(default_factory=list)
     client_extra_redirect_uris: List[str] = field(default_factory=list)
+    direct_access_grants_enabled: Optional[bool] = None
+    """Whether the client supports the direct access (password) grant. None leaves Keycloak's default."""
 
     def __post_init__(self):
         self.base_url = self.base_url.rstrip("/")
@@ -183,6 +185,8 @@ class OIDCClient:
                 }
             ],
         }
+        if self.direct_access_grants_enabled is not None:
+            output["directAccessGrantsEnabled"] = self.direct_access_grants_enabled
         if self.secret is not None:
             output["secret"] = self.secret
         output = self.oauth_flow.get_keycloak_payload(
@@ -214,7 +218,12 @@ class OIDCClient:
             ),
             client_extra_web_origins=json.loads(
                 os.environ.get(f"{prefix}EXTRA_WEB_ORIGINS", "[]")
-            )
+            ),
+            direct_access_grants_enabled=(
+                None
+                if f"{prefix}DIRECT_ACCESS_GRANTS_ENABLED" not in os.environ
+                else os.environ[f"{prefix}DIRECT_ACCESS_GRANTS_ENABLED"].lower() == "true"
+            ),
         )
 
 
@@ -269,6 +278,7 @@ class OIDCClientsConfig:
     notebooks: OIDCClient
     swagger: OIDCClient
     data_service: OIDCClient
+    ssh_proxy: OIDCClient
 
     @classmethod
     def from_env(cls) -> "OIDCClientsConfig":
@@ -279,6 +289,7 @@ class OIDCClientsConfig:
             notebooks=OIDCClient.from_env(prefix="NOTEBOOKS_KC_CLIENT_"),
             swagger=OIDCClient.from_env(prefix="SWAGGER_KC_CLIENT_"),
             data_service=OIDCClient.from_env(prefix="DATASERVICE_KC_CLIENT_"),
+            ssh_proxy=OIDCClient.from_env(prefix="SSHPROXY_KC_CLIENT_"),
         )
 
     def to_list(self) -> List[OIDCClient]:
@@ -289,4 +300,5 @@ class OIDCClientsConfig:
             self.notebooks,
             self.swagger,
             self.data_service,
+            self.ssh_proxy,
         ]
