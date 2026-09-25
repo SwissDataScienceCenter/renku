@@ -65,6 +65,12 @@ struct Cli {
     #[arg(long, env = "RENKU_SSH_PROXY_TARGET_USER")]
     target_user: Option<String>,
 
+    #[arg(long, env = "RENKU_SSH_PROXY_DATA_SERVICES_URL")]
+    data_services_url: Option<String>,
+
+    #[arg(long)]
+    data_services_timeout: Option<humantime::Duration>,
+
     /// Be more verbose when logging. Verbosity increases with each occurrence.
     #[command(flatten)]
     log_level: Option<Verbosity>,
@@ -86,6 +92,8 @@ struct FileConfig {
     target_user: Option<String>,
     #[serde(with = "humantime_serde")]
     inactivity_timeout: Option<Duration>,
+    data_services_url: Option<String>,
+    data_services_timeout: Option<Duration>,
 }
 
 fn deserialize_verbosity<'de, D>(
@@ -124,6 +132,8 @@ pub struct Settings {
     pub log_level: Verbosity,
     pub ssh_server_config: Arc<SshServerConfig>,
     pub target: Target,
+    pub data_services_url: String,
+    pub data_services_timeout: Duration,
 }
 
 impl Settings {
@@ -171,12 +181,26 @@ impl Settings {
             user: target_user,
             expected_host_key: None,
         };
+        let data_services_url = cli
+            .data_services_url
+            .or(file.data_services_url)
+            .ok_or_eyre("missing `data_services_url`")
+            .suggestion("pass --data-services-url or set `data_services_url` in the config file")?;
+
+        let data_services_timeout = cli
+            .data_services_timeout
+            .map(|e| e.into())
+            .or(file.data_services_timeout)
+            .unwrap_or_else(|| Duration::from_mins(1));
+
         Ok(Settings {
             listen,
             host_key_file,
             log_level,
             ssh_server_config,
             target,
+            data_services_url,
+            data_services_timeout,
         })
     }
 
