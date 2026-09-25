@@ -41,11 +41,11 @@ global:
     ## Postgres password for the Keycloak database
     postgresPassword:
       value:
-    ## Admin username/password for Keycloak
+    ## Admin username/password for Keycloak.
     user: admin
     password:
       value:
-    ## Fill in the keycloak url below if you are not using the renku-bundled keycloak instance
+    ## Fill in the keycloak url below (must end with /) if you are not using the renku-bundled keycloak.
     url:
     ## Explicitly set another realm than "renku" here
     realm:
@@ -262,8 +262,7 @@ logging:
   logFormatStyle: plain
 ## Keycloak configuration
 # Keycloak is deployed as a `Keycloak` custom resource, reconciled by the Keycloak
-# Operator. The operator itself is NOT part of this chart: its CRDs and RBAC are
-# cluster scoped, so it has to be installed once per cluster, like CloudNativePG.
+# Operator. The operator itself is NOT part of this chart, it is installed at cluster-level.
 keycloak:
   ## Deploy a Keycloak instance. When false, point global.keycloak.url at an
   ## external Keycloak instead.
@@ -287,14 +286,14 @@ keycloak:
       repository: renku/init-realm
       tag: "latest"
   ## Deep merged into the `Keycloak` resource spec, so anything the operator
-  ## accepts can be set here without a dedicated value. Lists are replaced, not
-  ## merged: a podTemplate that sets its own `containers` has to re-add the theme
-  ## volumeMount the chart puts there.
+  ## accepts can be set here without a dedicated value. Lists are replaced, not merged.
   ## See https://www.keycloak.org/operator/advanced-configuration
   extraSpec:
     resources:
       requests:
         cpu: 100m
+        memory: 600Mi
+      limits:
         memory: 600Mi
 # Postgresql configuration
 # The bitnami postgres chart offers a variety of configuration options, most of
