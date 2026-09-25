@@ -113,6 +113,8 @@ spec:
               value: {{ .Values.apps.enabled | quote }}
             - name: APP_LOBBY
               value: {{ toJson .Values.apps.appLobby | quote }}
+            - name: ENVIDAT_EXPORTS_ENABLED
+              value: {{ .Values.dataService.dataDeposits.envidat.exportsEnabled | quote }}
             - name: METRICS_ENABLED
               value: {{ .Values.ui.client.prometheus.enabled | quote }}
             - name: LEGACY_SUPPORT
