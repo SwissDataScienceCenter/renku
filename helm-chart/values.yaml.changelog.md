@@ -20,6 +20,9 @@ out in `keycloakx.extraInitContainers`.
 the chart-wide `securityContext`.
 * EDIT `keycloakx.createDemoUser` and `keycloakx.initRealm` move to `keycloak.*`.
 * DELETE `keycloakx.test`, it was only read by the subchart's helm test.
+* EDIT `global.keycloak.password.value` now also drives realm provisioning on an external
+Keycloak. Set it alongside `global.keycloak.url` and the realm job creates the Renku realm and
+its clients there, on every upgrade. Leave it empty to manage the realm yourself.
 
 ## Upgrading to Renku 2.21.0
 

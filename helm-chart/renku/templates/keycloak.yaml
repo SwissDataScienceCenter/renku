@@ -82,13 +82,12 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  {{- $extraSpec := default dict .Values.keycloak.extraSpec -}}
-  {{/* Lists are replaced rather than merged, so a podTemplate with its own
-  containers drops the theme mount below. Refuse to render to prevent bad surprises. */}}
-  {{- $containers := dig "unsupported" "podTemplate" "spec" "containers" list $extraSpec -}}
-  {{- if and $containers (not (contains "renku-theme" (toYaml $containers))) -}}
-  {{- fail "keycloak.extraSpec.unsupported.podTemplate.spec.containers replaces the chart's own entry, which mounts the Renku login theme. Re-add it alongside your settings: volumeMounts: [{name: theme, mountPath: /opt/keycloak/themes/renku-theme}]" -}}
+  {{- $spec := mergeOverwrite (include "keycloak.spec" . | fromYaml) (default dict .Values.keycloak.extraSpec) -}}
+  {{/* Lists are replaced rather than merged, so a podTemplate bringing its own
+  containers or initContainers drops the theme below. Check what actually survived. */}}
+  {{- $pod := toYaml (dig "unsupported" "podTemplate" dict $spec) -}}
+  {{- if not (and (contains "theme-provider" $pod) (contains "renku-theme" $pod)) -}}
+  {{- fail "keycloak.extraSpec.unsupported.podTemplate replaces the chart's own containers/initContainers, which copy in and mount the Renku login theme. Re-add them alongside your settings, see the theme-provider container in templates/keycloak.yaml." -}}
   {{- end -}}
-  {{- $spec := include "keycloak.spec" . | fromYaml -}}
-  {{- toYaml (mergeOverwrite $spec $extraSpec) | nindent 2 }}
+  {{- toYaml $spec | nindent 2 }}
 {{- end }}
