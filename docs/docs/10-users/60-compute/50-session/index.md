@@ -8,3 +8,16 @@ A session has access to a certain amount of compute resources (CPU, GPU, RAM and
 
 The sessions you launch are always private to you, but others with access to your project may launch their own instances
 of the session.
+
+### Managing sessions from the command line
+
+You can manage sessions from the terminal using the [Renku CLI](/docs/users/cli/cli-reference):
+
+```bash
+rnk session list                           # list running sessions
+rnk session start --launcher <launcher-id> # list running sessions
+rnk session logs <session-id>              # view session logs
+rnk session stop <session-id>              # stop a session
+```
+
+See the [CLI reference](/docs/users/cli/cli-reference) for the full list of session commands.
