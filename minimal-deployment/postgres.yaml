@@ -1,0 +1,69 @@
+# The chart needs an external database. Apply this in the release namespace before
+# installing renku with either values file next to it, and wait for the Cluster:
+#
+#   kubectl -n <namespace> apply -f minimal-deployment/postgres.yaml
+#   kubectl -n <namespace> wait --for=condition=Ready cluster/renku-pg --timeout=10m
+#
+# Needs the CloudNativePG operator, see
+# https://docs.renkulab.io/en/latest/docs/admins/installation/requirements#postgresql
+#
+# NOTE: Example for development and testing, NOT SUITABLE FOR PRODUCTION.
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: renku-pg
+spec:
+  instances: 1
+  # Renku's setup jobs need this superuser secret. CNPG deletes it by default.
+  enableSuperuserAccess: true
+  storage:
+    size: 8Gi
+  resources:
+    limits:
+      memory: 300Mi
+    requests:
+      memory: 300Mi
+---
+# Renku's default-deny-all-ingress selects every pod in the namespace, so the
+# cluster needs its own policy to be reachable at all.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: renku-pg-ingress
+spec:
+  podSelector:
+    matchLabels:
+      cnpg.io/cluster: renku-pg
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchExpressions:
+              - key: app
+                operator: In
+                values:
+                  - renku-data-service
+                  - renku-data-tasks
+                  - renku-k8s-watcher
+                  - renku-authz
+                  - renku-secrets-storage
+                  # the three jobs that create the databases and roles
+                  - postgres-setup
+        - podSelector: {matchLabels: {app.kubernetes.io/name: keycloakx}}
+        # peer instances, when spec.instances > 1
+        - podSelector: {matchLabels: {cnpg.io/cluster: renku-pg}}
+      ports:
+        - {protocol: TCP, port: 5432}
+    # the operator polls each instance on 8000 for readiness
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: cnpg-system
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: cloudnative-pg
+      ports:
+        - {protocol: TCP, port: 5432}
+        - {protocol: TCP, port: 8000}
