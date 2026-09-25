@@ -2,6 +2,7 @@ use std::collections::HashMap;
 use std::sync::Arc;
 
 use crate::Settings;
+use crate::data_services::Client;
 use color_eyre::eyre::{OptionExt, Result};
 use russh::keys::ssh_key::{HashAlg, PublicKey};
 use russh::server::Server as _;
@@ -12,7 +13,8 @@ use tokio::sync::mpsc;
 
 /// Creates and runs a proxy server
 pub async fn serve_proxy(settings: &Settings) -> Result<()> {
-    let mut ph = ProxyHandler::new().with_target(settings.target.clone());
+    let client = Client::new(&settings.data_services_url, &settings.data_services_timeout)?;
+    let mut ph = ProxyHandler::new(client).with_target(settings.target.clone());
     let socket = TcpListener::bind(settings.listen).await?;
     let server = ph.run_on_socket(settings.ssh_server_config.clone(), &socket);
     server.await?;
@@ -75,18 +77,16 @@ pub struct ProxyHandler {
     pub target: Option<Target>,
     upstream: Option<Arc<client::Handle<TargetHandler>>>,
     channels: HashMap<ChannelId, mpsc::Sender<SshMsg>>,
-    fixed_key: PublicKey,
+    client: Arc<Client>,
 }
 
-static FIXED_KEY_STR: &str = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDizMVvJFeooFSwv6qovyXn8SyoFkzKXZFwZFyzAgEmwK8h+OOLrI/Wcea9XuMKIh1QOUdi7i9bmTkUUoMAbK4iFGvRP+ScrmZ9y/8asOj25Vvj484ZhRKv6edVCb4PZyebB2+bvURx7fgaxwzTphxz6ilaJ0bR7PEEWeXKAFLoPPY24ClVGc+MnsBXcyaOO7/ekpDRdrsYBxDltMM9fBOvDISdB8UITGM6tdycm6Lb0qwotdtEK8ly58s6BlWyLtQyIAtKpp7Z6ubCGi74wRBiXPe7GaIaGr8GteiG7NQwPnraNtZdyTQ3/KFqULCa9jrIDuCHhPkaS60AiEGJ6qhZWottRgTDSLk1JpWDfXBjC0ISg2cc1PyCsW2lrooIV3Fvfo/048IMH8x6T5oB37AaR6icKzLaW6RaXLm+/bHNv3tFUl+DGfKAVahThEw9al86JTz7npXhV+0Dlx0vxMKSZO+kMCcaqSXmkh5pp8WH5NoxQL3e9ZsSvexGCo2f0Fk=";
-
 impl ProxyHandler {
-    pub fn new() -> Self {
+    pub fn new(client: Client) -> Self {
         Self {
             target: None,
             upstream: None,
             channels: HashMap::new(),
-            fixed_key: PublicKey::from_openssh(FIXED_KEY_STR).unwrap(),
+            client: Arc::new(client),
         }
     }
 
@@ -150,16 +150,19 @@ impl ProxyHandler {
         }
         Ok(())
     }
+
+    fn is_allowed_forward_target(host: &str) -> bool {
+        host.eq_ignore_ascii_case("localhost")
+            || host
+                .parse::<std::net::IpAddr>()
+                .is_ok_and(|ip| ip.is_loopback())
+    }
 }
 
 impl server::Handler for ProxyHandler {
     type Error = color_eyre::eyre::Error;
 
-    async fn auth_publickey(
-        &mut self,
-        user: &str,
-        public_key: &PublicKey,
-    ) -> std::prelude::v1::Result<server::Auth, Self::Error> {
+    async fn auth_publickey(&mut self, user: &str, public_key: &PublicKey) -> Result<server::Auth> {
         if self.target.is_none() || user.trim().is_empty() {
             log::warn!("No target host set!");
             Ok(server::Auth::reject())
@@ -167,18 +170,22 @@ impl server::Handler for ProxyHandler {
             // The username is the session hostname
             log::debug!("Setting target host to {user}");
             self.set_target_host(user);
-            //let pk = public_key.to_openssh();
-            // todo: reach out to data_services
-
-            if self.fixed_key.key_data() == public_key.key_data() {
-                log::info!("Auth successful");
-                Ok(server::Auth::Accept)
-            } else {
-                log::warn!(
-                    "Auth failed due to wrong public key: {}",
-                    public_key.fingerprint(HashAlg::Sha256)
-                );
-                Ok(server::Auth::reject())
+            match self.client.authorize_session(public_key, user).await {
+                Ok(true) => {
+                    log::info!("Auth successful");
+                    Ok(server::Auth::Accept)
+                }
+                Ok(false) => {
+                    log::warn!(
+                        "Auth failed for {}",
+                        public_key.fingerprint(HashAlg::Sha256)
+                    );
+                    Ok(server::Auth::reject())
+                }
+                Err(err) => {
+                    log::error!("Error obtaining authorization from data-services: {}", err);
+                    Ok(server::Auth::reject())
+                }
             }
         }
     }
@@ -188,7 +195,7 @@ impl server::Handler for ProxyHandler {
         channel: Channel<server::Msg>,
         reply: server::ChannelOpenHandle,
         session: &mut server::Session,
-    ) -> std::prelude::v1::Result<(), Self::Error> {
+    ) -> Result<()> {
         log::debug!("Entering channel_open_session");
         let client_id = channel.id();
         let upstream = self.connect_target().await?;
@@ -196,8 +203,9 @@ impl server::Handler for ProxyHandler {
         let (tx, rx) = mpsc::channel::<SshMsg>(64);
         self.channels.insert(client_id, tx);
         log::debug!(
-            "Connected. Open ssh session to target host: {:?}",
-            self.target
+            "Connected. Open ssh session to target host: {:?} on channel {}",
+            self.target,
+            client_id
         );
 
         let serve_handle = session.handle();
@@ -212,7 +220,7 @@ impl server::Handler for ProxyHandler {
         channel: ChannelId,
         data: &[u8],
         _session: &mut server::Session,
-    ) -> std::prelude::v1::Result<(), Self::Error> {
+    ) -> Result<()> {
         log::debug!("Sending data...");
         self.forward(&channel, SshMsg::Data(data.to_vec())).await
     }
@@ -232,7 +240,7 @@ impl server::Handler for ProxyHandler {
         &mut self,
         channel: ChannelId,
         _session: &mut server::Session,
-    ) -> std::prelude::v1::Result<(), Self::Error> {
+    ) -> Result<()> {
         log::debug!("Sending eof...");
         self.forward(&channel, SshMsg::Eof).await
     }
@@ -241,8 +249,8 @@ impl server::Handler for ProxyHandler {
         &mut self,
         channel: ChannelId,
         _session: &mut server::Session,
-    ) -> std::prelude::v1::Result<(), Self::Error> {
-        log::debug!("Sending channel_close...");
+    ) -> Result<()> {
+        log::debug!("Remove channel {} on channel_close...", channel);
         self.channels.remove(&channel);
         Ok(())
     }
@@ -262,7 +270,7 @@ impl server::Handler for ProxyHandler {
         channel: ChannelId,
         data: &[u8],
         session: &mut server::Session,
-    ) -> std::prelude::v1::Result<(), Self::Error> {
+    ) -> Result<()> {
         log::debug!("Sending exec...");
         self.forward(&channel, SshMsg::Exec(data.to_vec())).await?;
         session.channel_success(channel)?;
@@ -279,7 +287,7 @@ impl server::Handler for ProxyHandler {
         pix_height: u32,
         modes: &[(russh::Pty, u32)],
         _session: &mut server::Session,
-    ) -> std::prelude::v1::Result<(), Self::Error> {
+    ) -> Result<()> {
         log::debug!("Sending pty request...");
         self.forward(
             &channel,
@@ -303,7 +311,7 @@ impl server::Handler for ProxyHandler {
         pix_width: u32,
         pix_height: u32,
         session: &mut server::Session,
-    ) -> std::prelude::v1::Result<(), Self::Error> {
+    ) -> Result<()> {
         log::debug!("Sending window_change request...");
         self.forward(
             &channel,
@@ -324,11 +332,77 @@ impl server::Handler for ProxyHandler {
         channel: ChannelId,
         name: &str,
         session: &mut server::Session,
-    ) -> std::prelude::v1::Result<(), Self::Error> {
+    ) -> Result<()> {
         log::debug!("Sending subsystem request...");
         self.forward(&channel, SshMsg::Subsystem(name.to_string()))
             .await?;
         session.channel_success(channel)?;
+        Ok(())
+    }
+
+    async fn channel_open_direct_tcpip(
+        &mut self,
+        channel: Channel<server::Msg>,
+        host_to_connect: &str,
+        port_to_connect: u32,
+        originator_address: &str,
+        originator_port: u32,
+        reply: server::ChannelOpenHandle,
+        session: &mut server::Session,
+    ) -> Result<()> {
+        if ProxyHandler::is_allowed_forward_target(host_to_connect) {
+            let client_id = channel.id();
+            log::debug!(
+                "Open direct tcpip channel ({}) to {}:{}...",
+                client_id,
+                host_to_connect,
+                port_to_connect
+            );
+            let upstream = self.connect_target().await?;
+            let up_channel_r = upstream
+                .channel_open_direct_tcpip(
+                    host_to_connect,
+                    port_to_connect,
+                    originator_address,
+                    originator_port,
+                )
+                .await;
+            match up_channel_r {
+                Ok(up_channel) => {
+                    let (tx, rx) = mpsc::channel::<SshMsg>(64);
+                    self.channels.insert(client_id, tx);
+
+                    let serve_handle = session.handle();
+                    tokio::spawn(proxy_channel(up_channel, rx, serve_handle, client_id));
+
+                    reply.accept().await;
+                }
+                Err(russh::Error::ChannelOpenFailure(cause)) => {
+                    log::info!(
+                        "Attempt to forward to port {} failed: {:?}",
+                        port_to_connect,
+                        cause
+                    );
+                    reply.reject(cause).await;
+                }
+                Err(err) => {
+                    log::info!(
+                        "Attempt to forward to port {} failed: {}",
+                        port_to_connect,
+                        err
+                    );
+                    reply.reject(russh::ChannelOpenFailure::ConnectFailed).await;
+                }
+            }
+        } else {
+            log::info!(
+                "Don't allow forwarding to non-local host {}",
+                host_to_connect
+            );
+            reply
+                .reject(russh::ChannelOpenFailure::AdministrativelyProhibited)
+                .await;
+        }
         Ok(())
     }
 }
@@ -426,7 +500,17 @@ impl server::Server for ProxyHandler {
 
 impl Drop for ProxyHandler {
     fn drop(&mut self) {
-        log::debug!("Closing client");
+        log::debug!("Closing client. Clear all channels");
         self.channels.clear();
     }
+}
+
+#[test]
+fn test_forward_allow_host() {
+    assert!(ProxyHandler::is_allowed_forward_target("localhost"));
+    assert!(ProxyHandler::is_allowed_forward_target("127.0.0.1"));
+    assert!(ProxyHandler::is_allowed_forward_target("::1"));
+
+    assert!(!ProxyHandler::is_allowed_forward_target("google.com"));
+    assert!(!ProxyHandler::is_allowed_forward_target("80.17.21.131"));
 }

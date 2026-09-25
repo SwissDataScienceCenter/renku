@@ -1,7 +1,7 @@
 list:
     just --list
 
-test $RUST_LOG="sandhole=debug":
+test $RUST_LOG="renku_ssh_proxy=debug":
     cargo nextest run --no-fail-fast
 
 clippy:
@@ -9,3 +9,8 @@ clippy:
 
 image:
     nix build .#docker && docker load < result
+
+target := 'target/release'
+
+build target=target:
+    cargo build --release --bin renku-ssh-proxy --target-dir {{target}}
