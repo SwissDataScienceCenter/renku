@@ -356,8 +356,8 @@ Beside Renku specific elements, customization of child charts are also required.
 Here we can see the changes to be applied to make KeycloakX, Redis and Solr start
 properly.
 
-PostgreSQL is deployed by the CloudNativePG operator. If enabled, install the operator
-first, as described under [Requirements](/docs/admins/installation/requirements#postgresql).
+The database is not part of this, Renku does not deploy one. Set it up as described under
+[Requirements](/docs/admins/installation/requirements#postgresql) before installing.
 
 Note that these changes are not Renku specific, they need to be applied in any
 cases when deployed in OpenShift.
@@ -432,13 +432,6 @@ authz:
     requests:
       cpu: 50m
       memory: 75Mi
-cnpg:
-  extraSpec:
-    resources:
-      limits:
-        memory: 300Mi
-      requests:
-        memory: 300Mi
 dataService:
   # added
   rbac:
@@ -475,6 +468,12 @@ gitlab:
 global:
   anonymousSessions:
     enabled: false # Changed from default
+  externalServices:
+    postgresql:
+      host: renku-pg-rw
+      username: postgres
+      existingSecret: renku-pg-superuser
+      existingSecretPasswordKey: password
   renku:
     domain: renku.apps.my-openshift.ch
   useHTTPS: true
