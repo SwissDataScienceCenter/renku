@@ -76,13 +76,10 @@ global:
     ## NOTE should only be set for CI deployments and development purposes.
     cli_version:
   externalServices:
-    # If an external Postgres database is defined in global.externalServices.postgresql,
-    # global.externalServices.postgresql.enabled should be true, and cnpg.install should be false.
-    # By default, Renku-bundled Postgres is enabled.
+    # Renku does not deploy a database. Point this at the PostgreSQL you run,
+    # in this namespace or anywhere the services can reach it.
     postgresql:
-      enabled: false
-      # host:
-
+      host:
       ## We use the defaults here.
       username: postgres
       ## The admin password should be set explicitly.
@@ -291,10 +288,10 @@ keycloakx:
     # The following environment variables are provided to keycloak
     # as extraEnvFrom secrets.
   # renku-keycloak-postgres
-  # - DB_ADDR: database host                            value: <RELEASE-NAME>-pg-rw
-  # - DB_DATABASE: database name for keycloak           value: global.keycloak.postgresDatabase
-  # - DB_USER: database username for keycloak database  value: global.keycloak.postgresUser
-  # - DB_PASSWORD: database password for keycloak       value: global.keycloak.postgresPassword.value
+  # - KC_DB_URL_HOST: database host                     value: global.externalServices.postgresql.host
+  # - KC_DB_URL_DATABASE: keycloak database name        value: global.keycloak.postgresDatabase
+  # - KC_DB_USERNAME: keycloak database username        value: global.keycloak.postgresUser
+  # - KC_DB_PASSWORD: keycloak database password        value: global.keycloak.postgresPassword.value
   # keycloak-password-secret
   # - KEYCLOAK_USER: keycloak admin username            value: global.keycloak.user
   # - KEYCLOAK_PASSWORD: keycloak admin password        value: global.keycloak.password.value
@@ -390,60 +387,6 @@ keycloakx:
     {{- end -}}
   ingress:
     enabled: false
-# Legacy bitnami postgres. Renku never connects to it. It exists only so an
-# existing database can keep running while its data is migrated into the cnpg
-# cluster. Set enabled to false and drop the section once the migration is done.
-postgresql:
-  enabled: false
-  auth:
-    username: postgres
-    database: postgres
-    ## Use an existing secret instead of creating a new one. It must have a
-    ## postgres-password key containing the password for the postgres user.
-    # existingSecret:
-  ## Use Bitnami's PostgreSQL image from Renkulab Harbor registry
-  image:
-    registry: harbor.renkulab.io
-    repository: bitnami-mirror/postgresql
-  primary:
-    persistence:
-      enabled: true
-      size: 8Gi
-      ## Provide an existing PersistentVolumeClaim to be reused.
-      # existingClaim:
-    resources:
-      requests:
-        cpu: 100m
-        memory: 300Mi
-
-# Postgresql configuration
-# Renku deploys postgres through the CloudNativePG operator, which must be installed separately.
-# This section configures the Cluster that renku creates in its own namespace.
-# For all options see
-# https://cloudnative-pg.io/documentation/current/cloudnative-pg.v1/
-cnpg:
-  # Set to false to not deploy a postgres at all, for instance when pointing
-  # renku at an instance it does not manage through
-  # global.externalServices.postgresql.
-  install: true
-  # Where the operator runs. The chart opens a network policy for it, so a wrong
-  # value here leaves the Cluster hanging and never ready.
-  operatorNamespace: cnpg-system
-  # Import the databases and roles from the legacy postgresql section when
-  # the Cluster is first created. Bootstrap only runs at creation: setting this
-  # on a Cluster that already exists does nothing, so the chart refuses it.
-  autoMigration: false
-  # The Cluster spec. Anything cnpg accepts goes here.
-  extraSpec:
-    instances: 1
-    storage:
-      size: 8Gi
-      # Omit storageClass to use the default storage class of the cluster.
-    resources:
-      requests:
-        cpu: 100m
-        memory: 300Mi
-
 redis:
   # If set to true, a HA redis will be included in the Renku release.
   install: true
