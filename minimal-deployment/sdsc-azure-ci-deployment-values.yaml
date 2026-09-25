@@ -1,5 +1,8 @@
 # This file is based on the minimal-deployment-values.yaml file,
 # but it overrides some values to make the deployment work on Azure.
+#
+# NOTE: The chart does not deploy a database. Apply postgres.yaml next to this file
+# in the release namespace first, the values below point at the cluster it creates.
 ---
 authz:
   image:
@@ -10,13 +13,6 @@ authz:
     requests:
       cpu: 50m
       memory: 75Mi
-cnpg:
-  extraSpec:
-    resources:
-      limits:
-        memory: 300Mi
-      requests:
-        memory: 300Mi
 dataService:
   image:
     repository: harbor.dev.renku.ch/dockerhub_cache/renku/renku-data-service
@@ -53,6 +49,12 @@ gateway:
 global:
   anonymousSessions:
     enabled: true
+  externalServices:
+    postgresql:
+      host: renku-pg-rw
+      username: postgres
+      existingSecret: renku-pg-superuser
+      existingSecretPasswordKey: password
   certificates:
     image:
       repository: harbor.dev.renku.ch/dockerhub_cache/renku/certificates
