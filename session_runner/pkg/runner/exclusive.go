@@ -39,10 +39,6 @@ func (r *Runner) lock() error {
 		return err
 	}
 
-	if err := file.Sync(); err != nil {
-		return err
-	}
-
 	return nil
 }
 
