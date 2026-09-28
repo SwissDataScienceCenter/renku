@@ -9,8 +9,10 @@ The dump and restore path works against any target, and the ordering in steps 3 
 
 > [!IMPORTANT]
 >
-> Create the new database **before** upgrading the chart. The upgrade removes the bitnami
-> StatefulSet, and with it the only copy of the old data if you have not moved it yet.
+> Create the new database **before** upgrading the chart. The upgrade takes the bitnami instance
+> down and deletes the `<release>-postgresql` secret holding its superuser password. The data
+> volume should survive until you delete it, but accessing it again requires recreating an
+> instance by hand. Back it up to be safe.
 
 ```bash
 NS=renku
@@ -164,5 +166,5 @@ when the storage class reclaim policy is `Delete`.
 kubectl -n $NS delete pvc data-$REL-postgresql-0
 ```
 
-A run that dies partway leaves a broken state, both a half-restored database and a Solr
-migration lock would block later deploys. Restart from a wiped cluster and Solr volume.
+A run that dies partway leaves a half-restored database, which blocks later deploys. Restart
+from a wiped cluster.
