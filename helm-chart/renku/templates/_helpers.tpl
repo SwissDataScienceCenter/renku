@@ -149,6 +149,15 @@ KC_DB_PASSWORD: {{ default (randAlphaNum 64) .Values.global.keycloak.postgresPas
 {{- end -}}
 {{- end -}}
 
+{{- define "renku.internalKeycloakUrl" -}}
+{{- if .Values.keycloakx.enabled -}}
+{{/* NOTE: If the url for keycloak does not end with '/' then the python keycloak client library will fail to connect */}}
+{{- printf "http://%s-http/auth/" (include "keycloak.fullname" .) -}}
+{{- else -}}
+{{- .Values.global.keycloak.url -}}
+{{- end -}}
+{{- end -}}
+
 {{- define "renku.keycloakIssuerUrl" -}}
 {{- printf "%s/realms/%s" (include "renku.keycloakUrl" . | trimSuffix "/") (include "renku.keycloak.realm" .) -}}
 {{- end -}}

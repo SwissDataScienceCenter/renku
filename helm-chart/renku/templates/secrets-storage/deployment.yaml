@@ -69,7 +69,7 @@ spec:
                   name: {{ .Values.global.db.common.passwordSecretName }}
                   key: password
             - name: KEYCLOAK_URL
-              value: {{ include "renku.keycloakUrl" . | quote }}
+              value: {{ include "renku.internalKeycloakUrl" . | quote }}
             - name: KEYCLOAK_TOKEN_SIGNATURE_ALGS
               value: "RS256"
             - name: KEYCLOAK_CLIENT_ID
