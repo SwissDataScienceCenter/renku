@@ -12,6 +12,7 @@ import (
 	apptainerEngine "github.com/SwissDataScienceCenter/renku/session_runner/pkg/engine/apptainer"
 	"github.com/SwissDataScienceCenter/renku/session_runner/pkg/renku"
 	"github.com/SwissDataScienceCenter/renku/session_runner/pkg/renku/api/session_runners"
+	"github.com/SwissDataScienceCenter/renku/session_runner/pkg/runner/persistence"
 	"github.com/SwissDataScienceCenter/renku/session_runner/pkg/runner/reconciler"
 	"github.com/SwissDataScienceCenter/renku/session_runner/pkg/state"
 )
@@ -30,6 +31,8 @@ type Runner struct {
 	state         *state.LocalSessionState
 	reconciler    *reconciler.RunnerReconciler
 	engine        *apptainerEngine.ApptainerEngine
+
+	persist *persistence.Persistence
 }
 
 func NewRunner(options ...RunnerOption) (runner *Runner, err error) {
@@ -50,6 +53,11 @@ func NewRunner(options ...RunnerOption) (runner *Runner, err error) {
 		return nil, err
 	}
 	r.engine = engine
+	persist, err := persistence.NewPersistence()
+	if err != nil {
+		return nil, err
+	}
+	r.persist = persist
 	if err := r.validateNewRunner(); err != nil {
 		return nil, err
 	}
@@ -97,6 +105,8 @@ func (r *Runner) Start(ctx context.Context) error {
 	}
 	defer r.unlock()
 
+	r.persist.Set(persistence.PersistedRunnerState{ServerURL: r.renkuURL.String()})
+
 	registerCtx, registerCancel := context.WithTimeout(ctx, time.Minute)
 	defer registerCancel()
 	if err := r.register(registerCtx); err != nil {
@@ -115,6 +125,9 @@ func (r *Runner) Start(ctx context.Context) error {
 	}
 
 	<-ctx.Done()
+	if err := r.persist.Close(); err != nil {
+		return err
+	}
 	if err := ctx.Err(); err != nil && !errors.Is(err, context.Canceled) {
 		return err
 	}
