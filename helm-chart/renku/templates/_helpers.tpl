@@ -55,18 +55,18 @@ Host and admin credentials the database setup jobs need.
 {{- define "renku.pgAdminEnv" -}}
 {{- $ext := .Values.global.externalServices.postgresql -}}
 - name: DB_HOST
-  value: {{ include "renku.pgHost" . }}
+  value: {{ include "renku.pgHost" . | quote }}
 - name: DB_ADMIN_USERNAME
-  value: {{ $ext.username }}
+  value: {{ $ext.username | quote }}
 {{- if $ext.password }}
 - name: DB_ADMIN_PASSWORD
-  value: {{ $ext.password }}
+  value: {{ $ext.password | quote }}
 {{- else if $ext.existingSecret }}
 - name: DB_ADMIN_PASSWORD
   valueFrom:
     secretKeyRef:
-      name: {{ $ext.existingSecret }}
-      key: {{ $ext.existingSecretPasswordKey }}
+      name: {{ $ext.existingSecret | quote }}
+      key: {{ $ext.existingSecretPasswordKey | quote }}
 {{- end }}
 {{- end -}}
 
