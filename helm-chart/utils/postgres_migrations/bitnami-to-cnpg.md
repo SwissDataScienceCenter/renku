@@ -46,7 +46,8 @@ done
 Per database rather than `pg_dumpall`, because the roles already exist in the new cluster with the
 same passwords. `--clean --if-exists` lets the restore overwrite the schema the services create.
 
-**Check the dumps before going on.** Setting `postgresql.enabled: false` removes the StatefulSet.
+**Check the dumps before going on.** Setting `postgresql.enabled: false` removes the StatefulSet
+and the `<release>-postgresql` secret holding its password. The volume stays until step 5.
 
 ### 2. Upgrade
 
@@ -97,8 +98,8 @@ the storage class reclaim policy is `Delete`.
 kubectl -n $NS delete pvc data-$REL-postgresql-0
 ```
 
-A run that dies partway leaves a broken state, both a half-restored database and a Solr
-migration lock would block later deploys. Restart from a wiped cluster and Solr volume.
+A run that dies partway leaves a half-restored database, which blocks later deploys. Restart
+from a wiped cluster.
 
 ## Out of Band CNPG Cluster
 
