@@ -6,7 +6,7 @@ func RootCmd() *cobra.Command {
 	rootCmd := &cobra.Command{
 		Use: "renku_session_runner",
 	}
-	registerCmd := StartCmd()
-	rootCmd.AddCommand(registerCmd)
+	startCmd := StartCmd()
+	rootCmd.AddCommand(startCmd)
 	return rootCmd
 }

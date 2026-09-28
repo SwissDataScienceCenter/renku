@@ -92,6 +92,11 @@ func WithRegistrationToken(token string) RunnerOption {
 func (r *Runner) Start(ctx context.Context) error {
 	// TODO
 
+	if err := r.lock(); err != nil {
+		return err
+	}
+	defer r.unlock()
+
 	registerCtx, registerCancel := context.WithTimeout(ctx, time.Minute)
 	defer registerCancel()
 	if err := r.register(registerCtx); err != nil {
