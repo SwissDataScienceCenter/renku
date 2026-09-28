@@ -130,22 +130,6 @@ jobs:
           az aks get-credentials --resource-group renku-dev --name aks-switzerlandnorth-renku-dev --file "${{ github.workspace }}/renkubot-kube.config"
           chmod 400 "${{ github.workspace }}/renkubot-kube.config"
 
-      - name: Install kubectl
-        if: needs.check-deploy.outputs.deploy == 'true'
-        uses: azure/setup-kubectl@v5
-
-      # The chart does not deploy a database, the values point at this CNPG cluster.
-      # The namespace is deleted on teardown, which takes the cluster with it.
-      - name: Deploy postgres
-        if: needs.check-deploy.outputs.deploy == 'true'
-        env:
-          KUBECONFIG: "${{ github.workspace }}/renkubot-kube.config"
-          NAMESPACE: ci-renku-${{ github.event.number }}
-        run: |
-          kubectl create namespace "$NAMESPACE" --dry-run=client -o yaml | kubectl apply -f -
-          kubectl -n "$NAMESPACE" apply -f minimal-deployment/postgres.yaml
-          kubectl -n "$NAMESPACE" wait --for=condition=Ready cluster/renku-pg --timeout=10m
-
       - name: renku build and deploy
         if: needs.check-deploy.outputs.deploy == 'true'
         uses: SwissDataScienceCenter/renku-actions/deploy-renku@v1.23.1

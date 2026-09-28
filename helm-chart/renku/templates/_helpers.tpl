@@ -43,30 +43,58 @@ http
 {{- end -}}
 
 {{/*
-Postgres host Renku connects to.
+Name of the CloudNativePG Cluster renku deploys. Truncated to 60 so that the
+service names the operator derives from it ("-rw", "-ro", "-r") still fit in 63.
 */}}
-{{- define "renku.pgHost" -}}
-{{- .Values.global.externalServices.postgresql.host -}}
+{{- define "renku.pgCluster" -}}
+{{- printf "%s-%s" .Release.Name "pg" | replace "+" "_" | trunc 60 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
-Host and admin credentials the database setup jobs need.
+Postgres host used by renku services. For the bundled postgres this is the
+read-write service of the Cluster; for an external instance it is what the admin configured.
+*/}}
+{{- define "renku.pgHost" -}}
+{{- if not .Values.global.externalServices.postgresql.enabled -}}
+{{- printf "%s-rw" (include "renku.pgCluster" .) -}}
+{{- else -}}
+{{- .Values.global.externalServices.postgresql.host -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Host and superuser credentials the database setup jobs need. For the bundled
+postgres these come from the secret cnpg generates alongside the Cluster; for an
+external instance they come from whatever the admin configured.
 */}}
 {{- define "renku.pgAdminEnv" -}}
 {{- $ext := .Values.global.externalServices.postgresql -}}
 - name: DB_HOST
-  value: {{ include "renku.pgHost" . | quote }}
+  value: {{ include "renku.pgHost" . }}
+{{- if $ext.enabled }}
 - name: DB_ADMIN_USERNAME
-  value: {{ $ext.username | quote }}
+  value: {{ $ext.username }}
 {{- if $ext.password }}
 - name: DB_ADMIN_PASSWORD
-  value: {{ $ext.password | quote }}
+  value: {{ $ext.password }}
 {{- else if $ext.existingSecret }}
 - name: DB_ADMIN_PASSWORD
   valueFrom:
     secretKeyRef:
-      name: {{ $ext.existingSecret | quote }}
-      key: {{ $ext.existingSecretPasswordKey | quote }}
+      name: {{ $ext.existingSecret }}
+      key: {{ $ext.existingSecretPasswordKey }}
+{{- end }}
+{{- else }}
+- name: DB_ADMIN_USERNAME
+  valueFrom:
+    secretKeyRef:
+      name: {{ include "renku.pgCluster" . }}-superuser
+      key: username
+- name: DB_ADMIN_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: {{ include "renku.pgCluster" . }}-superuser
+      key: password
 {{- end }}
 {{- end -}}
 
