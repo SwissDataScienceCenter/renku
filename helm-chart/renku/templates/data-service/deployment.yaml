@@ -128,6 +128,8 @@ spec:
               value: {{ .Values.dataService.trustedProxies.proxiesCount | default "" | quote }}
             - name: REAL_IP_HEADER
               value: {{ .Values.dataService.trustedProxies.realIpHeader | default "" | quote }}
+            - name: APPS_ENABLED
+              value: {{ .Values.apps.enabled | quote }}
             - name: IMAGE_BUILDERS_ENABLED
               value: {{ .Values.dataService.imageBuilders.enabled | quote }}
             - name: BUILD_PRIVATE_REPO_BUILDS_ENABLED
@@ -148,6 +150,10 @@ spec:
               value: {{ .Values.dataService.imageBuilders.privateRepositoryBuilds.pushPrivateSecretName | default "" | quote }}
             - name: BUILD_PULL_PRIVATE_SECRET_NAME
               value: {{ .Values.dataService.imageBuilders.privateRepositoryBuilds.pullPrivateSecretName | default "" | quote }}
+            - name: BUILD_INSECURE_OUTPUT_ENABLED
+              value: {{ .Values.dataService.imageBuilders.insecureOutput.enabled | default "false" | quote }}
+            - name: BUILD_INSECURE_REGISTRIES
+              value: {{ .Values.dataService.imageBuilders.insecureOutput.registries | default "" | quote }}
             - name: BUILD_RUN_RETENTION_AFTER_FAILED_SECONDS
               value: {{ .Values.dataService.imageBuilders.buildRunRetentionAfterFailedSeconds | default "" | quote }}
             - name: BUILD_RUN_RETENTION_AFTER_SUCCEEDED_SECONDS
