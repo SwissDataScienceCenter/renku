@@ -5,7 +5,7 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
-## Upgrading to Renku 2.yy.z
+## Upgrading to Renku 2.22.0
 
 Renku no longer uses the bitnami `postgresql` chart as its database. It relies on an external
 postgres db, or deploys one through the [CloudNativePG](https://cloudnative-pg.io/) operator.
