@@ -12,6 +12,7 @@ authz:
       memory: 75Mi
 cnpg:
   extraSpec:
+    enablePDB: false
     resources:
       limits:
         memory: 300Mi
