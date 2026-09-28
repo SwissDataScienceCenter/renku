@@ -23,6 +23,10 @@ Postgres instance checks.
   {{- fail "global.externalServices.postgresql.password and global.externalServices.postgresql.existingSecret cannot both be set, pick one." }}
 {{- end }}
 
+{{- if not (or $ext.password $ext.existingSecret) }}
+  {{- fail "Renku needs the PostgreSQL admin password. Set global.externalServices.postgresql.password or global.externalServices.postgresql.existingSecret." }}
+{{- end }}
+
 
 {{/*
 Keycloak checks.
