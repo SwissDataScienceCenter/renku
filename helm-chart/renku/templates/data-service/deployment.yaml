@@ -33,6 +33,9 @@ spec:
         renku.io/database-access: "true"
         renku.io/authz-access: "true"
         renku.io/secrets-storage-access: "true"
+        {{- if .Values.keycloakx.enabled}}
+        renku.io/keycloak-access: "true"
+        {{- end }}
         {{- if .Values.solr.enabled }}
         renku.io/solr-access: "true"
         {{- end }}
