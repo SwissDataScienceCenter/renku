@@ -27,6 +27,14 @@ Postgres instance checks.
   {{- fail "global.externalServices.postgresql.password and global.externalServices.postgresql.existingSecret cannot both be set, pick one." }}
 {{- end }}
 
+{{- if and $ext.enabled (not $ext.host) }}
+  {{- fail "global.externalServices.postgresql.enabled needs global.externalServices.postgresql.host, the instance the services connect to." }}
+{{- end }}
+
+{{- if and $ext.enabled (not (or $ext.password $ext.existingSecret)) }}
+  {{- fail "Renku needs the PostgreSQL admin password. Set global.externalServices.postgresql.password or global.externalServices.postgresql.existingSecret." }}
+{{- end }}
+
 {{- if $cnpg.autoMigration }}
   {{- if not $legacy }}
     {{- fail "cnpg.autoMigration imports from the legacy bitnami instance, so it needs postgresql.enabled: true. Without a source there is nothing to import." }}
