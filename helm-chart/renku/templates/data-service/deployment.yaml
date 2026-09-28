@@ -254,6 +254,8 @@ spec:
               value: {{ .Values.dataService.dataDeposits.scicat.apiUrl | quote }}
             - name: SCICAT_JOB_IMAGE
               value: {{ .Values.dataService.dataDeposits.scicat.image | quote }}
+            - name: SCICAT_TEST_ENV
+              value: {{ .Values.dataService.dataDeposits.scicat.testEnv | default false | quote }}
             - name: RENKU_URL
               value: {{ (include "renku.baseUrl" .) | quote }}
             - name: PERSISTED_LOGS_ENABLED
