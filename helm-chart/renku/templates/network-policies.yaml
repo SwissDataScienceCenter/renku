@@ -199,7 +199,7 @@ spec:
     - Ingress
   ingress:
     - from:
-        # Only allow ingress to secrets storage from notebooks and data services
+        # Only allow ingress to secrets storage from notebooks, data services and the ssh-proxy
         - podSelector:
             matchLabels:
               app: {{ template "renku.notebooks.name" . }}
@@ -207,6 +207,10 @@ spec:
         - podSelector:
             matchLabels:
               app: renku-data-service
+              release: {{ .Release.Name }}
+        - podSelector:
+            matchLabels:
+              app: renku-ssh-proxy
               release: {{ .Release.Name }}
       ports:
         - protocol: TCP
@@ -689,32 +693,6 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: ingress-to-data-service-from-ssh-proxy
-  labels:
-    app: {{ template "renku.name" . }}
-    chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-spec:
-  podSelector:
-    matchLabels:
-      app: renku-data-service
-      release: {{ .Release.Name }}
-  policyTypes:
-    - Ingress
-  ingress:
-    - from:
-        - podSelector:
-            matchLabels:
-              app: renku-ssh-proxy
-              release: {{ .Release.Name }}
-      ports:
-        - protocol: TCP
-          port: http
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
   name: allow-external-to-ssh-proxy
   labels:
     app: {{ template "renku.name" . }}
@@ -757,10 +735,10 @@ spec:
     {{- toYaml . | nindent 4 }}
     {{- end }}
     - to:
-        # Access needed to authorize and locate sessions.
+        # Access needed to authorize sessions (internal secret service).
         - podSelector:
             matchLabels:
-              app: renku-data-service
+              app: renku-secrets-storage
               release: {{ .Release.Name }}
       ports:
         - protocol: TCP
