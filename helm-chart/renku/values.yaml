@@ -78,7 +78,6 @@ global:
   externalServices:
     # If an external Postgres database is defined in global.externalServices.postgresql,
     # global.externalServices.postgresql.enabled should be true, and cnpg.install should be false.
-    # By default, Renku-bundled Postgres is enabled.
     postgresql:
       enabled: false
       # host:
