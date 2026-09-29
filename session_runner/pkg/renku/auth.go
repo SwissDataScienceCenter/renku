@@ -29,14 +29,19 @@ type RenkuAuth struct {
 	refreshTicker *time.Ticker
 
 	authClient auth.ClientWithResponsesInterface
+
+	refreshCallbackFns []RefreshCallbackFn
 }
 
-func NewRenkuAuth(serverURL *url.URL, accessToken string, refreshToken string) (ra *RenkuAuth, err error) {
+type RefreshCallbackFn func(refreshToken string)
+
+func NewRenkuAuth(serverURL *url.URL, accessToken string, refreshToken string, refreshCallbackFns ...RefreshCallbackFn) (ra *RenkuAuth, err error) {
 	renkuAuth := RenkuAuth{
-		accessToken:  accessToken,
-		refreshToken: refreshToken,
-		tokenType:    "Bearer",
-		mutex:        sync.RWMutex{},
+		accessToken:        accessToken,
+		refreshToken:       refreshToken,
+		tokenType:          "Bearer",
+		mutex:              sync.RWMutex{},
+		refreshCallbackFns: refreshCallbackFns,
 	}
 
 	parser := jwt.NewParser()
@@ -143,6 +148,9 @@ func (ra *RenkuAuth) refreshTokens(ctx context.Context) error {
 		ra.refreshExpiresAt = claims.ExpiresAt.Time
 	}
 
+	for _, fn := range ra.refreshCallbackFns {
+		go fn(ra.refreshToken)
+	}
 	return nil
 }
 
