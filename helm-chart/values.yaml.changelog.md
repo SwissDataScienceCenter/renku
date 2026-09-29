@@ -21,8 +21,7 @@ upgrading, see [the chart readme](https://github.com/SwissDataScienceCenter/renk
 * NEW `cnpg.operatorNamespace`, defaults to `cnpg-system`. Refers to the namespace in your cluster where the CNPG operator is installed. Opens a network policy letting the operator reach the Renku instance of Postgres.
 * NEW `cnpg.autoMigration`, setting it to true imports every database and role from the
   legacy instance into the cnpg Cluster on **creation**. Fails if the Cluster already exists.
-* EDIT `postgresql`. The section stays, but only as a migration source: renku never connects to it
-  again. Keep `enabled: true` for as long as you need the old data reachable.
+* EDIT `postgresql`. The section stays, but only as a migration source: from this release onward Renku services stop using this database. Keep `enabled: true` for as long as you need the old data reachable.
 * NEW `cnpg.extraSpec`, the Cluster spec itself. Useful to set e.g. `instances`, `storage` or `backup`.
 * NEW `global.externalServices.postgresql.existingSecretPasswordKey`, defaults to
   `postgres-password`. Set to `password` to point at a CNPG `<cluster>-superuser` secret.
