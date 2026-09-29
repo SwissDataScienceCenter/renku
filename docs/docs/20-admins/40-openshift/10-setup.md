@@ -356,8 +356,8 @@ Beside Renku specific elements, customization of child charts are also required.
 Here we can see the changes to be applied to make KeycloakX, Redis and Solr start
 properly.
 
-PostgreSQL is deployed by the CloudNativePG operator. If enabled, install the operator
-first, as described under [Requirements](/docs/admins/installation/requirements#postgresql).
+PostgreSQL can be deployed by the CloudNativePG operator, you can deploy it yourself or use a managed PostgreSQL service. Note that If you decide to deploy PostgerSQL yourself we strongly recommend using the operator.
+For more information refer to [requirements section](/docs/admins/installation/requirements#postgresql). The example below assumes you will use the CloudNativePG operator.
 
 Note that these changes are not Renku specific, they need to be applied in any
 cases when deployed in OpenShift.

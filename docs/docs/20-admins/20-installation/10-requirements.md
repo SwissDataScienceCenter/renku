@@ -54,12 +54,21 @@ performance is not sufficient to host the local filesystem for a session.
 
 ## PostgreSQL
 
-Renku stores its data in PostgreSQL, which it deploys through the
-[CloudNativePG](https://cloudnative-pg.io/) operator. The operator is **not** part of the
-Renku Helm chart and has to be installed once per cluster, before installing Renku.
+Renku stores its data in PostgreSQL. The Renku Helm chart supports configuring PostgreSQL in two ways:
+- via [CloudNativePG](https://cloudnative-pg.io/) operator
+- via any pre-existing PostgreSQL instance
 
-Renku then creates a `Cluster` resource in its own namespace and the operator turns that into
+### Cloud-native PostgreSQL
+
+:::warning
+The Renku Helm chart does not provide the CloudNativePG operator. 
+If you wish to use this option you have to either have the operator already installed in your cluster or you need to install the operator before you install Renku.
+:::
+
+The Renku Helm chart can create a `Cluster` resource in its own namespace and the CloudNativePG operator then turns that into
 a running database. Configure it under the `cnpg` section of the Renku values.
+
+### External or pre-existing PostgreSQL
 
 If you would rather run PostgreSQL yourself, or use a managed database from your cloud
 provider, set `cnpg.install` to `false` and point Renku at it through
