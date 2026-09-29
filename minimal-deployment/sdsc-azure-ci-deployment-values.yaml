@@ -20,7 +20,7 @@ cnpg:
       requests:
         memory: 300Mi
 postgresql:
-  enabled: true
+  enabled: false
   image:
     registry: "harbor.dev.renku.ch"
     repository: "bitnami-mirror/postgresql"
