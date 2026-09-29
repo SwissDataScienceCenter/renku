@@ -461,7 +461,7 @@ cnpg:
   # value here leaves the Cluster hanging and never ready.
   operatorNamespace: cnpg-system
   # Import the databases and roles from the legacy postgresql section when
-  # the Cluster is first created. Bootstrap only runs at creation: setting this
+  # the Cluster custom resource is first created. This only runs at creation: setting this
   # on a Cluster that already exists does nothing, so the chart refuses it.
   autoMigration: false
   # The Cluster spec. Anything cnpg accepts goes here.
