@@ -18,10 +18,6 @@
 
 ## Manual migration
 
-> [!WARNING]
->
-> **UNTESTED.** Try on a scratch namespace first.
-
 This works with any PostgreSQL. You dump the old databases, point Renku at the new instance (the
 upgrade's setup jobs create the databases and roles there, empty), then restore the dumps into
 them. Plan for downtime, the platform is down from step 1 to step 4.
@@ -187,9 +183,8 @@ spec:
         - podSelector: {matchLabels: {app: renku-data-tasks}}
         - podSelector: {matchLabels: {app: renku-k8s-watcher}}
         - podSelector: {matchLabels: {app: renku-authz}}
+        - podSelector: {matchLabels: {app: renku-secrets-storage}}
         - podSelector: {matchLabels: {app: postgres-setup}}
-        - podSelector: {matchLabels: {app: post-install-postgres}}
-        - podSelector: {matchLabels: {app: keycloak-sync}}
         - podSelector: {matchLabels: {app.kubernetes.io/name: keycloakx}}
         - podSelector: {matchLabels: {cnpg.io/cluster: mypg}}
       ports:
