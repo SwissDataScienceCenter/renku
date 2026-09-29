@@ -57,8 +57,8 @@ Per database rather than `pg_dumpall`: the setup jobs create the roles on the ne
 with the same passwords. `--clean --if-exists` lets the restore overwrite the schema the services
 create.
 
-**Check the dumps before going on.** Setting `postgresql.enabled: false` removes the StatefulSet
-and the `<release>-postgresql` secret holding its password. The volume stays until step 5.
+**Check the dumps before going on.** If you changed `global.keycloak.postgresDatabase`, replace
+`keycloak` in the `for db in ...` loops (here and in step 4) with its value.
 
 ### 2. Deploy postgres
 
@@ -128,8 +128,15 @@ In order, check that:
 
 ### 6. Clean up
 
-Only once verified. This is the last copy of the old state, and the volume goes with the claim when
-the storage class reclaim policy is `Delete`.
+Only once verified. Set `postgresql.enabled: false` and upgrade. This removes the bitnami
+StatefulSet and the `$REL-postgresql` secret holding its password.
+
+```bash
+helm -n $NS upgrade $REL renku/renku -f my-values.yaml
+```
+
+The volume is the last copy of the old state, and it goes with the claim when the storage class
+reclaim policy is `Delete`.
 
 ```bash
 kubectl -n $NS delete pvc data-$REL-postgresql-0
