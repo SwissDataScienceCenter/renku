@@ -66,6 +66,7 @@ global:
   renku:
     ## Domain name for the deployed instance of renku
     domain: example.local
+
     ## Renku version to be used (currently for project creation in
     ## the UI) If not set explicitly the version will be picked up
     ## from the respective renku (sub)chart.
@@ -1405,6 +1406,7 @@ sshProxy:
   openSshHostKey:
   targetUser:
   targetPort: 80
+  subDomain: ssh
   sentry:
     enabled: false
     dsn:
