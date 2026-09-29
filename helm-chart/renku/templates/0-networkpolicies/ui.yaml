@@ -65,7 +65,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: egress-to-ui
+  name: egress-to-uiserver
   labels:
     {{- include "netpol.labels" . | nindent 4 }}
 spec:
