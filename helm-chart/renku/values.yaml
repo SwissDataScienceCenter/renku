@@ -451,9 +451,10 @@ postgresql:
 # For all options see
 # https://cloudnative-pg.io/documentation/current/cloudnative-pg.v1/
 cnpg:
-  # Set to false to not deploy a postgres at all, for instance when pointing
-  # renku at an instance it does not manage through
-  # global.externalServices.postgresql.
+  # If set to true Renku will create the Cluster custom resource
+  # that can be used by a pre-existing cloud-native Postgres operator to provision a Postgres database.
+  # Renku will never install the Postgres operator for you.
+  # Set to false if you provision the database yourself fully outside of Renku. In this case you need to set `global.externalServices.postgresql`.
   install: true
   # Where the operator runs. The chart opens a network policy for it, so a wrong
   # value here leaves the Cluster hanging and never ready.
