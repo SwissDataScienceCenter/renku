@@ -15,9 +15,13 @@ The jobs you submit are always private to you. Jobs are not shared between users
 You can also manage jobs from the terminal using the [Renku CLI](/docs/users/cli/cli-reference). For example:
 
 ```bash
-rnk job list          # list all jobs
-rnk job logs <id>     # view logs for a specific job
+rnk launcher list --mode non-interactive # list all launcher, pick the id of the one you want or copy the id from the UI
+rnk job start --launcher <launcher-id>   # start a new job
+rnk job list                             # list all jobs, including their ids
+rnk job logs <job-id>                        # view logs for a specific job
 ```
+
+Make sure to enable [shell completions](/docs/users/cli/cli-reference#shell-completions) for an easier time picking the launcher id and job id!
 
 See the [CLI reference](/docs/users/cli/cli-reference) for the full list of job commands.
 

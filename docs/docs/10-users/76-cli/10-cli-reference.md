@@ -92,21 +92,21 @@ This project context is resolved in this precedence order (in descending precede
 
 ### Jobs
 
-| Command         | Description                 |
-| --------------- | --------------------------- |
-| `rnk job list`  | List jobs (`rnk j ls`)      |
-| `rnk job start` | Start a non-interactive job |
-| `rnk job stop`  | Stop a running job          |
-| `rnk job logs`  | View job logs               |
+| Command                                  | Description                 |
+| ---------------------------------------- | --------------------------- |
+| `rnk job list`                           | List jobs (`rnk j ls`)      |
+| `rnk job start --launcher <launcher-id>` | Start a non-interactive job |
+| `rnk job stop <job-id>`                  | Stop a running job          |
+| `rnk job logs <job-id>`                  | View job logs               |
 
 ### Sessions
 
-| Command                             | Description                                         |
-| ----------------------------------- | --------------------------------------------------- |
-| `rnk session start --launcher <id>` | Start an interactive session using a launcher       |
-| `rnk session stop <session-id>`     | Stop a running session                              |
-| `rnk session list`                  | List currently running sessions                     |
-| `rnk session logs <session-id>`     | View session logs (`--follow` / `-f` for live tail) |
+| Command                                      | Description                                         |
+| -------------------------------------------- | --------------------------------------------------- |
+| `rnk session start --launcher <launcher-id>` | Start an interactive session using a launcher       |
+| `rnk session stop <session-id>`              | Stop a running session                              |
+| `rnk session list`                           | List currently running sessions                     |
+| `rnk session logs <session-id>`              | View session logs (`--follow` / `-f` for live tail) |
 
 ### Launchers
 

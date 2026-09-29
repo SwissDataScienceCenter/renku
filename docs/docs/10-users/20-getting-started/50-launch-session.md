@@ -36,7 +36,7 @@ rnk login
 rnk session start --launcher <launcher-id>
 ```
 
-Make sure to enable shell completions for an easier time picking the launcher id!
+Make sure to enable [shell completions](/docs/users/cli/cli-reference#shell-completions) for an easier time picking the launcher id!
 
 See the [CLI reference](/docs/users/cli/cli-reference) for more commands.
 :::
