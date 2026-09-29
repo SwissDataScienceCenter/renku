@@ -2,6 +2,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ template "renku.fullname" . }}-ssh-proxy
+  annotations:
+    "external-dns.kubernetes.io/hostname": {{ include "renku.sshDomain" . | quote }}
   labels:
     app: renku-ssh-proxy
     chart: {{ template "renku.chart" . }}
