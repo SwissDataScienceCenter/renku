@@ -393,7 +393,7 @@ keycloakx:
 # existing database can keep running while its data is migrated into the cnpg
 # cluster. Set enabled to false and drop the section once the migration is done.
 postgresql:
-  enabled: false
+  enabled: true
   auth:
     username: postgres
     database: postgres
