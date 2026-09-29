@@ -87,7 +87,7 @@ func (r *Runner) recoverRunner() error {
 		}
 	}
 	if state.Auth != nil && string(state.Auth.RefreshToken) != "" {
-		renkuAuth, err := renku.NewRenkuAuth(r.renkuURL, "", string(state.Auth.RefreshToken))
+		renkuAuth, err := renku.NewRenkuAuth(r.renkuURL, "", string(state.Auth.RefreshToken), r.getRefreshCallbackFn())
 		if err != nil {
 			return err
 		}
@@ -220,7 +220,7 @@ func (r *Runner) register(ctx context.Context) error {
 	accessToken := registerResponseJSON.Auth.AccessToken
 	refreshToken := registerResponseJSON.Auth.RefreshToken
 
-	renkuAuth, err := renku.NewRenkuAuth(r.renkuURL, accessToken, refreshToken)
+	renkuAuth, err := renku.NewRenkuAuth(r.renkuURL, accessToken, refreshToken, r.getRefreshCallbackFn())
 	if err != nil {
 		return err
 	}
@@ -330,4 +330,17 @@ func (r *Runner) contact(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+func (r *Runner) getRefreshCallbackFn() renku.RefreshCallbackFn {
+	return func(refreshToken string) {
+		slog.Info("saving new refresh token", "len(refreshToken)", len(refreshToken))
+		r.persist.Set(persistence.PersistedRunnerState{
+			RunnerID:  r.runnerID,
+			ServerURL: r.renkuURL.String(),
+			Auth: &persistence.PersistedRunnerStateAuth{
+				RefreshToken: persistence.EncodedString(refreshToken),
+			},
+		})
+	}
 }
