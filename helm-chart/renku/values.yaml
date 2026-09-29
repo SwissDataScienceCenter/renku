@@ -1117,7 +1117,7 @@ gateway:
   secretKey:
   image:
     repository: renku/renku-gateway
-    tag: "1.10.4"
+    tag: "1.10.5"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
