@@ -237,19 +237,13 @@ networkPolicies:
   # is used in production.
   # only created if ingress above is enabled
   ingressController:
-    ingress:
-      - from:
-        - podSelector:
-            matchLabels:
-              app.kubernetes.io/name: ingress-nginx
-          namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: ingress-nginx
-        ports:
-          - protocol: TCP
-            port: http
-          - protocol: TCP
-            port: https
+    selector:
+      - podSelector:
+          matchLabels:
+            app.kubernetes.io/name: ingress-nginx
+        namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: ingress-nginx
 ## Alerts configuration
 alerts:
   ## Alertmanager webhook authentication
