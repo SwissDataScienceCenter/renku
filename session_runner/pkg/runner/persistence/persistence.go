@@ -12,8 +12,13 @@ import (
 const persistenceFileRelativePath = "renku/session_runner/runner_state.json"
 
 type PersistedRunnerState struct {
-	RunnerID  string `json:"runner_id,omitempty"`
-	ServerURL string `json:"server_url,omitempty"`
+	RunnerID  string                    `json:"runner_id,omitempty"`
+	ServerURL string                    `json:"server_url,omitempty"`
+	Auth      *PersistedRunnerStateAuth `json:"auth,omitempty"`
+}
+
+type PersistedRunnerStateAuth struct {
+	RefreshToken EncodedString `json:"refresh_token,omitempty"`
 }
 
 type Persistence struct {

@@ -58,13 +58,67 @@ func NewRunner(options ...RunnerOption) (runner *Runner, err error) {
 		return nil, err
 	}
 	r.persist = persist
+	if r.renkuURL.String() == "" && r.registrationToken == "" {
+		err := r.recoverRunner()
+		if err != nil {
+			slog.Warn("could not resume runner", "err", err)
+		}
+	}
 	if err := r.validateNewRunner(); err != nil {
 		return nil, err
 	}
 	return &r, nil
 }
 
+func (r *Runner) recoverRunner() error {
+	state, err := r.persist.Get()
+	if err != nil {
+		return err
+	}
+
+	slog.Info("recovered state", "state", state)
+	if state.RunnerID != "" {
+		r.runnerID = state.RunnerID
+	}
+	if state.ServerURL != "" {
+		parsedURL, err := url.Parse(state.ServerURL)
+		if err == nil {
+			r.renkuURL = parsedURL
+		}
+	}
+	if state.Auth != nil && string(state.Auth.RefreshToken) != "" {
+		renkuAuth, err := renku.NewRenkuAuth(r.renkuURL, "", string(state.Auth.RefreshToken))
+		if err != nil {
+			return err
+		}
+		renkuClient, err := renku.NewRenkuClient(r.renkuURL, renku.WithAuth(renkuAuth))
+		if err != nil {
+			return err
+		}
+		r.renkuClient = renkuClient
+	}
+	if r.runnerID != "" && r.renkuClient != nil {
+		rec, err := reconciler.NewRunnerReconciler(r.state, r.renkuClient, r.runnerID)
+		if err != nil {
+			return err
+		}
+		r.reconciler = rec
+	}
+	return nil
+}
+
 func (r *Runner) validateNewRunner() error {
+	// Validate recovered client
+	if r.runnerID != "" {
+		if r.renkuClient == nil {
+			return fmt.Errorf("Renku client not recovered")
+		}
+		if r.reconciler == nil {
+			return fmt.Errorf("reconciler not recovered")
+		}
+		return nil
+	}
+
 	if r.renkuURL == nil {
 		return fmt.Errorf("Renku URL not provided")
 	}
@@ -105,12 +159,13 @@ func (r *Runner) Start(ctx context.Context) error {
 	}
 	defer r.unlock()
 
-	r.persist.Set(persistence.PersistedRunnerState{ServerURL: r.renkuURL.String()})
-
-	registerCtx, registerCancel := context.WithTimeout(ctx, time.Minute)
-	defer registerCancel()
-	if err := r.register(registerCtx); err != nil {
-		return err
+	if r.runnerID == "" {
+		r.persist.Set(persistence.PersistedRunnerState{ServerURL: r.renkuURL.String()})
+		registerCtx, registerCancel := context.WithTimeout(ctx, time.Minute)
+		defer registerCancel()
+		if err := r.register(registerCtx); err != nil {
+			return err
+		}
 	}
 
 	// TODO: use wait group?
@@ -179,6 +234,14 @@ func (r *Runner) register(ctx context.Context) error {
 		return err
 	}
 	r.reconciler = rec
+
+	r.persist.Set(persistence.PersistedRunnerState{
+		RunnerID:  r.runnerID,
+		ServerURL: r.renkuURL.String(),
+		Auth: &persistence.PersistedRunnerStateAuth{
+			RefreshToken: persistence.EncodedString(refreshToken),
+		},
+	})
 
 	fmt.Printf("Registered as runner: %s\n", r.runnerID)
 
