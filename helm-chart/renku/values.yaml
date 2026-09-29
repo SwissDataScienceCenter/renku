@@ -389,9 +389,22 @@ keycloakx:
     {{- end -}}
   ingress:
     enabled: false
-# Legacy bitnami postgres. Renku never connects to it. It exists only so an
-# existing database can keep running while its data is migrated into the cnpg
-# cluster. Set enabled to false and drop the section once the migration is done.
+# Legacy bitnami postgres.
+# This postgres database is not used by any Renku services.
+# This section exists only to allow migrating the legacy database.
+# Renku supports two options for using Postgres:
+# 1. Using an externally managed Postgres. In this case you have to deploy Postgres yourself and provide
+#    credentials and information on how to connect to the database in global.externalServices.postgresql.
+# 2. If you already have the cloud-native Postgres (CNPG) operator installed in your cluster,
+#    then you can look at the `cnpg` section below which can be used to template the `Cluster`
+#    resource used by the operator as part of the Renku Helm chart. If you do not have the CNPG
+#    operator installed you have to install it in your cluster independently of Renku.
+#    See more information about the CNPG operator here: https://cloudnative-pg.io/docs.
+# Renku will migrate the old database for you only if you use the CNPG operator and you set the `cnpg.autoMigration`
+# flag to `true` below. In all other cases administrators have to do the DB migration manually.
+# Please refer to the instructions in helm-chart/utils/postgres_migrations/bitnami-to-cnpg.md
+# on how to manually perform the migration.
+
 postgresql:
   enabled: true
   auth:
