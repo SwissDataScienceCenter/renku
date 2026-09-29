@@ -17,8 +17,7 @@ postgres db, or deploys one through the [CloudNativePG](https://cloudnative-pg.i
 The operator is **not** part of this chart and has to be installed once per cluster before
 upgrading, see [the chart readme](https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart#upgrading).
 
-* NEW `cnpg`. It configures a CloudNativePG `Cluster` in renku's namespace. `cnpg.install` takes the
-  role that `postgresql.enabled` used to play.
+* NEW `cnpg`. It creates and configures a CloudNativePG `Cluster` custom resource in renku's namespace. You need to have installed the Cloud-native Postgres operator in your cluster independently of Renku for this custom resource to result in the creation of a postgres database.
 * NEW `cnpg.operatorNamespace`, defaults to `cnpg-system`. Opens a network policy letting the
   operator reach the instances
 * NEW `cnpg.autoMigration`, setting it to true imports every database and role from the
