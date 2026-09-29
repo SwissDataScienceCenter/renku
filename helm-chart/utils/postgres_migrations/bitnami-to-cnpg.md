@@ -187,6 +187,8 @@ spec:
         - podSelector: {matchLabels: {app: postgres-setup}}
         - podSelector: {matchLabels: {app.kubernetes.io/name: keycloakx}}
         - podSelector: {matchLabels: {cnpg.io/cluster: mypg}}
+        # only for the manual restore, which runs psql from the old bitnami pod
+        - podSelector: {matchLabels: {app.kubernetes.io/name: postgresql}}
       ports:
         - {protocol: TCP, port: 5432}
     # the operator polls each instance on 8000 or the Cluster never reports ready
@@ -227,7 +229,7 @@ spec:
         key: postgres-password
 ```
 
-Your cluster then also needs its own ingress policy in to the old instance:
+The old instance then also needs a policy letting your cluster in:
 
 ```yaml
 apiVersion: networking.k8s.io/v1
@@ -248,17 +250,23 @@ spec:
         - {protocol: TCP, port: 5432}
 ```
 
+The import copies the data once, when the Cluster is created. Anything written to the old instance
+after that is lost, so scale the services down first (as in step 1 of the manual migration).
+
 Order matters:
 1. Create policies
 2. Create the Cluster
 3. Upgrade the chart
 
 Point Renku at the CNPG generated secret directly.
-Cnpg keeps it in `<cluster>-superuser` under the key `password`.
+CNPG keeps it in `<cluster>-superuser` under the key `password`. Keep the old instance until you
+have verified the migration, then remove it as in step 6 of the manual migration.
 
 ```yaml
 cnpg:
   install: false
+postgresql:
+  enabled: true
 global:
   externalServices:
     postgresql:
