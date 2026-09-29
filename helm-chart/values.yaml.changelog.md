@@ -7,6 +7,11 @@ Please follow this convention when adding a new row
 
 ## Upgrading to Renku 2.22.0
 
+> [!WARNING]
+> You MUST backup the postgres database before upgrading.
+> Setting `postgresql.enabled: false` can result in irrecoverable
+> data loss depending on storage class's reclaimPolicy.
+
 Renku no longer uses the bitnami `postgresql` chart as its database. It relies on an external
 postgres db, or deploys one through the [CloudNativePG](https://cloudnative-pg.io/) operator.
 The operator is **not** part of this chart and has to be installed once per cluster before
