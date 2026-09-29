@@ -7,9 +7,12 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
   labels:
-    app: "ui"
+    app.kubernetes.io/name: ui
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: ui
+    app.kubernetes.io/part-of: renku
     chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
   type: {{ .Values.ui.client.service.type }}
@@ -25,8 +28,8 @@ spec:
       name: metrics
     {{- end }}
   selector:
-    app: "ui"
-    release: {{ .Release.Name }}
+    app.kubernetes.io/name: ui
+    app.kubernetes.io/instance: {{ .Release.Name }}
 ---
 {{- if .Values.ui.client.canary.enabled }}
 apiVersion: v1
@@ -34,9 +37,12 @@ kind: Service
 metadata:
   name: {{ template "ui.canary.fullname" . }}
   labels:
-    app: "ui-canary"
+    app.kubernetes.io/name: ui-canary
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: ui
+    app.kubernetes.io/part-of: renku
     chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
   type: {{ .Values.ui.client.service.type }}
@@ -46,6 +52,6 @@ spec:
       protocol: TCP
       name: http
   selector:
-    app: "ui-canary"
-    release: {{ .Release.Name }}
+    app.kubernetes.io/name: ui-canary
+    app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}

@@ -3,9 +3,12 @@ kind: Deployment
 metadata:
   name: {{ template "renku.fullname" . }}-k8s-watcher
   labels:
-    app: renku-k8s-watcher
+    app.kubernetes.io/name: renku-k8s-watcher
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: data-services
+    app.kubernetes.io/part-of: renku
     chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
   replicas: 1
@@ -13,13 +16,18 @@ spec:
     {{- toYaml .Values.dataService.updateStrategy | nindent 4 }}
   selector:
     matchLabels:
-      app: renku-k8s-watcher
-      release: {{ .Release.Name }}
+      app.kubernetes.io/name: renku-k8s-watcher
+      app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: renku-k8s-watcher
-        release: {{ .Release.Name }}
+        app.kubernetes.io/name: renku-k8s-watcher
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/component: data-services
+        app.kubernetes.io/part-of: renku
+        renku.io/kubeapi-access: "true"
+        renku.io/database-access: "true"
       annotations:
       {{- with .Values.dataService.podAnnotations }}
         {{- toYaml . | nindent 8 }}

@@ -1,0 +1,46 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ingress-to-gateway
+  labels:
+    {{- include "netpol.labels" . | nindent 4 }}
+spec:
+  policyTypes:
+    - Ingress
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: {{ template "gateway.name" . }}
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              renku.io/gateway-access: "true"
+      ports:
+        - protocol: TCP
+          port: http
+        - protocol: TCP
+          port: https
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: egress-to-gateway
+  labels:
+    {{- include "netpol.labels" . | nindent 4 }}
+spec:
+  policyTypes:
+    - Egress
+  podSelector:
+    matchLabels:
+      renku.io/gateway-access: "true"
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: {{ template "gateway.name" . }}
+      ports:
+        - protocol: TCP
+          port: http
+        - protocol: TCP
+          port: https

@@ -3,6 +3,14 @@ apiVersion: {{ template "ui-server.autoscaling.apiVersion" . }}
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ template "ui-server.fullname" . }}
+  labels:
+    app.kubernetes.io/name: ui
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: ui
+    app.kubernetes.io/part-of: renku
+    chart: {{ template "renku.chart" . }}
+    heritage: {{ .Release.Service }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1

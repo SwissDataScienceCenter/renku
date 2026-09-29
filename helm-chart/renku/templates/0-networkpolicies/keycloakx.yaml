@@ -1,0 +1,48 @@
+{{- if .Values.keycloakx.enabled }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ingress-to-keycloakx
+  labels:
+    {{- include "netpol.labels" . | nindent 4 }}
+spec:
+  policyTypes:
+    - Ingress
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: keycloakx
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              renku.io/keycloak-access: "true"
+      ports:
+        - protocol: TCP
+          port: http
+        - protocol: TCP
+          port: https
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: egress-to-keycloakx
+  labels:
+    {{- include "netpol.labels" . | nindent 4 }}
+spec:
+  policyTypes:
+    - Egress
+  podSelector:
+    matchLabels:
+      renku.io/keycloak-access: "true"
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: keycloakx
+      ports:
+        - protocol: TCP
+          port: http
+        - protocol: TCP
+          port: https
+{{- end }}

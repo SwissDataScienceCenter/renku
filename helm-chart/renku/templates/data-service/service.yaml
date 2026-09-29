@@ -3,9 +3,12 @@ kind: Service
 metadata:
   name: {{ template "renku.fullname" . }}-data-service
   labels:
-    app: renku-data-service
+    app.kubernetes.io/name: renku-data-service
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: data-services
+    app.kubernetes.io/part-of: renku
     chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   annotations:
     prometheus.io/scrape: 'true'
@@ -19,5 +22,5 @@ spec:
       protocol: TCP
       name: http
   selector:
-    app: {{ template "renku.name" . }}-data-service
-    release: {{ .Release.Name }}
+    app.kubernetes.io/name: renku-data-service
+    app.kubernetes.io/instance: {{ .Release.Name }}
