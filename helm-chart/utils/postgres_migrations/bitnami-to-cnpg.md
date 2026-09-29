@@ -54,16 +54,9 @@ same passwords. `--clean --if-exists` lets the restore overwrite the schema the 
 **Check the dumps before going on.** Setting `postgresql.enabled: false` removes the StatefulSet
 and the `<release>-postgresql` secret holding its password. The volume stays until step 5.
 
-### 2. Upgrade
+### 2. Deploy postgres
 
-Keep `postgresql.enabled: true`, leave `cnpg.autoMigration: false`, and set `cnpg.operatorNamespace`
-if the operator does not run in `cnpg-system`.
-
-```bash
-helm -n $NS upgrade $REL renku/renku -f my-values.yaml
-kubectl -n $NS get cluster $REL-pg -w     # until healthy
-kubectl -n $NS get jobs
-```
+Deploy an external postgres instance using your preferred method.
 
 ### 3. Restore
 
@@ -82,14 +75,28 @@ done
 
 `ON_ERROR_STOP=1` prevents `psql` from exiting 0 after skipping statements that failed.
 
-### 4. Start up and verify
+Check that the databases have been restored properly on your new postgres instance.
+
+### 4. Upgrade and verify
+
+Keep `postgresql.enabled: true`, set `cnpg.install: false`, and edit the renku chart 
+values to point to your external postgres.
+
+```yaml
+global:
+  externalServices:
+    postgresql:
+      enabled: true
+      # your postgres admin user
+      username: <superuser-username>
+      password: <superuser-password>
+```
 
 ```bash
 helm -n $NS upgrade $REL renku/renku -f my-values.yaml
 ```
 
 In order:
-* the Cluster is healthy
 * authz connects (i.e. the preserved spicedb password matches the restored role)
 * keycloak starts and its realm is there
 * you can log in and see the projects.
