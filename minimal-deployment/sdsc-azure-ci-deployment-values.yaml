@@ -30,14 +30,6 @@ postgresql:
         memory: "300Mi"
       requests:
         memory: "300Mi"
-global:
-  externalServices:
-    postgresql:
-      enabled: true
-      host: "mypg-rw"
-      username: "postgres"
-      existingSecret: "mypg-superuser"
-      existingSecretPasswordKey: "password"
 dataService:
   image:
     repository: harbor.dev.renku.ch/dockerhub_cache/renku/renku-data-service
@@ -72,6 +64,13 @@ gateway:
     repository: harbor.dev.renku.ch/dockerhub_cache/renku/renku-gateway
   replicaCount: 1
 global:
+  externalServices:
+    postgresql:
+      enabled: true
+      host: "mypg-rw"
+      username: "postgres"
+      existingSecret: "mypg-superuser"
+      existingSecretPasswordKey: "password"
   anonymousSessions:
     enabled: true
   certificates:
