@@ -456,7 +456,8 @@ cnpg:
   # Renku will never install the Postgres operator for you.
   # Set to false if you provision the database yourself fully outside of Renku. In this case you need to set `global.externalServices.postgresql`.
   install: true
-  # Where the operator runs. The chart opens a network policy for it, so a wrong
+  # The namespace where the cloud-native Postgres operator is installed. 
+  # The chart opens a network policy for it, so a wrong
   # value here leaves the Cluster hanging and never ready.
   operatorNamespace: cnpg-system
   # Import the databases and roles from the legacy postgresql section when
