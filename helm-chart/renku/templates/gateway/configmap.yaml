@@ -46,7 +46,7 @@ data:
       renkuServices:
         notebooks: {{ printf "http://%s-notebooks" .Release.Name | quote }}
         dataService: {{ printf "http://%s-data-service" (include "renku.fullname" .) | quote }}
-        keycloak: {{ include "renku.keycloakUrl" . | quote }} 
+        keycloak: {{ include "renku.internalKeycloakUrl" . | quote }}
         uiserver: {{ printf "http://%s" (include "ui-server.fullname" .) | quote }} 
         search: {{ printf "http://%s-search-api" .Release.Name | quote }}
     login:
