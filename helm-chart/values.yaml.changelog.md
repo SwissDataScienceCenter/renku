@@ -28,9 +28,9 @@ upgrading, see [the chart readme](https://github.com/SwissDataScienceCenter/renk
 * `global.externalServices.postgresql` is unchanged and keeps working for an external postgres. It
   stays mutually exclusive with `cnpg.install`.
 
-Note that the hostname of the deployed database changes from `<release>-postgresql` to
-`<release>-pg-rw`, the read-write service of the cnpg Cluster. The renku chart templates it,
-so this only matters for anything outside the chart that referred to the old name.
+If you have services that are completely unrelated to Renku which are using the Postgres database that came with Renku, and you set `cnpg.enabled` to `true`, and  you want those external services to keep using the same database, then you should know that
+the hostname of the deployed database changes from `<release>-postgresql` to
+`<release>-pg-rw`, the read-write service of the cnpg Cluster. The renku chart templates it.
 ## Upgrading to Renku 2.21.0
 
 * NEW `dataService.imageBuilders.insecureOutput.enabled`: it is now possible to configure registries that use e.g. self-signed certificates to push images to. **WARNING** do not use in production. This is a feature that helps for testing and development.
