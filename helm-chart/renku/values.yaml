@@ -90,8 +90,8 @@ global:
       # password:
       ## Use an existing secret instead of setting the password above.
       # existingSecret:
-      ## Key in that secret holding the admin password. A CloudNativePG cluster
-      ## keeps it in <cluster>-superuser under "password".
+      ## Key in the secret holding the admin password. If you are using a cloud-native Postgres (CNPG), a CloudNativePG cluster 
+      ## keeps the same value in the <cluster>-superuser Kubernetes secret under the "password" key.
       existingSecretPasswordKey: postgres-password
 
   # Globally available solr (TBD)
