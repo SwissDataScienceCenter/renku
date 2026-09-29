@@ -1,8 +1,11 @@
 # Migration from Bitnami postgresql to CloudNativePG
 
 > [!IMPORTANT]
+> You MUST create a full, fresh backup of your database before you start the migration.
+
+> [!IMPORTANT]
 >
-> The recommended route is to use CNPG. Either with the chart's built-in `cnpg.autoMigration: true`
+> The recommended route is to use the cloud-native PostgreSQL operator (CNPG). Either with the chart's built-in `cnpg.autoMigration: true`
 > or with an out-of-band CNPG cluster you manage (See [Ouf of Band CNPG cluster](#out-of-band-cnpg-cluster)),
 > together with `postgresql.enabled: true`. The new Cluster can then import every database and role 
 > on creation and none of this is needed. The procedure below is the manual alternative, for a CNPG 
@@ -20,13 +23,15 @@
 > **UNTESTED.** Try on a scratch namespace first.
 
 Without `cnpg.autoMigration`, The upgrade creates an **empty** cnpg cluster: the setup jobs create
-the databases and roles, the services create their schema, but the rows are not copied. Plan for
+the databases and roles, the services create their schema, but the Renku data from the old database is not copied. Plan for
 downtime, the platform is down from step 1 to step 4. The operator must already be installed.
 
 ```bash
-NS=renku
-REL=renku
+export NS=renku
+export REL=renku
 ```
+
+`NS` refers to the Kubernetes namespace where Renku is installed. `REL` referes to the name of the Renku Helm release as you have installed it on your cluster.
 
 ### 1. Quiesce and dump
 
