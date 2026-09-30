@@ -1,3 +1,4 @@
+{{- if .Values.sshProxy.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -150,3 +151,4 @@ spec:
             - key: authKey
               path: authKey
         {{- include "certificates.volumes" . | nindent 8 }}
+{{- end }}
