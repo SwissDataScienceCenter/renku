@@ -1397,6 +1397,7 @@ dataService:
     storageMaxSizeGb: 10
 
 sshProxy:
+  enabled: false
   image:
     repository: renku/ssh-proxy
     tag:
