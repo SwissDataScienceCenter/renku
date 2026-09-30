@@ -1,3 +1,4 @@
+{{- if .Values.sshProxy.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -20,3 +21,4 @@ spec:
   selector:
     app: renku-ssh-proxy
     release: {{ .Release.Name }}
+{{- end }}

@@ -663,6 +663,7 @@ spec:
       app.kubernetes.io/name: AmaltheaSession
   policyTypes:
   - Egress
+{{- if .Values.sshProxy.enabled }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -756,3 +757,5 @@ spec:
         - protocol: TCP
           # ssh sessions listen on Session.Port (data-services BUILD_PORT = 8888)
           port: 8888
+{{- end }}
+
