@@ -144,6 +144,10 @@ operator appends resources (longest is -network-policy.) */}}
   password: {{ $password | quote }}
 {{- end -}}
 
+{{/*
+Only the password is read from an existing secret; host, database and user are derived from values. 
+The DB_PASSWORD fallback covers secrets written before the keycloakx upgrade.
+*/}}
 {{- define "keycloak.postgres-secret" -}}
   {{- $d := (lookup "v1" "Secret" .Release.Namespace "renku-keycloak-postgres").data | default dict -}}
   KC_DB_USERNAME: {{ $d.KC_DB_USERNAME | default $d.DB_USER | default (b64enc .Values.global.keycloak.postgresUser) | quote }}
@@ -153,7 +157,6 @@ operator appends resources (longest is -network-policy.) */}}
 {{/* The bundled Keycloak, or an external one we were handed admin credentials for. */}}
 {{- define "renku.keycloak.provisionRealm" -}}
 {{- if or .Values.keycloak.install .Values.global.keycloak.password.value -}}true{{- end -}}
->>>>>>> fe4a12b7 (refactor(chart): collapse ifelse in helpers)
 {{- end -}}
 
 {{- define "renku.baseUrl" -}}
