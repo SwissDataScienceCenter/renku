@@ -1,25 +1,20 @@
 #!/usr/bin/env python3
-"""Generate the two static proxy-to-session (hop 2) SSH keypairs as Kubernetes Secrets.
+"""Generate the two static proxy-to-session SSH keypairs as Kubernetes Secrets.
 
 The session host keypair is generated with `dropbearkey`: dropbear's `-r` reads only dropbear's
-native private-key format. The proxy auth keypair uses `ssh-keygen` (OpenSSH), which russh reads
-and dropbear accepts in `authorized_keys`.
+native private-key format. The proxy auth keypair uses Python `cryptography` (OpenSSH format),
+which russh reads and dropbear accepts in `authorized_keys`.
 
 Idempotent: existing secrets are left untouched so chart upgrades never rotate keys.
-
-See docs/superpowers/specs/2026-09-18-ssh-proxy-session-authn-design.md.
 """
 
-import argparse
 import base64
 import logging
-import os
 import subprocess
-import sys
 import tempfile
 from pathlib import Path
 
-logger = logging.getLogger("ssh-proxy-session-keys")
+logger = logging.getLogger("platform-init")
 
 
 def _run(cmd: list[str]) -> subprocess.CompletedProcess[str]:
@@ -126,34 +121,16 @@ def ensure_secret(api, namespace: str, name: str, data: dict[str, bytes]) -> boo
     return True
 
 
-def main() -> int:
-    logging.basicConfig(level=logging.INFO)
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--namespace", default=os.environ.get("K8S_NAMESPACE"))
-    parser.add_argument("--fullname", default=os.environ.get("RENKU_FULLNAME"))
-    args = parser.parse_args()
-    if not args.namespace or not args.fullname:
-        logger.error("missing --namespace/--fullname (or K8S_NAMESPACE/RENKU_FULLNAME)")
-        return 1
-
-    from kubernetes import client, config
-
-    config.load_incluster_config()
-    api = client.CoreV1Api()
-
+def ensure_ssh_proxy_session_keys(api, namespace: str, fullname: str) -> None:
+    """Create the two hop-2 keypair Secrets if absent (idempotent)."""
     with tempfile.TemporaryDirectory() as tmp:
         workdir = Path(tmp)
         for keypair in KEYPAIRS:
-            name = secret_name(args.fullname, keypair["suffix"])
+            name = secret_name(fullname, keypair["suffix"])
             private, public = generate_keypair(workdir, name, keypair)
             ensure_secret(
                 api,
-                args.namespace,
+                namespace,
                 name,
                 {keypair["private_key"]: private, keypair["public_key"]: public},
             )
-    return 0
-
-
-if __name__ == "__main__":
-    sys.exit(main())
