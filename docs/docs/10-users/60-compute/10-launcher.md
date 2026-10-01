@@ -27,4 +27,4 @@ However, the sessions you launch and the jobs you submit are only accessible to 
 
 - To create an interactive session launcher, see [Add a session launcher to your project](session/guides/add-a-session-launcher-to-your-project).
 - To create a job launcher, see [Add a job launcher to your project](job/guides/create-a-job-launcher).
-- To publish an app, see [Publish an App](../use-cases/host-app).
+- To publish an app, see [Publish an App](../compute/app/guides/host-app).
