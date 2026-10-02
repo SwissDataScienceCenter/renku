@@ -732,3 +732,45 @@ spec:
     - from:
         - ipBlock:
             cidr: 0.0.0.0/0
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: egress-from-ssh-proxy
+  labels:
+    app.kubernetes.io/name: {{ template "renku.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/component: ssh-proxy
+    app.kubernetes.io/part-of: renku
+    chart: {{ template "renku.chart" . }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: renku-ssh-proxy
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  policyTypes:
+    - Egress
+  egress:
+    {{- with .Values.networkPolicies.sshProxy.egress }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    - to:
+        # Access needed to authorize and locate sessions.
+        - podSelector:
+            matchLabels:
+              app: renku-data-service
+              release: {{ .Release.Name }}
+      ports:
+        - protocol: TCP
+          port: http
+    - to:
+        # Access to the SSH port of user sessions.
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/created-by: controller-manager
+              app.kubernetes.io/name: AmaltheaSession
+      ports:
+        - protocol: TCP
+          port: 2222
