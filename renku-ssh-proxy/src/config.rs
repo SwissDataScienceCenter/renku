@@ -80,8 +80,8 @@ struct Cli {
     #[arg(long, env = "RENKU_SSH_PROXY_TARGET_USER")]
     target_user: Option<String>,
 
-    #[arg(long, env = "RENKU_SSH_PROXY_DATA_SERVICES_URL")]
-    data_services_url: Option<String>,
+    #[arg(long, env = "RENKU_SSH_PROXY_SECRET_SERVICE_URL")]
+    secret_service_url: Option<String>,
 
     #[arg(long)]
     data_services_timeout: Option<humantime::Duration>,
@@ -109,7 +109,7 @@ struct FileConfig {
     target_user: Option<String>,
     #[serde(with = "humantime_serde")]
     inactivity_timeout: Option<Duration>,
-    data_services_url: Option<String>,
+    secret_service_url: Option<String>,
     data_services_timeout: Option<Duration>,
 }
 
@@ -150,7 +150,7 @@ pub struct Settings {
     pub log_level: Verbosity,
     pub ssh_server_config: Arc<SshServerConfig>,
     pub target: Target,
-    pub data_services_url: String,
+    pub secret_service_url: String,
     pub data_services_timeout: Duration,
 }
 
@@ -224,11 +224,11 @@ impl Settings {
             user: target_user,
             expected_host_key: Some(session_host_key),
         };
-        let data_services_url = cli
-            .data_services_url
-            .or(file.data_services_url)
-            .ok_or_eyre("missing `data_services_url`")
-            .suggestion("pass --data-services-url or set `data_services_url` in the config file")?;
+        let secret_service_url = cli
+            .secret_service_url
+            .or(file.secret_service_url)
+            .ok_or_eyre("missing `secret_service_url`")
+            .suggestion("pass --secret-service-url or set `secret_service_url` in the config file")?;
 
         let data_services_timeout = cli
             .data_services_timeout
@@ -243,7 +243,7 @@ impl Settings {
             log_level,
             ssh_server_config,
             target,
-            data_services_url,
+            secret_service_url,
             data_services_timeout,
         })
     }

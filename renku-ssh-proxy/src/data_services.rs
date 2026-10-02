@@ -1,4 +1,4 @@
-//! Module for interacting with data services.
+//! Module for interacting with the secret service.
 
 use color_eyre::Result;
 use color_eyre::eyre::eyre;

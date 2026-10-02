@@ -14,7 +14,7 @@ use tokio::sync::mpsc;
 
 /// Creates and runs a proxy server
 pub async fn serve_proxy(settings: &Settings) -> Result<()> {
-    let client = Client::new(&settings.data_services_url, &settings.data_services_timeout)?;
+    let client = Client::new(&settings.secret_service_url, &settings.data_services_timeout)?;
     let mut ph = ProxyHandler::new(client)
         .with_target(settings.target.clone())
         .with_auth_key(settings.session_auth_key.0.clone());

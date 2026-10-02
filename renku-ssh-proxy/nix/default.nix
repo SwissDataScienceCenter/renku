@@ -111,7 +111,7 @@ in
       RENKU_SSH_PROXY_TARGET_HOST = "localhost";
       RENKU_SSH_PROXY_TARGET_USER = "renku";
       RENKU_SSH_PROXY_TARGET_PORT = "10022";
-      RENKU_SSH_PROXY_DATA_SERVICES_URL = "http://localhost:8111";
+      RENKU_SSH_PROXY_SECRET_SERVICE_URL = "http://localhost:8111";
       # Proxy-to-session (hop 2): the dev VM uses the same throwaway key as its
       # host key and as the proxy's client credential. Dev only.
       RENKU_SSH_PROXY_SESSION_AUTH_KEY = "${inputs.devshell-tools}/internal/dev-vm-key";
