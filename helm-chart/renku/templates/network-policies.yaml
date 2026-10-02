@@ -738,15 +738,18 @@ kind: NetworkPolicy
 metadata:
   name: egress-from-ssh-proxy
   labels:
-    app: {{ template "renku.name" . }}
+    app.kubernetes.io/name: {{ template "renku.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/component: ssh-proxy
+    app.kubernetes.io/part-of: renku
     chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
   podSelector:
     matchLabels:
-      app: renku-ssh-proxy
-      release: {{ .Release.Name }}
+      app.kubernetes.io/name: renku-ssh-proxy
+      app.kubernetes.io/instance: {{ .Release.Name }}
   policyTypes:
     - Egress
   egress:
