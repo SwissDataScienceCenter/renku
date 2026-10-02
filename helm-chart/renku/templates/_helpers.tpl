@@ -62,6 +62,7 @@ read-write service of the Cluster; for an external instance it is what the admin
 {{- end -}}
 {{- end -}}
 
+
 {{/*
 Host and superuser credentials the database setup jobs need. For the bundled
 postgres these come from the secret cnpg generates alongside the Cluster; for an
@@ -101,12 +102,14 @@ external instance they come from whatever the admin configured.
 {{/*
 Define subcharts full names
 */}}
-{{- define "keycloak.fullname" -}}
-{{- printf "%s-%s" .Release.Name "keycloakx" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
 {{- define "solr.fullname" -}}
 {{- printf "%s-%s" .Release.Name "solr" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/* Name of the Keycloak custom resource. 48 leaves room for the suffixes the
+operator appends resources (longest is -network-policy.) */}}
+{{- define "keycloak.fullname" -}}
+{{- printf "%s-%s" .Release.Name "keycloak" | replace "+" "_" | trunc 48 | trimSuffix "-" -}}
 {{- end -}}
 
 {{- define "gitlab.fullname" -}}
@@ -125,23 +128,17 @@ Define subcharts full names
 {{- printf "%s-%s" .Release.Name "core" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
+{{/* Admin credentials are under: 
+* KEYCLOAK_ADMIN + KEYCLOAK_ADMIN_PASSWORD -> read by realm init job reads
+* and username and password -> keys used by Keycloak operator in secret spec.bootstrapAdmin. */}}
 {{- define "keycloak.admin-secret" -}}
-{{- $secretAdmin := lookup "v1" "Secret" .Release.Namespace "keycloak-password-secret" -}}
-{{- if $secretAdmin -}}
-{{- if $secretAdmin.data.KEYCLOAK_ADMIN -}}
-# Post-keycloakx
-KEYCLOAK_ADMIN: {{ $secretAdmin.data.KEYCLOAK_ADMIN | quote }}
-KEYCLOAK_ADMIN_PASSWORD: {{ $secretAdmin.data.KEYCLOAK_ADMIN_PASSWORD | quote }}
-{{- else -}}
-# Pre-keycloakx
-KEYCLOAK_ADMIN: {{ $secretAdmin.data.KEYCLOAK_USER | quote }}
-KEYCLOAK_ADMIN_PASSWORD: {{ $secretAdmin.data.KEYCLOAK_PASSWORD | quote }}
-{{- end -}}
-# No pre-existing secret
-{{- else -}}
-KEYCLOAK_ADMIN: {{ .Values.global.keycloak.user | b64enc }}
-KEYCLOAK_ADMIN_PASSWORD: {{ default (randAlphaNum 64) .Values.global.keycloak.password.value | b64enc }}
-{{- end -}}
+{{- $d := (lookup "v1" "Secret" .Release.Namespace "keycloak-password-secret").data | default dict -}}
+{{- $user := $d.KEYCLOAK_ADMIN | default $d.KEYCLOAK_USER | default (b64enc .Values.global.keycloak.user) -}}
+{{- $password := $d.KEYCLOAK_ADMIN_PASSWORD | default $d.KEYCLOAK_PASSWORD | default (b64enc (default (randAlphaNum 64) .Values.global.keycloak.password.value)) -}}
+KEYCLOAK_ADMIN: {{ $user | quote }}
+KEYCLOAK_ADMIN_PASSWORD: {{ $password | quote }}
+username: {{ $user | quote }}
+password: {{ $password | quote }}
 {{- end -}}
 
 {{/*
@@ -149,19 +146,15 @@ Only the password is read from an existing secret; host, database and user are d
 The DB_PASSWORD fallback covers secrets written before the keycloakx upgrade.
 */}}
 {{- define "keycloak.postgres-secret" -}}
-{{- $password := default (randAlphaNum 64) .Values.global.keycloak.postgresPassword.value | b64enc -}}
-{{- $secretPostgres := lookup "v1" "Secret" .Release.Namespace "renku-keycloak-postgres" -}}
-{{- if $secretPostgres -}}
-{{- if $secretPostgres.data.KC_DB_PASSWORD -}}
-{{- $password = $secretPostgres.data.KC_DB_PASSWORD -}}
-{{- else if $secretPostgres.data.DB_PASSWORD -}}
-{{- $password = $secretPostgres.data.DB_PASSWORD -}}
+
+{{- $d := (lookup "v1" "Secret" .Release.Namespace "renku-keycloak-postgres").data | default dict -}}
+KC_DB_USERNAME: {{ $d.KC_DB_USERNAME | default $d.DB_USER | default (b64enc .Values.global.keycloak.postgresUser) | quote }}
+KC_DB_PASSWORD: {{ $d.KC_DB_PASSWORD | default $d.DB_PASSWORD | default (b64enc (default (randAlphaNum 64) .Values.global.keycloak.postgresPassword.value)) | quote }}
 {{- end -}}
-{{- end -}}
-KC_DB_URL_HOST: {{ (include "renku.pgHost" .) | b64enc | quote }}
-KC_DB_URL_DATABASE: {{ .Values.global.keycloak.postgresDatabase | b64enc | quote }}
-KC_DB_USERNAME: {{ .Values.global.keycloak.postgresUser | b64enc | quote }}
-KC_DB_PASSWORD: {{ $password | quote }}
+
+{{/* The bundled Keycloak, or an external one we were handed admin credentials for. */}}
+{{- define "renku.keycloak.provisionRealm" -}}
+{{- if or .Values.keycloak.install .Values.global.keycloak.password.value -}}true{{- end -}}
 {{- end -}}
 
 {{- define "renku.baseUrl" -}}
@@ -169,7 +162,7 @@ KC_DB_PASSWORD: {{ $password | quote }}
 {{- end -}}
 
 {{- define "renku.keycloakUrl" -}}
-{{- if .Values.keycloakx.enabled -}}
+{{- if .Values.keycloak.install -}}
 {{/* NOTE: If the url for keycloak does not end with '/' then the python keycloak client library will fail to connect */}}
 {{- printf "%s://%s/auth/" (include "renku.http" .) .Values.global.renku.domain -}}
 {{- else -}}
