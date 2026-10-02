@@ -26,6 +26,7 @@ spec:
     metadata:
       labels:
         app: renku-ssh-proxy
+        release: {{ .Release.Name }}
         app.kubernetes.io/name: renku-ssh-proxy
         app.kubernetes.io/instance: {{ .Release.Name }}
         app.kubernetes.io/managed-by: {{ .Release.Service }}
