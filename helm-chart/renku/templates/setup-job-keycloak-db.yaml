@@ -28,30 +28,7 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           env:
-            - name: DB_HOST
-              value: {{ template "postgresql.fullname" . }}
-            - name: DB_ADMIN_USERNAME
-              {{ if .Values.global.externalServices.postgresql.enabled }}
-              value: {{ .Values.global.externalServices.postgresql.username }}
-              {{- else -}}
-              value: {{ .Values.postgresql.auth.username }}
-              {{- end }}
-            {{- if not .Values.global.externalServices.postgresql.enabled }}
-            - name: DB_ADMIN_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: "{{ template "postgresql.fullname" . }}"
-                  key: postgres-password
-            {{- else if .Values.global.externalServices.postgresql.password }}
-            - name: DB_ADMIN_PASSWORD
-              value: {{ .Values.global.externalServices.postgresql.password }}
-            {{- else if .Values.global.externalServices.postgresql.existingSecret }}
-            - name: DB_ADMIN_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.global.externalServices.postgresql.existingSecret }}
-                  key: postgres-password
-            {{- end }}
+            {{- include "renku.pgAdminEnv" . | nindent 12 }}
             - name: KEYCLOAK_DB_USERNAME
               value: {{ .Values.global.keycloak.postgresUser | quote }}
             - name: KEYCLOAK_DB_NAME

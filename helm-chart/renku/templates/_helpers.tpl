@@ -43,16 +43,65 @@ http
 {{- end -}}
 
 {{/*
-Define subcharts full names
+Name of the CloudNativePG Cluster renku deploys. Truncated to 60 so that the
+service names the operator derives from it ("-rw", "-ro", "-r") still fit in 63.
 */}}
-{{- define "postgresql.fullname" -}}
+{{- define "renku.pgCluster" -}}
+{{- printf "%s-%s" .Release.Name "pg" | replace "+" "_" | trunc 60 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
+Postgres host used by renku services. For the bundled postgres this is the
+read-write service of the Cluster; for an external instance it is what the admin configured.
+*/}}
+{{- define "renku.pgHost" -}}
 {{- if not .Values.global.externalServices.postgresql.enabled -}}
-{{- printf "%s-%s" .Release.Name "postgresql" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- printf "%s-rw" (include "renku.pgCluster" .) -}}
 {{- else -}}
 {{- .Values.global.externalServices.postgresql.host -}}
 {{- end -}}
 {{- end -}}
 
+
+{{/*
+Host and superuser credentials the database setup jobs need. For the bundled
+postgres these come from the secret cnpg generates alongside the Cluster; for an
+external instance they come from whatever the admin configured.
+*/}}
+{{- define "renku.pgAdminEnv" -}}
+{{- $ext := .Values.global.externalServices.postgresql -}}
+- name: DB_HOST
+  value: {{ include "renku.pgHost" . | quote }}
+{{- if $ext.enabled }}
+- name: DB_ADMIN_USERNAME
+  value: {{ $ext.username | quote }}
+{{- if $ext.password }}
+- name: DB_ADMIN_PASSWORD
+  value: {{ $ext.password | quote }}
+{{- else if $ext.existingSecret }}
+- name: DB_ADMIN_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: {{ $ext.existingSecret | quote }}
+      key: {{ $ext.existingSecretPasswordKey | quote }}
+{{- end }}
+{{- else }}
+- name: DB_ADMIN_USERNAME
+  valueFrom:
+    secretKeyRef:
+      name: {{ include "renku.pgCluster" . }}-superuser
+      key: username
+- name: DB_ADMIN_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: {{ include "renku.pgCluster" . }}-superuser
+      key: password
+{{- end }}
+{{- end -}}
+
+{{/*
+Define subcharts full names
+*/}}
 {{- define "solr.fullname" -}}
 {{- printf "%s-%s" .Release.Name "solr" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
@@ -92,7 +141,12 @@ username: {{ $user | quote }}
 password: {{ $password | quote }}
 {{- end -}}
 
+{{/*
+Only the password is read from an existing secret; host, database and user are derived from values. 
+The DB_PASSWORD fallback covers secrets written before the keycloakx upgrade.
+*/}}
 {{- define "keycloak.postgres-secret" -}}
+
 {{- $d := (lookup "v1" "Secret" .Release.Namespace "renku-keycloak-postgres").data | default dict -}}
 KC_DB_USERNAME: {{ $d.KC_DB_USERNAME | default $d.DB_USER | default (b64enc .Values.global.keycloak.postgresUser) | quote }}
 KC_DB_PASSWORD: {{ $d.KC_DB_PASSWORD | default $d.DB_PASSWORD | default (b64enc (default (randAlphaNum 64) .Values.global.keycloak.postgresPassword.value)) | quote }}

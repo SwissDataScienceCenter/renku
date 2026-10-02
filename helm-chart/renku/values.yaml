@@ -77,8 +77,7 @@ global:
     cli_version:
   externalServices:
     # If an external Postgres database is defined in global.externalServices.postgresql,
-    # global.externalServices.postgresql.enabled should be true, and postgresql.enabled should be false.
-    # By default, Renku-bundled Postgres is enabled.
+    # global.externalServices.postgresql.enabled should be true, and cnpg.install should be false.
     postgresql:
       enabled: false
       # host:
@@ -89,9 +88,11 @@ global:
       ## Alternatively an existing secret can be provided. Note that postgres
       ## DOES NOT tolerate a change of the admin password when upgrading.
       # password:
-  ## Use an existing secret instead of creating a new one. It must have a
-  ## postgres-password key containing the password for the postgres user.
-  # existingSecret:
+      ## Use an existing secret instead of setting the password above.
+      # existingSecret:
+      ## Key in the secret holding the admin password. If you are using a cloud-native Postgres (CNPG), a CloudNativePG cluster 
+      ## keeps the same value in the <cluster>-superuser Kubernetes secret under the "password" key.
+      existingSecretPasswordKey: postgres-password
 
   # Globally available solr (TBD)
   solr:
@@ -295,18 +296,25 @@ keycloak:
         memory: 600Mi
       limits:
         memory: 600Mi
-# Postgresql configuration
-# The bitnami postgres chart offers a variety of configuration options, most of
-# which are not explicitly mentioned here. We predominantly list the values where we
-# deviate from the defaults or where we expect some deployment specific values
-# to be set. For all options and their defaults see:
-# https://github.com/bitnami/charts/tree/master/bitnami/postgresql#parameters
-# For production deployments check out
-# https://github.com/bitnami/charts/blob/master/bitnami/postgresql/values-production.yaml
-postgresql:
-  ## We use the defaults here. Note that these basic configs could also be set as
-  ## global values such that sub-charts can access them too.
 
+# Legacy bitnami postgres.
+# This postgres database is not used by any Renku services.
+# This section exists only to allow migrating the legacy database.
+# Renku supports two options for using Postgres:
+# 1. Using an externally managed Postgres. In this case you have to deploy Postgres yourself and provide
+#    credentials and information on how to connect to the database in global.externalServices.postgresql.
+# 2. If you already have the cloud-native Postgres (CNPG) operator installed in your cluster,
+#    then you can look at the `cnpg` section below which can be used to template the `Cluster`
+#    resource used by the operator as part of the Renku Helm chart. If you do not have the CNPG
+#    operator installed you have to install it in your cluster independently of Renku.
+#    See more information about the CNPG operator here: https://cloudnative-pg.io/docs.
+# Renku will migrate the old database for you only if you use the CNPG operator and you set the `cnpg.autoMigration`
+# flag to `true` below. In all other cases administrators have to do the DB migration manually.
+# Please refer to the instructions in helm-chart/utils/postgres_migrations/bitnami-to-cnpg.md
+# on how to manually perform the migration.
+
+postgresql:
+  enabled: true
   auth:
     username: postgres
     database: postgres
@@ -340,6 +348,36 @@ postgresql:
     readReplicas:
       enabled: false
       replicaCount: 1
+    resources:
+      requests:
+        cpu: 100m
+        memory: 300Mi
+
+# Postgresql configuration
+# Renku deploys postgres through the CloudNativePG operator, which must be installed separately.
+# This section configures the Cluster that renku creates in its own namespace.
+# For all options see
+# https://cloudnative-pg.io/documentation/current/cloudnative-pg.v1/
+cnpg:
+  # If set to true Renku will create the Cluster custom resource
+  # that can be used by a pre-existing cloud-native Postgres operator to provision a Postgres database.
+  # Renku will never install the Postgres operator for you.
+  # Set to false if you provision the database yourself fully outside of Renku. In this case you need to set `global.externalServices.postgresql`.
+  install: true
+  # The namespace where the cloud-native Postgres operator is installed. 
+  # The chart opens a network policy for it, so a wrong
+  # value here leaves the Cluster hanging and never ready.
+  operatorNamespace: cnpg-system
+  # Import the databases and roles from the legacy postgresql section when
+  # the Cluster custom resource is first created. This only runs at creation: setting this
+  # on a Cluster that already exists does nothing, so the chart refuses it.
+  autoMigration: false
+  # The Cluster spec. Anything cnpg accepts goes here.
+  extraSpec:
+    instances: 1
+    storage:
+      size: 8Gi
+      # Omit storageClass to use the default storage class of the cluster.
     resources:
       requests:
         cpu: 100m
@@ -1120,12 +1158,12 @@ dataService:
     existingPriorityClass: ""
   image:
     repository: renku/renku-data-service
-    tag: "0.85.0"
+    tag: "0.85.1"
     pullPolicy: IfNotPresent
   k8sWatcher:
     image:
       repository: renku/data-service-k8s-watcher
-      tag: "0.85.0"
+      tag: "0.85.1"
       pullPolicy: IfNotPresent
     resources: {}
     sentry:
@@ -1136,7 +1174,7 @@ dataService:
   dataTasks:
     image:
       repository: renku/data-service-data-tasks
-      tag: "0.85.0"
+      tag: "0.85.1"
       pullPolicy: IfNotPresent
     resources: {}
     enableResourceRequestTracking: false
@@ -1193,16 +1231,16 @@ dataService:
       registries: ""
 
     ## The builder image (see https://buildpacks.io/docs/for-platform-operators/concepts/builder/)
-    builderImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/selector:0.9.1"
+    builderImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/selector:0.10.0"
     ## The run image (see https://buildpacks.io/docs/for-platform-operators/concepts/base-images/)
-    runImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/run-image:0.9.1"
+    runImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/run-image:0.10.0"
     ## The name of the BuildStrategy to use for image builds.
     strategyName: renku-buildpacks-v3
     ## Configuration overrides for specific target platforms
     platformOverrides: {}
       # linux/arm64:
-      #   builderImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/cuda-selector:0.9.1"
-      #   runImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/cuda-run-image:0.9.1"
+      #   builderImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/cuda-selector:0.10.0"
+      #   runImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/cuda-run-image:0.10.0"
       #   strategyName: renku-buildpacks-v3
       #   nodeSelector:
       #     kubernetes.io/arch: arm64
@@ -1317,7 +1355,7 @@ authz:
 secretsStorage:
   image:
     repository: renku/secrets-storage
-    tag: "0.85.0"
+    tag: "0.85.1"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
