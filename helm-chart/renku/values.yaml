@@ -66,6 +66,7 @@ global:
   renku:
     ## Domain name for the deployed instance of renku
     domain: example.local
+
     ## Renku version to be used (currently for project creation in
     ## the UI) If not set explicitly the version will be picked up
     ## from the respective renku (sub)chart.
@@ -187,6 +188,23 @@ networkPolicies:
   allowAllIngressFromPods: []
   ## List of namespaces that should be allowed all ingress to all services
   allowAllIngressFromNamespaces: []
+  sshProxy:
+    ## Egress rules for the SSH proxy. The proxy additionally reaches data-services
+    ## and sessions (same namespace) via rules hardcoded in the chart.
+    egress:
+      - to:
+          # DNS resolution
+          - namespaceSelector:
+              matchLabels:
+                kubernetes.io/metadata.name: kube-system
+            podSelector:
+              matchLabels:
+                k8s-app: kube-dns
+        ports:
+          - port: 53
+            protocol: UDP
+          - port: 53
+            protocol: TCP
   sessions:
     egress:
       # NOTE: These prevent user sessions from accessing other services running in your cluster.
@@ -1282,16 +1300,16 @@ dataService:
       registries: ""
 
     ## The builder image (see https://buildpacks.io/docs/for-platform-operators/concepts/builder/)
-    builderImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/selector:0.9.1"
+    builderImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/selector:0.11.0"
     ## The run image (see https://buildpacks.io/docs/for-platform-operators/concepts/base-images/)
-    runImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/run-image:0.9.1"
+    runImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/run-image:0.11.0"
     ## The name of the BuildStrategy to use for image builds.
     strategyName: renku-buildpacks-v3
     ## Configuration overrides for specific target platforms
     platformOverrides: {}
       # linux/arm64:
-      #   builderImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/cuda-selector:0.9.1"
-      #   runImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/cuda-run-image:0.9.1"
+      #   builderImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/cuda-selector:0.11.0"
+      #   runImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/cuda-run-image:0.11.0"
       #   strategyName: renku-buildpacks-v3
       #   nodeSelector:
       #     kubernetes.io/arch: arm64
@@ -1377,6 +1395,38 @@ dataService:
     ## This is the upper limit of what the users can request. When they create the project storage
     ## user have the option to set a lower value. The value cannot be lower than 1 Gb.
     storageMaxSizeGb: 10
+
+sshProxy:
+  enabled: false
+  image:
+    repository: renku/ssh-proxy
+    tag:
+    pullPolicy: IfNotPresent
+  service:
+    port: 2222
+  openSshHostKey:
+  targetUser:
+  targetPort: 80
+  subDomain: ssh
+  sentry:
+    enabled: false
+    dsn:
+    environment:
+    sampleRate: 0.1
+  replicaCount: 1
+  podAnnotations: {}
+  ## Proxy-specific hardening, merged over the global podSecurityContext.
+  podSecurityContext:
+    seccompProfile:
+      type: RuntimeDefault
+  ## Proxy-specific hardening, merged over the global securityContext.
+  securityContext:
+    readOnlyRootFilesystem: true
+  resources: {}
+  updateStrategy: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
 
 posthog:
   enabled: false
