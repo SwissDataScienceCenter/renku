@@ -204,17 +204,6 @@ networkPolicies:
             protocol: UDP
           - port: 53
             protocol: TCP
-      - to:
-          # Keycloak is reached via its public URL. Allow egress outside the
-          # cluster by excluding private ranges (same trick as sessions.egress).
-          # If Keycloak is only reachable on a private address, add an explicit
-          # rule here for that range.
-          - ipBlock:
-              cidr: 0.0.0.0/0
-              except:
-                - 10.0.0.0/8
-                - 172.16.0.0/12
-                - 192.168.0.0/16
   sessions:
     egress:
       # NOTE: These prevent user sessions from accessing other services running in your cluster.
