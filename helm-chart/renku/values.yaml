@@ -1404,7 +1404,7 @@ sshProxy:
     port: 2222
   openSshHostKey:
   targetUser:
-  targetPort:
+  targetPort: 80
   sentry:
     enabled: false
     dsn:
