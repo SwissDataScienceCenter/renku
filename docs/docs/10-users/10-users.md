@@ -44,31 +44,24 @@ Renku is an **open-source platform for researchers and scientists to connect dat
 ## What's new - Check out our latest blog posts:
 
     <p class="image-container-s">
-    [![Streamlining data delivery](https://blog.renkulab.io/assets/images/SwissCat_Cover_image-6d47ba812a924eabdc413573134b0588.png)](https://blog.renkulab.io/swisscat-collaboration/)
+    [![Renku Release September 2026](https://blog.renkulab.io/assets/images/cover-image-post-september-2026-c849d1afb02bec18bb352477b06516c6.png)](https://blog.renkulab.io/release-2026-09/)
 
-    **Streamlining data delivery:**
-     <p>How ETHZ SwissCAT+ uses Renku to let clients focus on science, not setup</p>
+    
+
+    **Renku Release | September 2026**
+     <p>Renku Apps, Project Storage and more connectors</p>
 
     </p>
 
 ---
 
       <p class="image-container-s">
-      [![Renku Release Octubre 2025](https://blog.renkulab.io/assets/images/cscs-cover-90cd8e2dbe514501f43d26ed2c6b2a45.png)](https://blog.renkulab.io/release-2025-10/)
+      [![Renku Release July 2026](https://blog.renkulab.io/assets/images/cover-image-post-july-2026-aded17f83640b72da2caea50854c4345.png)](https://blog.renkulab.io/release-2026-07/)
 
-    **Renku Release • October 2025**
-    <p>We've combined Renku's super-simple sessions with the power of supercomputing!</p>
-
-    </p>
-
----
-
-    <p class="image-container-s">
-    [![AiiDA Success Story](https://blog.renkulab.io/assets/images/intro-image-f9ca2c80c6b9ad273b0d8750b112dab7.png)](https://blog.renkulab.io/aiida-success-story/)
-
-    **AiiDA Success Story • October 2025**
-     <p>How PSI's Materials Software and Data group uses Renku to facilitate access to research data.</p>
+    **Renku Release | July 2026**
+    <p>Renku Jobs, Coding Agents & Custom Environments from Private Repos</p>
 
     </p>
 
 ---
+
