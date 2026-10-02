@@ -21,6 +21,11 @@ spec:
       app: renku-authz
   template:
     metadata:
+      annotations:
+        # The connection URI arrives as an environment variable. 
+        # A database move needs to restart the pod to update the host.
+        # Without this annotation Keycloak will not restart if the host chagnes.
+        renku.io/db-host: {{ include "renku.pgHost" . | quote }}
       labels:
         app: renku-authz
         chart: {{ template "renku.chart" . }}
