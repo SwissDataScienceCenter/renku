@@ -40,7 +40,7 @@ truststores:
     {{- end }}
   {{- end }}
 {{- end }}
-# The Renku login theme  is copied into an emptyDir by an init container using the pod template.
+# The Renku login theme is copied into an emptyDir by an init container using the pod template.
 unsupported:
   podTemplate:
     spec:
