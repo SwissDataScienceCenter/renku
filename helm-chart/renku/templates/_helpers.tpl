@@ -135,9 +135,15 @@ operator appends to the resources it owns (longest is -network-policy). */}}
 * KEYCLOAK_ADMIN + KEYCLOAK_ADMIN_PASSWORD -> read by the realm init job
 * and username and password -> keys used by Keycloak operator in secret spec.bootstrapAdmin. */}}
 {{- define "keycloak.admin-secret" -}}
-  {{- $d := (lookup "v1" "Secret" .Release.Namespace "keycloak-password-secret").data | default dict -}}
-  {{- $user := $d.KEYCLOAK_ADMIN | default $d.KEYCLOAK_USER | default (b64enc .Values.global.keycloak.user) -}}
-  {{- $password := $d.KEYCLOAK_ADMIN_PASSWORD | default $d.KEYCLOAK_PASSWORD | default (b64enc (default (randAlphaNum 64) .Values.global.keycloak.password.value)) -}}
+  {{- $user := b64enc .Values.global.keycloak.user -}}
+  {{- $password := b64enc (.Values.global.keycloak.password.value | default "") -}}
+  {{- if .Values.keycloak.install -}}
+    {{/* The bundled instance generates its password on first install and has to keep it
+    across upgrades. External instances authenticates with whatever the admin configured. */}}
+    {{- $d := (lookup "v1" "Secret" .Release.Namespace "keycloak-password-secret").data | default dict -}}
+    {{- $user = $d.KEYCLOAK_ADMIN | default $d.KEYCLOAK_USER | default $user -}}
+    {{- $password = $d.KEYCLOAK_ADMIN_PASSWORD | default $d.KEYCLOAK_PASSWORD | default (b64enc (default (randAlphaNum 64) .Values.global.keycloak.password.value)) -}}
+  {{- end -}}
   KEYCLOAK_ADMIN: {{ $user | quote }}
   KEYCLOAK_ADMIN_PASSWORD: {{ $password | quote }}
   username: {{ $user | quote }}
