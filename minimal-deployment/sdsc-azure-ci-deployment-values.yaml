@@ -81,12 +81,6 @@ keycloak:
   initRealm:
     image:
       repository: harbor.dev.renku.ch/dockerhub_cache/renku/init-realm
-  extraSpec:
-    resources:
-      requests:
-        memory: 600Mi
-      limits:
-        memory: 600Mi
 platformInit:
   image:
     repository: harbor.dev.renku.ch/dockerhub_cache/renku/platform-init
