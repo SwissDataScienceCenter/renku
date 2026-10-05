@@ -3,7 +3,7 @@ keycloak.extraSpec values deep merged into the yaml defined here. */}}
 {{- define "keycloak.spec" -}}
 db:
   vendor: postgres
-  host: {{ include "postgresql.fullname" . }}
+  host: {{ include "renku.pgHost" . }}
   database: {{ .Values.global.keycloak.postgresDatabase | quote }}
   poolMaxSize: 10
   usernameSecret:
