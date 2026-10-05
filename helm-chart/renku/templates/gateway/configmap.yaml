@@ -29,10 +29,10 @@ data:
       maxSessionTTLSeconds: {{ .Values.gateway.maxSessionTTLSeconds }}
       {{- end }}
       authorizationVerifiers:
-        - issuer: {{ printf "%s/realms/%s" (include "renku.keycloakUrl" . | trimSuffix "/") (include "renku.keycloak.realm" .) }}
+        - issuer: {{ include "renku.keycloakIssuerUrl" . }}
           audience: renku
           authorizedParty: renku
-        - issuer: {{ printf "%s/realms/%s" (include "renku.keycloakUrl" . | trimSuffix "/") (include "renku.keycloak.realm" .) }}
+        - issuer: {{ include "renku.keycloakIssuerUrl" . }}
           audience: renku
           authorizedParty: renku-cli
     revproxy:
@@ -55,7 +55,7 @@ data:
         enabled: true
       providers:
         renku:
-          issuer: {{ printf "%s/realms/%s" (include "renku.keycloakUrl" . | trimSuffix "/") (include "renku.keycloak.realm" .) }}
+          issuer: {{ include "renku.keycloakIssuerUrl" . }}
           clientID: renku
           scopes: ["profile", "email", "openid", "microprofile-jwt"]
           callbackURI:  {{ printf "%s/api/auth/callback" (include "renku.baseUrl" .) }}
