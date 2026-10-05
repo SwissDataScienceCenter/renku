@@ -46,7 +46,7 @@ Renku is an **open-source platform for researchers and scientists to connect dat
     <p class="image-container-s">
     [![Renku Release September 2026](https://blog.renkulab.io/assets/images/cover-image-post-september-2026-c849d1afb02bec18bb352477b06516c6.png)](https://blog.renkulab.io/release-2026-09/)
 
-    
+
 
     **Renku Release | September 2026**
      <p>Renku Apps, Project Storage and more connectors</p>
@@ -64,4 +64,3 @@ Renku is an **open-source platform for researchers and scientists to connect dat
     </p>
 
 ---
-
