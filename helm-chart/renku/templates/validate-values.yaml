@@ -4,6 +4,18 @@ Validation of values with actionable messages on failure.
 
 
 {{/*
+Keycloak checks.
+*/}}
+
+{{- if hasKey .Values "keycloakx" }}
+  {{- fail "The `keycloakx` subchart has been replaced by the Keycloak Operator. Move your values under `keycloak` and remove the `keycloakx` section." }}
+{{- end }}
+
+{{- if and (not .Values.keycloak.install) (not .Values.global.keycloak.url) }}
+  {{- fail "keycloak.install is false, so renku needs global.keycloak.url, the external Keycloak the services authenticate against." }}
+{{- end }}
+
+{{/*
 Postgres instance checks.
 */}}
 
@@ -44,12 +56,4 @@ Postgres instance checks.
   {{- if lookup "postgresql.cnpg.io/v1" "Cluster" .Release.Namespace (include "renku.pgCluster" .) }}
     {{- fail (printf "cnpg.autoMigration only works while the Cluster is being created, and %s already exists. Set it back to false and migrate the data by hand (helm-chart/utils/postgres_migrations/bitnami-to-cnpg.md), or delete the Cluster to import from scratch." (include "renku.pgCluster" .)) }}
   {{- end }}
-{{- end }}
-
-{{/*
-Keycloak checks.
-*/}}
-
-{{- if hasKey .Values "keycloakx" }}
-  {{- fail "The `keycloakx` subchart has been replaced by the Keycloak Operator. Move your values under `keycloak` and remove the `keycloakx` section." }}
 {{- end }}
