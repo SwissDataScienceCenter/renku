@@ -107,7 +107,7 @@ Define subcharts full names
 {{- end -}}
 
 {{/* Name of the Keycloak custom resource. 48 leaves room for the suffixes the
-operator appends resources (longest is -network-policy.) */}}
+operator appends to the resources it owns (longest is -network-policy). */}}
 {{- define "keycloak.fullname" -}}
 {{- printf "%s-%s" .Release.Name "keycloak" | replace "+" "_" | trunc 48 | trimSuffix "-" -}}
 {{- end -}}
@@ -129,7 +129,7 @@ operator appends resources (longest is -network-policy.) */}}
 {{- end -}}
 
 {{/* Admin credentials are under: 
-* KEYCLOAK_ADMIN + KEYCLOAK_ADMIN_PASSWORD -> read by realm init job reads
+* KEYCLOAK_ADMIN + KEYCLOAK_ADMIN_PASSWORD -> read by the realm init job
 * and username and password -> keys used by Keycloak operator in secret spec.bootstrapAdmin. */}}
 {{- define "keycloak.admin-secret" -}}
 {{- $d := (lookup "v1" "Secret" .Release.Namespace "keycloak-password-secret").data | default dict -}}
@@ -141,12 +141,8 @@ username: {{ $user | quote }}
 password: {{ $password | quote }}
 {{- end -}}
 
-{{/*
-Only the password is read from an existing secret; host, database and user are derived from values. 
-The DB_PASSWORD fallback covers secrets written before the keycloakx upgrade.
-*/}}
+{{/* DB_USER/DB_PASSWORD fallbacks cover secrets written by keycloakx. */}}
 {{- define "keycloak.postgres-secret" -}}
-
 {{- $d := (lookup "v1" "Secret" .Release.Namespace "renku-keycloak-postgres").data | default dict -}}
 KC_DB_USERNAME: {{ $d.KC_DB_USERNAME | default $d.DB_USER | default (b64enc .Values.global.keycloak.postgresUser) | quote }}
 KC_DB_PASSWORD: {{ $d.KC_DB_PASSWORD | default $d.DB_PASSWORD | default (b64enc (default (randAlphaNum 64) .Values.global.keycloak.postgresPassword.value)) | quote }}
@@ -166,7 +162,7 @@ KC_DB_PASSWORD: {{ $d.KC_DB_PASSWORD | default $d.DB_PASSWORD | default (b64enc 
 {{/* NOTE: If the url for keycloak does not end with '/' then the python keycloak client library will fail to connect */}}
 {{- printf "%s://%s/auth/" (include "renku.http" .) .Values.global.renku.domain -}}
 {{- else -}}
-{{- .Values.global.keycloak.url -}}
+{{- printf "%s/" (.Values.global.keycloak.url | trimSuffix "/") -}}
 {{- end -}}
 {{- end -}}
 
