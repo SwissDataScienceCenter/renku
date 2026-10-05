@@ -11,6 +11,10 @@ Keycloak checks.
   {{- fail "The `keycloakx` subchart has been replaced by the Keycloak Operator. Move your values under `keycloak` and remove the `keycloakx` section." }}
 {{- end }}
 
+{{- if and .Values.keycloak.install .Values.global.keycloak.url }}
+  {{- fail "An external Keycloak and the renku bundled Keycloak cannot both be configured. Set keycloak.install to false, or unset global.keycloak.url." }}
+{{- end }}
+
 {{- if and (not .Values.keycloak.install) (not .Values.global.keycloak.url) }}
   {{- fail "keycloak.install is false, so renku needs global.keycloak.url, the external Keycloak the services authenticate against." }}
 {{- end }}
