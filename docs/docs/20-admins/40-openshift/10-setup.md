@@ -12,7 +12,7 @@ require admin access.
 ### CRDs
 
 The Keycloak CRDs are not part of the chart. They come with the
-[Keycloak Operator](../installation/requirements#keycloak-operator), which is cluster scoped and
+[Keycloak Operator](../installation/requirements#operator-managed-keycloak), which is cluster scoped and
 also has to be installed by an administrator.
 
 Generate the remaining CRDs out of the helm chart:
