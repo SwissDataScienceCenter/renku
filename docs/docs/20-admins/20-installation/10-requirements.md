@@ -112,8 +112,7 @@ If you wish to use this option you need to have the operator already installed i
 The Renku Helm chart can create a `Keycloak` resource in its own namespace and the Keycloak operator
 then turns that into a running instance. Configure it under the `keycloak` section of the Renku values.
 
-The chart does not pin `spec.image`, but the operator version determines which Keycloak version you
-run.
+The Keycloak version is determined by the installed operator.
 
 ### External or pre-existing Keycloak
 

@@ -357,7 +357,7 @@ start properly.
 Here follows a full configuration based on the minimal deployment values file.
 
 Beside Renku specific elements, customization of child charts are also required.
-Here we can see the changes to be applied to make KeycloakX, Redis and Solr start
+Here we can see the changes to be applied to make Redis and Solr start
 properly.
 
 PostgreSQL can be deployed by the CloudNativePG operator, you can deploy it yourself or use a managed PostgreSQL service. Note that If you decide to deploy PostgerSQL yourself we strongly recommend using the operator.
@@ -496,13 +496,6 @@ ingress:
     - hosts:
         - renku.apps.my-openshift.ch
       secretName: renku-renku-ch-tls
-keycloak:
-  extraSpec:
-    resources:
-      requests:
-        memory: 600Mi
-      limits:
-        memory: 600Mi
 notebooks:
   oidc:
     allowUnverifiedEmail: true
