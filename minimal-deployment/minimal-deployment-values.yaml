@@ -61,13 +61,6 @@ ingress:
     - hosts:
         - <deployment-FQDN>
       secretName: <certificate-secret-name>
-keycloak:
-  extraSpec:
-    resources:
-      requests:
-        memory: 600Mi
-      limits:
-        memory: 600Mi
 redis:
   architecture: standalone
   master:
