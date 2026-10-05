@@ -289,6 +289,7 @@ keycloak:
   ## accepts can be set here without a dedicated value. Lists are replaced, not merged.
   ## See https://www.keycloak.org/operator/advanced-configuration
   extraSpec:
+    instances: 1
     resources:
       requests:
         cpu: 100m
