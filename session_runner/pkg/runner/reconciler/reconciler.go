@@ -9,7 +9,7 @@ import (
 	"net/url"
 
 	"github.com/SwissDataScienceCenter/renku/session_runner/pkg/renku"
-	"github.com/SwissDataScienceCenter/renku/session_runner/pkg/renku/api/session_runners"
+	sessionRunners "github.com/SwissDataScienceCenter/renku/session_runner/pkg/renku/api/session_runners"
 	"github.com/SwissDataScienceCenter/renku/session_runner/pkg/state"
 )
 
@@ -85,8 +85,8 @@ func (r *RunnerReconciler) Reconcile(ctx context.Context, session SessionRef) er
 	return nil
 }
 
-func (r *RunnerReconciler) getSession(ctx context.Context, sessionID string) (session session_runners.AssignedSessionDetails, err error) {
-	res, err := r.client.SessionRunners().GetSessionRunnersSessionRunnerIdSessionsSessionIdWithResponse(ctx, r.runnerID, sessionID)
+func (r *RunnerReconciler) getSession(ctx context.Context, sessionID string) (session sessionRunners.RemoteUserSessionWithSpec, err error) {
+	res, err := r.client.SessionRunners().GetSessionRunnersUserSessionsSessionIdSpecWithResponse(ctx, sessionID)
 	if err != nil {
 		return session, fmt.Errorf("failed to get session: %w", err)
 	}
@@ -111,8 +111,8 @@ func (r *RunnerReconciler) getSession(ctx context.Context, sessionID string) (se
 	return *resJSON, nil
 }
 
-func (r *RunnerReconciler) getSessionSecrets(ctx context.Context, sessionID string) (secrets session_runners.AssignedSessionSecrets, err error) {
-	res, err := r.client.SessionRunners().GetSessionRunnersSessionRunnerIdSessionsSessionIdSecretsWithResponse(ctx, r.runnerID, sessionID)
+func (r *RunnerReconciler) getSessionSecrets(ctx context.Context, sessionID string) (secrets sessionRunners.RemoteUserSessionSecrets, err error) {
+	res, err := r.client.SessionRunners().GetSessionRunnersUserSessionsSessionIdSecretsWithResponse(ctx, sessionID)
 	if err != nil {
 		return secrets, fmt.Errorf("failed to get session: %w", err)
 	}

@@ -5,11 +5,11 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/SwissDataScienceCenter/renku/session_runner/pkg/renku/api/session_runners"
+	sessionRunners "github.com/SwissDataScienceCenter/renku/session_runner/pkg/renku/api/session_runners"
 )
 
 type RenkuClient struct {
-	sessionRunnersClient session_runners.ClientWithResponsesInterface
+	sessionRunnersClient sessionRunners.ClientWithResponsesInterface
 
 	auth *RenkuAuth
 }
@@ -41,11 +41,11 @@ func NewRenkuClient(serverURL *url.URL, options ...ClientOption) (client *RenkuC
 		}
 	}
 
-	sessionRunnersOpts := []session_runners.ClientOption{}
+	sessionRunnersOpts := []sessionRunners.ClientOption{}
 	if rc.auth != nil {
-		sessionRunnersOpts = append(sessionRunnersOpts, session_runners.WithRequestEditorFn(session_runners.RequestEditorFn(rc.auth.RequestEditor())))
+		sessionRunnersOpts = append(sessionRunnersOpts, sessionRunners.WithRequestEditorFn(sessionRunners.RequestEditorFn(rc.auth.RequestEditor())))
 	}
-	sessionRunnersClient, err := session_runners.NewClientWithResponses(apiURLStr, sessionRunnersOpts...)
+	sessionRunnersClient, err := sessionRunners.NewClientWithResponses(apiURLStr, sessionRunnersOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -54,6 +54,6 @@ func NewRenkuClient(serverURL *url.URL, options ...ClientOption) (client *RenkuC
 	return &rc, nil
 }
 
-func (rc *RenkuClient) SessionRunners() session_runners.ClientWithResponsesInterface {
+func (rc *RenkuClient) SessionRunners() sessionRunners.ClientWithResponsesInterface {
 	return rc.sessionRunnersClient
 }
