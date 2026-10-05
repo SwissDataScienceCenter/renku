@@ -33,6 +33,7 @@ spec:
             "--admin-user=$(KEYCLOAK_ADMIN_USER)",
             "--admin-password=$(KEYCLOAK_ADMIN_PASSWORD)",
             "--keycloak-url=$(KEYCLOAK_URL)",
+            {{ printf "--realm=%s" (include "renku.keycloak.realm" .) | quote }},
             "--force"
           ]
 
