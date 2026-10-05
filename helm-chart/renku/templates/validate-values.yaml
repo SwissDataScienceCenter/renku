@@ -11,6 +11,10 @@ Keycloak checks.
   {{- fail "The `keycloakx` subchart has been replaced by the Keycloak Operator. Move your values under `keycloak` and remove the `keycloakx` section." }}
 {{- end }}
 
+{{- if and (not .Values.keycloak.install) (not .Values.global.keycloak.url) }}
+  {{- fail "keycloak.install is false, so renku needs global.keycloak.url, the external Keycloak the services authenticate against." }}
+{{- end }}
+
 {{/*
 Postgres instance checks.
 */}}
