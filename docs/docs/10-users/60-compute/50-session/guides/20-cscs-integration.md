@@ -20,13 +20,7 @@ RenkuLab accesses compute and storage resources on behalf of the user, using exi
 
 Go to the [integrations page](https://renkulab.io/integrations?targetProvider=cscs.ch) and connect with the CSCS integration.
 
-### Step 2: Complete the form
-
-Fill in the [request access to the Renku/CSCS Integration form](https://www.notion.so/2810df2efafc803a8175ccd2d472b23d?pvs=21), so that a RenkuLab admin can let you launch sessions with the CSCS integration.
-
-Fill in the form so that a RenkuLab admin can let you launch sessions with the CSCS integration.
-
-### Step 3: Launch a session
+### Step 2: Launch a session
 
 **Option 1: Try out a template**
 
@@ -49,45 +43,27 @@ Fill in the form so that a RenkuLab admin can let you launch sessions with the C
 
 4.  When selecting Session launcher compute resources, open the drop down and select a **CSCS resource class**, such as the `Eiger - Debug` resource class inside the `CSCS - Eiger - Debug` resource pool!
 
-5.  Note: By default, the job is submitted against your default CSCS account
+5.  You **have to** set the **CSCS Slurm Account** you will be using otherwise the job **will** fail.
+    1. Open your session launcher side panel
+    2. Scroll down to the Environment variables section
+    3. Add an environment variable with key `SLURM_ACCOUNT` and set the value to your CSCS organisation (e.g. `g159`).
 
-        <details>
-        <summary>*If you’d like the job go to a different account…*</summary>
+    :::note
+    [See the example Project "Demo HPC"](https://staging.dev.renku.ch/p/flora.thiebaut/demo-hpc#launcher-01K58XQSDV5HFF0T9A6D1G16ZF)
 
-                <p>
-                1. Open your session launcher side panel
-                2. Scroll down to the Environment variables section
-                3. Add an environment variable with key `SLURM_ACCOUNT` and set the value to your CSCS organisation (e.g. `g159`).
-                </p>
+     <p class="image-container-l">
+     ![image.png](./cscs-integration-10.png)
+     </p>
 
-                :::note
-                [See the example Project "Demo HPC"](https://staging.dev.renku.ch/p/flora.thiebaut/demo-hpc#launcher-01K58XQSDV5HFF0T9A6D1G16ZF)
+    :::
 
-                 <p class="image-container-l">
-                 ![image.png](./cscs-integration-10.png)
-                </p>
+    :::warning
 
-                :::
+    After you shut down your sessions, **make sure that there is no running job leftover at CSCS**. Session shut down is not 100% reliable right now.
 
-                :::note
+    - Go to https://my.hpcp.cscs.ch/compute (or https://my.mlp.cscs.ch/compute) and check that no job is running
 
-                Note: If you see the following screen, wait a minute and try to refresh the page. The session is still starting at CSCS.
-
-                <p class="image-container-l">
-                ![image.png](./cscs-integration-20.png)
-                </p>
-
-                :::
-
-                :::warning
-
-                After you shut down your sessions, **make sure that there is no running job leftover at CSCS**. Session shut down is not 100% reliable right now.
-
-                - Go to https://my.hpcp.cscs.ch/compute (or https://my.mlp.cscs.ch/compute) and check that no job is running
-
-                :::
-
-        </details>
+    :::
 
 ---
 

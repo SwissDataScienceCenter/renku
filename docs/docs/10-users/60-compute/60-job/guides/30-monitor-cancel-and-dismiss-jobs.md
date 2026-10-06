@@ -34,6 +34,21 @@ While a job is **Starting**, **Running**, **Completed**, or **Errored**, click *
 
 Logs are available for 24 hours or until you dismiss the job.
 
+:::tip
+You can also view job logs from the command line:
+
+```bash
+rnk job list                   # list jobs with their ids
+rnk job logs <job-id>          # one-time view
+rnk job logs <job-id> --follow # live tail
+```
+
+Make sure to enable [shell completions](/docs/users/cli/cli-reference#shell-completions) for an easier time picking the job id!
+
+See the [CLI reference](/docs/users/cli/cli-reference) for the full list of job commands.
+
+:::
+
 ## Cancel a running job
 
 If a job is still **Starting** or **Running**, you can cancel it:
