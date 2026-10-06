@@ -1,0 +1,477 @@
+openapi: 3.0.2
+info:
+  title: Renku Data Services API
+  description: |
+    This service is the main backend for Renku. It provides information about users, projects,
+    cloud storage, access to compute resources and many other things.
+  version: v1
+servers:
+  - url: /api/data
+paths:
+  /session_runners:
+    get:
+      summary: Get all session runners
+      description: TODO
+      responses:
+        "200":
+          description: A list of session runners
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionRunners"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - session_runners
+    post:
+      summary: Create a new session runner
+      description: TODO
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SessionRunnerPost"
+      responses:
+        "201":
+          description: The session runner was created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionRunner"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - session_runners
+  /session_runners/register:
+    post:
+      summary: Register a session runner
+      description: TODO
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SessionRunnerRegisterPost"
+      responses:
+        "200":
+          description: The session runner was registered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionRunnerRegisterResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - session_runners
+  /session_runners/{session_runner_id}:
+    parameters:
+      - in: path
+        name: session_runner_id
+        required: true
+        schema:
+          $ref: "#/components/schemas/Ulid"
+    get:
+      summary: Get a session runner
+      description: TODO
+      responses:
+        "200":
+          description: The session runner
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionRunner"
+        "404":
+          description: The session runner does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - session_runners
+    delete:
+      summary: Remove a session runner
+      description: TODO
+      responses:
+        "204":
+          description: The session runner was removed or did not exist in the first place
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - session_runners
+  /session_runners/{session_runner_id}/sessions:
+    parameters:
+      - in: path
+        name: session_runner_id
+        required: true
+        schema:
+          $ref: "#/components/schemas/Ulid"
+    get:
+      summary: List sessions assigned to a runner
+      description: TODO
+      responses:
+        "200":
+          description: The list of session IDs assigned to a given runner
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssignedSessionIds"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - session_runners
+  /session_runners/{session_runner_id}/sessions/{session_id}:
+    parameters:
+      - in: path
+        name: session_runner_id
+        required: true
+        schema:
+          $ref: "#/components/schemas/Ulid"
+      - in: path
+        name: session_id
+        required: true
+        schema:
+          $ref: "#/components/schemas/AssignedSessionId"
+    get:
+      summary: Get the details of a session assigned to a given runner
+      description: TODO
+      responses:
+        "200":
+          description: The secrets used in an assigned session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssignedSessionDetails"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - session_runners
+    patch:
+      summary: Update a session assigned to a given runner
+      description: TODO
+      responses:
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - session_runners
+  /session_runners/{session_runner_id}/sessions/{session_id}/secrets:
+    parameters:
+      - in: path
+        name: session_runner_id
+        required: true
+        schema:
+          $ref: "#/components/schemas/Ulid"
+      - in: path
+        name: session_id
+        required: true
+        schema:
+          $ref: "#/components/schemas/AssignedSessionId"
+    get:
+      summary: Get the secrets necessary to run a session assigned to a given runner
+      description: TODO
+      responses:
+        "200":
+          description: The secrets used in an assigned session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssignedSessionSecrets"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - session_runners
+    patch:
+      summary: Update the secrets used in an assigned session
+      description: TODO
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AssignedSessionSecrets"
+      responses:
+        "200":
+          description: The updated secrets used in an assigned session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssignedSessionSecrets"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - session_runners
+  /session_runners/{session_runner_id}/contact:
+    parameters:
+      - in: path
+        name: session_runner_id
+        required: true
+        schema:
+          $ref: "#/components/schemas/Ulid"
+    post:
+      summary: Contact endpoint for session runners
+      description: TODO
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SessionRunnerContactPost"
+      responses:
+        "200":
+          description: The desired state of the session runner
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionRunnerContactResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - session_runners
+  /session_runners/sessions/{session_id}:
+    parameters:
+      - in: path
+        name: session_id
+        required: true
+        schema:
+          $ref: "#/components/schemas/AssignedSessionId"
+    get:
+      summary: Get the details of a session
+      description: TODO
+      responses:
+        "200":
+          description: The secrets used in an assigned session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssignedSession"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - session_runners
+components:
+  schemas:
+    SessionRunners:
+      description: A list of session runners
+      type: array
+      items:
+        $ref: "#/components/schemas/SessionRunner"
+    SessionRunner:
+      description: A session runner
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          $ref: "#/components/schemas/Ulid"
+        resource_pool_id:
+          type: integer
+        status:
+          $ref: "#/components/schemas/SessionRunnerStatus"
+        registration_token:
+          type: string
+      required:
+        - id
+        - resource_pool_id
+        - status
+    SessionRunnerPost:
+      description: Data required to create a session runner
+      type: object
+      additionalProperties: false
+      properties:
+        resource_pool_id:
+          type: integer
+      required:
+        - resource_pool_id
+    SessionRunnerRegisterPost:
+      description: Data required to register a session runner
+      type: object
+      additionalProperties: false
+      properties:
+        registration_token:
+          type: string
+      required:
+        - registration_token
+    SessionRunnerRegisterResponse:
+      description: The result of registering a session runner
+      type: object
+      additionalProperties: false
+      properties:
+        runner:
+          $ref: "#/components/schemas/SessionRunner"
+        auth:
+          type: object
+          additionalProperties: true
+          properties:
+            access_token:
+              type: string
+              example: "some_access_token"
+            token_type:
+              type: string
+              example: "Bearer"
+            expires_in:
+              type: integer
+              example: 600
+            refresh_token:
+              type: string
+              example: "some_refresh_token"
+            refresh_expires_in:
+              type: integer
+              example: 3600
+            scope:
+              type: string
+              example: "api"
+          required:
+            - access_token
+            - token_type
+            - expires_in
+            - refresh_token
+      required:
+        - runner
+        - auth
+    AssignedSessionIds:
+      description: A list of session IDs assigned to a runner
+      type: array
+      items:
+        $ref: "#/components/schemas/AssignedSessionId"
+    AssignedSessionId:
+      description: A session ID
+      type: string
+      example: "my-session-name"
+    AssignedSessionSecrets:
+      description: The secrets used in an assigned session
+      type: array
+      items:
+        $ref: "#/components/schemas/AssignedSessionSecret"
+    AssignedSessionSecret:
+      description: A secret used in an assigned session
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+          example: my_secret
+        value:
+          type: string
+          example: some_value
+      required:
+        - name
+        - value
+    SessionRunnerContactPost:
+      description: Data sent when a session runner contacts the API
+      type: object
+      additionalProperties: false
+      properties:
+        status:
+          type: string
+          enum:
+            - ready
+            - not_ready
+      required:
+        - status
+    SessionRunnerContactResponse:
+      description: Data sent back when a session runner contacts the API
+      type: object
+      additionalProperties: false
+      properties:
+        sessions:
+          $ref: "#/components/schemas/SessionRunnerAssignedSessions"
+      required:
+        - sessions
+    SessionRunnerStatus:
+      description: The status of a session runner
+      type: string
+      enum:
+        - never_contacted
+        - initializing
+        - ready
+        - not_ready
+    SessionRunnerAssignedSessions:
+      description: The list of sessions assigned to a runner
+      type: array
+      items:
+        $ref: "#/components/schemas/SessionRunnerAssignedSession"
+    SessionRunnerAssignedSession:
+      type: string
+    AssignedSession:
+      description: The details of a session which needs a runner
+      type: object
+      additionalProperties: false
+      properties:
+        session_id:
+          $ref: "#/components/schemas/AssignedSessionId"
+        runner_id:
+          $ref: "#/components/schemas/Ulid"
+      required:
+        - session_id
+    AssignedSessionDetails:
+      description: The details of a session which needs a runner
+      type: object
+      additionalProperties: false
+      properties:
+        session_id:
+          $ref: "#/components/schemas/AssignedSessionId"
+        runner_id:
+          $ref: "#/components/schemas/Ulid"
+        spec:
+          type: object
+          additionalProperties: false
+          properties:
+            image:
+              type: string
+            url:
+              type: string
+            session_type:
+              type: string
+            command:
+              type: array
+              items:
+                type: string
+            args:
+              type: array
+              items:
+                type: string
+          required:
+            - image
+            - session_type
+            - command
+            - args
+      required:
+        - session_id
+        - spec
+    Ulid:
+      description: ULID identifier
+      type: string
+      minLength: 26
+      maxLength: 26
+      pattern: "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" # This is case-insensitive
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+              minimum: 0
+              exclusiveMinimum: true
+              example: 1404
+            detail:
+              type: string
+              example: "A more detailed optional message showing what the problem was"
+            message:
+              type: string
+              example: "Something went wrong - please try again later"
+            trace_id:
+              type: string
+              example: "ac93950e9e114a55c67fb8e5ef519bbe"
+              description: Sentry trace ID for linking to corresponding log entries
+          required: ["code", "message"]
+      required: ["error"]
+  responses:
+    Error:
+      description: The schema for all 4xx and 5xx responses
+      content:
+        "application/json":
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
