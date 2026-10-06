@@ -78,6 +78,9 @@ initDb:
   image:
     repository: harbor.dev.renku.ch/dockerhub_cache/renku/init-db
 keycloakx:
+  # Gives the migration test a user with a retrievable password, so the upgrade can be
+  # checked with a real login and a surviving session.
+  createDemoUser: true
   initRealm:
     image:
       repository: harbor.dev.renku.ch/dockerhub_cache/renku/init-realm
