@@ -235,7 +235,6 @@ networkPolicies:
       #       protocol: TCP
   # The name of the pod and the namespace may vary based on which ingress controller
   # is used in production.
-  # only created if ingress above is enabled
   ingressController:
     selector:
       - podSelector:
