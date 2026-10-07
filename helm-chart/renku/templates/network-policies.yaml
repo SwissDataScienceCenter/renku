@@ -25,15 +25,16 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      app.kubernetes.io/name: postgresql
+      cnpg.io/cluster: {{ include "renku.pgCluster" . }}
   policyTypes:
     - Ingress
   ingress:
     - from:
-        {{- if .Values.keycloakx.enabled }}
+        {{- if .Values.keycloak.install }}
         - podSelector:
             matchLabels:
-              app.kubernetes.io/name: keycloakx
+              app: keycloak
+              app.kubernetes.io/instance: {{ include "keycloak.fullname" . }}
           namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: {{ .Release.Namespace }}
@@ -85,6 +86,56 @@ spec:
           port: 5432
         - protocol: TCP
           port: 9187
+    # Operator, and peer instances when cnpg.instances > 1, must reach the pods.
+    # https://cloudnative-pg.io/documentation/current/networking/
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Values.cnpg.operatorNamespace }}
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: cloudnative-pg
+        - podSelector:
+            matchLabels:
+              cnpg.io/cluster: {{ include "renku.pgCluster" . }}
+          namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+      ports:
+        - protocol: TCP
+          port: 5432
+        - protocol: TCP
+          port: 8000
+{{- end }}
+{{- if .Values.postgresql.enabled }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: legacy-postgres-ingress
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: postgresql
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  policyTypes:
+    - Ingress
+  ingress:
+    # No renku service talks to the legacy instance any more. The one thing that
+    # still has to reach it is the cnpg cluster, which reads it over the network
+    # when cnpg.autoMigration imports the data.
+    - from:
+        - podSelector:
+            matchLabels:
+              cnpg.io/cluster: {{ include "renku.pgCluster" . }}
+      ports:
+        - protocol: TCP
+          port: 5432
 {{- end }}
 ---
 apiVersion: networking.k8s.io/v1
@@ -311,33 +362,6 @@ spec:
       ports:
         - protocol: TCP
           port: http
-{{- if .Values.keycloakx.enabled }}
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: ingress-to-keycloak-from-anywhere
-  labels:
-    app: {{ template "renku.name" . }}
-    chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-spec:
-  podSelector:
-    matchLabels:
-      app.kubernetes.io/name: keycloakx
-  policyTypes:
-    - Ingress
-  ingress:
-    - from:
-        - ipBlock:
-            cidr: 0.0.0.0/0
-      ports:
-        - protocol: TCP
-          port: http
-        - protocol: TCP
-          port: https
-{{- end }}
 {{- if .Values.swagger.enabled }}
 ---
 apiVersion: networking.k8s.io/v1

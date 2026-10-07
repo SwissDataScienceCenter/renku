@@ -52,6 +52,29 @@ performance is not sufficient to host the local filesystem for a session.
 
 :::
 
+## PostgreSQL
+
+Renku stores its data in PostgreSQL. The Renku Helm chart supports configuring PostgreSQL in two ways:
+
+- via [CloudNativePG](https://cloudnative-pg.io/) operator
+- via any pre-existing PostgreSQL instance
+
+### Cloud-native PostgreSQL
+
+:::warning
+The Renku Helm chart does not provide the CloudNativePG operator.
+If you wish to use this option you have to either have the operator already installed in your cluster or you need to install the operator before you install Renku.
+:::
+
+The Renku Helm chart can create a `Cluster` resource in its own namespace and the CloudNativePG operator then turns that into
+a running database. Configure it under the `cnpg` section of the Renku values.
+
+### External or pre-existing PostgreSQL
+
+If you would rather run PostgreSQL yourself, or use a managed database from your cloud
+provider, set `cnpg.install` to `false` and point Renku at it through
+`global.externalServices.postgresql` instead. In that case the operator is not needed.
+
 ## Ingress
 
 You should have a functioning ingress controller in your cluster. If you use managed
@@ -71,6 +94,34 @@ get TLS certificates provisioned and renewed automatically.
 
 However, there are many alternatives to Let's Encrypt and ACME
 (some requiring more manual intervention than others) which are also acceptable.
+
+## Keycloak
+
+Renku authenticates its users against Keycloak. The Renku Helm chart supports configuring Keycloak in two ways:
+
+- via the [Keycloak Operator](https://www.keycloak.org/operator/installation)
+- via any pre-existing Keycloak instance
+
+### Operator-managed Keycloak
+
+:::warning
+The Renku Helm chart does not provide the Keycloak operator.
+If you wish to use this option you need to have the operator already installed in your cluster.
+:::
+
+The Renku Helm chart can create a `Keycloak` resource in its own namespace and the Keycloak operator
+then turns that into a running instance. Configure it under the `keycloak` section of the Renku values.
+
+The Keycloak version is determined by the installed operator.
+
+### External or pre-existing Keycloak
+
+If you would rather run Keycloak yourself, or use one your organisation already operates, set
+`keycloak.install` to `false` and point Renku at it through `global.keycloak.url`. In that case the
+operator is not needed.
+
+Set `global.keycloak.password.value` as well to let Renku create its realm and clients on that
+instance, or leave it empty to manage the realm yourself.
 
 ## Local CLI and similar useful tools
 

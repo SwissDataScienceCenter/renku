@@ -11,7 +11,11 @@ require admin access.
 
 ### CRDs
 
-Generate the CRDs out of the helm chart:
+The Keycloak CRDs are not part of the chart. They come with the
+[Keycloak Operator](../installation/requirements#operator-managed-keycloak), which is cluster scoped and
+also has to be installed by an administrator.
+
+Generate the remaining CRDs out of the helm chart:
 
 ```bash
 helm template --namespace renku renku renku/renku -f renku-values.yaml --set amalthea.deployCrd=true --set amalthea-sessions.deployCrd=true | yq e '. | select(.kind == "CustomResourceDefinition")' > renku-crds.yaml
@@ -353,8 +357,11 @@ start properly.
 Here follows a full configuration based on the minimal deployment values file.
 
 Beside Renku specific elements, customization of child charts are also required.
-Here we can see the changes to be applied to make KeycloakX, PostgreSQL, Redis
-and Solr start properly.
+Here we can see the changes to be applied to make Redis and Solr start
+properly.
+
+PostgreSQL can be deployed by the CloudNativePG operator, you can deploy it yourself or use a managed PostgreSQL service. Note that If you decide to deploy PostgerSQL yourself we strongly recommend using the operator.
+For more information refer to [requirements section](/docs/admins/installation/requirements#postgresql). The example below assumes you will use the CloudNativePG operator.
 
 Note that these changes are not Renku specific, they need to be applied in any
 cases when deployed in OpenShift.
@@ -429,6 +436,13 @@ authz:
     requests:
       cpu: 50m
       memory: 75Mi
+cnpg:
+  extraSpec:
+    resources:
+      limits:
+        memory: 300Mi
+      requests:
+        memory: 300Mi
 dataService:
   # added
   rbac:
@@ -482,26 +496,6 @@ ingress:
     - hosts:
         - renku.apps.my-openshift.ch
       secretName: renku-renku-ch-tls
-keycloakx:
-  resources:
-    requests:
-      memory: 600Mi
-    limits:
-      memory: 600Mi
-  # added
-  podSecurityContext:
-    fsGroup: null
-
-  securityContext:
-    runAsUser: null
-    runAsGroup: null
-    runAsNonRoot: true
-    allowPrivilegeEscalation: false
-    capabilities:
-      drop: ["ALL"]
-    seccompProfile:
-      type: "RuntimeDefault"
-  # end added
 notebooks:
   oidc:
     allowUnverifiedEmail: true
@@ -509,32 +503,6 @@ notebooks:
     host: renku.apps.my-openshift.ch
     tlsSecret: renku-renku-ch-tls
     ingressClassName: openshift-default
-postgresql:
-  primary:
-    # added
-    volumePermissions:
-      enabled: false
-      securityContext:
-        runAsUser: "auto"
-    podSecurityContext:
-      enabled: false
-
-    shmVolume:
-      chmod:
-        enabled: false
-
-    containerSecurityContext:
-      enabled: false
-    # end added
-    resources:
-      limits:
-        memory: 300Mi
-      requests:
-        memory: 300Mi
-  # Use Bitnami's PostgreSQL image from Renkulab Harbor registry
-  image:
-    registry: harbor.renkulab.io
-    repository: bitnami-mirror/postgresql
 redis:
   architecture: standalone
   master:

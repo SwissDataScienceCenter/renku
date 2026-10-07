@@ -5,6 +5,52 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
+## Upgrading to Renku 2.23.1
+
+Keycloak is now deployed as a `Keycloak` resource reconciled by the
+[Keycloak Operator](https://www.keycloak.org/operator/installation) instead of the `keycloakx`
+subchart.
+
+* DELETE `keycloakx`, the whole section. The chart refuses to render while it is present.
+* NEW `keycloak.install`, replaces `keycloakx.enabled`.
+* NEW `keycloak.extraSpec`, deep merged into the `Keycloak` resource spec.
+* NEW `keycloak.themeImage`, replaces the `theme-provider` init container that used to be spelled
+out in `keycloakx.extraInitContainers`.
+* DELETE `keycloakx.securityContext` and `keycloakx.podSecurityContext`. Keycloak now uses 
+the chart-wide `securityContext`.
+* EDIT `keycloakx.createDemoUser` and `keycloakx.initRealm` move to `keycloak.*`.
+* DELETE `keycloakx.test`, it was only read by the subchart's helm test.
+* EDIT `global.keycloak.password.value` now also drives realm provisioning on an external
+Keycloak. Set it alongside `global.keycloak.url` and the realm job creates the Renku realm and
+its clients there, on every upgrade. Leave it empty to manage the realm yourself.
+
+## Upgrading to Renku 2.23.0
+
+> [!WARNING]
+> You MUST backup the postgres database before upgrading.
+> Setting `postgresql.enabled: false` can result in irrecoverable
+> data loss depending on storage class's reclaimPolicy.
+
+Renku no longer uses the bitnami `postgresql` chart as its database. It relies on an external
+postgres db, or deploys one through the [CloudNativePG](https://cloudnative-pg.io/) operator.
+The operator is **not** part of this chart and has to be installed once per cluster before
+upgrading, see [the chart readme](https://github.com/SwissDataScienceCenter/renku/tree/master/helm-chart#upgrading).
+
+* NEW `cnpg`. It creates and configures a CloudNativePG `Cluster` custom resource in renku's namespace. You need to have installed the Cloud-native Postgres operator in your cluster independently of Renku for this custom resource to result in the creation of a postgres database.
+* NEW `cnpg.operatorNamespace`, defaults to `cnpg-system`. Refers to the namespace in your cluster where the CNPG operator is installed. Opens a network policy letting the operator reach the Renku instance of Postgres.
+* NEW `cnpg.autoMigration`, setting it to true imports every database and role from the
+  legacy instance into the cnpg Cluster on **creation**. Fails if the Cluster already exists.
+* EDIT `postgresql`. The section stays, but only as a migration source: from this release onward Renku services stop using this database. Keep `enabled: true` for as long as you need the old data reachable.
+* NEW `cnpg.extraSpec`, the Cluster spec itself. Useful to set e.g. `instances`, `storage` or `backup`.
+* NEW `global.externalServices.postgresql.existingSecretPasswordKey`, defaults to
+  `postgres-password`. Set to `password` to point at a CNPG `<cluster>-superuser` secret.
+* `global.externalServices.postgresql` is unchanged and keeps working for an external postgres. It
+  stays mutually exclusive with `cnpg.install`.
+
+If you have services that are completely unrelated to Renku which are using the Postgres database that came with Renku, and you set `cnpg.enabled` to `true`, and  you want those external services to keep using the same database, then you should know that
+the hostname of the deployed database changes from `<release>-postgresql` to
+`<release>-pg-rw`, the read-write service of the cnpg Cluster. The renku chart templates it.
+
 ## Upgrading to Renku 2.21.0
 
 * NEW `dataService.imageBuilders.insecureOutput.enabled`: it is now possible to configure registries that use e.g. self-signed certificates to push images to. **WARNING** do not use in production. This is a feature that helps for testing and development.
