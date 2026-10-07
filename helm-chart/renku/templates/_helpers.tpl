@@ -149,6 +149,7 @@ KC_DB_PASSWORD: {{ default (randAlphaNum 64) .Values.global.keycloak.postgresPas
 {{- end -}}
 {{- end -}}
 
+{{/* If using the Helm-chart bundled Keycloak this will return the cluster-internal service url, otherwise it will return the proper URL for an external Keycloak, running outside the cluster. */}}
 {{- define "renku.internalKeycloakUrl" -}}
 {{- if .Values.keycloakx.enabled -}}
 {{/* NOTE: If the url for keycloak does not end with '/' then the python keycloak client library will fail to connect */}}
