@@ -168,13 +168,22 @@ func (ae *ApptainerEngine) reconcileSessionContainer(ctx context.Context, sessio
 		tmpDir, err := filepath.Abs(filepath.Join(homeDir, ".tmp"))
 		if err != nil {
 			return err
+
 		}
 
 		// TODO: pull as a separate step?
 		apptainerImage := fmt.Sprintf("docker://%s", session.Spec.Image)
-		cmd := exec.Command(apptainer, "instance", "run",
+		args := []string{
+			"instance", "run",
 			"--writable-tmpfs", "--contain",
 			"--bind", fmt.Sprintf("%s:%s", sessionDir, sessionDir),
+		}
+		// Mount /share if it exists
+		_, err = os.ReadDir("/share")
+		if err == nil {
+			args = append(args, "--bind", "/share:/share")
+		}
+		args = append(args,
 			"--env", "RENKU_SESSION_PORT=9999",
 			"--env", fmt.Sprintf("RENKU_BASE_URL_PATH=%s", session.Spec.URL.EscapedPath()),
 			"--env", fmt.Sprintf("RENKU_MOUNT_DIR=%s", sessionDir),
@@ -184,14 +193,19 @@ func (ae *ApptainerEngine) reconcileSessionContainer(ctx context.Context, sessio
 			apptainerImage,
 			handle.apptainerInstance,
 		)
-		cmd.Env = append(cmd.Env, fmt.Sprintf("APPTAINER_TMPDIR=%s", tmpDir)) // TODO
+		cmd := exec.Command(apptainer, args...)
+		cmd.Env = append(cmd.Environ(), fmt.Sprintf("APPTAINER_TMPDIR=%s", tmpDir)) // TODO
 		slog.Info("apptainer command", "command", cmd.String())
 
 		// TODO: show logs?
 		// TODO: detach?
 		go func() {
 			out, err := cmd.Output()
-			slog.Info("apptainer", "out", string(out), "err", err)
+			stderr := ""
+			if ee, ok := err.(*exec.ExitError); ok {
+				stderr = string(ee.Stderr)
+			}
+			slog.Info("apptainer", "out", string(out), "err", err, "stderr", stderr)
 		}()
 	}
 	return nil
@@ -252,6 +266,7 @@ func (ae *ApptainerEngine) reconcileDeletedSession(ctx context.Context, sessionI
 
 		out, err := cmd.Output()
 		slog.Info("apptainer", "out", string(out), "err", err)
+		// TODO: handle instance not found (= do nothing)
 		if err == nil {
 			handle.apptainerInstance = ""
 			ae.handles[sessionID] = handle
