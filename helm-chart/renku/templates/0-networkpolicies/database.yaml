@@ -20,6 +20,7 @@ spec:
       ports:
         - protocol: TCP
           port: 5432
+        # 9187 is the postgres prometheus exporter
         - protocol: TCP
           port: 9187
 ---
