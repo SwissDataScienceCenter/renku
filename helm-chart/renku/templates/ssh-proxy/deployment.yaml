@@ -60,14 +60,6 @@ spec:
           env:
             - name: RUST_LOG
               value: "info,renku_ssh_proxy=debug"
-            {{- if .Values.sshProxy.targetPort }}
-            - name: RENKU_SSH_PROXY_TARGET_PORT
-              value: {{ .Values.sshProxy.targetPort | quote }}
-            {{- end }}
-            {{- if .Values.sshProxy.targetUser }}
-            - name: RENKU_SSH_PROXY_TARGET_USER
-              value: {{ .Values.sshProxy.targetUser | quote }}
-            {{- end }}
             - name: RENKU_SSH_PROXY_HOST_KEY
               value: "/secrets/openSshHostKey/openSshHostKey"
             - name: RENKU_SSH_PROXY_SESSION_HOST_KEY
