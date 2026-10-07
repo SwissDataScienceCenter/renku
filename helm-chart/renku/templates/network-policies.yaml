@@ -713,6 +713,10 @@ spec:
     - from:
         - ipBlock:
             cidr: 0.0.0.0/0
+      ports:
+        - protocol: TCP
+          # The proxy container port (fixed at 2222), not the Service port.
+          port: 2222
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy

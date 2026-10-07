@@ -1403,7 +1403,7 @@ sshProxy:
     tag:
     pullPolicy: IfNotPresent
   service:
-    port: 2222
+    port: 22
   openSshHostKey:
   subDomain: ssh
   sentry:
