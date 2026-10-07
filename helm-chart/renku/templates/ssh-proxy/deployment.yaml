@@ -115,10 +115,20 @@ spec:
       nodeSelector:
         {{ toYaml . | nindent 8 }}
     {{- end }}
-    {{- with .Values.sshProxy.affinity }}
       affinity:
-        {{ toYaml . | nindent 8 }}
-    {{- end }}
+        {{- if .Values.sshProxy.affinity }}
+        {{ toYaml .Values.sshProxy.affinity | nindent 8 }}
+        {{- else }}
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app: renku-ssh-proxy
+                    release: {{ .Release.Name }}
+                topologyKey: kubernetes.io/hostname
+        {{- end }}
     {{- with .Values.sshProxy.tolerations }}
       tolerations:
         {{ toYaml . | nindent 8 }}

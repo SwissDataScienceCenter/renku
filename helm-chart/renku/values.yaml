@@ -1411,7 +1411,7 @@ sshProxy:
     dsn:
     environment:
     sampleRate: 0.1
-  replicaCount: 1
+  replicaCount: 2
   podAnnotations: {}
   ## Proxy-specific hardening, merged over the global podSecurityContext.
   podSecurityContext:
