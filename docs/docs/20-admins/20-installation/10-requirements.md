@@ -95,6 +95,34 @@ get TLS certificates provisioned and renewed automatically.
 However, there are many alternatives to Let's Encrypt and ACME
 (some requiring more manual intervention than others) which are also acceptable.
 
+## Keycloak
+
+Renku authenticates its users against Keycloak. The Renku Helm chart supports configuring Keycloak in two ways:
+
+- via the [Keycloak Operator](https://www.keycloak.org/operator/installation)
+- via any pre-existing Keycloak instance
+
+### Operator-managed Keycloak
+
+:::warning
+The Renku Helm chart does not provide the Keycloak operator.
+If you wish to use this option you need to have the operator already installed in your cluster.
+:::
+
+The Renku Helm chart can create a `Keycloak` resource in its own namespace and the Keycloak operator
+then turns that into a running instance. Configure it under the `keycloak` section of the Renku values.
+
+The Keycloak version is determined by the installed operator.
+
+### External or pre-existing Keycloak
+
+If you would rather run Keycloak yourself, or use one your organisation already operates, set
+`keycloak.install` to `false` and point Renku at it through `global.keycloak.url`. In that case the
+operator is not needed.
+
+Set `global.keycloak.password.value` as well to let Renku create its realm and clients on that
+instance, or leave it empty to manage the realm yourself.
+
 ## Local CLI and similar useful tools
 
 - [kubectl](https://kubernetes.io/docs/reference/kubectl/)
