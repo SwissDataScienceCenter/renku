@@ -15,14 +15,11 @@ spec:
     - Ingress
   ingress:
     - from:
-      - namespaceSelector:
-          matchLabels:
-            kubernetes.io/metadata.name: app-routing-system
-        podSelector:
-          matchLabels:
-            app: nginx
+      {{- with .Values.networkPolicies.ingressController.selector }}
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
       ports:
-      - port: http
-        protocol: TCP
-      - port: https
-        protocol: TCP
+        - protocol: TCP
+          port: http
+        - protocol: TCP
+          port: https
