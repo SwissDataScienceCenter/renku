@@ -218,6 +218,8 @@ networkPolicies:
                 - 10.0.0.0/8
                 - 172.16.0.0/12
                 - 192.168.0.0/16
+                # Cloud instance metadata API
+                - 169.254.169.254/32
       ## Depending on the ingress controller in your cluster you will need an
       ## additional network policy like the one below. The example below is for ingress nginx.
       ## This resolves issues with hairpinning where a session pod is accessing
