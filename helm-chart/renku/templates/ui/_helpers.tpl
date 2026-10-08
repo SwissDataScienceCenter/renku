@@ -25,7 +25,7 @@ app.kubernetes.io/component: ui
 {{- end -}}
 {{- define "ui-server.labels" -}}
 app.kubernetes.io/name: uiserver
-app.kuvernetes.io/component: ui
+app.kubernetes.io/component: ui
 {{ template "renku.labels" . }}
 {{- end -}}
 

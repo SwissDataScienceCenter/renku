@@ -19,7 +19,7 @@ spec:
         # from configmaps do not update automatically.
         reloader: {{ randAlphaNum 16 | quote }}
       labels:
-        {{- include "ui-server.labels" . | nindent 8 }}
+        {{- include "ui.labels" . | nindent 8 }}
         renku.io/ingress-access: "true"
         {{- if .Values.keycloakx.enabled}}
         renku.io/keycloak-access: "true"
