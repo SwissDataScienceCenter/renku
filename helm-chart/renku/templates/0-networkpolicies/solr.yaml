@@ -11,7 +11,7 @@ spec:
     matchLabels:
       app.kubernetes.io/component: solr
       app.kubernetes.io/name: solr
-      {{- include "netpol.commonSelectors" . | nindent 6 }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
   policyTypes:
     - Ingress
   ingress:
@@ -43,7 +43,7 @@ spec:
             matchLabels:
               app.kubernetes.io/component: solr
               app.kubernetes.io/name: solr
-              {{- include "netpol.commonSelectors" . | nindent 14 }}
+              app.kubernetes.io/instance: {{ .Release.Name }}
       ports:
         - protocol: TCP
           port: http

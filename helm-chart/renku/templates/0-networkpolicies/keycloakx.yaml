@@ -12,7 +12,7 @@ spec:
   podSelector:
     matchLabels:
       app.kubernetes.io/name: keycloakx
-      {{- include "netpol.commonSelectors" . | nindent 6 }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
   ingress:
     - from:
         - podSelector:
@@ -43,7 +43,7 @@ spec:
         - podSelector:
             matchLabels:
               app.kubernetes.io/name: keycloakx
-              {{- include "netpol.commonSelectors" . | nindent 14 }}
+              app.kubernetes.io/instance: {{ .Release.Name }}
       ports:
         - protocol: TCP
           port: http
