@@ -113,6 +113,8 @@ spec:
               value: {{ .Values.apps.enabled | quote }}
             - name: APP_LOBBY
               value: {{ toJson .Values.apps.appLobby | quote }}
+            - name: SSH_ENABLED
+              value: {{ .Values.sshProxy.enabled | quote }}
             - name: METRICS_ENABLED
               value: {{ .Values.ui.client.prometheus.enabled | quote }}
             - name: LEGACY_SUPPORT
