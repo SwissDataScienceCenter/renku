@@ -9,3 +9,10 @@ app.kubernetes.io/part-of: renku
 chart: {{ template "renku.chart" . }}
 heritage: {{ .Release.Service }}
 {{- end }}
+
+{{/*
+Common selectors
+*/}}
+{{- define "netpol.commonSelectors" -}}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}

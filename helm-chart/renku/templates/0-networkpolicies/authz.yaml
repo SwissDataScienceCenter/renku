@@ -11,11 +11,13 @@ spec:
   podSelector:
     matchLabels:
       app.kubernetes.io/name: renku-authz
+      {{- include "netpol.commonSelectors" . | nindent 6 }}
   ingress:
     - from:
         - podSelector:
             matchLabels:
               renku.io/authz-access: "true"
+              {{- include "netpol.commonSelectors" . | nindent 14 }}
       ports:
         - protocol: TCP
           port: http
@@ -34,11 +36,13 @@ spec:
   podSelector:
     matchLabels:
       renku.io/authz-access: "true"
+      {{- include "netpol.commonSelectors" . | nindent 6 }}
   egress:
     - to:
         - podSelector:
             matchLabels:
               app.kubernetes.io/name: renku-authz
+              {{- include "netpol.commonSelectors" . | nindent 14 }}
       ports:
         - protocol: TCP
           port: http

@@ -12,11 +12,13 @@ spec:
   podSelector:
     matchLabels:
       app.kubernetes.io/name: postgresql
+      {{- include "netpol.commonSelectors" . | nindent 6 }}
   ingress:
     - from:
         - podSelector:
             matchLabels:
               renku.io/database-access: "true"
+              {{- include "netpol.commonSelectors" . | nindent 14 }}
       ports:
         - protocol: TCP
           port: 5432
@@ -36,11 +38,13 @@ spec:
   podSelector:
     matchLabels:
       renku.io/database-access: "true"
+      {{- include "netpol.commonSelectors" . | nindent 6 }}
   egress:
     - to:
         - podSelector:
             matchLabels:
               app.kubernetes.io/name: postgresql
+              {{- include "netpol.commonSelectors" . | nindent 14 }}
       ports:
         - protocol: TCP
           port: 5432

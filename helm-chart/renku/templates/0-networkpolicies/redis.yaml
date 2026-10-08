@@ -10,6 +10,7 @@ spec:
   podSelector:
     matchLabels:
       app.kubernetes.io/name: redis
+      {{- include "netpol.commonSelectors" . | nindent 6 }}
   policyTypes:
     - Ingress
   ingress:
@@ -17,7 +18,7 @@ spec:
         - podSelector:
             matchLabels:
               renku.io/redis-access: "true"
-              app.kubernetes.io/instance: {{ .Release.Name }}
+              {{- include "netpol.commonSelectors" . | nindent 14 }}
       ports:
         - protocol: TCP
           port: redis
@@ -34,6 +35,7 @@ spec:
   podSelector:
     matchLabels:
       renku.io/redis-access: "true"
+      {{- include "netpol.commonSelectors" . | nindent 6 }}
   policyTypes:
     - Egress
   egress:
@@ -41,7 +43,7 @@ spec:
         - podSelector:
             matchLabels:
               app.kubernetes.io/name: redis
-              app.kubernetes.io/instance: {{ .Release.Name }}
+              {{- include "netpol.commonSelectors" . | nindent 14 }}
       ports:
         - protocol: TCP
           port: redis

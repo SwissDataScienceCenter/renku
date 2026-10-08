@@ -11,6 +11,7 @@ spec:
     matchLabels:
       app.kubernetes.io/component: solr
       app.kubernetes.io/name: solr
+      {{- include "netpol.commonSelectors" . | nindent 6 }}
   policyTypes:
     - Ingress
   ingress:
@@ -18,7 +19,7 @@ spec:
         - podSelector:
             matchLabels:
               renku.io/solr-access: "true"
-              app.kubernetes.io/instance: {{ .Release.Name }}
+              {{- include "netpol.commonSelectors" . | nindent 14 }}
       ports:
         - protocol: TCP
           port: http
@@ -33,7 +34,7 @@ spec:
   podSelector:
     matchLabels:
       renku.io/solr-access: "true"
-      app.kubernetes.io/instance: {{ .Release.Name }}
+      {{- include "netpol.commonSelectors" . | nindent 6 }}
   policyTypes:
     - Egress
   egress:
@@ -42,6 +43,7 @@ spec:
             matchLabels:
               app.kubernetes.io/component: solr
               app.kubernetes.io/name: solr
+              {{- include "netpol.commonSelectors" . | nindent 14 }}
       ports:
         - protocol: TCP
           port: http

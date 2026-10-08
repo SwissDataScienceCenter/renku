@@ -13,6 +13,7 @@ spec:
   podSelector:
     matchLabels:
       renku.io/ingress-access: "true"
+      {{- include "netpol.commonSelectors" . | nindent 6 }}
   ingress:
     - from:
       {{- with .Values.networkPolicies.ingressController.selector }}
