@@ -277,6 +277,7 @@ keycloakx:
   ## Spawn a keycloak instance
   enabled: true
   podLabels:
+    app.kubernetes.io/part-of: renku
     renku.io/database-access: "true"
     renku.io/ingress-access: "true"
     renku.io/keycloak-access: "true"
@@ -409,6 +410,9 @@ keycloakx:
 # For production deployments check out
 # https://github.com/bitnami/charts/blob/master/bitnami/postgresql/values-production.yaml
 postgresql:
+  commonLabels:
+    app.kubernetes.io/part-of: renku
+
   ## We use the defaults here. Note that these basic configs could also be set as
   ## global values such that sub-charts can access them too.
 
@@ -451,6 +455,8 @@ postgresql:
         memory: 300Mi
 
 redis:
+  commonLabels:
+    app.kubernetes.io/part-of: renku
   # If set to true, a HA redis will be included in the Renku release.
   install: true
   ###########################################################################
@@ -563,6 +569,8 @@ redis:
     registry: harbor.renkulab.io
     repository: bitnami-mirror/redis
 solr:
+  commonLabels:
+    app.kubernetes.io/part-of: renku
   enabled: true
   cloudEnabled: false
   collectionReplicas: 0
