@@ -18,8 +18,14 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{/*
 Common labels
 */}}
+{{- define "ui.labels" -}}
+app.kubernetes.io/name: ui
+app.kubernetes.io/component: ui
+{{ template "renku.labels" . }}
+{{- end -}}
 {{- define "ui-server.labels" -}}
 app.kubernetes.io/name: uiserver
+app.kubernetes.io/component: ui
 {{ template "renku.labels" . }}
 {{- end -}}
 

@@ -8,10 +8,8 @@ kind: HorizontalPodAutoscaler
 metadata:
   name: {{ template "renku.fullname" . }}-data-service
   labels:
-    app: renku-data-service
-    chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    app.kubernetes.io/name: renku-data-service
+    {{- include "dataservice.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1

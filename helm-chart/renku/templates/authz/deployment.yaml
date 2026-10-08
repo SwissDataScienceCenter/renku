@@ -3,10 +3,7 @@ kind: Deployment
 metadata:
   name: {{ template "renku.fullname" . }}-authz
   labels:
-    app: renku-authz
-    chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    {{- include "authz.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.authz.autoscaling.enabled }}
   replicas: {{ .Values.authz.replicaCount }}
@@ -18,14 +15,13 @@ spec:
       maxUnavailable: 1
   selector:
     matchLabels:
-      app: renku-authz
+      app.kubernetes.io/name: renku-authz
+      app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: renku-authz
-        chart: {{ template "renku.chart" . }}
-        release: {{ .Release.Name }}
-        heritage: {{ .Release.Service }}
+        {{- include "authz.labels" . | nindent 8 }}
+        renku.io/database-access: "true"
     spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}

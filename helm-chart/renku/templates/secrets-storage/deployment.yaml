@@ -3,10 +3,8 @@ kind: Deployment
 metadata:
   name: {{ template "renku.fullname" . }}-secrets-storage
   labels:
-    app: renku-secrets-storage
-    chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    app.kubernetes.io/name: renku-secrets-storage
+    {{- include "secretsstorage.labels" $ | nindent 4 }}
 spec:
   {{- if not .Values.secretsStorage.autoscaling.enabled }}
   replicas: {{ .Values.secretsStorage.replicaCount }}
@@ -15,13 +13,20 @@ spec:
     {{- toYaml .Values.secretsStorage.updateStrategy | nindent 4 }}
   selector:
     matchLabels:
-      app: renku-secrets-storage
-      release: {{ .Release.Name }}
+      app.kubernetes.io/name: renku-secrets-storage
+      app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: renku-secrets-storage
-        release: {{ .Release.Name }}
+        app.kubernetes.io/name: renku-secrets-storage
+        {{- include "secretsstorage.labels" . | nindent 8 }}
+        renku.io/kubeapi-access: "true"
+        renku.io/database-access: "true"
+        {{- if .Values.keycloakx.enabled}}
+        renku.io/keycloak-access: "true"
+        {{- end }}
+        chart: {{ template "renku.chart" . }}
+        heritage: {{ .Release.Service }}
       {{- with .Values.secretsStorage.podAnnotations }}
       annotations:
         checksum/privateKey: {{ .Values.global.platformConfig | sha256sum }}
@@ -56,7 +61,7 @@ spec:
                   name: {{ .Values.global.db.common.passwordSecretName }}
                   key: password
             - name: KEYCLOAK_URL
-              value: {{ (printf "%s://%s/auth/" (include "renku.http" .) .Values.global.renku.domain) | quote }}
+              value: {{ include "renku.internalKeycloakUrl" . | quote }}
             - name: KEYCLOAK_TOKEN_SIGNATURE_ALGS
               value: "RS256"
             - name: KEYCLOAK_CLIENT_ID

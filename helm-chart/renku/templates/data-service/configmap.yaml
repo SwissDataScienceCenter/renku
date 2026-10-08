@@ -4,10 +4,8 @@ kind: ConfigMap
 metadata:
   name: {{ template "renku.fullname" . }}-server-options
   labels:
-    app: {{ template "renku.name" . }}
-    chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ template "renku.name" . }}
+    {{- include "dataservice.labels" . | nindent 4 }}
 data:
   server_options.json: |
     {{ .Values.notebooks.serverOptions | default dict | toJson }}

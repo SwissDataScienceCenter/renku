@@ -1,0 +1,53 @@
+{{- if not .Values.global.externalServices.postgresql.enabled }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ingress-to-database
+  labels:
+    {{- include "netpol.labels" . | nindent 4 }}
+spec:
+  policyTypes:
+    - Ingress
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: postgresql
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              renku.io/database-access: "true"
+              {{- include "netpol.commonSelectors" . | nindent 14 }}
+      ports:
+        - protocol: TCP
+          port: 5432
+        # 9187 is the postgres prometheus exporter
+        - protocol: TCP
+          port: 9187
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: egress-to-database
+  labels:
+    {{- include "netpol.labels" . | nindent 4 }}
+spec:
+  policyTypes:
+    - Egress
+  podSelector:
+    matchLabels:
+      renku.io/database-access: "true"
+      {{- include "netpol.commonSelectors" . | nindent 6 }}
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: postgresql
+              app.kubernetes.io/instance: {{ .Release.Name }}
+      ports:
+        - protocol: TCP
+          port: 5432
+        - protocol: TCP
+          port: 9187
+{{- end }}

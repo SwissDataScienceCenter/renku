@@ -12,10 +12,7 @@ kind: HorizontalPodAutoscaler
 metadata:
   name: {{ include "renku.fullname" . }}-authz
   labels:
-    app: renku-authz
-    chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    {{- include "authz.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1

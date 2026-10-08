@@ -3,10 +3,8 @@ kind: Service
 metadata:
   name: {{ template "renku.fullname" . }}-data-service
   labels:
-    app: renku-data-service
-    chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    app.kubernetes.io/name: renku-data-service
+    {{- include "dataservice.labels" . | nindent 4 }}
   annotations:
     prometheus.io/scrape: 'true'
     prometheus.io/path: '/metrics'
@@ -19,5 +17,5 @@ spec:
       protocol: TCP
       name: http
   selector:
-    app: {{ template "renku.name" . }}-data-service
-    release: {{ .Release.Name }}
+    app.kubernetes.io/name: renku-data-service
+    app.kubernetes.io/instance: {{ .Release.Name }}

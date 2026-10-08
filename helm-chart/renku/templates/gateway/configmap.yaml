@@ -3,10 +3,8 @@ kind: ConfigMap
 metadata:
   name: {{ template "renku.fullname" . }}-gateway
   labels:
-    app: {{ template "gateway.name" . }}
-    chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ template "gateway.name" . }}
+    {{- include "gateway.labels" . | nindent 4 }}
 data:
   config.yaml: |
     debugMode: {{ .Values.gateway.debug | default false }}
@@ -29,10 +27,10 @@ data:
       maxSessionTTLSeconds: {{ .Values.gateway.maxSessionTTLSeconds }}
       {{- end }}
       authorizationVerifiers:
-        - issuer: {{ printf "%s/realms/%s" (include "renku.keycloakUrl" . | trimSuffix "/") (include "renku.keycloak.realm" .) }}
+        - issuer: {{ include "renku.keycloakIssuerUrl" . | quote }}
           audience: renku
           authorizedParty: renku
-        - issuer: {{ printf "%s/realms/%s" (include "renku.keycloakUrl" . | trimSuffix "/") (include "renku.keycloak.realm" .) }}
+        - issuer: {{ include "renku.keycloakIssuerUrl" . | quote }}
           audience: renku
           authorizedParty: renku-cli
     revproxy:
@@ -43,7 +41,7 @@ data:
       renkuServices:
         notebooks: {{ printf "http://%s-notebooks" .Release.Name | quote }}
         dataService: {{ printf "http://%s-data-service" (include "renku.fullname" .) | quote }}
-        keycloak: {{ include "renku.keycloakUrl" . | quote }} 
+        keycloak: {{ include "renku.internalKeycloakUrl" . | quote }}
         uiserver: {{ printf "http://%s" (include "ui-server.fullname" .) | quote }} 
         search: {{ printf "http://%s-search-api" .Release.Name | quote }}
     login:
@@ -55,7 +53,7 @@ data:
         enabled: true
       providers:
         renku:
-          issuer: {{ printf "%s/realms/%s" (include "renku.keycloakUrl" . | trimSuffix "/") (include "renku.keycloak.realm" .) }}
+          issuer: {{ include "renku.keycloakIssuerUrl" . | quote }}
           clientID: renku
           scopes: ["profile", "email", "openid", "microprofile-jwt"]
           callbackURI:  {{ printf "%s/api/auth/callback" (include "renku.baseUrl" .) }}

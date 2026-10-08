@@ -218,6 +218,8 @@ networkPolicies:
                 - 10.0.0.0/8
                 - 172.16.0.0/12
                 - 192.168.0.0/16
+                # Cloud instance metadata API
+                - 169.254.169.254/32
       ## Depending on the ingress controller in your cluster you will need an
       ## additional network policy like the one below. The example below is for ingress nginx.
       ## This resolves issues with hairpinning where a session pod is accessing
@@ -233,6 +235,16 @@ networkPolicies:
       #   ports:
       #     - port: 443
       #       protocol: TCP
+  # The name of the pod and the namespace may vary based on which ingress controller
+  # is used in production.
+  ingressController:
+    selector:
+      - podSelector:
+          matchLabels:
+            app.kubernetes.io/name: ingress-nginx
+        namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: ingress-nginx
 ## Alerts configuration
 alerts:
   ## Alertmanager webhook authentication
@@ -264,6 +276,11 @@ logging:
 keycloakx:
   ## Spawn a keycloak instance
   enabled: true
+  podLabels:
+    app.kubernetes.io/part-of: renku
+    renku.io/database-access: "true"
+    renku.io/ingress-access: "true"
+    renku.io/keycloak-access: "true"
   postgresql:
     # Disable PostgreSQL dependency
     enabled: false
@@ -393,6 +410,9 @@ keycloakx:
 # For production deployments check out
 # https://github.com/bitnami/charts/blob/master/bitnami/postgresql/values-production.yaml
 postgresql:
+  commonLabels:
+    app.kubernetes.io/part-of: renku
+
   ## We use the defaults here. Note that these basic configs could also be set as
   ## global values such that sub-charts can access them too.
 
@@ -435,6 +455,8 @@ postgresql:
         memory: 300Mi
 
 redis:
+  commonLabels:
+    app.kubernetes.io/part-of: renku
   # If set to true, a HA redis will be included in the Renku release.
   install: true
   ###########################################################################
@@ -547,6 +569,8 @@ redis:
     registry: harbor.renkulab.io
     repository: bitnami-mirror/redis
 solr:
+  commonLabels:
+    app.kubernetes.io/part-of: renku
   enabled: true
   cloudEnabled: false
   collectionReplicas: 0
