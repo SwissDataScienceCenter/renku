@@ -293,7 +293,7 @@ And your launcher set up could be, for example:
 
 ## Creating a code-based environment from a private code repository
 
-To ensure that private repository content does not leak to unauthorized users, if an image is built 
-from a private repository it is only made available to users who have read access to both the project and the repository. 
+To ensure that private repository content does not leak to unauthorized users, if an image is built
+from a private repository it is only made available to users who have read access to both the project and the repository.
 You may therefore safely create launchers in public projects using private repositories, without uninentionally
-exposing any repository content. 
+exposing any repository content.
