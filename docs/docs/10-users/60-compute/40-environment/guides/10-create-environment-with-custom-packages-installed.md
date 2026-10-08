@@ -220,14 +220,6 @@ session](use-your-own-docker-image-for-renku-session).
 
 ## How to create a code-based environment for your Renku session
 
-:::info
-
-This functionality only works with **public code repositories**. If your code repository is
-private, please see [Creating a custom environment from a private code
-repository](create-environment-with-custom-packages-private-code-repository).
-
-:::
-
 1. Make sure the code repository that contains your environment definition file is added to your
    Renku project.
 2. Create a **new session launcher** by clicking the "+" button in the Launchers section, and select either Session Launcher or Job Launcher.
@@ -236,14 +228,6 @@ repository](create-environment-with-custom-packages-private-code-repository).
    ![image.png](./create-environment-with-custom-packages-installed-10.png)
 
 4. Select the **Code repository**
-
-   :::info
-
-   Note: The code repository must be public. If your code repository is private, please see
-   [Creating a custom environment from a private code
-   repository](create-environment-with-custom-packages-private-code-repository)
-
-   :::
 
    :::info
 
@@ -309,5 +293,7 @@ And your launcher set up could be, for example:
 
 ## Creating a code-based environment from a private code repository
 
-Please see [Creating a custom environment from a private code
-repository](create-environment-with-custom-packages-private-code-repository).
+To ensure that private repository content does not leak to unauthorized users, if an image is built
+from a private repository it is only made available to users who have read access to both the project and the repository.
+You may therefore safely create launchers in public projects using private repositories, without uninentionally
+exposing any repository content.
