@@ -5,25 +5,17 @@ metadata:
   name: "{{ .Release.Name }}-init-postgres-keycloak-rev{{ .Release.Revision }}-{{ randAlphaNum 5 | lower }}"
   labels:
     app.kubernetes.io/name: postgres-setup
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/component: setup-jobs
-    app.kubernetes.io/part-of: renku
-    heritage: {{ .Release.Service }}
-    chart: {{ template "renku.chart" . }}
+    {{- include "renku.labels" . | nindent 4 }}
 spec:
   template:
     metadata:
       name: {{ .Release.Name }}-init-postgres-keycloak
       labels:
         app.kubernetes.io/name: postgres-setup
-        app.kubernetes.io/instance: {{ .Release.Name }}
-        app.kubernetes.io/managed-by: {{ .Release.Service }}
         app.kubernetes.io/component: setup-jobs
-        app.kubernetes.io/part-of: renku
+        {{- include "renku.labels" . | nindent 8 }}
         renku.io/database-access: "true"
-        heritage: {{ .Release.Service }}
-        chart: {{ template "renku.chart" . }}
     spec:
       restartPolicy: Never
       securityContext:

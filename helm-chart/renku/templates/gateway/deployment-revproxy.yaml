@@ -4,12 +4,7 @@ metadata:
   name: {{ template "renku.fullname" . }}-gateway
   labels:
     app.kubernetes.io/name: {{ template "gateway.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/component: gateway
-    app.kubernetes.io/part-of: renku
-    chart: {{ template "renku.chart" . }}
-    heritage: {{ .Release.Service }}
+    {{- include "gateway.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.gateway.autoscaling.enabled }}
   replicas: {{ .Values.gateway.replicaCount }}
@@ -24,10 +19,7 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: {{ template "gateway.name" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
-        app.kubernetes.io/managed-by: {{ .Release.Service }}
-        app.kubernetes.io/component: gateway
-        app.kubernetes.io/part-of: renku
+        {{- include "gateway.labels" . | nindent 8 }}
         renku.io/ingress-access: "true"
         renku.io/data-service-access: "true"
         renku.io/uiserver-access: "true"

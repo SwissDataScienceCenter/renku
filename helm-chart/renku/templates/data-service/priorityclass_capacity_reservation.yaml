@@ -5,12 +5,7 @@ metadata:
   name: {{ printf "%s-capacity-placeholder" (include "renku.fullname" . | trunc 42 | trimSuffix "-") }}
   labels:
     app.kubernetes.io/name: {{ template "renku.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/component: data-services
-    app.kubernetes.io/part-of: renku
-    chart: {{ template "renku.chart" . }}
-    heritage: {{ .Release.Service }}
+    {{- include "dataservice.labels" . | nindent 4 }}
 value: -1
 globalDefault: false
 description: "Low priority class for Renku capacity reservation placeholder pods. Evicted when user session pods need resources."

@@ -4,12 +4,7 @@ metadata:
   name: {{ template "renku.fullname" . }}-secrets-storage
   labels:
     app.kubernetes.io/name: renku-secrets-storage
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/component: secrets-storage
-    app.kubernetes.io/part-of: renku
-    chart: {{ template "renku.chart" . }}
-    heritage: {{ .Release.Service }}
+    {{- include "secretsstorage.labels" $ | nindent 4 }}
 spec:
   {{- if not .Values.secretsStorage.autoscaling.enabled }}
   replicas: {{ .Values.secretsStorage.replicaCount }}
@@ -24,10 +19,7 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: renku-secrets-storage
-        app.kubernetes.io/instance: {{ .Release.Name }}
-        app.kubernetes.io/managed-by: {{ .Release.Service }}
-        app.kubernetes.io/component: secrets-storage
-        app.kubernetes.io/part-of: renku
+        {{- include "secretsstorage.labels" . | nindent 8 }}
         renku.io/kubeapi-access: "true"
         renku.io/database-access: "true"
         {{- if .Values.keycloakx.enabled}}

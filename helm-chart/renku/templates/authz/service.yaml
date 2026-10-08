@@ -3,13 +3,7 @@ kind: Service
 metadata:
   name: {{ include "renku.fullname" . }}-authz
   labels:
-    app.kubernetes.io/name: renku-authz
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/component: authentication
-    app.kubernetes.io/part-of: renku
-    chart: {{ template "renku.chart" . }}
-    heritage: {{ .Release.Service }}
+    {{- include "authz.labels" . | nindent 4 }}
   annotations:
     {{- if and .Values.authz.metrics.enabled .Values.authz.metrics.addPrometheusAnnotations }}
     prometheus.io/scrape: 'true'

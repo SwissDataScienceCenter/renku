@@ -5,12 +5,7 @@ metadata:
   name: {{ template "renku.fullname" . }}-data-service
   labels:
     app.kubernetes.io/name: {{ template "renku.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/component: data-services
-    app.kubernetes.io/part-of: renku
-    chart: {{ template "renku.chart" . }}
-    heritage: {{ .Release.Service }}
+    {{- include "dataservice.labels" . | nindent 4 }}
 rules:
   - apiGroups:
       - ""
@@ -111,10 +106,8 @@ kind: RoleBinding
 metadata:
   name: {{ template "renku.fullname" . }}-data-service
   labels:
-    app: {{ template "renku.name" . }}
-    chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ template "renku.name" . }}
+    {{- include "dataservice.labels" . | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role

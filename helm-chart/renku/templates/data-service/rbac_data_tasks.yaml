@@ -5,12 +5,7 @@ metadata:
   name: {{ template "renku.fullname" . }}-data-tasks
   labels:
     app.kubernetes.io/name: {{ template "renku.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/component: data-services
-    app.kubernetes.io/part-of: renku
-    chart: {{ template "renku.chart" . }}
-    heritage: {{ .Release.Service }}
+    {{- include "dataservice.labels" . | nindent 4 }}
 rules:
 {{- if .Values.dataService.dataTasks.enableResourceRequestTracking }}
   - apiGroups:
@@ -52,12 +47,7 @@ metadata:
   name: {{ template "renku.fullname" . }}-data-tasks
   labels:
     app.kubernetes.io/name: {{ template "renku.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/component: data-services
-    app.kubernetes.io/part-of: renku
-    chart: {{ template "renku.chart" . }}
-    heritage: {{ .Release.Service }}
+    {{- include "dataservice.labels" . | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -74,12 +64,7 @@ metadata:
   name: {{ template "renku.fullname" . }}-data-tasks-cluster-role
   labels:
     app.kubernetes.io/name: {{ template "renku.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/component: data-services
-    app.kubernetes.io/part-of: renku
-    chart: {{ template "renku.chart" . }}
-    heritage: {{ .Release.Service }}
+    {{- include "dataservice.labels" . | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -95,12 +80,7 @@ metadata:
   name: {{ template "renku.fullname" . }}-data-tasks
   labels:
     app.kubernetes.io/name: {{ template "renku.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/component: data-services
-    app.kubernetes.io/part-of: renku
-    chart: {{ template "renku.chart" . }}
-    heritage: {{ .Release.Service }}
+    {{- include "dataservice.labels" . | nindent 4 }}
 rules:
 - apiGroups:
   - ""

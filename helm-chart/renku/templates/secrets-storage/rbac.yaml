@@ -13,12 +13,7 @@ metadata:
   namespace: {{ . }}
   labels:
     app.kubernetes.io/name: {{ template "renku.name" $ }}
-    app.kubernetes.io/instance: {{ $.Release.Name }}
-    app.kubernetes.io/managed-by: {{ $.Release.Service }}
-    app.kubernetes.io/component: secrets-storage
-    app.kubernetes.io/part-of: renku
-    chart: {{ template "renku.chart" $ }}
-    heritage: {{ $.Release.Service }}
+    {{- include "secretsstorage.labels" $ | nindent 4 }}
 rules:
   - apiGroups:
       - ""
@@ -33,12 +28,7 @@ metadata:
   name: {{ template "renku.fullname" $ }}-secrets-storage
   labels:
     app.kubernetes.io/name: {{ template "renku.name" $ }}
-    app.kubernetes.io/instance: {{ $.Release.Name }}
-    app.kubernetes.io/managed-by: {{ $.Release.Service }}
-    app.kubernetes.io/component: secrets-storage
-    app.kubernetes.io/part-of: renku
-    chart: {{ template "renku.chart" $ }}
-    heritage: {{ $.Release.Service }}
+    {{- include "secretsstorage.labels" $ | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role

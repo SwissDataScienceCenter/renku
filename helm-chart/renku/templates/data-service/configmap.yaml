@@ -5,12 +5,7 @@ metadata:
   name: {{ template "renku.fullname" . }}-server-options
   labels:
     app.kubernetes.io/name: {{ template "renku.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/component: data-services
-    app.kubernetes.io/part-of: renku
-    chart: {{ template "renku.chart" . }}
-    heritage: {{ .Release.Service }}
+    {{- include "dataservice.labels" . | nindent 4 }}
 data:
   server_options.json: |
     {{ .Values.notebooks.serverOptions | default dict | toJson }}
