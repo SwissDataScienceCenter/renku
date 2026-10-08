@@ -4,13 +4,7 @@ kind: Deployment
 metadata:
   name: {{ .deploymentName }}
   labels:
-    app.kubernetes.io/name: ui
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/component: ui
-    app.kubernetes.io/part-of: renku
-    chart: {{ template "renku.chart" . }}
-    heritage: {{ .Release.Service }}
+    {{- include "ui.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.ui.client.replicaCount }}
   selector:
@@ -25,11 +19,7 @@ spec:
         # from configmaps do not update automatically.
         reloader: {{ randAlphaNum 16 | quote }}
       labels:
-        app.kubernetes.io/name: ui
-        app.kubernetes.io/instance: {{ .Release.Name }}
-        app.kubernetes.io/managed-by: {{ .Release.Service }}
-        app.kubernetes.io/component: ui
-        app.kubernetes.io/part-of: renku
+        {{- include "ui-server.labels" . | nindent 8 }}
         renku.io/ingress-access: "true"
         {{- if .Values.keycloakx.enabled}}
         renku.io/keycloak-access: "true"

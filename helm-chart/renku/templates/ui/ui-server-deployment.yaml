@@ -19,8 +19,7 @@ spec:
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: "uiserver"
-        app.kubernetes.io/instance: {{ .Release.Name }}
+        {{- include "ui-server.labels" . | nindent 8 }}
         renku.io/ingress-access: "true"
         renku.io/gateway-access: "true"
         {{- if .Values.keycloakx.enabled}}
