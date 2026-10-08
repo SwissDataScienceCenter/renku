@@ -715,8 +715,8 @@ spec:
             cidr: 0.0.0.0/0
       ports:
         - protocol: TCP
-          # The proxy container port (fixed at 2222), not the Service port.
-          port: 2222
+          # The proxy container port, not the Service port.
+          port: {{ include "renku.sshProxy.port" . }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy

@@ -144,6 +144,10 @@ KC_DB_PASSWORD: {{ default (randAlphaNum 64) .Values.global.keycloak.postgresPas
 {{ printf "%s.%s" .Values.sshProxy.subDomain .Values.global.renku.domain }}
 {{- end -}}
 
+{{- define "renku.sshProxy.port" -}}
+2222
+{{- end -}}
+
 {{- define "renku.keycloakUrl" -}}
 {{- if .Values.keycloakx.enabled -}}
 {{/* NOTE: If the url for keycloak does not end with '/' then the python keycloak client library will fail to connect */}}
