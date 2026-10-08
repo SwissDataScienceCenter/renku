@@ -9,7 +9,7 @@ metadata:
   labels:
     app.kubernetes.io/name: ui
     app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/component: ui
     app.kubernetes.io/part-of: renku
     chart: {{ template "renku.chart" . }}
@@ -39,7 +39,7 @@ metadata:
   labels:
     app.kubernetes.io/name: ui-canary
     app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/component: ui
     app.kubernetes.io/part-of: renku
     chart: {{ template "renku.chart" . }}

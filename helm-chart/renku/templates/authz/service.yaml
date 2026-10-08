@@ -5,7 +5,7 @@ metadata:
   labels:
     app.kubernetes.io/name: renku-authz
     app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/component: authentication
     app.kubernetes.io/part-of: renku
     chart: {{ template "renku.chart" . }}

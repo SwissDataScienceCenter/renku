@@ -9,7 +9,7 @@ metadata:
   labels:
     app.kubernetes.io/name: keycloak-realms-initialisation
     app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/component: setup-jobs
     app.kubernetes.io/part-of: renku
     heritage: {{ .Release.Service }}
@@ -22,7 +22,7 @@ spec:
       labels:
         app.kubernetes.io/name: keycloak-realms-initialisation
         app.kubernetes.io/instance: {{ .Release.Name }}
-        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/managed-by: {{ .Release.Service }}
         app.kubernetes.io/component: setup-jobs
         app.kubernetes.io/part-of: renku
         heritage: {{ .Release.Service }}

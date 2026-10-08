@@ -5,7 +5,7 @@ metadata:
   labels:
     app.kubernetes.io/name: renku-data-service
     app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/component: data-services
     app.kubernetes.io/part-of: renku
     chart: {{ template "renku.chart" . }}
@@ -25,7 +25,7 @@ spec:
       labels:
         app.kubernetes.io/name: renku-data-service
         app.kubernetes.io/instance: {{ .Release.Name }}
-        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/managed-by: {{ .Release.Service }}
         app.kubernetes.io/component: data-services
         app.kubernetes.io/part-of: renku
         renku.io/allow-external: "true"
