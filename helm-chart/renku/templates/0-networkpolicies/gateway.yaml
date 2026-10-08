@@ -40,5 +40,3 @@ spec:
       ports:
         - protocol: TCP
           port: http
-        - protocol: TCP
-          port: https
