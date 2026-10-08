@@ -28,6 +28,7 @@ spec:
       labels:
         app: renku-ssh-proxy
         release: {{ .Release.Name }}
+        renku.io/secrets-storage-access: "true"
         app.kubernetes.io/name: renku-ssh-proxy
         app.kubernetes.io/instance: {{ .Release.Name }}
         app.kubernetes.io/managed-by: {{ .Release.Service }}
