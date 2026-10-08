@@ -16,6 +16,7 @@ rules:
       - endpoints
       - secrets
       - persistentvolumeclaims
+      - configmaps
     verbs:
       - get
       - list
@@ -49,6 +50,7 @@ rules:
     resources:
       - secrets
       - persistentvolumeclaims
+      - configmaps
     verbs:
       - create
       - update
