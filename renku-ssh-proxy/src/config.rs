@@ -217,7 +217,7 @@ impl Settings {
             .target_user
             .or(file.target_user)
             .unwrap_or("renku".to_string());
-        let target_port = cli.target_port.or(file.target_port).unwrap_or(2222);
+        let target_port = cli.target_port.or(file.target_port).unwrap_or(80);
         let target = Target {
             host: "".to_string(),
             port: target_port,

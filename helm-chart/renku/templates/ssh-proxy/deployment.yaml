@@ -55,19 +55,11 @@ spec:
             {{- toYaml (mergeOverwrite (deepCopy .Values.securityContext) (.Values.sshProxy.securityContext | default dict)) | nindent 12 }}
           ports:
             - name: ssh
-              containerPort: 2222
+              containerPort: {{ include "renku.sshProxy.port" . }}
               protocol: TCP
           env:
             - name: RUST_LOG
               value: "info,renku_ssh_proxy=debug"
-            {{- if .Values.sshProxy.targetPort }}
-            - name: RENKU_SSH_PROXY_TARGET_PORT
-              value: {{ .Values.sshProxy.targetPort | quote }}
-            {{- end }}
-            {{- if .Values.sshProxy.targetUser }}
-            - name: RENKU_SSH_PROXY_TARGET_USER
-              value: {{ .Values.sshProxy.targetUser | quote }}
-            {{- end }}
             - name: RENKU_SSH_PROXY_HOST_KEY
               value: "/secrets/openSshHostKey/openSshHostKey"
             - name: RENKU_SSH_PROXY_SESSION_HOST_KEY
@@ -75,7 +67,7 @@ spec:
             - name: RENKU_SSH_PROXY_SESSION_AUTH_KEY
               value: "/secrets/sessionAuthKey/authKey"
             - name: RENKU_SSH_PROXY_LISTEN
-              value: "0.0.0.0:2222"
+              value: "0.0.0.0:{{ include "renku.sshProxy.port" . }}"
             - name: VERSION
               value: {{ .Values.sshProxy.image.tag | quote }}
             - name: SENTRY_ENABLED
@@ -101,19 +93,19 @@ spec:
             {{- include "certificates.volumeMounts.system" . | nindent 12 }}
           livenessProbe:
             tcpSocket:
-              port: 2222
+              port: {{ include "renku.sshProxy.port" . }}
             periodSeconds: 30
             timeoutSeconds: 5
             failureThreshold: 6
           readinessProbe:
             tcpSocket:
-              port: 2222
+              port: {{ include "renku.sshProxy.port" . }}
             initialDelaySeconds: 10
             periodSeconds: 10
             failureThreshold: 2
           startupProbe:
             tcpSocket:
-              port: 2222
+              port: {{ include "renku.sshProxy.port" . }}
             periodSeconds: 5
             timeoutSeconds: 5
             failureThreshold: 24
@@ -123,10 +115,20 @@ spec:
       nodeSelector:
         {{ toYaml . | nindent 8 }}
     {{- end }}
-    {{- with .Values.sshProxy.affinity }}
       affinity:
-        {{ toYaml . | nindent 8 }}
-    {{- end }}
+        {{- if .Values.sshProxy.affinity }}
+        {{ toYaml .Values.sshProxy.affinity | nindent 8 }}
+        {{- else }}
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app: renku-ssh-proxy
+                    release: {{ .Release.Name }}
+                topologyKey: kubernetes.io/hostname
+        {{- end }}
     {{- with .Values.sshProxy.tolerations }}
       tolerations:
         {{ toYaml . | nindent 8 }}

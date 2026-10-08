@@ -15,7 +15,7 @@ spec:
   externalTrafficPolicy: Local
   ports:
     - port: {{ .Values.sshProxy.service.port }}
-      targetPort: 2222
+      targetPort: {{ include "renku.sshProxy.port" . }}
       protocol: TCP
       name: ssh
   selector:
