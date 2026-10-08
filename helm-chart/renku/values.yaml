@@ -1403,17 +1403,15 @@ sshProxy:
     tag:
     pullPolicy: IfNotPresent
   service:
-    port: 2222
+    port: 22
   openSshHostKey:
-  targetUser:
-  targetPort: 80
   subDomain: ssh
   sentry:
     enabled: false
     dsn:
     environment:
     sampleRate: 0.1
-  replicaCount: 1
+  replicaCount: 2
   podAnnotations: {}
   ## Proxy-specific hardening, merged over the global podSecurityContext.
   podSecurityContext:

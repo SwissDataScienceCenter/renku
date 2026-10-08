@@ -1,0 +1,17 @@
+{{- if and .Values.sshProxy.enabled (gt (int .Values.sshProxy.replicaCount) 1) }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ template "renku.fullname" . }}-ssh-proxy
+  labels:
+    app: renku-ssh-proxy
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  maxUnavailable: 50%
+  selector:
+    matchLabels:
+      app: renku-ssh-proxy
+      release: {{ .Release.Name }}
+{{- end }}
