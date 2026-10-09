@@ -112,7 +112,7 @@ describe("Data Connectors", () => {
     // Note: You can only delete data connectors from the user's page, not
     // from a project page (where you can only unlink them)
     visitCurrentProject();
-    cy.getDataCy("project-namespace-link").click();
+    cy.getDataCy("user-namespace-link").click();
 
     // Open the data connector view and delete from the menu
     cy.getDataCy("data-connector-box")
