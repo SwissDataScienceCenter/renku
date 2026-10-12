@@ -1,10 +1,14 @@
 {{- if .Values.sshProxy.enabled }}
+{{- if .Values.sshProxy.service.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
   name: {{ template "renku.fullname" . }}-ssh-proxy
   annotations:
-    "external-dns.kubernetes.io/hostname": {{ include "renku.sshDomain" . | quote }}
+    "external-dns.kubernetes.io/hostname": {{ .Values.sshProxy.domain | quote }}
+    {{- with .Values.sshProxy.service.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
   labels:
     app: renku-ssh-proxy
     chart: {{ template "renku.chart" . }}
@@ -14,11 +18,12 @@ spec:
   type: LoadBalancer
   externalTrafficPolicy: Local
   ports:
-    - port: {{ .Values.sshProxy.service.port }}
-      targetPort: {{ include "renku.sshProxy.port" . }}
+    - port: {{ .Values.sshProxy.port }}
+      targetPort: ssh
       protocol: TCP
       name: ssh
   selector:
     app: renku-ssh-proxy
     release: {{ .Release.Name }}
+{{- end }}
 {{- end }}

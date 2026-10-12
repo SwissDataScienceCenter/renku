@@ -269,9 +269,9 @@ spec:
             - name: SSH_PROXY_ENABLED
               value: {{ .Values.sshProxy.enabled | quote }}
             - name: SSH_PROXY_HOSTNAME
-              value: {{ include "renku.sshDomain" . | quote }}
+              value: {{ .Values.sshProxy.domain | quote }}
             - name: SSH_PROXY_PORT
-              value: {{ .Values.sshProxy.service.port | quote }}
+              value: {{ .Values.sshProxy.port | quote }}
             - name: SSH_PROXY_HOST_KEY_SECRET
               value: "{{ template "renku.fullname" . }}-ssh-session-host-key"
             - name: SSH_PROXY_AUTH_KEY_SECRET

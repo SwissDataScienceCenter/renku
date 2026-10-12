@@ -1396,16 +1396,39 @@ dataService:
     ## user have the option to set a lower value. The value cannot be lower than 1 Gb.
     storageMaxSizeGb: 10
 
+## Enables SSH access to sessions in Renku.
+## Currently only sessions that use buildpacks and are built from code are supported.
+## The old ssh section of the values file is completely abandoned and unrelated to this and will be ignored.
+## The ssh proxy routes authenticates and then routes SSH connections to each renku session.
 sshProxy:
   enabled: false
   image:
     repository: renku/ssh-proxy
     tag:
     pullPolicy: IfNotPresent
+  ## The port where the SSH proxy will be accessible to from the outside.
+  ## If not 22 then users connecting to their session will have to specify the port.
+  port: 22
   service:
-    port: 22
+    ## If true will create a LoadBalancer type service for ingress into the SSH proxy and access to sessions.
+    ## If disabled you have to create the ingress/service to get SSH connections from outside the cluster to the proxy.
+    enabled: true
+    ## Additional annotations that can be added to the service.
+    annotations: {}
+  ## The SSH host key presented to all users trying to use SSH to access a session.
+  ## If not provided we will automatically generate a host key.
+  ## Rotating or changing this will cause disruptions for users who have already accessed sessions using the old key.
+  ## The warning that users will see after the rotation of these keys is like this:
+  ## Therefore rotation of the host keys has to be done after all users have been warned that it will happen.
+  ##    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  ##    @    WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!     @
+  ##    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  ##    IT IS POSSIBLE THAT SOMEONE IS DOING SOMETHING NASTY!
+  ##    Someone could be eavesdropping on you right now (man-in-the-middle attack)!
+  ##    It is also possible that a host key has just been changed.
   openSshHostKey:
-  subDomain: ssh
+  ## The domain where the the SSH server will run.
+  domain: ssh.example.local
   sentry:
     enabled: false
     dsn:
