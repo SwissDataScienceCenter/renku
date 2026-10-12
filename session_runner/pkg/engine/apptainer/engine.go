@@ -6,7 +6,9 @@ import (
 	"fmt"
 	"log"
 	"log/slog"
+	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 	"sync"
 	"time"
@@ -27,6 +29,8 @@ type ApptainerEngine struct {
 	ticker       *time.Ticker
 	handles      map[string]sessionHandle
 	handlesMutex sync.RWMutex
+
+	homeDir string
 }
 
 type sessionHandle struct {
@@ -153,28 +157,55 @@ func (ae *ApptainerEngine) reconcileSessionContainer(ctx context.Context, sessio
 		handle.apptainerInstance = fmt.Sprintf("renku-%s", session.ID)
 		ae.handles[session.ID] = handle
 
+		homeDir, err := ae.getUserHomeDir()
+		if err != nil {
+			return err
+		}
+		sessionDir, err := filepath.Abs(filepath.Join(homeDir, "work")) // TODO
+		if err != nil {
+			return err
+		}
+		tmpDir, err := filepath.Abs(filepath.Join(homeDir, ".tmp"))
+		if err != nil {
+			return err
+
+		}
+
 		// TODO: pull as a separate step?
 		apptainerImage := fmt.Sprintf("docker://%s", session.Spec.Image)
-		cmd := exec.Command(apptainer, "instance", "run",
+		args := []string{
+			"instance", "run",
 			"--writable-tmpfs", "--contain",
-			"--bind", "/home/flora/test:/workspace", // TODO
+			"--bind", fmt.Sprintf("%s:%s", sessionDir, sessionDir),
+		}
+		// Mount /share if it exists
+		_, err = os.ReadDir("/share")
+		if err == nil {
+			args = append(args, "--bind", "/share:/share")
+		}
+		args = append(args,
 			"--env", "RENKU_SESSION_PORT=9999",
 			"--env", fmt.Sprintf("RENKU_BASE_URL_PATH=%s", session.Spec.URL.EscapedPath()),
-			"--env", "RENKU_MOUNT_DIR=/workspace",
-			"--env", "RENKU_WORKING_DIR=/workspace",
-			"--env", "CNB_APP_DIR=/workspace",
+			"--env", fmt.Sprintf("RENKU_MOUNT_DIR=%s", sessionDir),
+			"--env", fmt.Sprintf("RENKU_WORKING_DIR=%s", sessionDir),
+			"--env", fmt.Sprintf("CNB_APP_DIR=%s", sessionDir),
 			"--no-init", "--no-eval",
 			apptainerImage,
 			handle.apptainerInstance,
 		)
-		cmd.Env = append(cmd.Env, "APPTAINER_TMPDIR=/home/flora/tmp") // TODO
+		cmd := exec.Command(apptainer, args...)
+		cmd.Env = append(cmd.Environ(), fmt.Sprintf("APPTAINER_TMPDIR=%s", tmpDir)) // TODO
 		slog.Info("apptainer command", "command", cmd.String())
 
 		// TODO: show logs?
 		// TODO: detach?
 		go func() {
 			out, err := cmd.Output()
-			slog.Info("apptainer", "out", string(out), "err", err)
+			stderr := ""
+			if ee, ok := err.(*exec.ExitError); ok {
+				stderr = string(ee.Stderr)
+			}
+			slog.Info("apptainer", "out", string(out), "err", err, "stderr", stderr)
 		}()
 	}
 	return nil
@@ -235,6 +266,7 @@ func (ae *ApptainerEngine) reconcileDeletedSession(ctx context.Context, sessionI
 
 		out, err := cmd.Output()
 		slog.Info("apptainer", "out", string(out), "err", err)
+		// TODO: handle instance not found (= do nothing)
 		if err == nil {
 			handle.apptainerInstance = ""
 			ae.handles[sessionID] = handle
@@ -256,4 +288,16 @@ func (ae *ApptainerEngine) reconcileDeletedSession(ctx context.Context, sessionI
 		return fmt.Errorf("could not delete session: %w", errors.Join(errs...))
 	}
 	return nil
+}
+
+func (ae *ApptainerEngine) getUserHomeDir() (string, error) {
+	if ae.homeDir != "" {
+		return ae.homeDir, nil
+	}
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		return "", nil
+	}
+	ae.homeDir = homeDir
+	return homeDir, nil
 }

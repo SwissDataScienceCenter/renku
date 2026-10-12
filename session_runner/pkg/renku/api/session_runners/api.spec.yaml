@@ -8,63 +8,74 @@ info:
 servers:
   - url: /api/data
 paths:
-  /session_runners:
+  /session_runners/user:
     get:
-      summary: Get all session runners
-      description: TODO
+      summary: Get all user-scoped session runners
+      parameters:
+        - in: query
+          name: all_users
+          required: false
+          schema:
+            type: boolean
+            description: |
+               If true, an admin will see the list of runners from all users.
       responses:
         "200":
-          description: A list of session runners
+          description: A list of user-scoped session runners
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SessionRunners"
+                $ref: "#/components/schemas/UserSessionRunners"
         default:
           $ref: "#/components/responses/Error"
       tags:
         - session_runners
     post:
-      summary: Create a new session runner
-      description: TODO
+      summary: Create a new user-scoped session runner
+      description: |
+        The resource pool associated with the runner must be accessible
+        by the user and must be a remote pool which uses user-scoped runners.
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/SessionRunnerPost"
+              $ref: "#/components/schemas/UserSessionRunnerPost"
       responses:
         "201":
-          description: The session runner was created
+          description: The user-scoped session runner was created
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SessionRunner"
+                $ref: "#/components/schemas/UserSessionRunner"
         default:
           $ref: "#/components/responses/Error"
       tags:
         - session_runners
-  /session_runners/register:
+  /session_runners/user/register:
     post:
-      summary: Register a session runner
-      description: TODO
+      summary: Register a user-scoped session runner
+      description: |
+        Used by runners to register themselves and obtain
+        internal authentication tokens.
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/SessionRunnerRegisterPost"
+              $ref: "#/components/schemas/UserSessionRunnerRegisterPost"
       responses:
         "200":
-          description: The session runner was registered
+          description: The user-scoped session runner was registered
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SessionRunnerRegisterResponse"
+                $ref: "#/components/schemas/UserSessionRunnerRegisterResponse"
         default:
           $ref: "#/components/responses/Error"
       tags:
         - session_runners
-  /session_runners/{session_runner_id}:
+  /session_runners/user/{session_runner_id}:
     parameters:
       - in: path
         name: session_runner_id
@@ -72,17 +83,16 @@ paths:
         schema:
           $ref: "#/components/schemas/Ulid"
     get:
-      summary: Get a session runner
-      description: TODO
+      summary: Get a user-scoped session runner
       responses:
         "200":
-          description: The session runner
+          description: The user-scoped session runner
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SessionRunner"
+                $ref: "#/components/schemas/UserSessionRunner"
         "404":
-          description: The session runner does not exist
+          description: The user-scoped session runner does not exist
           content:
             application/json:
               schema:
@@ -91,191 +101,202 @@ paths:
           $ref: "#/components/responses/Error"
       tags:
         - session_runners
+    patch:
+      summary: Update a user-scoped session runner
+      description: |
+        Internal authentication only.
+
+        Used by runners to update their status.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserSessionRunnerPatch"
+      responses:
+        "200":
+          description: The user-scoped session runner has been updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserSessionRunner"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - session_runners
     delete:
-      summary: Remove a session runner
-      description: TODO
+      summary: Remove a user-scoped session runner
       responses:
         "204":
-          description: The session runner was removed or did not exist in the first place
+          description: The user-scoped session runner was removed or did not exist in the first place
         default:
           $ref: "#/components/responses/Error"
       tags:
         - session_runners
-  /session_runners/{session_runner_id}/sessions:
-    parameters:
-      - in: path
-        name: session_runner_id
-        required: true
-        schema:
-          $ref: "#/components/schemas/Ulid"
+  /session_runners/user/sessions:
     get:
-      summary: List sessions assigned to a runner
-      description: TODO
+      summary: List sessions which are powered by user-scoped runners
+      description: |
+        Internal authentication only.
+
+        Runners only see sessions assigned to them.
       responses:
         "200":
-          description: The list of session IDs assigned to a given runner
+          description: A list of remote Renku session powered by a user-scoped runner
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AssignedSessionIds"
+                $ref: "#/components/schemas/RemoteUserSessions"
         default:
           $ref: "#/components/responses/Error"
       tags:
         - session_runners
-  /session_runners/{session_runner_id}/sessions/{session_id}:
+  /session_runners/user/sessions/{session_id}:
     parameters:
-      - in: path
-        name: session_runner_id
-        required: true
-        schema:
-          $ref: "#/components/schemas/Ulid"
       - in: path
         name: session_id
         required: true
         schema:
-          $ref: "#/components/schemas/AssignedSessionId"
+          $ref: "#/components/schemas/RemoteUserSessionId"
     get:
-      summary: Get the details of a session assigned to a given runner
-      description: TODO
+      summary: Get a session which is powered by a user-scoped runner
+      description: |
+        Internal authentication only.
+
+        Runners only see sessions assigned to them.
       responses:
         "200":
-          description: The secrets used in an assigned session
+          description: The remote Renku session powered by a user-scoped runner
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AssignedSessionDetails"
+                $ref: "#/components/schemas/RemoteUserSession"
+        "404":
+          description: The session does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - session_runners
+  /session_runners/user/sessions/{session_id}/spec:
+    parameters:
+      - in: path
+        name: session_id
+        required: true
+        schema:
+          $ref: "#/components/schemas/RemoteUserSessionId"
+    get:
+      summary: Get the spec of a session which is powered by a user-scoped runner
+      description: |
+        Internal authentication only.
+
+        Runners only see sessions assigned to them.
+      responses:
+        "200":
+          description: The remote Renku session powered by a user-scoped runner
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RemoteUserSessionWithSpec"
+        "404":
+          description: The session does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - session_runners
+  /session_runners/user/sessions/{session_id}/secrets:
+    parameters:
+      - in: path
+        name: session_id
+        required: true
+        schema:
+          $ref: "#/components/schemas/RemoteUserSessionId"
+    get:
+      summary: Get the secrets necessary to run a remote Renku session
+      description: |
+        Internal authentication only.
+
+        Runners only see sessions assigned to them.
+      responses:
+        "200":
+          description: The secrets used in a remote Renku session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RemoteUserSessionSecrets"
+        "404":
+          description: The session does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
         default:
           $ref: "#/components/responses/Error"
       tags:
         - session_runners
     patch:
-      summary: Update a session assigned to a given runner
-      description: TODO
-      responses:
-        default:
-          $ref: "#/components/responses/Error"
-      tags:
-        - session_runners
-  /session_runners/{session_runner_id}/sessions/{session_id}/secrets:
-    parameters:
-      - in: path
-        name: session_runner_id
-        required: true
-        schema:
-          $ref: "#/components/schemas/Ulid"
-      - in: path
-        name: session_id
-        required: true
-        schema:
-          $ref: "#/components/schemas/AssignedSessionId"
-    get:
-      summary: Get the secrets necessary to run a session assigned to a given runner
-      description: TODO
-      responses:
-        "200":
-          description: The secrets used in an assigned session
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AssignedSessionSecrets"
-        default:
-          $ref: "#/components/responses/Error"
-      tags:
-        - session_runners
-    patch:
-      summary: Update the secrets used in an assigned session
-      description: TODO
+      summary: Update the secrets used in a remote Renku session
+      description: |
+        Internal authentication only.
+
+        Runners only see sessions assigned to them.
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/AssignedSessionSecrets"
+              $ref: "#/components/schemas/RemoteUserSessionSecrets"
       responses:
         "200":
-          description: The updated secrets used in an assigned session
+          description: The updated secrets used in a remote Renku session
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AssignedSessionSecrets"
-        default:
-          $ref: "#/components/responses/Error"
-      tags:
-        - session_runners
-  /session_runners/{session_runner_id}/contact:
-    parameters:
-      - in: path
-        name: session_runner_id
-        required: true
-        schema:
-          $ref: "#/components/schemas/Ulid"
-    post:
-      summary: Contact endpoint for session runners
-      description: TODO
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/SessionRunnerContactPost"
-      responses:
-        "200":
-          description: The desired state of the session runner
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/SessionRunnerContactResponse"
-        default:
-          $ref: "#/components/responses/Error"
-      tags:
-        - session_runners
-  /session_runners/sessions/{session_id}:
-    parameters:
-      - in: path
-        name: session_id
-        required: true
-        schema:
-          $ref: "#/components/schemas/AssignedSessionId"
-    get:
-      summary: Get the details of a session
-      description: TODO
-      responses:
-        "200":
-          description: The secrets used in an assigned session
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AssignedSession"
+                $ref: "#/components/schemas/RemoteUserSessionSecrets"
         default:
           $ref: "#/components/responses/Error"
       tags:
         - session_runners
 components:
   schemas:
-    SessionRunners:
-      description: A list of session runners
+    UserSessionRunners:
+      description: A list of user-scoped session runners
       type: array
       items:
-        $ref: "#/components/schemas/SessionRunner"
-    SessionRunner:
-      description: A session runner
+        $ref: "#/components/schemas/UserSessionRunner"
+    UserSessionRunner:
+      description: A user-scoped session runner
       type: object
       additionalProperties: false
       properties:
         id:
           $ref: "#/components/schemas/Ulid"
+        user_id:
+          $ref: "#/components/schemas/UserId"
         resource_pool_id:
           type: integer
         status:
-          $ref: "#/components/schemas/SessionRunnerStatus"
+          $ref: "#/components/schemas/UserSessionRunnerStatus"
         registration_token:
           type: string
+        creation_date:
+          $ref: "#/components/schemas/CreationDate"
+        last_contact:
+          $ref: "#/components/schemas/UpdatedAt"
       required:
         - id
         - resource_pool_id
         - status
-    SessionRunnerPost:
-      description: Data required to create a session runner
+        - creation_date
+    UserSessionRunnerPost:
+      description: Data required to create a user-scoped session runner
       type: object
       additionalProperties: false
       properties:
@@ -283,8 +304,20 @@ components:
           type: integer
       required:
         - resource_pool_id
-    SessionRunnerRegisterPost:
-      description: Data required to register a session runner
+    UserSessionRunnerPatch:
+      description: Data required to update a user-scoped session runner
+      type: object
+      additionalProperties: false
+      properties:
+        status:
+          type: string
+          enum:
+            - ready
+            - not_ready
+      required:
+        - status
+    UserSessionRunnerRegisterPost:
+      description: Data required to register a user-scoped session runner
       type: object
       additionalProperties: false
       properties:
@@ -292,13 +325,13 @@ components:
           type: string
       required:
         - registration_token
-    SessionRunnerRegisterResponse:
-      description: The result of registering a session runner
+    UserSessionRunnerRegisterResponse:
+      description: The result of registering a user-scoped session runner
       type: object
       additionalProperties: false
       properties:
         runner:
-          $ref: "#/components/schemas/SessionRunner"
+          $ref: "#/components/schemas/UserSessionRunner"
         auth:
           type: object
           additionalProperties: true
@@ -329,22 +362,83 @@ components:
       required:
         - runner
         - auth
-    AssignedSessionIds:
-      description: A list of session IDs assigned to a runner
+    UserSessionRunnerStatus:
+      description: The status of a user-scoped session runner
+      type: string
+      enum:
+        - never_contacted
+        - initializing
+        - ready
+        - not_ready
+    RemoteUserSessions:
+      description: A list of remote Renku session powered by a user-scoped runner
       type: array
       items:
-        $ref: "#/components/schemas/AssignedSessionId"
-    AssignedSessionId:
+        $ref: "#/components/schemas/RemoteUserSession"
+    RemoteUserSession:
+      description: A remote Renku session powered by user-scoped runners
+      type: object
+      additionalProperties: false
+      properties:
+        session_id:
+          $ref: "#/components/schemas/RemoteUserSessionId"
+        user_id:
+          $ref: "#/components/schemas/UserId"
+        resource_pool_id:
+          type: integer
+        runner_id:
+          $ref: "#/components/schemas/Ulid"
+      required:
+        - session_id
+        - user_id
+        - resource_pool_id
+    RemoteUserSessionWithSpec:
+      description: A remote Renku session powered by user-scoped runners with a detailed spec
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/RemoteUserSession"
+        - type: object
+          additionalProperties: false
+          properties:
+            spec:
+              $ref: "#/components/schemas/RemoteUserSessionSpec"
+          required:
+            - spec
+    RemoteUserSessionSpec:
+      description: The spec of a remote Renku session powered by a user-scoped runner
+      type: object
+      additionalProperties: false
+      properties:
+        image:
+          type: string
+        url:
+          type: string
+        session_type:
+          type: string
+        command:
+          type: array
+          items:
+            type: string
+        args:
+          type: array
+          items:
+            type: string
+      required:
+        - image
+        - session_type
+        - command
+        - args
+    RemoteUserSessionId:
       description: A session ID
       type: string
       example: "my-session-name"
-    AssignedSessionSecrets:
-      description: The secrets used in an assigned session
+    RemoteUserSessionSecrets:
+      description: The secrets used in a remote Renku session powered by a user-scoped runner
       type: array
       items:
-        $ref: "#/components/schemas/AssignedSessionSecret"
-    AssignedSessionSecret:
-      description: A secret used in an assigned session
+        $ref: "#/components/schemas/RemoteUserSessionSecret"
+    RemoteUserSessionSecret:
+      description: A secret used in a remote Renku session
       type: object
       additionalProperties: false
       properties:
@@ -357,94 +451,27 @@ components:
       required:
         - name
         - value
-    SessionRunnerContactPost:
-      description: Data sent when a session runner contacts the API
-      type: object
-      additionalProperties: false
-      properties:
-        status:
-          type: string
-          enum:
-            - ready
-            - not_ready
-      required:
-        - status
-    SessionRunnerContactResponse:
-      description: Data sent back when a session runner contacts the API
-      type: object
-      additionalProperties: false
-      properties:
-        sessions:
-          $ref: "#/components/schemas/SessionRunnerAssignedSessions"
-      required:
-        - sessions
-    SessionRunnerStatus:
-      description: The status of a session runner
-      type: string
-      enum:
-        - never_contacted
-        - initializing
-        - ready
-        - not_ready
-    SessionRunnerAssignedSessions:
-      description: The list of sessions assigned to a runner
-      type: array
-      items:
-        $ref: "#/components/schemas/SessionRunnerAssignedSession"
-    SessionRunnerAssignedSession:
-      type: string
-    AssignedSession:
-      description: The details of a session which needs a runner
-      type: object
-      additionalProperties: false
-      properties:
-        session_id:
-          $ref: "#/components/schemas/AssignedSessionId"
-        runner_id:
-          $ref: "#/components/schemas/Ulid"
-      required:
-        - session_id
-    AssignedSessionDetails:
-      description: The details of a session which needs a runner
-      type: object
-      additionalProperties: false
-      properties:
-        session_id:
-          $ref: "#/components/schemas/AssignedSessionId"
-        runner_id:
-          $ref: "#/components/schemas/Ulid"
-        spec:
-          type: object
-          additionalProperties: false
-          properties:
-            image:
-              type: string
-            url:
-              type: string
-            session_type:
-              type: string
-            command:
-              type: array
-              items:
-                type: string
-            args:
-              type: array
-              items:
-                type: string
-          required:
-            - image
-            - session_type
-            - command
-            - args
-      required:
-        - session_id
-        - spec
     Ulid:
       description: ULID identifier
       type: string
       minLength: 26
       maxLength: 26
       pattern: "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" # This is case-insensitive
+    UserId:
+      type: string
+      description: Keycloak user ID
+      example: f74a228b-1790-4276-af5f-25c2424e9b0c
+      pattern: "^[A-Za-z0-9]{1}[A-Za-z0-9-]+$"
+    CreationDate:
+      description: The date and time the resource was created (in UTC and ISO-8601 format)
+      type: string
+      format: date-time
+      example: "2023-11-01T17:32:28Z"
+    UpdatedAt:
+      description: The date and time the resource was updated (in UTC and ISO-8601 format)
+      type: string
+      format: date-time
+      example: "2023-11-01T17:32:28Z"
     ErrorResponse:
       type: object
       properties:

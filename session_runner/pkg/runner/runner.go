@@ -11,7 +11,7 @@ import (
 
 	apptainerEngine "github.com/SwissDataScienceCenter/renku/session_runner/pkg/engine/apptainer"
 	"github.com/SwissDataScienceCenter/renku/session_runner/pkg/renku"
-	"github.com/SwissDataScienceCenter/renku/session_runner/pkg/renku/api/session_runners"
+	sessionRunners "github.com/SwissDataScienceCenter/renku/session_runner/pkg/renku/api/session_runners"
 	"github.com/SwissDataScienceCenter/renku/session_runner/pkg/runner/persistence"
 	"github.com/SwissDataScienceCenter/renku/session_runner/pkg/runner/reconciler"
 	"github.com/SwissDataScienceCenter/renku/session_runner/pkg/state"
@@ -195,7 +195,7 @@ func (r *Runner) register(ctx context.Context) error {
 		return err
 	}
 
-	registerResponse, err := renkuClient.SessionRunners().PostSessionRunnersRegisterWithResponse(ctx, session_runners.SessionRunnerRegisterPost{
+	registerResponse, err := renkuClient.SessionRunners().PostSessionRunnersUserRegisterWithResponse(ctx, sessionRunners.UserSessionRunnerRegisterPost{
 		RegistrationToken: r.registrationToken,
 	})
 	if err != nil {
@@ -288,12 +288,12 @@ func (r *Runner) contactLoop(ctx context.Context, ch chan<- error) {
 }
 
 func (r *Runner) contact(ctx context.Context) error {
-	body := session_runners.SessionRunnerContactPost{
+	body := sessionRunners.UserSessionRunnerPatch{
 		// TODO: handle status (?)
-		Status: session_runners.SessionRunnerContactPostStatusReady,
+		Status: sessionRunners.UserSessionRunnerPatchStatusReady,
 	}
 	slog.Info("Sending to Renku", "body", body)
-	res, err := r.renkuClient.SessionRunners().PostSessionRunnersSessionRunnerIdContactWithResponse(ctx, r.runnerID, body)
+	res, err := r.renkuClient.SessionRunners().PatchSessionRunnersUserSessionRunnerIdWithResponse(ctx, r.runnerID, body)
 	if err != nil {
 		return fmt.Errorf("failed to contact Renku: %w", err)
 	}
@@ -313,14 +313,34 @@ func (r *Runner) contact(ctx context.Context) error {
 	}
 	slog.Info("Received from Renku", "response", *resJSON)
 
+	res2, err := r.renkuClient.SessionRunners().GetSessionRunnersUserSessionsWithResponse(ctx)
+	if err != nil {
+		return fmt.Errorf("failed to contact Renku: %w", err)
+	}
+	res2JSON := res2.GetJSON200()
+	if res2JSON == nil {
+		message := ""
+		resJSONDefault := res2.GetJSONDefault()
+		if resJSONDefault != nil {
+			message = resJSONDefault.Error.Message
+			if resJSONDefault.Error.Detail != nil {
+				message += fmt.Sprintf(", detail: %s", *resJSONDefault.Error.Detail)
+			}
+		} else {
+			message = res2.HTTPResponse.Status
+		}
+		return fmt.Errorf("failed to contact Renku: %s", message)
+	}
+	slog.Info("Received from Renku", "response", *res2JSON)
+
 	// Merge existing session IDs with new ones from the POST response
 	existingSessionIDs := r.state.GetSessionIDs(ctx)
-	sessionIDs := make(map[string]struct{}, len(existingSessionIDs)+len(resJSON.Sessions))
+	sessionIDs := make(map[string]struct{}, len(existingSessionIDs)+len(*res2JSON))
 	for _, sessionID := range existingSessionIDs {
 		sessionIDs[sessionID] = struct{}{}
 	}
-	for _, sessionID := range resJSON.Sessions {
-		sessionIDs[sessionID] = struct{}{}
+	for _, session := range *res2JSON {
+		sessionIDs[session.SessionId] = struct{}{}
 	}
 	for sessionID := range sessionIDs {
 		err := r.reconciler.Reconcile(ctx, reconciler.SessionRef{ID: sessionID})
