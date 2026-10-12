@@ -22,6 +22,6 @@ async fn main() -> color_eyre::Result<()> {
         .init();
 
     println!("{} running. Listening on {}", info, settings.listen);
-    let _ = renku_ssh_proxy::serve_proxy(&settings).await;
+    renku_ssh_proxy::serve_proxy(&settings).await?;
     Ok(())
 }
