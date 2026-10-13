@@ -6,9 +6,9 @@ Would you prefer to work on your Renku project from the comfort of your local VS
 
 VSCode tunnels are supported in the following Renku session environments:
 
-- **Most Renku [global environments](../../environment)** ≥ version `2.7.0`.
+- **Most Renku [global environments](/docs/users/compute/environment)** ≥ version `2.7.0`.
   - Global environments where VSCode tunneling is _not_ supported include: the RStudio environment.
-- **All Renku [code based environments](../../environment/guides/create-environment-with-custom-packages-installed)** that were built (or rebuilt) after September 2, 2025 (release 2.7.0)
+- **All Renku [code based environments](../../../environment/guides/create-environment-with-custom-packages-installed)** that were built (or rebuilt) after September 2, 2025 (release 2.7.0)
 
 :::
 

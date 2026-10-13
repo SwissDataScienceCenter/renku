@@ -6,16 +6,16 @@ Apps let project members publish a long-lived web application (a dashboard, a de
 
 Apps are disabled by default and have prerequisites that have to be in place before you turn them on:
 
-- [Requirements](../installation/requirements#knative): the Knative install itself
-- [Configuration](../installation/configuration#knative): the Knative feature flags, the apps domain, and `apps.enabled`
+- [Requirements](/docs/admins/installation/requirements#knative): the Knative install itself
+- [Configuration](/docs/admins/installation/configuration#knative): the Knative feature flags, the apps domain, and `apps.enabled`
 
 :::warning
-An app serves **user-supplied code to anonymous visitors on the public internet**. If you have not already chosen the domain apps are served from, read [Configure the apps domain](../installation/configuration#3-configure-the-apps-domain) first; the domain decides whether a hostile app can reach your users' platform sessions.
+An app serves **user-supplied code to anonymous visitors on the public internet**. If you have not already chosen the domain apps are served from, read [Configure the apps domain](/docs/admins/installation/configuration#3-configure-the-apps-domain) first; the domain decides whether a hostile app can reach your users' platform sessions.
 :::
 
 ## How Apps Differ From Sessions
 
-See [App](../../users/compute/app#how-an-app-differs-from-a-session) for the user-facing comparison.
+See [App](/docs/users/compute/app#how-an-app-differs-from-a-session) for the user-facing comparison.
 The admin perspective adds a few more details:
 
 ## What Renku Creates
@@ -27,7 +27,7 @@ One `Service` per app, built from the session launcher's environment. It is crea
 - **Name**: `<project-slug>-<launcher-id-suffix>`, where the suffix is the last eight characters of the launcher's id. The slug is coerced to a DNS-1035 label and the whole name is capped at 50 characters. It is stable for a given launcher, so stopping and starting an app returns the same name and the same URL.
 - **Image**: the launcher's container image, built by Renku or supplied by the user.
 - **Port**: the launcher's configured port, as `containerPort`. Knative routes and probes exactly this port.
-- **Environment**: Injected first and cannot be overridden. See [Publish an app](../../users/compute/app/guides/host-app#1-listen-on-the-port-renku-assigns). The launcher's own variables are appended after.
+- **Environment**: Injected first and cannot be overridden. See [Publish an app](/docs/users/compute/app/guides/host-app#1-listen-on-the-port-renku-assigns). The launcher's own variables are appended after.
 - **Security context**: `runAsUser` and `runAsGroup` from the environment's UID and GID.
 - **Resources**: if the launcher has a resource class: CPU and memory requests from it, plus a memory limit. There is no CPU limit. A launcher with no resource class gets no resource block at all, and Knative's own defaults apply.
 - **Scheduling**: node affinity and tolerations derived from the resource class, falling back to the session defaults, the same as sessions.
@@ -43,7 +43,7 @@ Labels on both the `Service` and its pod template:
 | `renku.io/project-namespace` | Project namespace path, slashes replaced by `-`  |
 | `renku.io/launcher-id`       | Session launcher id                              |
 
-`renku.io/project-slug` and `renku.io/project-id-slug` are the pair the [domain template](../installation/configuration#3-configure-the-apps-domain) consumes; the others exist so that both you and Renku can find an app's owner from the cluster.
+`renku.io/project-slug` and `renku.io/project-id-slug` are the pair the [domain template](/docs/admins/installation/configuration#3-configure-the-apps-domain) consumes; the others exist so that both you and Renku can find an app's owner from the cluster.
 
 Renku reads the resulting URL from `status.url` on the `Service`. It never constructs the hostname itself, so whatever your domain template produces is what users get.
 
@@ -81,7 +81,7 @@ A Knative Service that has scaled to zero still reports `Ready=True`. Renku's ap
 
 ### What the lobby page expects of the request path
 
-Every shared app link points at the UI's lobby page, which wakes the app by requesting it and hands the visitor over once it answers. Its timings, configurable via `apps.appLobby` (see [Tune the app lobby](../installation/configuration#5-tune-the-app-lobby-optional)), are the practical budget the gateway in front of Knative has to fit inside. By default:
+Every shared app link points at the UI's lobby page, which wakes the app by requesting it and hands the visitor over once it answers. Its timings, configurable via `apps.appLobby` (see [Tune the app lobby](/docs/admins/installation/configuration#5-tune-the-app-lobby-optional)), are the practical budget the gateway in front of Knative has to fit inside. By default:
 
 - Each probe is held for up to **45 s** before the browser abandons it.
 - Failed probes are retried **7 times**, 2 s apart, for a total wait of about **five and a half minutes** before the page gives up and offers a manual retry.
@@ -104,7 +104,7 @@ Apps are public by construction, and the platform enforces that in several indep
 
 **An app launcher can only exist in a public project.** Creating or updating one in a private project is rejected at the API layer, and copying a project into a non-public namespace silently drops its app launchers rather than carrying them over.
 
-**Making a project private deletes its apps.** Patching a project's visibility to private triggers deletion of every app deployment belonging to that project, immediately. Deleting an app launcher likewise deletes its app (see [Publish an app](../../users/compute/app/guides/host-app#stopping-an-app)).
+**Making a project private deletes its apps.** Patching a project's visibility to private triggers deletion of every app deployment belonging to that project, immediately. Deleting an app launcher likewise deletes its app (see [Publish an app](/docs/users/compute/app/guides/host-app#stopping-an-app)).
 
 **Only credential-free public data connectors are mounted.** An app runs as an anonymous identity, so a connector is mounted only when all three hold:
 
@@ -162,12 +162,12 @@ Deleting the `Service` also removes its owned `Secret` and `PersistentVolumeClai
 ### Troubleshooting
 
 This covers cluster-level causes. For symptoms a project member without `kubectl` access
-might report, see [Publish an app § Troubleshooting](../../users/compute/app/guides/host-app#troubleshooting).
+might report, see [Publish an app § Troubleshooting](/docs/users/compute/app/guides/host-app#troubleshooting).
 
 | Symptom                                               | Likely cause                                                                                                                                                                  |
 | ----------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| App stays `pending`, then reports `failed`            | See [Publish an app](../../users/compute/app/guides/host-app#troubleshooting), most often the port or bind address is wrong.                                                  |
-| `Service` rejected at creation                        | A Knative [feature flag](../installation/configuration#1-enable-the-knative-feature-flags) is missing; check the admission error for the disallowed pod spec field            |
+| App stays `pending`, then reports `failed`            | See [Publish an app](/docs/users/compute/app/guides/host-app#troubleshooting), most often the port or bind address is wrong.                                                  |
+| `Service` rejected at creation                        | A Knative [feature flag](/docs/admins/installation/configuration#1-enable-the-knative-feature-flags) is missing; check the admission error for the disallowed pod spec field  |
 | App has no URL in `status.url`                        | Knative networking has not programmed a route; check the ingress layer and the domain configuration                                                                           |
 | App URL resolves but times out                        | DNS or the TLS certificate does not cover this app's hostname; check the depth if you are relying on a wildcard                                                               |
 | Lobby fails but the app answers when curled directly  | The apps domain has no valid certificate; the lobby always requests `https`, even when `status.url` is `http`                                                                 |

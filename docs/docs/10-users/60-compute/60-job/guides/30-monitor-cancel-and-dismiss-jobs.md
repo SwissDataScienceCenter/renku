@@ -1,6 +1,6 @@
 # Monitor, cancel, and dismiss jobs
 
-After you submit a [Job](../../job), you can follow its progress on the project page, in the launcher side panel, and on your Renku dashboard.
+After you submit a [Job](/docs/users/compute/job), you can follow its progress on the project page, in the launcher side panel, and on your Renku dashboard.
 
 ## Where to find your jobs
 
@@ -82,4 +82,4 @@ Dismissing a job is permanent. You will not be able to view that job or its logs
 
 You can have multiple jobs running from the same launcher at the same time. Use a different **submission ID** for each job so you can tell them apart.
 
-Resource limits still apply at the resource pool level — if a pool's quota is full, new jobs (and sessions) may not start until resources are available. See [Resource Pools & Classes](../../resource-pools-and-classes).
+Resource limits still apply at the resource pool level — if a pool's quota is full, new jobs (and sessions) may not start until resources are available. See [Resource Pools & Classes](/docs/users/compute/resource-pools-and-classes).

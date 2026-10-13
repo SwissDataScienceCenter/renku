@@ -2,11 +2,11 @@
 
 A Renku project can contain:
 
-- [Code repository](../code/code-repository)
-- [Data connector](../data/data)
-- [Session Launcher](../compute/session), which brings together:
-  - [Environment](../compute/environment)
-  - [Resource Pools & Classes](../compute/resource-pools-and-classes)
+- [Code repository](../../code/code-repository)
+- [Data connector](/docs/users/data/data)
+- [Session Launcher](/docs/users/compute/session), which brings together:
+  - [Environment](/docs/users/compute/environment)
+  - [Resource Pools & Classes](/docs/users/compute/resource-pools-and-classes)
 
 A Renku project may have members; see [Permissions, Roles, and Access
 Rights](/docs/users/collaboration/permissions).

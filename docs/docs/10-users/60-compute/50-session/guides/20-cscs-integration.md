@@ -32,7 +32,7 @@ Go to the [integrations page](https://renkulab.io/integrations?targetProvider=cs
 1.  Create a **new Renku project**
 2.  Add a new **session launcher**
 3.  For the launcher’s environment:
-    1. If you want to **Create from Code**, please note that only Python environments work on CSCS. If you’re unfamiliar with creating a code-based environment on Renku, see [How to create an environment with custom packages installed](../../environment/guides/create-environment-with-custom-packages-installed)
+    1. If you want to **Create from Code**, please note that only Python environments work on CSCS. If you’re unfamiliar with creating a code-based environment on Renku, see [How to create an environment with custom packages installed](../../../environment/guides/create-environment-with-custom-packages-installed)
     2. If you want to use the Renku **Global Environments**, select **Python Basic** or **Python Datascience**
 
        :::warning
@@ -77,7 +77,7 @@ Go to the [integrations page](https://renkulab.io/integrations?targetProvider=cs
     **Currently working**
 
     :white_check_mark: Launch interactive Renku sessions at CSCS on: `Eiger` and `Bristen`
-        - Sessions on `Daint` , `Clariden` work, but only with special images created by the Renku team. Simplified integration with ARM clusters is coming soon. Please [Contact us](../../../community) for more info.
+        - Sessions on `Daint` , `Clariden` work, but only with special images created by the Renku team. Simplified integration with ARM clusters is coming soon. Please [Contact us](/docs/users/community) for more info.
 
     :white_check_mark: Access data from scratch, store and home
 
