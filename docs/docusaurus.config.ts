@@ -82,7 +82,11 @@ const config: Config = {
   organizationName: "SwissDataScienceCenter", // Usually your GitHub org/user name.
   projectName: "renku", // Usually your repo name.
 
-  onBrokenLinks: "throw",
+  // GitHub pages deployment is broken when `trailingSlash` is left undefined
+  trailingSlash: false,
+
+  // onBrokenLinks: "throw",
+  onBrokenLinks: "warn",
 
   markdown: {
     mermaid: true,
