@@ -1,0 +1,42 @@
+{{- if .Values.cnpg.install }}
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: {{ include "renku.pgCluster" . }}
+  labels:
+    app: renku-postgres
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  # The setup jobs create the renku, authz and keycloak db and their
+  # owners as superuser (prevents cnpg from deleting the superuser secret).
+  enableSuperuserAccess: true
+  {{- toYaml .Values.cnpg.extraSpec | nindent 2 }}
+  {{- if .Values.cnpg.autoMigration }}
+  # Copies databases and roles from the legacy bitnami instance on initialization.
+  bootstrap:
+    # only runs at creation!
+    initdb:
+      import:
+        # Monolith keeps ownership and privileges.
+        type: monolith 
+        databases:
+          - "*"
+        roles:
+          - "*"
+        source:
+          externalCluster: legacy-bitnami
+  externalClusters:
+    - name: legacy-bitnami
+      connectionParameters:
+        host: {{ .Release.Name }}-postgresql
+        user: {{ .Values.postgresql.auth.username }}
+        dbname: {{ .Values.postgresql.auth.database }}
+        # bitnami postgres serves plaintext by default here.
+        sslmode: prefer
+      password:
+        name: {{ .Release.Name }}-postgresql
+        key: postgres-password
+  {{- end }}
+{{- end }}
