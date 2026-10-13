@@ -172,27 +172,26 @@ impl server::Handler for ProxyHandler {
     async fn auth_publickey(&mut self, user: &str, public_key: &PublicKey) -> Result<server::Auth> {
         if self.target.is_none() || user.trim().is_empty() {
             log::warn!("No target host set!");
-            Ok(server::Auth::reject())
-        } else {
-            // The username is the session hostname
-            log::debug!("Setting target host to {user}");
-            self.set_target_host(user);
-            match self.client.authorize_session(public_key, user).await {
-                Ok(true) => {
-                    log::info!("Auth successful");
-                    Ok(server::Auth::Accept)
-                }
-                Ok(false) => {
-                    log::warn!(
-                        "Auth failed for {}",
-                        public_key.fingerprint(HashAlg::Sha256)
-                    );
-                    Ok(server::Auth::reject())
-                }
-                Err(err) => {
-                    log::error!("Error obtaining authorization from data-services: {}", err);
-                    Ok(server::Auth::reject())
-                }
+            return Ok(server::Auth::reject());
+        }
+        // The username is the session hostname
+        log::debug!("Setting target host to {user}");
+        self.set_target_host(user);
+        match self.client.authorize_session(public_key, user).await {
+            Ok(true) => {
+                log::info!("Auth successful");
+                Ok(server::Auth::Accept)
+            }
+            Ok(false) => {
+                log::warn!(
+                    "Auth failed for {}",
+                    public_key.fingerprint(HashAlg::Sha256)
+                );
+                Ok(server::Auth::reject())
+            }
+            Err(err) => {
+                log::error!("Error obtaining authorization from data-services: {}", err);
+                Ok(server::Auth::reject())
             }
         }
     }

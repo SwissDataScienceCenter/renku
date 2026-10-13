@@ -96,8 +96,9 @@ struct Cli {
 }
 
 /// Config-file schema. Every field is optional so partial files work.
-#[derive(Debug, Default, Deserialize)]
+#[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
+#[serde(default)]
 struct FileConfig {
     listen: Option<SocketAddr>,
     host_key: Option<PathBuf>,
@@ -111,6 +112,23 @@ struct FileConfig {
     inactivity_timeout: Option<Duration>,
     secret_service_url: Option<String>,
     data_services_timeout: Option<Duration>,
+}
+
+impl Default for FileConfig {
+    fn default() -> Self {
+        Self {
+            listen: "127.0.0.1:2222".parse().ok(),
+            host_key: None,
+            session_host_key: None,
+            session_auth_key: None,
+            log_level: Some(Verbosity::from(VerbosityFilter::Warn)),
+            target_port: Some(80),
+            target_user: Some("renku".to_string()),
+            inactivity_timeout: Some(Duration::from_mins(30)),
+            secret_service_url: None,
+            data_services_timeout: Some(Duration::from_mins(1)),
+        }
+    }
 }
 
 fn deserialize_verbosity<'de, D>(
@@ -156,15 +174,9 @@ pub struct Settings {
 
 impl Settings {
     fn resolve(cli: Cli, file: FileConfig) -> Result<Self> {
-        let listen = cli
-            .listen
-            .or(file.listen)
-            .unwrap_or_else(|| "127.0.0.1:2222".parse().unwrap());
+        let listen = cli.listen.or(file.listen).unwrap();
 
-        let log_level = cli
-            .log_level
-            .or(file.log_level)
-            .unwrap_or_else(|| Verbosity::from(VerbosityFilter::Warn));
+        let log_level = cli.log_level.or(file.log_level).unwrap();
 
         let host_key_file = cli
             .host_key
@@ -191,7 +203,7 @@ impl Settings {
             .inactivity_timeout
             .map(|e| e.into())
             .or(file.inactivity_timeout)
-            .unwrap_or_else(|| Duration::from_mins(30));
+            .unwrap();
 
         // expose as config if ops ever need tuning.
         // Keepalives reap half-open clients and keep NAT/LB idle-timeouts from
@@ -213,11 +225,8 @@ impl Settings {
         };
         let ssh_server_config = Arc::new(ssh_server_config);
 
-        let target_user = cli
-            .target_user
-            .or(file.target_user)
-            .unwrap_or("renku".to_string());
-        let target_port = cli.target_port.or(file.target_port).unwrap_or(80);
+        let target_user = cli.target_user.or(file.target_user).unwrap();
+        let target_port = cli.target_port.or(file.target_port).unwrap();
         let target = Target {
             host: "".to_string(),
             port: target_port,
@@ -234,7 +243,7 @@ impl Settings {
             .data_services_timeout
             .map(|e| e.into())
             .or(file.data_services_timeout)
-            .unwrap_or_else(|| Duration::from_mins(1));
+            .unwrap();
 
         Ok(Settings {
             listen,
@@ -262,7 +271,7 @@ impl Settings {
 }
 
 fn default_config_path() -> Option<PathBuf> {
-    ProjectDirs::from("io", "renku", "ssh-proxy").map(|dirs| dirs.config_dir().join("config.toml"))
+    "/config/renku/ssh_proxy".parse().ok()
 }
 
 #[cfg(test)]
