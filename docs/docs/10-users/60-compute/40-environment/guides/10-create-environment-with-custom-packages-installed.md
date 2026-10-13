@@ -216,7 +216,7 @@ To use `renv` with a code-based environment:
 When Renku builds the image, it restores the packages recorded in `renv.lock`. If a package requires
 system libraries that are not available in the build image, the build can fail. In that case,
 consider using a custom Docker image instead; see [How to use your own docker image for a Renku
-session](use-your-own-docker-image-for-renku-session).
+session](/docs/users/compute/environment/guides/use-your-own-docker-image-for-renku-session).
 
 ## How to create a code-based environment for your Renku session
 
@@ -224,7 +224,7 @@ session](use-your-own-docker-image-for-renku-session).
 
 This functionality only works with **public code repositories**. If your code repository is
 private, please see [Creating a custom environment from a private code
-repository](create-environment-with-custom-packages-private-code-repository).
+repository](/docs/users/compute/environment/guides/create-environment-with-custom-packages-private-code-repository).
 
 :::
 
@@ -241,7 +241,7 @@ repository](create-environment-with-custom-packages-private-code-repository).
 
    Note: The code repository must be public. If your code repository is private, please see
    [Creating a custom environment from a private code
-   repository](create-environment-with-custom-packages-private-code-repository)
+   repository](/docs/users/compute/environment/guides/create-environment-with-custom-packages-private-code-repository)
 
    :::
 
@@ -295,7 +295,7 @@ To set up a dashboard with an environment built from your repository, you can fo
 
 1. Follow the steps for creating a [code-based environment](#how-to-create-a-code-based-environment-for-your-renku-session) above.
 2. Once the image is done building, edit the environment and change it to a “Custom Environment”
-3. Edit the `Command` to be `["bash", "-c"]` and `Args` to correspond to your app - see common examples [here](use-your-own-docker-image-for-renku-session).
+3. Edit the `Command` to be `["bash", "-c"]` and `Args` to correspond to your app - see common examples [here](/docs/users/compute/environment/guides/use-your-own-docker-image-for-renku-session).
 
 Once you are done, your environment configuration should look something like this:
 
@@ -310,4 +310,4 @@ And your launcher set up could be, for example:
 ## Creating a code-based environment from a private code repository
 
 Please see [Creating a custom environment from a private code
-repository](create-environment-with-custom-packages-private-code-repository).
+repository](/docs/users/compute/environment/guides/create-environment-with-custom-packages-private-code-repository).

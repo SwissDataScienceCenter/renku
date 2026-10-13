@@ -83,7 +83,7 @@ const config: Config = {
   projectName: "renku", // Usually your repo name.
 
   // GitHub pages deployment is broken when `trailingSlash` is left undefined
-  trailingSlash: false,
+  trailingSlash: true,
 
   onBrokenLinks: "throw",
 

@@ -6,12 +6,12 @@ The basic steps for creating a launcher are:
 1. In the **Launchers** section of the project page, click on ➕ to add a new launcher.
 2. Choose **Session** in the type selector.
 3. Choose and configure an **environment** (see [Creating an environment for your session](#creating-an-environment-for-your-session))
-4. Select the **Resource class** that best fits your expected computational needs. (see [Resource Pool and Classes](../../resource-pools-and-classes))
+4. Select the **Resource class** that best fits your expected computational needs. (see [Resource Pool and Classes](/docs/users/compute/resource-pools-and-classes))
 
    :::tip
 
    Do you need more resources than are available in RenkuLab’s public resource classes? [Contact
-   us!](../../../community) We can configure a custom resource pool for your needs upon demand.
+   us!](/docs/users/community) We can configure a custom resource pool for your needs upon demand.
 
    :::
 
@@ -34,18 +34,18 @@ session?](#2-would-you-like-packages-to-be-pre-installed-and-ready-to-go-when-yo
 If your project uses [`renv`](https://rstudio.github.io/renv/) and has an `renv.lock` file,
 Renku can build a code-based environment with your packages pre-installed. See [How to create an
 environment with custom packages
-installed](../../environment/guides/create-environment-with-custom-packages-installed#defining-an-r-environment-with-renv).
+installed](/docs/users/compute/environment/guides/create-environment-with-custom-packages-installed#defining-an-r-environment-with-renv).
 
 If you do not need packages pre-installed, create a session launcher with a **global environment**
 and select the **R** global environment. If you need to install additional packages temporarily, see
 [How to install packages on-the-fly in your
-session](install-packages-on-the-fly-in-your-session).
+session](/docs/users/compute/session/guides/install-packages-on-the-fly-in-your-session).
 
 #### → I’m working in another language
 
 Working in some other language? That’s ok! You can run a wide variety of Docker images in Renku
 sessions! See [How to use your own docker image for a Renku
-session](../../environment/guides/use-your-own-docker-image-for-renku-session)
+session](/docs/users/compute/environment/guides/use-your-own-docker-image-for-renku-session)
 
 ### 2. Would you like packages to be pre-installed and ready to go when you (or anyone else) launches the session?
 
@@ -59,11 +59,11 @@ environment definition file, such as `environment.yml`, `requirements.txt`, `pyp
 `renv.lock`, and Renku will build a custom environment for your session for you!
 
 → If your code repository is **public**, see [How to create an environment with custom packages
-installed](../../environment/guides/create-environment-with-custom-packages-installed).
+installed](../../../environment/guides/create-environment-with-custom-packages-installed).
 
 → If your code repository is **private**, see [How to create an environment with custom packages from
 a private code
-repository](../../environment/guides/create-environment-with-custom-packages-private-code-repository).
+repository](/docs/users/compute/environment/guides/create-environment-with-custom-packages-private-code-repository).
 
 #### → Having packages pre-installed is not so important to me right now.
 
@@ -78,4 +78,4 @@ you install won’t be available for anyone else who launches a session from the
 
 If you’d like to permanently add the packages you need to your session environment, see [How to
 create an environment with custom packages
-installed](../../environment/guides/create-environment-with-custom-packages-installed).
+installed](../../../environment/guides/create-environment-with-custom-packages-installed).

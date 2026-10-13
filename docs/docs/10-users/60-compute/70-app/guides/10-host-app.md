@@ -15,7 +15,7 @@ To create an app launcher you need:
   for now.
 - **Write permission** on that project. Starting and stopping an app is an
   editor or owner action; opening it is not. See [Project
-  Permissions](../../../collaboration/permissions#project-permissions).
+  Permissions](/docs/users/collaboration/permissions#project-permissions).
 - **An image to run.** Either Renku builds it for you from a code repository
   (see the `Procfile` section [below](#1-listen-on-the-port-renku-assigns)), or
   you supply a container image you have already built and pushed.
@@ -78,13 +78,13 @@ response that cannot arrive and then reports an error.
      buildpacks, the same way it builds custom session environments.
    - **External environment**: give the launcher your container image and the
      port your server listens on.
-4. Set a [resource class](../../resource-pools-and-classes) if the default
+4. Set a [resource class](/docs/users/compute/resource-pools-and-classes) if the default
    is not enough for your app.
 5. Save the launcher. If Renku is building the image, the launcher shows the
    build progress.
 
 An app launcher sits alongside your session launchers, and the same editing
-surfaces (environment, resource class, environment variables) apply to it.
+surfaces (/docs/users/compute/environment, resource class, environment variables) apply to it.
 
 :::note
 

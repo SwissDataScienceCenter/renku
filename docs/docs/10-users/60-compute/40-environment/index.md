@@ -1,6 +1,6 @@
 # Environment
 
-An environment is a docker-based environment that can run in a RenkuLab interactive [Session](session) or a background [Job](job).
+An environment is a docker-based environment that can run in a RenkuLab interactive [Session](/docs/users/compute/session) or a background [Job](/docs/users/compute/job).
 
 An environment consists of:
 
@@ -9,4 +9,4 @@ An environment consists of:
 
 Renku provides several _global environments_ that come pre-configured and ready to use for interactive sessions. Alternatively, you can create your own custom environment [from a requirements file](/docs/users/compute/environment/guides/create-environment-with-custom-packages-installed) or [with your own docker image](/docs/users/compute/environment/guides/use-your-own-docker-image-for-renku-session). Job launchers use custom environments only (built from code or from an external image).
 
-Environments are connected to a Renku project via a [Launcher](launcher).
+Environments are connected to a Renku project via a [Launcher](/docs/users/compute/launcher).

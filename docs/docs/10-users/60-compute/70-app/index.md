@@ -4,13 +4,13 @@ An app is a web application (a dashboard, a demo, an interactive report) that
 Renku hosts at a public URL. Anyone with the link can open it, without a
 Renku account and without launching a session.
 
-An app is created by an _app launcher_, which is a [Launcher](launcher) of the
-app type, and runs the [Environment](environment)
-configured on that launcher. Unlike a [Session](session), an app belongs to the
+An app is created by an _app launcher_, which is a [Launcher](/docs/users/compute/launcher) of the
+app type, and runs the [Environment](/docs/users/compute/environment)
+configured on that launcher. Unlike a [Session](/docs/users/compute/session), an app belongs to the
 project rather than to you: there is one of it, it stays up between visits, and
 everyone who opens the link sees the same running app.
 
-To create one, see [Publish an app](app/guides/host-app).
+To create one, see [Publish an app](/docs/users/compute/app/guides/host-app).
 
 ## How an app differs from a session
 
@@ -36,9 +36,9 @@ has access to less than a session does.
 credentials, and are not backed by an account you connected, such as Google
 Drive or Dropbox. A connector that fails any of these is left out, because
 otherwise anyone on the internet could read your data through the app. Mounted
-connectors are read-only. See [Data Connector](../data/data).
+connectors are read-only. See [Data Connector](/docs/users/data/data).
 
-**[Code repositories](../code/code-repository) are not cloned.** Your app's code
+**[Code repositories](../../code/code-repository) are not cloned.** Your app's code
 has to already be in its image; data connectors and environment variables can
 still reach it, as described above and below.
 
@@ -67,4 +67,4 @@ An app launcher is edited like any other session launcher: its environment,
 resource class, and environment variables. Changes do **not** reach a running
 app: it keeps its old definition until it is stopped and started again.
 
-Deleting an app launcher stops its app (see [Publish an app](app/guides/host-app#stopping-an-app)).
+Deleting an app launcher stops its app (see [Publish an app](/docs/users/compute/app/guides/host-app#stopping-an-app)).
