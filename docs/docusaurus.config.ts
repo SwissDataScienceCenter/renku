@@ -85,8 +85,7 @@ const config: Config = {
   // GitHub pages deployment is broken when `trailingSlash` is left undefined
   trailingSlash: false,
 
-  // onBrokenLinks: "throw",
-  onBrokenLinks: "warn",
+  onBrokenLinks: "throw",
 
   markdown: {
     mermaid: true,
