@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"log/slog"
+	"net"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -34,6 +35,7 @@ type ApptainerEngine struct {
 }
 
 type sessionHandle struct {
+	port              int
 	apptainerInstance string
 	wstunnelCmd       *exec.Cmd
 }
@@ -183,8 +185,17 @@ func (ae *ApptainerEngine) reconcileSessionContainer(ctx context.Context, sessio
 		if err == nil {
 			args = append(args, "--bind", "/share:/share")
 		}
+		// Find a free port for the session
+		if handle.port == 0 {
+			port, err := findSessionPort()
+			if err != nil {
+				return err
+			}
+			handle.port = port
+			ae.handles[session.ID] = handle
+		}
 		args = append(args,
-			"--env", "RENKU_SESSION_PORT=9999",
+			"--env", fmt.Sprintf("RENKU_SESSION_PORT=%d", handle.port),
 			"--env", fmt.Sprintf("RENKU_BASE_URL_PATH=%s", session.Spec.URL.EscapedPath()),
 			"--env", fmt.Sprintf("RENKU_MOUNT_DIR=%s", sessionDir),
 			"--env", fmt.Sprintf("RENKU_WORKING_DIR=%s", sessionDir),
@@ -221,11 +232,21 @@ func (ae *ApptainerEngine) reconcileSessionTunnel(ctx context.Context, session s
 		defer ae.handlesMutex.Unlock()
 		handle, found := ae.handles[session.ID]
 		if !found || handle.wstunnelCmd == nil {
+			// Find a free port for the session
+			if handle.port == 0 {
+				port, err := findSessionPort()
+				if err != nil {
+					return err
+				}
+				handle.port = port
+				ae.handles[session.ID] = handle
+			}
 			// Create a new handle for wstunnel
 			wstunnelURLStr := fmt.Sprintf("wss://%s:443", session.Spec.URL.Hostname())
 			wstunnelPathPrefix := fmt.Sprintf("%s/__amalthea__/tunnel", strings.TrimSuffix(session.Spec.URL.EscapedPath(), "/"))
 			wstunnelAuth := fmt.Sprintf("Authorization: Bearer %s", wstunnelSecret)
-			handle.wstunnelCmd = exec.CommandContext(context.Background(), wstunnel, "client", "-R", "tcp://0.0.0.0:8888:localhost:9999",
+			handle.wstunnelCmd = exec.CommandContext(context.Background(), wstunnel, "client", "-R",
+				fmt.Sprintf("tcp://0.0.0.0:8888:localhost:%d", handle.port),
 				wstunnelURLStr, "-P", wstunnelPathPrefix,
 				"-H", wstunnelAuth, "--tls-verify-certificate",
 			)
@@ -300,4 +321,20 @@ func (ae *ApptainerEngine) getUserHomeDir() (string, error) {
 	}
 	ae.homeDir = homeDir
 	return homeDir, nil
+}
+
+func findSessionPort() (int, error) {
+	l, err := net.Listen("tcp4", "localhost:0")
+	if err != nil {
+		return 0, err
+	}
+	addr, ok := l.Addr().(*net.TCPAddr)
+	if !ok {
+		return 0, fmt.Errorf("listener address is not TCP")
+	}
+	port := addr.Port
+	if err := l.Close(); err != nil {
+		return 0, nil
+	}
+	return port, nil
 }
