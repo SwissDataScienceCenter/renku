@@ -52,11 +52,27 @@ This page provides reference configurations to use in the **Advanced Settings** 
 
 ### RStudio
 
-🚧 _Not yet available_
+- Container Image: `rocker/rstudio:4.5.1`, or an image built on top of it
+- Port: `8888`
+- Default URL: `/`
+- Working Directory: `/home/rstudio`
+- Mount Directory: `/home/rstudio`
+- UID: `1000`
+- GID: `1000`
+- Strip session URL path prefix: **enabled**
+- Command ENTRYPOINT:
 
-### RShiny
+```json
+["sh", "-c"]
+```
 
-🚧 _Not yet available_
+- Command Arguments CMD ([learn more](./use-your-own-docker-image-for-renku-session#about-renku-session-urls)):
+
+```json
+[
+  "mkdir -p $RENKU_MOUNT_DIR/.rstudio && printf 'provider=sqlite\\ndirectory=%s\\n' $RENKU_MOUNT_DIR/.rstudio > $RENKU_MOUNT_DIR/.rstudio/db.conf && export USER=$(whoami) && exec /usr/lib/rstudio-server/bin/rserver --server-daemonize=0 --server-user=$USER --auth-none=1 --www-address=0.0.0.0 --www-port=8888 --www-root-path=$RENKU_BASE_URL_PATH --www-frame-origin=same --www-verify-user-agent=0 --server-data-dir=$RENKU_MOUNT_DIR/.rstudio/data --database-config-file=$RENKU_MOUNT_DIR/.rstudio/db.conf"
+]
+```
 
 ### VSCode
 
@@ -76,84 +92,11 @@ This page provides reference configurations to use in the **Advanced Settings** 
 ]
 ```
 
-### Streamlit
+### Web apps (Streamlit, Plotly Dash, Shiny, Gradio)
 
-- Container Image: Build a docker image that includes streamlit and any other requirements needed by your streamlit app
-- Port: `8888`
-- Command ENTRYPOINT:
+To serve a dashboard or interactive app built with Streamlit, Plotly Dash, Shiny, Gradio or a similar framework, publish it as an **app** rather than a session. An app gets a stable public URL that anyone can open, without a Renku account and without launching a session. Your image runs its own web server, listening on `$RENKU_SESSION_PORT` and `0.0.0.0`.
 
-```json
-["sh", "-c"]
-```
-
-- Command Arguments CMD (fill in `<your-repo-name>/<your-app>`) ([learn more](./use-your-own-docker-image-for-renku-session#about-renku-session-urls)):
-
-```json
-[
-  "streamlit run $RENKU_WORKING_DIR/<your-repo-name>/<your-app>.py --server.port=8888 --server.address=0.0.0.0 --server.baseUrlPath=$RENKU_BASE_URL_PATH"
-]
-```
-
-### Plotly Dash
-
-- Container Image: Build a docker image that includes plotly and any other requirements needed by your plotly app
-- Port: `8888`
-- Command ENTRYPOINT:
-
-```json
-["sh", "-c"]
-```
-
-- Command Arguments CMD (fill in `<your-repo-name>/<your-app>`!) ([learn more](./use-your-own-docker-image-for-renku-session#about-renku-session-urls)):
-
-```json
-[
-  "DASH_URL_BASE_PATHNAME=$RENKU_BASE_URL_PATH/ HOST=0.0.0.0 PORT=8888 python $RENKU_WORKING_DIR/<your-repo-name>/<your-app>.py"
-]
-```
-
-### Gradio
-
-- Container Image: Build a docker image that includes Gradio and any other requirements needed by your Gradio app
-- Port: `8888`
-- Command ENTRYPOINT:
-
-```json
-["sh", "-c"]
-```
-
-- Command Arguments CMD (fill in `<your-repo-name>/<your-app>`!)([learn more](./use-your-own-docker-image-for-renku-session#about-renku-session-urls)):
-
-```json
-[
-  "python $RENKU_WORKING_DIR/<your-repo-name>/<your-app>.py --server_port=8888 --server_name=0.0.0.0 --root_path=$RENKU_BASE_URL_PATH"
-]
-```
-
-Note that these command line arguments need to be defined in your Gradio app file. This can be done easily with Python’s [argparse](https://docs.python.org/3/library/argparse.html) library, for example. Just paste the following lines into your Gradio file:
-
-```python
-from argparse import ArgumentParser
-
-parser = ArgumentParser()
-parser.add_argument('--server_port', default=8888, type=int)
-parser.add_argument('--server_name', default=None, type=str)
-parser.add_argument('--root_path', default=None, type=str)
-
-args = parser.parse_args()
-```
-
-and then make sure to launch your app with the arguments that were set:
-
-```python
-with gr.Blocks() as app: # or app = gr.Interface(...)
-		# Gradio blocks
-		...
-
-app.launch(server_port=args.server_port,
-					 server_name=args.server_name,
-					 root_path=args.root_path)
-```
+See [Publish an App](../../app/guides/host-app) for how to set this up, with example start commands.
 
 ## Next steps
 
