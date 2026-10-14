@@ -12,7 +12,6 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/component: ssh-proxy
     app.kubernetes.io/part-of: renku
-    chart: {{ template "renku.chart" . }}
     heritage: {{ .Release.Service }}
 spec:
   replicas: {{ .Values.sshProxy.replicaCount }}
@@ -56,7 +55,7 @@ spec:
             {{- toYaml (mergeOverwrite (deepCopy .Values.securityContext) (.Values.sshProxy.securityContext | default dict)) | nindent 12 }}
           ports:
             - name: ssh
-              containerPort: {{ include "renku.sshProxy.port" . }}
+              containerPort: 2222
               protocol: TCP
           env:
             - name: RUST_LOG
@@ -68,7 +67,7 @@ spec:
             - name: RENKU_SSH_PROXY_SESSION_AUTH_KEY
               value: "/secrets/sessionAuthKey/authKey"
             - name: RENKU_SSH_PROXY_LISTEN
-              value: "0.0.0.0:{{ include "renku.sshProxy.port" . }}"
+              value: "0.0.0.0:2222"
             - name: VERSION
               value: {{ .Values.sshProxy.image.tag | quote }}
             - name: SENTRY_ENABLED
@@ -94,19 +93,19 @@ spec:
             {{- include "certificates.volumeMounts.system" . | nindent 12 }}
           livenessProbe:
             tcpSocket:
-              port: {{ include "renku.sshProxy.port" . }}
+              port: ssh
             periodSeconds: 30
             timeoutSeconds: 5
             failureThreshold: 6
           readinessProbe:
             tcpSocket:
-              port: {{ include "renku.sshProxy.port" . }}
+              port: ssh
             initialDelaySeconds: 10
             periodSeconds: 10
             failureThreshold: 2
           startupProbe:
             tcpSocket:
-              port: {{ include "renku.sshProxy.port" . }}
+              port: ssh
             periodSeconds: 5
             timeoutSeconds: 5
             failureThreshold: 24
