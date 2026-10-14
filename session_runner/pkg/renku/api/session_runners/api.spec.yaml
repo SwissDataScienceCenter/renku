@@ -1,0 +1,504 @@
+openapi: 3.0.2
+info:
+  title: Renku Data Services API
+  description: |
+    This service is the main backend for Renku. It provides information about users, projects,
+    cloud storage, access to compute resources and many other things.
+  version: v1
+servers:
+  - url: /api/data
+paths:
+  /session_runners/user:
+    get:
+      summary: Get all user-scoped session runners
+      parameters:
+        - in: query
+          name: all_users
+          required: false
+          schema:
+            type: boolean
+            description: |
+               If true, an admin will see the list of runners from all users.
+      responses:
+        "200":
+          description: A list of user-scoped session runners
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserSessionRunners"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - session_runners
+    post:
+      summary: Create a new user-scoped session runner
+      description: |
+        The resource pool associated with the runner must be accessible
+        by the user and must be a remote pool which uses user-scoped runners.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserSessionRunnerPost"
+      responses:
+        "201":
+          description: The user-scoped session runner was created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserSessionRunner"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - session_runners
+  /session_runners/user/register:
+    post:
+      summary: Register a user-scoped session runner
+      description: |
+        Used by runners to register themselves and obtain
+        internal authentication tokens.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserSessionRunnerRegisterPost"
+      responses:
+        "200":
+          description: The user-scoped session runner was registered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserSessionRunnerRegisterResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - session_runners
+  /session_runners/user/{session_runner_id}:
+    parameters:
+      - in: path
+        name: session_runner_id
+        required: true
+        schema:
+          $ref: "#/components/schemas/Ulid"
+    get:
+      summary: Get a user-scoped session runner
+      responses:
+        "200":
+          description: The user-scoped session runner
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserSessionRunner"
+        "404":
+          description: The user-scoped session runner does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - session_runners
+    patch:
+      summary: Update a user-scoped session runner
+      description: |
+        Internal authentication only.
+
+        Used by runners to update their status.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserSessionRunnerPatch"
+      responses:
+        "200":
+          description: The user-scoped session runner has been updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserSessionRunner"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - session_runners
+    delete:
+      summary: Remove a user-scoped session runner
+      responses:
+        "204":
+          description: The user-scoped session runner was removed or did not exist in the first place
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - session_runners
+  /session_runners/user/sessions:
+    get:
+      summary: List sessions which are powered by user-scoped runners
+      description: |
+        Internal authentication only.
+
+        Runners only see sessions assigned to them.
+      responses:
+        "200":
+          description: A list of remote Renku session powered by a user-scoped runner
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RemoteUserSessions"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - session_runners
+  /session_runners/user/sessions/{session_id}:
+    parameters:
+      - in: path
+        name: session_id
+        required: true
+        schema:
+          $ref: "#/components/schemas/RemoteUserSessionId"
+    get:
+      summary: Get a session which is powered by a user-scoped runner
+      description: |
+        Internal authentication only.
+
+        Runners only see sessions assigned to them.
+      responses:
+        "200":
+          description: The remote Renku session powered by a user-scoped runner
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RemoteUserSession"
+        "404":
+          description: The session does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - session_runners
+  /session_runners/user/sessions/{session_id}/spec:
+    parameters:
+      - in: path
+        name: session_id
+        required: true
+        schema:
+          $ref: "#/components/schemas/RemoteUserSessionId"
+    get:
+      summary: Get the spec of a session which is powered by a user-scoped runner
+      description: |
+        Internal authentication only.
+
+        Runners only see sessions assigned to them.
+      responses:
+        "200":
+          description: The remote Renku session powered by a user-scoped runner
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RemoteUserSessionWithSpec"
+        "404":
+          description: The session does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - session_runners
+  /session_runners/user/sessions/{session_id}/secrets:
+    parameters:
+      - in: path
+        name: session_id
+        required: true
+        schema:
+          $ref: "#/components/schemas/RemoteUserSessionId"
+    get:
+      summary: Get the secrets necessary to run a remote Renku session
+      description: |
+        Internal authentication only.
+
+        Runners only see sessions assigned to them.
+      responses:
+        "200":
+          description: The secrets used in a remote Renku session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RemoteUserSessionSecrets"
+        "404":
+          description: The session does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - session_runners
+    patch:
+      summary: Update the secrets used in a remote Renku session
+      description: |
+        Internal authentication only.
+
+        Runners only see sessions assigned to them.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RemoteUserSessionSecrets"
+      responses:
+        "200":
+          description: The updated secrets used in a remote Renku session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RemoteUserSessionSecrets"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - session_runners
+components:
+  schemas:
+    UserSessionRunners:
+      description: A list of user-scoped session runners
+      type: array
+      items:
+        $ref: "#/components/schemas/UserSessionRunner"
+    UserSessionRunner:
+      description: A user-scoped session runner
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          $ref: "#/components/schemas/Ulid"
+        user_id:
+          $ref: "#/components/schemas/UserId"
+        resource_pool_id:
+          type: integer
+        status:
+          $ref: "#/components/schemas/UserSessionRunnerStatus"
+        registration_token:
+          type: string
+        creation_date:
+          $ref: "#/components/schemas/CreationDate"
+        last_contact:
+          $ref: "#/components/schemas/UpdatedAt"
+      required:
+        - id
+        - resource_pool_id
+        - status
+        - creation_date
+    UserSessionRunnerPost:
+      description: Data required to create a user-scoped session runner
+      type: object
+      additionalProperties: false
+      properties:
+        resource_pool_id:
+          type: integer
+      required:
+        - resource_pool_id
+    UserSessionRunnerPatch:
+      description: Data required to update a user-scoped session runner
+      type: object
+      additionalProperties: false
+      properties:
+        status:
+          type: string
+          enum:
+            - ready
+            - not_ready
+      required:
+        - status
+    UserSessionRunnerRegisterPost:
+      description: Data required to register a user-scoped session runner
+      type: object
+      additionalProperties: false
+      properties:
+        registration_token:
+          type: string
+      required:
+        - registration_token
+    UserSessionRunnerRegisterResponse:
+      description: The result of registering a user-scoped session runner
+      type: object
+      additionalProperties: false
+      properties:
+        runner:
+          $ref: "#/components/schemas/UserSessionRunner"
+        auth:
+          type: object
+          additionalProperties: true
+          properties:
+            access_token:
+              type: string
+              example: "some_access_token"
+            token_type:
+              type: string
+              example: "Bearer"
+            expires_in:
+              type: integer
+              example: 600
+            refresh_token:
+              type: string
+              example: "some_refresh_token"
+            refresh_expires_in:
+              type: integer
+              example: 3600
+            scope:
+              type: string
+              example: "api"
+          required:
+            - access_token
+            - token_type
+            - expires_in
+            - refresh_token
+      required:
+        - runner
+        - auth
+    UserSessionRunnerStatus:
+      description: The status of a user-scoped session runner
+      type: string
+      enum:
+        - never_contacted
+        - initializing
+        - ready
+        - not_ready
+    RemoteUserSessions:
+      description: A list of remote Renku session powered by a user-scoped runner
+      type: array
+      items:
+        $ref: "#/components/schemas/RemoteUserSession"
+    RemoteUserSession:
+      description: A remote Renku session powered by user-scoped runners
+      type: object
+      additionalProperties: false
+      properties:
+        session_id:
+          $ref: "#/components/schemas/RemoteUserSessionId"
+        user_id:
+          $ref: "#/components/schemas/UserId"
+        resource_pool_id:
+          type: integer
+        runner_id:
+          $ref: "#/components/schemas/Ulid"
+      required:
+        - session_id
+        - user_id
+        - resource_pool_id
+    RemoteUserSessionWithSpec:
+      description: A remote Renku session powered by user-scoped runners with a detailed spec
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/RemoteUserSession"
+        - type: object
+          additionalProperties: false
+          properties:
+            spec:
+              $ref: "#/components/schemas/RemoteUserSessionSpec"
+          required:
+            - spec
+    RemoteUserSessionSpec:
+      description: The spec of a remote Renku session powered by a user-scoped runner
+      type: object
+      additionalProperties: false
+      properties:
+        image:
+          type: string
+        url:
+          type: string
+        session_type:
+          type: string
+        command:
+          type: array
+          items:
+            type: string
+        args:
+          type: array
+          items:
+            type: string
+      required:
+        - image
+        - session_type
+        - command
+        - args
+    RemoteUserSessionId:
+      description: A session ID
+      type: string
+      example: "my-session-name"
+    RemoteUserSessionSecrets:
+      description: The secrets used in a remote Renku session powered by a user-scoped runner
+      type: array
+      items:
+        $ref: "#/components/schemas/RemoteUserSessionSecret"
+    RemoteUserSessionSecret:
+      description: A secret used in a remote Renku session
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+          example: my_secret
+        value:
+          type: string
+          example: some_value
+      required:
+        - name
+        - value
+    Ulid:
+      description: ULID identifier
+      type: string
+      minLength: 26
+      maxLength: 26
+      pattern: "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" # This is case-insensitive
+    UserId:
+      type: string
+      description: Keycloak user ID
+      example: f74a228b-1790-4276-af5f-25c2424e9b0c
+      pattern: "^[A-Za-z0-9]{1}[A-Za-z0-9-]+$"
+    CreationDate:
+      description: The date and time the resource was created (in UTC and ISO-8601 format)
+      type: string
+      format: date-time
+      example: "2023-11-01T17:32:28Z"
+    UpdatedAt:
+      description: The date and time the resource was updated (in UTC and ISO-8601 format)
+      type: string
+      format: date-time
+      example: "2023-11-01T17:32:28Z"
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+              minimum: 0
+              exclusiveMinimum: true
+              example: 1404
+            detail:
+              type: string
+              example: "A more detailed optional message showing what the problem was"
+            message:
+              type: string
+              example: "Something went wrong - please try again later"
+            trace_id:
+              type: string
+              example: "ac93950e9e114a55c67fb8e5ef519bbe"
+              description: Sentry trace ID for linking to corresponding log entries
+          required: ["code", "message"]
+      required: ["error"]
+  responses:
+    Error:
+      description: The schema for all 4xx and 5xx responses
+      content:
+        "application/json":
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"

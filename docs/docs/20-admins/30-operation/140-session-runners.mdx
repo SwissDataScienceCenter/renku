@@ -1,0 +1,57 @@
+---
+title: User-scoped session runners
+---
+
+_Introduced in Renku 2.??.0_
+
+Session runners allow Renku sessions to run in remote compute environments where
+there is no API Renku can leverage to start sessions (e.g. FirecREST for HPC).
+
+This type of runner is scoped to a single user, which means that a runner must be setup per
+machine per user.
+
+## 1. Setting up a resource pool for session runners
+
+1. Create a new resource pool
+2. Using the swagger page, patch the resource pool to support user-scoped session runners:
+   Send the following payload to the `PATCH /api/data/resource_pools/:id` endpoint:
+
+   ```json
+   { "remote": { "kind": "user_runners" } }
+   ```
+
+3. Add members who need access to runners to the resource pool
+
+## 2. Runners setup
+
+1. There are two prerequisites for using runners on a machine:
+   - [`apptainer`](https://apptainer.org): this is the only container engine supported for now
+   - [`wstunnel v10.4.4`](https://github.com/erebe/wstunnel/releases/tag/v10.4.4): this is used to connect the
+     remote session to supporting services on RenkuLab
+2. Install the `session_runner` program (found in `session_runner/`): download a binary or compile the go code
+
+## 3. User setup
+
+Now, each user can create and run their session runner:
+
+1. Using the swagger page, use the `POST /api/data/session_runners/user` endpoint:
+
+   ```json
+   { "resource_pool_id": "<ID>" }
+   ```
+
+   Use the ID of the resource pool setup earlier.
+   The backend response should include a `registration_token`.
+
+2. Run the `session_runner`:
+   ```bash
+   session_runner start --url "<RenkuLab URL>" --token "<TOKEN>"
+   ```
+   Use the `registration_token` from the previous step.
+3. Note that the `session_runner` can be restarted with just `session_runner start`,
+   as the URL and authentication tokens are saved to disk.
+
+## 4. Create a session launcher
+
+Now you should be able to create a session launcher, pick a resource class with
+support for runners and start the session.
