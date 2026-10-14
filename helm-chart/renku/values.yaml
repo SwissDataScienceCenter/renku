@@ -410,12 +410,8 @@ keycloakx:
 # For production deployments check out
 # https://github.com/bitnami/charts/blob/master/bitnami/postgresql/values-production.yaml
 postgresql:
-  commonLabels:
-    app.kubernetes.io/part-of: renku
-
   ## We use the defaults here. Note that these basic configs could also be set as
   ## global values such that sub-charts can access them too.
-
   auth:
     username: postgres
     database: postgres
@@ -438,6 +434,9 @@ postgresql:
     repository: bitnami-mirror/postgresql
 
   primary:
+    podLabels:
+      app.kubernetes.io/part-of: renku
+
     persistence:
       ## We use the defaults here, but they will probably be modified for most deployments.
       enabled: true
@@ -455,8 +454,9 @@ postgresql:
         memory: 300Mi
 
 redis:
-  commonLabels:
-    app.kubernetes.io/part-of: renku
+  master:
+    podLabels:
+      app.kubernetes.io/part-of: renku
   # If set to true, a HA redis will be included in the Renku release.
   install: true
   ###########################################################################
@@ -504,6 +504,8 @@ redis:
   # when using sentinel the master block is completely ignored
   # master:
   replica:
+    podLabels:
+      app.kubernetes.io/part-of: renku
     # this controls the amount of redis+sentinel pods which get created
     # it does relate to sentinel.quorum - if the latter is larger than this,
     # then clearly things are misconfigured
@@ -569,7 +571,7 @@ redis:
     registry: harbor.renkulab.io
     repository: bitnami-mirror/redis
 solr:
-  commonLabels:
+  podLabels:
     app.kubernetes.io/part-of: renku
   enabled: true
   cloudEnabled: false
