@@ -4,7 +4,7 @@ kind: PodDisruptionBudget
 metadata:
   name: {{ template "renku.fullname" . }}-gateway
   labels:
-    app: {{ template "renku.name" . }}-gateway
+    app: {{ template "gateway.name" . }}
     chart: {{ template "renku.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -12,7 +12,6 @@ spec:
   maxUnavailable: 50%
   selector:
     matchLabels:
-      app: {{ template "renku.name" . }}-gateway
+      app: {{ template "gateway.name" . }}
       release: {{ .Release.Name }}
 {{- end }}
-
