@@ -21,4 +21,3 @@ spec:
   selector:
     app: {{ template "gateway.name" . }}
     release: {{ .Release.Name }}
-
