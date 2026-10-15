@@ -1,0 +1,62 @@
+# Allow access to kube api server
+# Add --dry-run=server when calling helm template
+# otherwise, kubeapiEndpointSlice will be empty
+{{- define "kubeapiEgress" }}
+{{- $kubeapiEndpointSlice := lookup "discovery.k8s.io/v1" "EndpointSlice" "default" "kubernetes" }}
+{{- $kubeapiService := lookup "v1" "Service" "default" "kubernetes" }}
+    # Allow access to kebernetes service
+    - to:
+        {{- range $kubeapiService.spec.clusterIPs }}
+        - ipBlock:
+            cidr: {{ . }}/32
+        {{- end }}
+      ports:
+        {{- range $kubeapiService.spec.ports }}
+        - protocol: {{ .protocol }}
+          port: {{ .port }}
+        {{- end }}
+    # Allow access to kebernetes service endpoints
+    {{- range $kubeapiEndpointSlice.endpoints }}
+    - to:
+        {{- range .addresses }}
+        - ipBlock:
+            cidr: {{ . }}/32
+        {{- end }}
+      ports:
+        {{- range $kubeapiEndpointSlice.ports }}
+        - protocol: {{ .protocol }}
+          port: {{ .port }}
+        {{- end }}
+    {{- end }}
+{{- end }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-egress-to-apiserver
+  labels:
+    {{- include "netpol.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      renku.io/kubeapi-access: "true"
+  policyTypes:
+    - Egress
+  egress:
+    {{- include "kubeapiEgress" . }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-amalthea-egress-to-apiserver
+  labels:
+    {{- include "netpol.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: amalthea-sessions
+      control-plane: controller-manager
+  policyTypes:
+    - Egress
+  egress:
+    {{- include "kubeapiEgress" . }}

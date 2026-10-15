@@ -3,10 +3,8 @@ kind: Deployment
 metadata:
   name: {{ template "renku.fullname" . }}-gateway
   labels:
-    app: {{ template "gateway.name" . }}
-    chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ template "gateway.name" . }}
+    {{- include "gateway.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.gateway.autoscaling.enabled }}
   replicas: {{ .Values.gateway.replicaCount }}
@@ -15,15 +13,23 @@ spec:
     {{- toYaml .Values.gateway.updateStrategy | nindent 4 }}
   selector:
     matchLabels:
-      app: {{ template "gateway.name" . }}
-      release: {{ .Release.Name }}
+      app.kubernetes.io/name: {{ template "gateway.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ template "gateway.name" . }}
-        release: {{ .Release.Name }}
-        # The label below enables the gateway to connect to redis
+        app.kubernetes.io/name: {{ template "gateway.name" . }}
+        {{- include "gateway.labels" . | nindent 8 }}
+        renku.io/ingress-access: "true"
+        renku.io/data-service-access: "true"
+        renku.io/uiserver-access: "true"
+        {{- if .Values.keycloakx.enabled}}
+        renku.io/keycloak-access: "true"
+        {{- end }}
+        {{- if .Values.redis.install }}
+        renku.io/redis-access: "true"
         {{ .Values.global.redis.clientLabel | toYaml | nindent 8 }}
+        {{- end }}
       {{- if .Values.gateway.podAnnotations }}
       {{- with .Values.gateway.podAnnotations }}
       annotations:
