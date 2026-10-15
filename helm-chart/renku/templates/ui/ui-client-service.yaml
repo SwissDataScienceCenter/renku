@@ -18,6 +18,9 @@ spec:
       targetPort: 8080
       protocol: TCP
       name: http
+      {{- if and (has .Values.ui.client.service.type (list "NodePort" "LoadBalancer")) .Values.ui.client.service.nodePort }}
+      nodePort: {{ .Values.ui.client.service.nodePort }}
+      {{- end }}
     {{- if .Values.ui.client.prometheus.enabled }}
     - port: 9090
       targetPort: 9090

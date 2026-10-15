@@ -55,12 +55,15 @@ kind: Service
 metadata:
   name: {{ include "renku.fullname" . }}-swagger
 spec:
-  type: ClusterIP
+  type: {{ .Values.swagger.service.type | default "ClusterIP" }}
   ports:
     - port: 80
       targetPort: http
       protocol: TCP
       name: http
+      {{- if and (has .Values.swagger.service.type (list "NodePort" "LoadBalancer")) .Values.swagger.service.nodePort }}
+      nodePort: {{ .Values.swagger.service.nodePort }}
+      {{- end }}
   selector:
     app.kubernetes.io/name: {{ include "renku.name" . }}-swagger
     app.kubernetes.io/instance: {{ .Release.Name }}

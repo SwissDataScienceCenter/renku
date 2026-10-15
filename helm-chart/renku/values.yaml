@@ -182,6 +182,35 @@ ingress:
   #  - secretName: chart-example-tls
   #    hosts:
   #      - example.local
+  ## Exposing Renku through static node ports
+  ## If the load balancer is managed independently from the Kubernetes cluster
+  ## it may need to route traffic to static node ports instead of to an ingress
+  ## controller. In that case set the services which are backends of the ingress
+  ## above to the NodePort type with a fixed port, and have the load balancer
+  ## route the corresponding paths to these ports on the cluster nodes:
+  ##   /auth              -> keycloak  (keycloakx.service)
+  ##   /api, /ui-server   -> gateway   (gateway.service)
+  ##   /swagger           -> swagger   (swagger.service)
+  ##   /                  -> ui        (ui.client.service)
+  ## Node ports must be within the cluster's node port range (30000-32767 by default).
+  ## Example:
+  # gateway:
+  #   service:
+  #     type: NodePort
+  #     nodePort: 30080
+  # ui:
+  #   client:
+  #     service:
+  #       type: NodePort
+  #       nodePort: 30081
+  # swagger:
+  #   service:
+  #     type: NodePort
+  #     nodePort: 30082
+  # keycloakx:
+  #   service:
+  #     type: NodePort
+  #     httpNodePort: 30083
 networkPolicies:
   ## List of podSelector terms for pods in the release namespace that should be allowed all ingress to all services
   allowAllIngressFromPods: []
@@ -593,6 +622,9 @@ ui:
     service:
       type: ClusterIP
       port: 80
+      ## Static node port, only used if type is NodePort or LoadBalancer.
+      ## See "Exposing Renku through static node ports" under `ingress`.
+      nodePort:
     ingress:
       enabled: false
     resources: {}
@@ -1122,6 +1154,9 @@ gateway:
   service:
     type: ClusterIP
     port: 80
+    ## Static node port, only used if type is NodePort or LoadBalancer.
+    ## See "Exposing Renku through static node ports" under `ingress`.
+    nodePort:
   resources:
     requests:
       cpu: 20m
@@ -1179,6 +1214,11 @@ swagger:
   image:
     repository: swaggerapi/swagger-ui
     tag: "v5.32.6"
+  service:
+    type: ClusterIP
+    ## Static node port, only used if type is NodePort or LoadBalancer.
+    ## See "Exposing Renku through static node ports" under `ingress`.
+    nodePort:
 ## The image used in startup scripts to initialize different postgres databases
 initDb:
   image:
