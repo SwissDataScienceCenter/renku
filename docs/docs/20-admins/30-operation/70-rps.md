@@ -46,7 +46,7 @@ A resource class is what users select when they start a session. A single resour
 pool can have many resource classes.
 
 The CPU, memory, GPU and disk storage values can be shared between resource classes
-with a [resource flavour](#resource-flavours).
+with a [resource flavor](#resource-flavors).
 
 :::info
 The node affinities and tolerations can be used to make it so that specific resource
@@ -59,15 +59,15 @@ for more information on taints, tolerations, affinities and how they can be used
 to control scheduling.
 :::
 
-## Resource Flavours
+## Resource Flavors
 
 Different resource pools frequently offer resource classes of the same size, for example
-to fit a given number of sessions on one node. A resource flavour lets you define that
+to fit a given number of sessions on one node. A resource flavor lets you define that
 size in one place and share it across resource classes. You set the values one time, and
-an update to the resource flavour saves you from updating each resource class
+an update to the resource flavor saves you from updating each resource class
 individually.
 
-A resource flavour sets:
+A resource flavor sets:
 
 - CPU
 - Memory
@@ -75,7 +75,7 @@ A resource flavour sets:
 - Default disk storage
 - Maximum disk storage
 
-Without resource flavours, each resource class has its own copy of these values:
+Without resource flavors, each resource class has its own copy of these values:
 
 ```mermaid
 graph TB
@@ -99,57 +99,57 @@ graph TB
     style ValuesB fill:#01192d,stroke:#01192d,color:#ffffff
 ```
 
-With a resource flavour, the values are in one place and the resource classes link
+With a resource flavor, the values are in one place and the resource classes link
 to it:
 
 ```mermaid
 graph TB
-    Flavour["Resource flavour: Large<br/>8 CPU<br/>32 GB memory<br/>1 GPU<br/>50 GB disk, 200 GB max"]
+    Flavor["Resource flavor: Large<br/>8 CPU<br/>32 GB memory<br/>1 GPU<br/>50 GB disk, 200 GB max"]
 
     subgraph PoolA["Resource pool A"]
         subgraph ClassA["Resource class: Large"]
-            FromFlavourA["CPU<br/>Memory<br/>GPU<br/>Disk storage"]
+            FromFlavorA["CPU<br/>Memory<br/>GPU<br/>Disk storage"]
             OnClassA["Default: yes<br/>Toleration: gpu<br/>Affinity: nodepool=gpu"]
         end
     end
 
     subgraph PoolB["Resource pool B"]
         subgraph ClassB["Resource class: Teaching"]
-            FromFlavourB["CPU<br/>Memory<br/>GPU<br/>Disk storage"]
+            FromFlavorB["CPU<br/>Memory<br/>GPU<br/>Disk storage"]
             OnClassB["Default: no<br/>Toleration: none<br/>Affinity: nodepool=teaching"]
         end
     end
 
-    Flavour -->|Values| FromFlavourA
-    Flavour -->|Values| FromFlavourB
+    Flavor -->|Values| FromFlavorA
+    Flavor -->|Values| FromFlavorB
 
     style PoolA fill:#f8f9fa,stroke:#6c757d,color:#16192c
     style PoolB fill:#f8f9fa,stroke:#6c757d,color:#16192c
     style ClassA fill:#ffffff,stroke:#01192d,color:#16192c
     style ClassB fill:#ffffff,stroke:#01192d,color:#16192c
-    style Flavour fill:#006e58,stroke:#01192d,color:#ffffff
-    style FromFlavourA fill:#006e58,stroke:#01192d,color:#ffffff
-    style FromFlavourB fill:#006e58,stroke:#01192d,color:#ffffff
+    style Flavor fill:#006e58,stroke:#01192d,color:#ffffff
+    style FromFlavorA fill:#006e58,stroke:#01192d,color:#ffffff
+    style FromFlavorB fill:#006e58,stroke:#01192d,color:#ffffff
     style OnClassA fill:#01192d,stroke:#01192d,color:#ffffff
     style OnClassB fill:#01192d,stroke:#01192d,color:#ffffff
 ```
 
-A resource class can link to one resource flavour. The resource class then takes its
-CPU, memory, GPU and disk storage requests and limits from that resource flavour. The
+A resource class can link to one resource flavor. The resource class then takes its
+CPU, memory, GPU and disk storage requests and limits from that resource flavor. The
 name, the default flag, the tolerations, and the node affinities are not part of a
-resource flavour, and are individual to the resource class on which they are set.
+resource flavor, and are individual to the resource class on which they are set.
 
-When you modify the resource values in a resource flavour, every resource class linked
-to that resource flavour adopts the change, across all resource pools.
+When you modify the resource values in a resource flavor, every resource class linked
+to that resource flavor adopts the change, across all resource pools.
 
-In the admin panel, go to `Compute Resources` -> `Resource Flavours` to create, edit and
-delete resource flavours. To link or unlink a resource class, use the `Resource Flavour`
+In the admin panel, go to `Compute Resources` -> `Resource Flavors` to create, edit and
+delete resource flavors. To link or unlink a resource class, use the `Resource flavor`
 field on the resource class form. An unlinked resource class keeps the values it adopted
-from the resource flavour, and you can then change them on the resource class.
+from the resource flavor, and you can then change them on the resource class.
 
 :::info
-You cannot delete a resource flavour whilst it still has links to resource classes. On
-the admin panel, each resource flavour shows the resource classes linked to it, so you
+You cannot delete a resource flavor while it still has links to resource classes. On
+the admin panel, each resource flavor shows the resource classes linked to it, so you
 can see what an edit or a deletion affects before you make it.
 :::
 
