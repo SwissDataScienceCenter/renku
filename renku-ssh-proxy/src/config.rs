@@ -8,7 +8,6 @@ use clap_complete::CompleteEnv;
 use clap_verbosity_flag::{Verbosity, VerbosityFilter};
 use color_eyre::Help;
 use color_eyre::eyre::{OptionExt, Result, WrapErr};
-use directories::ProjectDirs;
 use russh::Preferred;
 use russh::server::Config as SshServerConfig;
 use serde::{Deserialize, Deserializer};
