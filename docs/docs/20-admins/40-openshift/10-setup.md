@@ -27,7 +27,7 @@ different version of Renku than what you have or will install.
 
 ### RBAC
 
-The admin here needs to decide if the ["Resource Pool" feature](../operation/rps) will be used or not. If
+The admin here needs to decide if the ["Resource Pool" feature](/docs/admins/operation/rps) will be used or not. If
 it is to be used, then the RBAC for resource pool management must also be
 generated and applied by an admin that has access to ClusterRole and
 ClusterRoleBinding.
@@ -37,7 +37,7 @@ where Renku is installed should be sufficient).
 
 #### Enabling Resource Pools
 
-To have the ["Resource Pool" feature](../operation/rps) enabled, some ClusterRoles and ClusterRoleBindings are needed, to generate them
+To have the ["Resource Pool" feature](/docs/admins/operation/rps) enabled, some ClusterRoles and ClusterRoleBindings are needed, to generate them
 run:
 
 ```bash
