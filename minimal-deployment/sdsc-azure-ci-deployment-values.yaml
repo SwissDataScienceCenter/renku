@@ -10,6 +10,14 @@ authz:
     requests:
       cpu: 50m
       memory: 75Mi
+cnpg:
+  extraSpec:
+    enablePDB: false
+    resources:
+      limits:
+        memory: 300Mi
+      requests:
+        memory: 300Mi
 dataService:
   image:
     repository: harbor.dev.renku.ch/dockerhub_cache/renku/renku-data-service
@@ -69,15 +77,11 @@ ingress:
 initDb:
   image:
     repository: harbor.dev.renku.ch/dockerhub_cache/renku/init-db
-keycloakx:
+keycloak:
+  createDemoUser: true
   initRealm:
     image:
       repository: harbor.dev.renku.ch/dockerhub_cache/renku/init-realm
-  resources:
-    requests:
-      memory: 600Mi
-    limits:
-      memory: 600Mi
 platformInit:
   image:
     repository: harbor.dev.renku.ch/dockerhub_cache/renku/platform-init
@@ -155,16 +159,6 @@ notebooks:
       key: renku.io/dedicated
       operator: Equal
       value: user
-postgresql:
-  image:
-    registry: harbor.dev.renku.ch
-    repository: bitnami-mirror/postgresql
-  primary:
-    resources:
-      limits:
-        memory: 300Mi
-      requests:
-        memory: 300Mi
 redis:
   architecture: standalone
   image:

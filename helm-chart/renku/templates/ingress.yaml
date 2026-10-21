@@ -1,7 +1,6 @@
 {{- if .Values.ingress.enabled -}}
-{{- $keycloakEnabled := .Values.keycloakx.enabled -}}
+{{- $keycloakEnabled := .Values.keycloak.install -}}
 {{- $keycloakFullname := include "keycloak.fullname" . -}}
-{{- $keycloakServicePort := .Values.keycloakx.ingress.servicePort -}}
 {{- $uiFullname := include "ui.fullname" . -}}
 {{- $uiServicePort := .Values.ui.client.service.port -}}
 {{- $uiserverFullname := include "uiserver.fullname" . -}}
@@ -46,9 +45,9 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: {{ $keycloakFullname }}-http
+            name: {{ $keycloakFullname }}-service
             port:
-              name: {{ $keycloakServicePort }}
+              name: http
       {{- end }}
       - path: /api
         pathType: Prefix

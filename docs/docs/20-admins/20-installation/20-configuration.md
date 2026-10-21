@@ -147,14 +147,15 @@ postgresql:
       memory: 6000Mi
     limits:
       memory: 6000Mi
-keycloakx:
-  resources:
-    limits:
-      cpu: 1000m
-      memory: 2Gi
-    requests:
-      cpu: 1000m
-      memory: 2Gi
+keycloak:
+  extraSpec:
+    resources:
+      limits:
+        cpu: 1000m
+        memory: 2Gi
+      requests:
+        cpu: 1000m
+        memory: 2Gi
 redis:
   replica:
     resources:
