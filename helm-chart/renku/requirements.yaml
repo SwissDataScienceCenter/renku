@@ -16,7 +16,7 @@ dependencies:
     version: "0.31.0"
   - name: csi-rclone
     repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-    version: "0.7.0"
+    version: "0.7.1"
     condition: global.csi-rclone.install
   - name: solr
     repository: "oci://harbor.renkulab.io/bitnami-mirror"
