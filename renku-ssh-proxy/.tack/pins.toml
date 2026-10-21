@@ -36,5 +36,9 @@ type = "fetch"
 url = "github:eikek/devshell-tools/main"
 type = "flake"
 
+[inputs.advisory-db]
+url = "github:rustsec/advisory-db"
+type = "fetch"
+
 [tack]
 recomposable = true

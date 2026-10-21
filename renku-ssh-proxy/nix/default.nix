@@ -1,12 +1,12 @@
 {
   system ? builtins.currentSystem,
   inputs ? import ../.tack,
-  pkgs ? import inputs.nixpkgs {
-    inherit system;
-    overlays = [ (import inputs.rust-overlay) ];
-  },
-}:
-let
+  pkgs ?
+    import inputs.nixpkgs {
+      inherit system;
+      overlays = [(import inputs.rust-overlay)];
+    },
+}: let
   inherit (pkgs) pkgsStatic lib;
 
   rustPlatform = pkgsStatic.makeRustPlatform {
@@ -21,6 +21,8 @@ let
       ../Cargo.lock
       ../README.md
       ../build.rs
+      ../deny.toml
+      ../.cargo/audit.toml
       ../src
     ];
   };
@@ -31,14 +33,15 @@ let
     strictDeps = true;
     cargoLock.lockFile = ../Cargo.lock;
 
-    nativeBuildInputs = [
-      pkgsStatic.cmake
-      pkgsStatic.installShellFiles
-      pkgsStatic.perl
-    ]
-    ++ lib.optionals (pkgsStatic.stdenv.hostPlatform.isDarwin) [ pkgsStatic.lld ];
+    nativeBuildInputs =
+      [
+        pkgsStatic.cmake
+        pkgsStatic.installShellFiles
+        pkgsStatic.perl
+      ]
+      ++ lib.optionals (pkgsStatic.stdenv.hostPlatform.isDarwin) [pkgsStatic.lld];
 
-    buildInputs = lib.optionals (pkgsStatic.stdenv.hostPlatform.isDarwin) [ pkgsStatic.libiconv ];
+    buildInputs = lib.optionals (pkgsStatic.stdenv.hostPlatform.isDarwin) [pkgsStatic.libiconv];
   };
 
   renku-ssh-proxy = rustPlatform.buildRustPackage (
@@ -48,10 +51,10 @@ let
       version = (lib.importTOML ../Cargo.toml).package.version;
       doCheck = false;
       postInstall = lib.optionalString (pkgsStatic.stdenv.buildPlatform.canExecute pkgsStatic.stdenv.hostPlatform) ''
-          for shell in fish zsh bash; do
-              COMPLETE=$shell $out/bin/renku-ssh-proxy > renku-ssh-proxy.$shell
-              installShellCompletion --$shell renku-ssh-proxy.$shell
-          done
+        for shell in fish zsh bash; do
+            COMPLETE=$shell $out/bin/renku-ssh-proxy > renku-ssh-proxy.$shell
+            installShellCompletion --$shell renku-ssh-proxy.$shell
+        done
       '';
 
       env.NIX_GIT_SHA = inputs.self.rev or inputs.self.dirtyRev or "unknown-sha";
@@ -61,15 +64,15 @@ let
         license = lib.licenses.asl20;
         mainProgram = "renku-ssh-proxy";
         platforms = lib.platforms.linux ++ lib.platforms.darwin;
+        description = "A CLI tool for working with the renku platform.";
       };
     }
   );
 
-  renku-ssh-proxy-no_default_features = renku-ssh-proxy.overrideAttrs { buildNoDefaultFeatures = true; };
+  renku-ssh-proxy-no_default_features = renku-ssh-proxy.overrideAttrs {buildNoDefaultFeatures = true;};
 
   devshellPkgs = lib.optionals (pkgsStatic.stdenv.hostPlatform.isLinux) (builtins.attrValues inputs.devshell-tools.legacyPackages.${system}.vm-scripts);
-in
-{
+in {
   inherit renku-ssh-proxy renku-ssh-proxy-no_default_features;
 
   packages = import ./packages.nix {
@@ -84,24 +87,29 @@ in
     inherit
       pkgs
       renku-ssh-proxy
+      src
       ;
+    inherit (inputs) advisory-db;
   };
 
   shell = pkgs.mkShell {
-    packages = [
-      # General dependencies
-      pkgs.rust-bin.stable.latest.default
-      pkgs.just
-      pkgs.tack
-      pkgs.azure-cli
+    packages =
+      [
+        # General dependencies
+        pkgs.rust-bin.stable.latest.default
+        pkgs.just
+        pkgs.tack
 
-      # Dev dependencies
-      pkgs.cargo-flamegraph
-      pkgs.rust-analyzer
+        # Dev dependencies
+        pkgs.cargo-flamegraph
+        pkgs.cargo-deny
+        pkgs.cargo-audit
+        pkgs.rust-analyzer
 
-      # Test dependencies
-      pkgs.cargo-nextest
-    ] ++ devshellPkgs;
+        # Test dependencies
+        pkgs.cargo-nextest
+      ]
+      ++ devshellPkgs;
     env = {
       DEV_VM = "rpsdevvm";
       VM_SSH_PORT = "10022";
@@ -137,7 +145,7 @@ in
           isNormalUser = true;
           group = "nogroup";
           # accept the proxy's proxy-to-session public key
-          openssh.authorizedKeys.keyFiles = [ "${inputs.devshell-tools}/internal/dev-vm-key.pub" ];
+          openssh.authorizedKeys.keyFiles = ["${inputs.devshell-tools}/internal/dev-vm-key.pub"];
         };
         # pin a fixed host key so the proxy's check_server_key pin is stable.
         # This assumes dev-vm-key is ed25519; if it is not, generate a dedicated
@@ -153,13 +161,22 @@ in
           enable = true;
           virtualHosts."_" = {
             default = true;
-            listen = [ { addr = "0.0.0.0"; port = 8000; } ];
+            listen = [
+              {
+                addr = "0.0.0.0";
+                port = 8000;
+              }
+            ];
             locations."/".return = 204; # allow all
           };
         };
-        networking.firewall.allowedTCPPorts = [ 8000 ];
+        networking.firewall.allowedTCPPorts = [8000];
         virtualisation.forwardPorts = [
-          { from = "host"; host.port = 8111; guest.port = 8000; }
+          {
+            from = "host";
+            host.port = 8111;
+            guest.port = 8000;
+          }
         ];
       }
     ];
