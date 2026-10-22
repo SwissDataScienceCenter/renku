@@ -236,7 +236,9 @@ impl Settings {
             .secret_service_url
             .or(file.secret_service_url)
             .ok_or_eyre("missing `secret_service_url`")
-            .suggestion("pass --secret-service-url or set `secret_service_url` in the config file")?;
+            .suggestion(
+                "pass --secret-service-url or set `secret_service_url` in the config file",
+            )?;
 
         let data_services_timeout = cli
             .data_services_timeout

@@ -14,3 +14,6 @@ target := 'target/release'
 
 build target=target:
     cargo build --release --bin renku-ssh-proxy --target-dir {{target}}
+
+nixfmt:
+    nix fmt flake.nix nix/
