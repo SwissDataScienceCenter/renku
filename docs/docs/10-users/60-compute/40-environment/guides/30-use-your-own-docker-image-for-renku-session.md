@@ -32,7 +32,7 @@ In the project page:
      - if the image is hosted on gitlab.renkulab.io:
        - `registry.renkulab.io/laura.kinkead1/n2o-pathway-analysis:980f4a3`
    - The image identifier should be in the format that works with `docker pull`
-4. Depending on the image you’re using, you’ll need to fill in the **Advanced settings**. See [Example image configurations for common front ends](./configure-frontends-for-a-session-environment) for ready-to-use configurations, or the information below for how to fill it in:
+4. Depending on the image you’re using, you’ll need to fill in the **Advanced settings**. See [Example image configurations for common front ends](/docs/users/compute/environment/guides/configure-frontends-for-a-session-environment) for ready-to-use configurations, or the information below for how to fill it in:
 
    :::danger
 
@@ -73,13 +73,13 @@ In the project page:
 
    - I’m using an image created **somewhere else** (not by Renku).
 
-     You need to fill in the **Advanced Settings** for your image to work on RenkuLab. See [Example image configurations for common front ends](./configure-frontends-for-a-session-environment).
+     You need to fill in the **Advanced Settings** for your image to work on RenkuLab. See [Example image configurations for common front ends](/docs/users/compute/environment/guides/configure-frontends-for-a-session-environment).
 
 5. Select the **Resource class** that best fits your expected computational needs.
 
    :::tip
 
-   If the available resource classes are too small for your compute requirements, we can create a custom resource pool for you! See [Request a Custom Resource Pool](../../resource-pools-and-classes#request-custom-resource-pool).
+   If the available resource classes are too small for your compute requirements, we can create a custom resource pool for you! See [Request a Custom Resource Pool](/docs/users/compute/resource-pools-and-classes#request-custom-resource-pool).
 
    :::
 
