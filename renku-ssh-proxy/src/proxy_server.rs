@@ -2,6 +2,7 @@ use std::collections::HashMap;
 use std::sync::Arc;
 
 use crate::Settings;
+use crate::activity::Activity;
 use crate::data_services::Client;
 use color_eyre::eyre::{OptionExt, Result};
 use russh::keys::ssh_key::{HashAlg, PublicKey};
@@ -9,6 +10,8 @@ use russh::keys::{PrivateKey, PrivateKeyWithHashAlg};
 use russh::server::Server as _;
 use russh::{Channel, ChannelId, ChannelMsg, Pty, Sig};
 use russh::{client, server};
+use std::sync::Mutex;
+use std::time::Duration;
 use tokio::net::TcpListener;
 use tokio::sync::mpsc;
 
@@ -22,7 +25,18 @@ pub async fn serve_proxy(settings: &Settings) -> Result<()> {
         .with_target(settings.target.clone())
         .with_auth_key(settings.session_auth_key.0.clone());
     let socket = TcpListener::bind(settings.listen).await?;
+    let amap = ph.activity_map.clone();
     let server = ph.run_on_socket(settings.ssh_server_config.clone(), &socket);
+
+    tokio::spawn(async move {
+        let mut tick = tokio::time::interval(Duration::from_secs(10));
+        loop {
+            tick.tick().await;
+            let x = amap.lock().unwrap();
+            println!("TICK: {:?}", x);
+        }
+    });
+
     server.await?;
     Ok(())
 }
@@ -85,6 +99,8 @@ pub struct ProxyHandler {
     channels: HashMap<ChannelId, mpsc::Sender<SshMsg>>,
     client: Arc<Client>,
     auth_key: Option<Arc<PrivateKey>>,
+    activity_map: Arc<Mutex<HashMap<String, Arc<Activity>>>>,
+    activity: Option<Arc<Activity>>,
 }
 
 impl ProxyHandler {
@@ -95,6 +111,8 @@ impl ProxyHandler {
             channels: HashMap::new(),
             client: Arc::new(client),
             auth_key: None,
+            activity_map: Arc::default(),
+            activity: None,
         }
     }
 
@@ -183,6 +201,14 @@ impl server::Handler for ProxyHandler {
         match self.client.authorize_session(public_key, user).await {
             Ok(true) => {
                 log::info!("Auth successful");
+                let act = self
+                    .activity_map
+                    .lock()
+                    .unwrap()
+                    .entry(user.to_string())
+                    .or_default()
+                    .clone();
+                self.activity = Some(act);
                 Ok(server::Auth::Accept)
             }
             Ok(false) => {
@@ -216,6 +242,9 @@ impl server::Handler for ProxyHandler {
             self.target,
             client_id
         );
+        if let Some(act) = &self.activity {
+            act.track_input();
+        }
 
         let serve_handle = session.handle();
         tokio::spawn(proxy_channel(up_channel, rx, serve_handle, client_id));
@@ -231,6 +260,9 @@ impl server::Handler for ProxyHandler {
         _session: &mut server::Session,
     ) -> Result<()> {
         log::debug!("Sending data...");
+        if let Some(act) = &self.activity {
+            act.track_input();
+        }
         self.forward(&channel, SshMsg::Data(data.to_vec())).await
     }
 
@@ -241,6 +273,9 @@ impl server::Handler for ProxyHandler {
     ) -> Result<(), Self::Error> {
         log::debug!("Requesting shell...");
         let _ = self.forward(&channel, SshMsg::Shell).await;
+        if let Some(act) = &self.activity {
+            act.track_input();
+        }
         session.channel_success(channel)?;
         Ok(())
     }
@@ -282,6 +317,9 @@ impl server::Handler for ProxyHandler {
     ) -> Result<()> {
         log::debug!("Sending exec...");
         self.forward(&channel, SshMsg::Exec(data.to_vec())).await?;
+        if let Some(act) = &self.activity {
+            act.track_input();
+        }
         session.channel_success(channel)?;
         Ok(())
     }
@@ -322,6 +360,9 @@ impl server::Handler for ProxyHandler {
         session: &mut server::Session,
     ) -> Result<()> {
         log::debug!("Sending window_change request...");
+        if let Some(act) = &self.activity {
+            act.track_input();
+        }
         self.forward(
             &channel,
             SshMsg::WindowChange {
@@ -343,6 +384,9 @@ impl server::Handler for ProxyHandler {
         session: &mut server::Session,
     ) -> Result<()> {
         log::debug!("Sending subsystem request...");
+        if let Some(act) = &self.activity {
+            act.track_input();
+        }
         self.forward(&channel, SshMsg::Subsystem(name.to_string()))
             .await?;
         session.channel_success(channel)?;
@@ -367,6 +411,10 @@ impl server::Handler for ProxyHandler {
                 host_to_connect,
                 port_to_connect
             );
+            if let Some(act) = &self.activity {
+                act.track_input();
+            }
+
             let upstream = self.connect_target().await?;
             let up_channel_r = upstream
                 .channel_open_direct_tcpip(

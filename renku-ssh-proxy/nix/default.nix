@@ -129,6 +129,15 @@ in {
     };
   };
 
+  # this vm can be used to test the proxy locally. it provides a ssh
+  # daemon and a nginx that lets auth requests pass
+  #
+  # running the proxy requires only the --host-key option, everything
+  # else is setup by env variables in the dev shell.
+  #
+  # start the vm: vm-run
+  # connect directly: ssh -p 10022 renku@localhost
+  # connect via proxy: ssh -p 2221 localhost@localhost
   rpsdevvm = inputs.devshell-tools.lib.mkVm {
     inherit system;
     modules = [
@@ -154,7 +163,7 @@ in {
         services.openssh.hostKeys = [
           {
             type = "ed25519";
-            path = "${inputs.devshell-tools}/internal/dev-vm-key";
+            path = "/root/dev-vm-key";
           }
         ];
         services.nginx = {
@@ -169,6 +178,12 @@ in {
             ];
             locations."/".return = 204; # allow all
           };
+        };
+        system.activationScripts = {
+          copy_host_key = ''
+            cp ${inputs.devshell-tools}/internal/dev-vm-key /root
+            chmod 600 /root/dev-vm-key
+          '';
         };
         networking.firewall.allowedTCPPorts = [8000];
         virtualisation.forwardPorts = [
