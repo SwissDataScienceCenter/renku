@@ -55,6 +55,22 @@ Most information related to upgrading from one chart version to another is cover
 in the `values changelog file <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/values.yaml.changelog.md>`_.
 For upgrades that require some steps other than modifying the values files to be executed, we add some instructions here.
 
+Upgrading to 2.23.0
+*******************
+
+This version contains an update that changes the labels of multiple objects as
+part of the hardening of the NetworkPolicies. More specifically, these changes
+involve multiple spec selectors in deployments which is in an immutable field.
+
+The following deployments must be deleted prior to applying this update:
+
+- renku-authz
+- renku-data-service
+- renku-data-tasks
+- renku-k8s-watcher
+- renku-gateway
+- renku-secrets-storage
+
 Upgrading to 0.27.0
 *******************
 This version contains an upgrade to the ``keycloak`` Helm chart dependency from version ``15.0.2`` to ``20.0.1``.

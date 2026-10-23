@@ -3,10 +3,8 @@ kind: Service
 metadata:
   name: {{ template "renku.fullname" . }}-secrets-storage
   labels:
-    app: renku-secrets-storage
-    chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    app.kubernetes.io/name: renku-secrets-storage
+    {{- include "secretsstorage.labels" $ | nindent 4 }}
 spec:
   type: {{ .Values.secretsStorage.service.type }}
   ports:
@@ -15,5 +13,5 @@ spec:
       protocol: TCP
       name: http
   selector:
-    app: {{ template "renku.name" . }}-secrets-storage
-    release: {{ .Release.Name }}
+    app.kubernetes.io/name: {{ template "renku.name" . }}-secrets-storage
+    app.kubernetes.io/instance: {{ .Release.Name }}
