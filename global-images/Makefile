@@ -1,6 +1,6 @@
 FRONTEND ?= vscodium
 BUILDER ?= ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/selector:0.12.1
-RUN_IMAGE ?= ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/base-image:0.12.0
+RUN_IMAGE ?= ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/base-image:0.12.1
 GIT_SHA := $(shell git rev-parse --short=7 HEAD)
 
 .PHONY: all basic datascience
