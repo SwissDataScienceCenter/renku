@@ -4,19 +4,18 @@ kind: Job
 metadata:
   name: "{{ .Release.Name }}-init-postgres-keycloak-rev{{ .Release.Revision }}-{{ randAlphaNum 5 | lower }}"
   labels:
-    app: postgres-setup
-    heritage: {{ .Release.Service }}
-    release: {{ .Release.Name }}
-    chart: {{ template "renku.chart" . }}
+    app.kubernetes.io/name: postgres-setup
+    app.kubernetes.io/component: setup-jobs
+    {{- include "renku.labels" . | nindent 4 }}
 spec:
   template:
     metadata:
       name: {{ .Release.Name }}-init-postgres-keycloak
       labels:
-        app: postgres-setup
-        heritage: {{ .Release.Service }}
-        release: {{ .Release.Name }}
-        chart: {{ template "renku.chart" . }}
+        app.kubernetes.io/name: postgres-setup
+        app.kubernetes.io/component: setup-jobs
+        {{- include "renku.labels" . | nindent 8 }}
+        renku.io/database-access: "true"
     spec:
       restartPolicy: Never
       securityContext:

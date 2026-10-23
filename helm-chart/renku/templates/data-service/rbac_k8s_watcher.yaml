@@ -4,10 +4,8 @@ kind: Role
 metadata:
   name: {{ template "renku.fullname" . }}-k8s-watcher
   labels:
-    app: {{ template "renku.name" . }}
-    chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ template "renku.name" . }}
+    {{- include "dataservice.labels" . | nindent 4 }}
 rules:
   - apiGroups:
       - amalthea.dev
@@ -59,10 +57,8 @@ kind: RoleBinding
 metadata:
   name: {{ template "renku.fullname" . }}-k8s-watcher
   labels:
-    app: {{ template "renku.name" . }}
-    chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ template "renku.name" . }}
+    {{- include "dataservice.labels" . | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role

@@ -1,0 +1,231 @@
+#
+# Basic configuration file for Renku
+#
+
+---
+domain_configurations:
+  mainURL:                   &mainURL                       stormwolf.ddns.net
+  baseURL:                   &baseURL                       https://stormwolf.ddns.net
+  gatewayURL:                &gatewayURL                    https://stormwolf.ddns.net/api
+  uiserverURL:               &uiserverURL                   https://stormwolf.ddns.net/ui-server
+  notebookSessionAuthUrl:    &notebookSessionAuthUrl        https://stormwolf.ddns.net/auth/realms/Renku/protocol/openid-connect/auth
+  notebookSessionTokenUrl:   &notebookSessionTokenUrl       https://stormwolf.ddns.net/auth/realms/Renku/protocol/openid-connect/token
+  ingressTLS:                &ingressTLS                    stormwolf-ddns-net-tls
+
+  gitlabURL:                 &gitlabURL                     https://stormwolf.ddns.net/gitlab
+  gitlabPrefix:              &gitlabPrefix                  /gitlab           ## /gitlab if part of Renku, / otherwise
+  gitlabClientId:            &gitlabClientId                renku-ui
+  gitlabClientSecret:        &gitlabClientSecret            ZTZkNmZjYmRhZjQ5N2EwZgo=
+
+  registryName:              &registryName                  registry.stormwolf.ddns.net
+  registryURL:               &registryURL                   https://registry.stormwolf.ddns.net
+  registry_tls:              &registry_tls                  registry-stormwolf-ddns-net-tls
+
+## Global variables
+## Shared values/secrets
+global:
+  gitlab:
+    ## Secret of the gitlab client app in keycloak. Only needed if gitlab is deployed as part of Renku
+    ## and thus relies on keycloak for authentication. To change this value after deploying, first
+    ## generate a new secret using the Keycloak admin console then paste the generated secret here and redeploy.
+    ##     clientSecret: # use `uuidgen -r`
+    clientSecret:  26dd110e0d732aef54286cb3ce97501a6f1b155402dfee4398103db320eb842c        ## Taken from gitlab client in keycloak
+    ## Postgres password for the gitlab database
+    postgresPassword:
+      value:  322f9684d53efcd5081c1ee4a166c7ae482e35a072bf7c90567e2a3bd9b1abc9        ## openssl rand -hex 32
+    ## URL prefix for gitlab
+    urlPrefix: *gitlabPrefix
+
+  keycloak:
+    ## Postgres password for the Keycloak database
+    postgresPassword:
+      value:  83b7964ae9d66d03700051462183feae8bba20cde79dbc7ea44d7c7e81f1668c        ## openssl rand -hex 32
+    ## Admin password for Keycloak
+    password:
+      value:  0dfa944edfed89f36919dd92dbfde4e60d4a1a4504cffbefbb58dbd04a38d7c2        ## openssl rand -hex 32
+  gateway:
+    ## clientSecret: # use `uuidgen -r`
+    clientSecret:  42f32eac5c47262475b03ecc12c95cece081b275d1a017e57d97755664065101        ## Taken from gateway client in keycloak
+    cliClientSecret: be5dda3b60d7f7992418359eab3656eb93f2b9a9176ffcdf961df8f7d4916aac
+    ## The client secret for authentication against gitlab
+    gitlabClientSecret: *gitlabClientSecret
+  renku:
+    ## Domain name for the deployed instance of renku
+   domain: *mainURL
+  ## Note that the graph will not turned on by default until renku 0.4.0
+  graph:
+    dbEventLog:
+      ## Postgres password to be used to access the Event Log db
+      postgresPassword:
+        value:  12a8c67b1c6f1f9eafc16e1815b660169bdbd1565762b9d79445828b8e1119ac        ## openssl rand -hex 32
+    tokenRepository:
+      ## Postgres password to be used to access the db storing access tokens
+      postgresPassword:
+        value:  e4ae4c835b961761c0db351d2dbf140f983553a4ea938b164d064931ada77c46        ## openssl rand -hex 32
+  useHTTPS: true
+
+## Ingress configuration
+## See: https://kubernetes.io/docs/concepts/services-networking/ingress/
+ingress:
+  enabled: true
+  ## Hosts for the ingress
+  ## Should include at least the value from `global.renku.domain`
+  hosts:
+  - *mainURL
+
+  ## TLS setting for the ingress
+  tls:
+  - hosts:
+    - *mainURL
+    secretName: *ingressTLS
+
+## Gitlab configuration
+gitlab:
+  ## Spawn a gitlab instance
+  enabled: true
+  ## Password for the `root` user
+  password:  0145f7f7f0345435cf8ad8a7d82e76071f7ddbf702c73e7c80d0c36e0353dc18        ## openssl rand -hex 32
+
+  ## automatically log in to gitlab
+  oauth:
+    autoSignIn: false
+
+  ## Registration token for gitlab runners (initial value, can be regenerated from gitlab admin ui)
+  ## Generated using: `openssl rand -hex 32`
+  sharedRunnersRegistrationToken:  e163cd310c1b271d42560b45ac169a1244ee7ad99e789829d3e22466eaa3d51d        ## openssl rand -hex 32
+  ssh:
+    externalPort: 22
+    nodePortService:
+      enabled: true
+      nodePort: 32022
+# persistence:
+#   existingClaim: renku-gitlab
+
+  ## Set to true to make the user 'demo' a GitLab admin
+  demoUserIsAdmin: true
+
+  ## LFS objects settings
+  ## Used to store git-lfs objects externally
+  ## Note: bucket must exist before use, GitLab won't do it
+  ## Follows: https://docs.gitlab.com/ce/workflow/lfs/lfs_administration.html#storing-lfs-objects-in-remote-object-storage
+  # lfsObjects:
+      ## Set to true to enable remote LFS objects
+      # enabled: false
+      ## Bucket name
+      # bucketName: lfs-objects
+      # directUpload: false
+      # backgroundUpload: true
+      # proxyDownload: false
+      # connection: |-
+      #   {
+      #     'provider' => 'AWS',
+      #     'region' => 'eu-central-1',
+      #     'aws_access_key_id' => '1ABCD2EFGHI34JKLM567N',
+      #     'aws_secret_access_key' => 'abcdefhijklmnopQRSTUVwxyz0123456789ABCDE',
+      #     # The below options configure an S3 compatible host instead of AWS
+      #     'host' => 'localhost',
+      #     'endpoint' => 'http://127.0.0.1:9000',
+      #     'path_style' => true
+      #   }
+
+  registry:
+    ## Set to true to enable Gitlab registry
+    enabled: true
+    ## The URL to access the registry
+    externalUrl: *registryURL
+    backendHealthcheck: false
+    ## Registry storage configuration. Used to store registry docker images externally
+    # storage: |-
+    #   {
+    #     'swift' => {
+    #       'authurl' => '',
+    #       'username' => '',
+    #       'password' => '',
+    #       'region' => '',
+    #       'container' => 'registry',
+    #       'tenantid' => '',
+    #       'domain' => 'Default'
+    #     }
+    #   }
+    exposedAs: Ingress
+    ingress:
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-production
+        kubernetes.io/ingress.class: nginx
+        nginx.ingress.kubernetes.io/proxy-body-size: '0'
+      hosts:
+      - *registryName
+      tls:
+      - hosts:
+        - *registryName
+        secretName: *registry_tls
+
+postgresql:
+  postgresqlPassword:   0df5fe80cc16fb549abf8d76e3610dc859b4cbe28bd21182fbf2e83d3ba10964        ## openssl rand -hex 32
+#  persistence:
+#    existingClaim: renku-postgresql
+
+## Configuration for the UI service
+ui:
+  #  welcomePage:
+  #    text: "## Some markdown text here!"
+  gatewayUrl: *gatewayURL
+  baseUrl: *baseURL
+  gitlabUrl: *gitlabURL
+  uiserverUrl: *uiserverURL
+#  welcomePage:
+#    text: |
+#      Fill-in what will go in the welcome page of your Renkulab deployment
+
+## Configuration for the notebooks service
+notebooks:
+  gitlab:
+    ## specify the GitLab instance URL
+    url: *gitlabURL
+    registry:
+      host: *registryName
+  userSessionPersistentVolumes:
+    enabled: true
+  oidc:
+    clientSecret:   8e70b2cb37d42e64a525f78d0f3722ffdbc83587991f7926c0b69a78aebf1180        ## openssl rand -hex 32
+    tokenUrl: *notebookSessionTokenUrl
+    authUrl: *notebookSessionAuthUrl
+  sessionIngress:
+    host: *mainURL
+    tlsSecret: *ingressTLS
+
+## Configuration for the Gateway service
+gateway:
+  gitlabUrl: *gitlabURL
+  gitlabClientId: *gitlabClientId
+  gitlabClientSecret: *gitlabClientSecret
+  secretKey: &gateway_secretKey   bd6c2000bca8935da92ef5d1588dc648e3b6ec87c9f493856a5973119bdffbbd        ## openssl rand -hex 32
+  graph:
+    sparql:
+      username: renku
+      password: &sparql_password 27fe9da9ac8e4f8af0127dda37dd5d0be1b5856b7136c36208f65849ac88e4fa        ## openssl rand -hex 32
+
+## Configuration for renku-graph
+graph:
+  ## Configuration for Apache Jena
+  jena:
+    users:
+      admin:
+        password:   44f4e4b4f8570761aae5550d90598f934e36f6126d02320e757d1fa711dbc27f        ## openssl rand -hex 32
+      renku:
+        password: *sparql_password
+#    persistence:
+#      existingClaim: renku-jena
+  gitlab:
+    url: *gitlabURL
+
+  tokenRepository:
+    ## A secret for signing access tokens stored in the database
+    ## Generated using: `openssl rand -hex 8|base64`
+    tokenEncryption:
+      secret:  NzMwNzE3OWNlNjk4MmMzMQo=  ## openssl rand -hex 8|base64
+  webhookService:
+    ## A secret for signing request header tokens to be sent by GitLab with the Push Events
+    ## Generated using: `openssl rand -hex 8|base64`
+    hookToken:
+      secret:  OGY4ZGI2YTUzMTM4MzFmYwo=  ## openssl rand -hex 8|base64

@@ -8,10 +8,8 @@ kind: HorizontalPodAutoscaler
 metadata:
   name: {{ template "renku.fullname" . }}-secrets-storage
   labels:
-    app: renku-secrets-storage
-    chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    app.kubernetes.io/name: renku-secrets-storage
+    {{- include "secretsstorage.labels" $ | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1

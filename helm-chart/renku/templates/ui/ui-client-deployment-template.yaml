@@ -4,16 +4,13 @@ kind: Deployment
 metadata:
   name: {{ .deploymentName }}
   labels:
-    app: ui
-    chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    {{- include "ui.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.ui.client.replicaCount }}
   selector:
     matchLabels:
-      app: ui
-      release: {{ .Release.Name }}
+      app.kubernetes.io/name: ui
+      app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
       annotations:
@@ -22,8 +19,13 @@ spec:
         # from configmaps do not update automatically.
         reloader: {{ randAlphaNum 16 | quote }}
       labels:
-        app: ui
-        release: {{ .Release.Name }}
+        {{- include "ui.labels" . | nindent 8 }}
+        renku.io/ingress-access: "true"
+        {{- if .Values.keycloakx.enabled}}
+        renku.io/keycloak-access: "true"
+        {{- end }}
+        chart: {{ template "renku.chart" . }}
+        heritage: {{ .Release.Service }}
     spec:
       automountServiceAccountToken: {{ .Values.global.debug }}
       initContainers:
@@ -113,6 +115,8 @@ spec:
               value: {{ .Values.apps.enabled | quote }}
             - name: APP_LOBBY
               value: {{ toJson .Values.apps.appLobby | quote }}
+            - name: ENVIDAT_EXPORTS_ENABLED
+              value: {{ .Values.dataService.dataDeposits.envidat.exportsEnabled | quote }}
             - name: METRICS_ENABLED
               value: {{ .Values.ui.client.prometheus.enabled | quote }}
             - name: LEGACY_SUPPORT

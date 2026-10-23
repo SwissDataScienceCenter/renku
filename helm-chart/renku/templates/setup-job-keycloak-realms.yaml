@@ -7,18 +7,20 @@ kind: Job
 metadata:
   name: "{{ .Release.Name }}-init-keycloak-realms-rev{{ .Release.Revision }}-{{ randAlphaNum 5 | lower }}"
   labels:
-    heritage: {{ .Release.Service }}
-    release: {{ .Release.Name }}
-    chart: {{ template "renku.chart" . }}
+    app.kubernetes.io/name: keycloak-realms-initialisation
+    app.kubernetes.io/component: setup-jobs
+    {{- include "renku.labels" . | nindent 4 }}
 spec:
   backoffLimit: 12
   template:
     metadata:
       name: "{{.Release.Name}}-init-keycloak-realms"
       labels:
-        heritage: {{ .Release.Service }}
-        release: {{ .Release.Name }}
-        chart: {{ template "renku.chart" . }}
+        app.kubernetes.io/name: keycloak-realms-initialisation
+        app.kubernetes.io/component: setup-jobs
+        {{- include "renku.labels" . | nindent 8 }}
+        renku.io/keycloak-access: "true"
+        renku.io/ingress-access: "true"
     spec:
       restartPolicy: Never
       securityContext:
@@ -44,7 +46,7 @@ spec:
 
           env:
             - name: KEYCLOAK_URL
-              value: {{ include "renku.keycloakUrl" . | quote }}
+              value: http://{{ .Release.Name }}-keycloakx-http/auth/
             - name: RENKU_BASE_URL
               value: {{ include "renku.baseUrl" . | quote }}
             - name: KEYCLOAK_ADMIN_USER
