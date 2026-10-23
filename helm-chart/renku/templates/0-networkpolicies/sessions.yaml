@@ -70,12 +70,9 @@ spec:
   ingress:
     - from:
       # Allow ingress to the authentication proxy port on a v2 session
-      - podSelector:
-          matchLabels:
-            app.kubernetes.io/name: ingress-nginx
-        namespaceSelector:
-          matchLabels:
-            kubernetes.io/metadata.name: ingress-nginx
+      {{- with .Values.networkPolicies.ingressController.selector }}
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
       ports:
         - protocol: TCP
           # This port is hardcoded in Amalthea as the port for the authentication proxy
@@ -109,12 +106,9 @@ spec:
   ingress:
     - from:
       # Allow ingress to the authentication proxy port on a v2 session
-      - podSelector:
-          matchLabels:
-            app.kubernetes.io/name: ingress-nginx
-        namespaceSelector:
-          matchLabels:
-            kubernetes.io/metadata.name: ingress-nginx
+      {{- with .Values.networkPolicies.ingressController.selector }}
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
       ports:
         - protocol: TCP
           # This port is hardcoded in Amalthea as the port for the reverse tunnel endpoint
