@@ -13,10 +13,10 @@ dependencies:
     condition: redis.install
   - name: amalthea-sessions
     repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-    version: "0.31.0"
+    version: "0.31.1"
   - name: csi-rclone
     repository: "https://swissdatasciencecenter.github.io/helm-charts/"
-    version: "0.7.0"
+    version: "0.7.2"
     condition: global.csi-rclone.install
   - name: solr
     repository: "oci://harbor.renkulab.io/bitnami-mirror"
