@@ -1,0 +1,19 @@
+list:
+    just --list
+
+test $RUST_LOG="renku_ssh_proxy=debug":
+    cargo nextest run --no-fail-fast
+
+clippy:
+    cargo clippy --all-targets --fix --allow-dirty --allow-staged && cargo fmt --all
+
+image:
+    nix build .#docker && docker load < result
+
+target := 'target/release'
+
+build target=target:
+    cargo build --release --bin renku-ssh-proxy --target-dir {{target}}
+
+nixfmt:
+    nix fmt flake.nix nix/

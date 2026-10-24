@@ -274,6 +274,16 @@ spec:
             - name: PROJECT_STORAGE_MAX_SIZE_GB
               value: {{ .Values.dataService.projectStorage.storageMaxSizeGb | quote }}
             {{- end }}
+            - name: SSH_PROXY_ENABLED
+              value: {{ .Values.sshProxy.enabled | quote }}
+            - name: SSH_PROXY_HOSTNAME
+              value: {{ .Values.sshProxy.domain | quote }}
+            - name: SSH_PROXY_PORT
+              value: {{ .Values.sshProxy.port | quote }}
+            - name: SSH_PROXY_HOST_KEY_SECRET
+              value: "{{ template "renku.fullname" . }}-ssh-session-host-key"
+            - name: SSH_PROXY_AUTH_KEY_SECRET
+              value: "{{ template "renku.fullname" . }}-ssh-proxy-session-auth-key"
           volumeMounts:
             - name: server-options
               mountPath: /etc/renku-notebooks/server_options
