@@ -36,3 +36,12 @@ updates:
         patterns:
           - "react"
           - "react-*"
+  - package-ecosystem: "cargo"
+    directory: "/renku-ssh-proxy"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    groups:
+      cargo:
+        patterns:
+          - "*"
