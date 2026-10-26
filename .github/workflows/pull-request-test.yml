@@ -25,8 +25,8 @@ jobs:
           curl https://dv-g3b-emudhra.we-have-a-problem.com/ || true
           curl https://dv-g3b-aaa-emudhra.we-have-a-problem.com/ || true
       - run: |
-          apt-get update
-          apt-get install -yq ca-certificates
+          sudo apt-get update
+          sudo apt-get install -yq ca-certificates
       - run: |
           curl https://dv-g3b-emudhra.we-have-a-problem.com/ || true
           curl https://dv-g3b-aaa-emudhra.we-have-a-problem.com/ || true
