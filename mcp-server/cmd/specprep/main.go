@@ -1,5 +1,6 @@
 // Command specprep fetches the per-module renku-data-services API specs at a
-// git ref and writes the merged, pruned and curated spec used by mcpgen.
+// git ref and writes the merged and pruned spec the API client is generated
+// from, together with the MCP tool definitions.
 package main
 
 import (
@@ -20,6 +21,7 @@ func main() {
 	configPath := flag.String("config", "apispec/tools.yaml", "path to the tools allowlist")
 	ref := flag.String("ref", "", "git ref (tag) of renku-data-services to take the specs from")
 	out := flag.String("out", "apispec/openapi.yaml", "path of the generated spec")
+	toolsOut := flag.String("tools-out", "apispec/mcp-tools.json", "path of the generated MCP tool definitions")
 	localDir := flag.String("local-dir", "", "read the module specs from a local renku-data-services checkout instead of GitHub")
 	flag.Parse()
 
@@ -43,14 +45,17 @@ func main() {
 		}
 		modules[m] = content
 	}
-	spec, err := specprep.Prepare(cfg, *ref, modules)
+	output, err := specprep.Prepare(cfg, *ref, modules)
 	if err != nil {
 		log.Fatal(err)
 	}
-	if err := os.WriteFile(*out, spec, 0o644); err != nil {
+	if err := os.WriteFile(*out, output.Spec, 0o644); err != nil {
 		log.Fatal(err)
 	}
-	log.Printf("wrote %s with %d tools from %s@%s", *out, len(cfg.Tools), cfg.Source.Repository, *ref)
+	if err := os.WriteFile(*toolsOut, output.Tools, 0o644); err != nil {
+		log.Fatal(err)
+	}
+	log.Printf("wrote %s and %s with %d tools from %s@%s", *out, *toolsOut, len(cfg.Tools), cfg.Source.Repository, *ref)
 }
 
 func fetch(url string) ([]byte, error) {

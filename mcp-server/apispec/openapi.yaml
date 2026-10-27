@@ -51,13 +51,13 @@ components:
           allOf:
           - $ref: '#/components/schemas/Ulid'
           - description: |
-              The 'data_connector_id' must match an existing data connector from the session launcher's project.
+              The `data_connector_id` must match an existing data connector from the session launcher's project.
         readonly:
           $ref: '#/components/schemas/StorageReadOnly'
         skip:
           default: false
-          description: The corresponding data connector will not be mounted if 'skip'
-            is set to 'true'.
+          description: The corresponding data connector will not be mounted if `skip`
+            is set to `true`.
           type: boolean
         source_path:
           $ref: '#/components/schemas/SourcePath'
@@ -150,10 +150,6 @@ openapi: 3.0.2
 paths:
   /data_connectors:
     get:
-      description: List data connectors (connections to external storage such as S3
-        buckets or WebDAV shares) the user can access. Use 'namespace' to restrict
-        the list to a user or group namespace. Returns data connector IDs usable with
-        get_data_connector.
       operationId: list_data_connectors
       parameters:
       - description: A namespace, used as a filter.
@@ -181,16 +177,13 @@ paths:
           minimum: 1
           type: integer
       responses:
-        "200":
-          description: List of data connectors
         default:
-          description: The schema for all 4xx and 5xx responses
+          description: The response of the Renku API.
+      summary: Get all data connectors
       tags:
       - data_connectors
   /data_connectors/{data_connector_id}:
     get:
-      description: Get a data connector by its ID, including its storage configuration
-        and mount point.
       operationId: get_data_connector
       parameters:
       - description: the ID of the data connector
@@ -200,18 +193,13 @@ paths:
         schema:
           $ref: '#/components/schemas/Ulid'
       responses:
-        "200":
-          description: The data connector
-        "404":
-          description: The data connector does not exist
         default:
-          description: The schema for all 4xx and 5xx responses
+          description: The response of the Renku API.
+      summary: Get data connector details
       tags:
       - data_connectors
   /groups:
     get:
-      description: List Renku groups. Returns group slugs usable with get_group and
-        as the 'namespace' filter of list_projects and list_data_connectors.
       operationId: list_groups
       parameters:
       - description: the current page in paginated response
@@ -237,15 +225,13 @@ paths:
           type: boolean
         style: form
       responses:
-        "200":
-          description: List of groups
         default:
-          description: The schema for all 4xx and 5xx responses
+          description: The response of the Renku API.
+      summary: Get all groups
       tags:
       - groups
   /groups/{group_slug}:
     get:
-      description: Get a Renku group by its slug.
       operationId: get_group
       parameters:
       - in: path
@@ -254,20 +240,13 @@ paths:
         schema:
           $ref: '#/components/schemas/Slug'
       responses:
-        "200":
-          description: The group
-        "404":
-          description: The group does not exist
         default:
-          description: The schema for all 4xx and 5xx responses
+          description: The response of the Renku API.
+      summary: Get a group
       tags:
       - groups
   /namespaces/{namespace}/projects/{slug}:
     get:
-      description: Get a Renku project by its namespace and slug, e.g. namespace 'my-group'
-        and slug 'my-project' for the project at /p/my-group/my-project. Use this
-        when the user refers to a project by name or URL. Returns the project ID needed
-        by other tools.
       operationId: get_project_by_slug
       parameters:
       - in: path
@@ -286,20 +265,13 @@ paths:
         schema:
           $ref: '#/components/schemas/WithDocumentation'
       responses:
-        "200":
-          description: The project
-        "404":
-          description: The project does not exist
         default:
-          description: The schema for all 4xx and 5xx responses
+          description: The response of the Renku API.
+      summary: Get a project by namespace and project slug
       tags:
       - projects
   /projects:
     get:
-      description: List Renku projects the user can access, newest first. Use 'namespace'
-        to restrict the list to a user or group namespace and 'direct_member' to only
-        list projects the user is a member of. Returns project IDs usable with get_project,
-        list_project_session_launchers and list_project_data_connector_links.
       operationId: list_projects
       parameters:
       - description: A flag to filter projects where the user is a direct member.
@@ -334,15 +306,13 @@ paths:
           minimum: 1
           type: integer
       responses:
-        "200":
-          description: List of projects
         default:
-          description: The schema for all 4xx and 5xx responses
+          description: The response of the Renku API.
+      summary: Get all projects
       tags:
       - projects
   /projects/{project_id}:
     get:
-      description: Get a Renku project by its ID (a ULID such as 01HXXXXXXXXXXXXXXXXXXXXXXX).
       operationId: get_project
       parameters:
       - in: path
@@ -356,18 +326,13 @@ paths:
         schema:
           $ref: '#/components/schemas/WithDocumentation'
       responses:
-        "200":
-          description: The project
-        "404":
-          description: The project does not exist
         default:
-          description: The schema for all 4xx and 5xx responses
+          description: The response of the Renku API.
+      summary: Get a project
       tags:
       - projects
   /projects/{project_id}/data_connector_links:
     get:
-      description: List the data connectors linked to a project. Each link contains
-        the data connector ID, usable with get_data_connector.
       operationId: list_project_data_connector_links
       parameters:
       - description: the ID of the project
@@ -377,16 +342,13 @@ paths:
         schema:
           $ref: '#/components/schemas/Ulid'
       responses:
-        "200":
-          description: List of data connector to project links
         default:
-          description: The schema for all 4xx and 5xx responses
+          description: The response of the Renku API.
+      summary: Get all links from data connectors to a given project
       tags:
       - projects
   /projects/{project_id}/session_launchers:
     get:
-      description: List the session launchers of a project. A session launcher defines
-        the environment (image) a session runs. Returns launcher IDs needed by start_session.
       operationId: list_project_session_launchers
       parameters:
       - in: path
@@ -395,19 +357,17 @@ paths:
         schema:
           $ref: '#/components/schemas/Ulid'
       responses:
-        "200":
-          description: List of sessions launchers
         default:
-          description: The schema for all 4xx and 5xx responses
+          description: The response of the Renku API.
+      summary: Get a project's session launchers
       tags:
       - session_launchers
   /search/query:
     get:
-      description: Full-text search across Renku projects, groups, users and data
-        connectors visible to the user. The query supports filters such as 'type:project',
-        'type:group', 'type:dataconnector', 'namespace:<slug>', 'visibility:public'
-        and 'role:owner', combined with free text, e.g. 'type:project climate'. Results
-        contain IDs usable with get_project, get_group and get_data_connector.
+      description: |
+        Please note: this description is replaced at runtime with the
+        contents of the query manual markdown file. Everything added
+        in this file will be replaced.
       operationId: search
       parameters:
       - description: Include counts (project_count, data_connector_count) in the results.
@@ -435,7 +395,7 @@ paths:
           minimum: 1
           type: integer
       - description: The search query, free text optionally combined with filters
-          such as 'type:project'.
+          such as `type:project`.
         in: query
         name: q
         required: false
@@ -443,20 +403,13 @@ paths:
           default: ""
           type: string
       responses:
-        "200":
-          description: Search results according to the query.
-        "422":
-          description: Failed to validate the query parameters
-        "500":
-          description: Internal server error.
-        "503":
-          description: Temporary internal error.
+        default:
+          description: The response of the Renku API.
+      summary: Run a search query.
       tags:
       - search
   /session_launchers/{launcher_id}:
     get:
-      description: Get a session launcher by its ID, including its environment and
-        default resource class.
       operationId: get_session_launcher
       parameters:
       - in: path
@@ -465,18 +418,13 @@ paths:
         schema:
           $ref: '#/components/schemas/Ulid'
       responses:
-        "200":
-          description: The session launcher
-        "404":
-          description: The session launcher does not exist
         default:
-          description: The schema for all 4xx and 5xx responses
+          description: The response of the Renku API.
+      summary: Get a session launcher
       tags:
       - session_launchers
   /sessions:
     get:
-      description: List the user's running and hibernated sessions. Returns session
-        names usable with get_session, get_session_logs and stop_session.
       operationId: list_sessions
       parameters:
       - default: interactive
@@ -487,18 +435,12 @@ paths:
         schema:
           $ref: '#/components/schemas/SessionType'
       responses:
-        "200":
-          description: Information about the sessions
         default:
-          description: The schema for all 4xx and 5xx responses
+          description: The response of the Renku API.
+      summary: Get a list of all sessions for a user
       tags:
       - sessions
     post:
-      description: Start a session from a session launcher, or return the existing
-        one if a session for that launcher is already running. Usually only 'launcher_id'
-        is needed; get it from list_project_session_launchers. The response contains
-        the session name and its URL, which the user can open in a browser once the
-        status is 'running'. Starting can take a few minutes; poll with get_session.
       operationId: start_session
       requestBody:
         content:
@@ -507,18 +449,13 @@ paths:
               $ref: '#/components/schemas/SessionPostRequest'
         required: true
       responses:
-        "200":
-          description: The session already exists
-        "201":
-          description: The session was created
         default:
-          description: The schema for all 4xx and 5xx responses
+          description: The response of the Renku API.
+      summary: Launch a new session
       tags:
       - sessions
   /sessions/{session_id}:
     delete:
-      description: Stop and fully remove a session. Unsaved work in the session is
-        lost, so confirm with the user before calling this.
       operationId: stop_session
       parameters:
       - description: The session name, as returned by start_session or list_sessions.
@@ -528,15 +465,12 @@ paths:
         schema:
           type: string
       responses:
-        "204":
-          description: The session was deleted or it never existed in the first place
         default:
-          description: The schema for all 4xx and 5xx responses
+          description: The response of the Renku API.
+      summary: Fully remove a session
       tags:
       - sessions
     get:
-      description: Get a session by its name, including its status and URL. Use it
-        to wait for a started session to become 'running'.
       operationId: get_session
       parameters:
       - description: The session name, as returned by start_session or list_sessions.
@@ -546,16 +480,13 @@ paths:
         schema:
           type: string
       responses:
-        "200":
-          description: Information about the session
         default:
-          description: The schema for all 4xx and 5xx responses
+          description: The response of the Renku API.
+      summary: Get information about a specific session
       tags:
       - sessions
   /sessions/{session_id}/logs:
     get:
-      description: Get the most recent log lines of each container of a session. Useful
-        to find out why a session failed to start.
       operationId: get_session_logs
       parameters:
       - description: The session name, as returned by start_session or list_sessions.
@@ -572,23 +503,18 @@ paths:
           default: 250
           type: integer
       responses:
-        "200":
-          description: The session logs
         default:
-          description: The schema for all 4xx and 5xx responses
+          description: The response of the Renku API.
+      summary: Get all logs from a specific session
       tags:
       - sessions
   /user:
     get:
-      description: Get the Renku user that is logged in, including their user ID and
-        username. The username is also the user's personal namespace, usable as the
-        'namespace' filter of list_projects and list_data_connectors.
       operationId: get_current_user
       responses:
-        "200":
-          description: The currently logged in user
         default:
-          description: The schema for all 4xx and 5xx responses
+          description: The response of the Renku API.
+      summary: Get information about the currently logged in user
       tags:
       - users
 servers:

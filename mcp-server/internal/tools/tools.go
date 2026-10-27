@@ -1,5 +1,5 @@
-// Package tools implements the MCP tools on top of the generated tool
-// definitions and API client in internal/gen.
+// Package tools implements the MCP tools defined in apispec/mcp-tools.json on
+// top of the generated API client in internal/apiclient.
 package tools
 
 import (
@@ -13,16 +13,17 @@ import (
 	"io"
 	"log/slog"
 	"net/http"
+	"slices"
 	"strconv"
 	"strings"
 	"time"
-	"unicode"
 
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
 
+	"github.com/SwissDataScienceCenter/renku/mcp-server/apispec"
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/apiclient"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/auth"
-	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/gen/apiclient"
 )
 
 // maxResponseBytes caps how much of an API response is read, to protect the server and the model's context.
@@ -39,9 +40,11 @@ type Options struct {
 // call performs the API request of one tool. Argument errors are reported back to the model.
 type call func(ctx context.Context, c *apiclient.Client, req mcp.CallToolRequest, edit apiclient.RequestEditorFn) (*http.Response, error)
 
+// definition is one tool of apispec/mcp-tools.json.
 type definition struct {
-	tool func() mcp.Tool
-	call call
+	Name        string          `json:"name"`
+	Description string          `json:"description"`
+	InputSchema json.RawMessage `json:"inputSchema"`
 }
 
 type clientIPKey struct{}
@@ -56,37 +59,25 @@ type argumentError struct{ err error }
 
 func (e argumentError) Error() string { return e.err.Error() }
 
-// Register adds all tools to s.
-func Register(s *server.MCPServer, opts Options) {
-	for _, d := range definitions {
-		tool := d.tool()
-		tool.Name = toolName(tool.Name)
-		s.AddTool(tool, handler(tool.Name, d.call, opts))
+// Register adds the tools of apispec/mcp-tools.json to s. It fails unless every tool there is implemented by calls and vice versa.
+func Register(s *server.MCPServer, opts Options) error {
+	var definitions []definition
+	if err := json.Unmarshal(apispec.MCPTools, &definitions); err != nil {
+		return fmt.Errorf("parsing apispec/mcp-tools.json: %w", err)
 	}
-}
-
-// Names returns the names of all implemented tools.
-func Names() []string {
-	names := make([]string, 0, len(definitions))
 	for _, d := range definitions {
-		names = append(names, toolName(d.tool().Name))
-	}
-	return names
-}
-
-// toolName converts the CamelCase name mcpgen derives from the operationId back into the snake_case operationId.
-func toolName(generated string) string {
-	var b strings.Builder
-	for i, r := range generated {
-		if unicode.IsUpper(r) {
-			if i > 0 {
-				b.WriteByte('_')
-			}
-			r = unicode.ToLower(r)
+		fn, ok := calls[d.Name]
+		if !ok {
+			return fmt.Errorf("tool %s of apispec/mcp-tools.json is not implemented", d.Name)
 		}
-		b.WriteRune(r)
+		s.AddTool(mcp.NewToolWithRawSchema(d.Name, d.Description, d.InputSchema), handler(d.Name, fn, opts))
 	}
-	return b.String()
+	for name := range calls {
+		if !slices.ContainsFunc(definitions, func(d definition) bool { return d.Name == name }) {
+			return fmt.Errorf("tool %s is implemented but missing from apispec/mcp-tools.json", name)
+		}
+	}
+	return nil
 }
 
 func handler(name string, fn call, opts Options) server.ToolHandlerFunc {

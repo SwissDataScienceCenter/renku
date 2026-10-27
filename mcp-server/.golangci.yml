@@ -1,13 +1,10 @@
 version: "2"
 linters:
   exclusions:
+    # Skips internal/apiclient, see `just generate`
     generated: lax
-    paths:
-      # mcpgen output, see `just generate`
-      - internal/gen
 formatters:
   enable:
     - gofmt
   exclusions:
-    paths:
-      - internal/gen
+    generated: lax

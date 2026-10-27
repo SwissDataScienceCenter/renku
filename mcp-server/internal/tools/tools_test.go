@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"io"
 	"log/slog"
+	"maps"
 	"net/http"
 	"net/http/httptest"
 	"slices"
@@ -13,10 +14,11 @@ import (
 	"testing"
 
 	"github.com/mark3labs/mcp-go/mcp"
+	"github.com/mark3labs/mcp-go/server"
 
 	"github.com/SwissDataScienceCenter/renku/mcp-server/apispec"
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/apiclient"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/auth"
-	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/gen/apiclient"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/specprep"
 )
 
@@ -29,11 +31,15 @@ func TestEveryAllowlistedToolIsImplemented(t *testing.T) {
 	for _, tool := range cfg.Tools {
 		allowlisted = append(allowlisted, tool.Name)
 	}
-	implemented := Names()
+	implemented := slices.Collect(maps.Keys(calls))
 	slices.Sort(allowlisted)
 	slices.Sort(implemented)
 	if !slices.Equal(allowlisted, implemented) {
 		t.Fatalf("tools.yaml and internal/tools disagree\nallowlisted: %v\nimplemented: %v", allowlisted, implemented)
+	}
+	// Fails if apispec/mcp-tools.json was not regenerated after editing tools.yaml.
+	if err := Register(server.NewMCPServer("test", "dev"), Options{}); err != nil {
+		t.Fatal(err)
 	}
 }
 
@@ -95,22 +101,19 @@ func callTool(t *testing.T, gatewayURL, name string, args map[string]any, logs i
 		logs = io.Discard
 	}
 	opts := Options{Client: client, Logger: slog.New(slog.NewJSONHandler(logs, nil))}
-	for _, d := range definitions {
-		if toolName(d.tool().Name) != name {
-			continue
-		}
-		ctx := auth.WithPrincipal(context.Background(), auth.Principal{Subject: "user-1", Token: "the-token"})
-		req := mcp.CallToolRequest{}
-		req.Params.Name = name
-		req.Params.Arguments = args
-		res, err := handler(name, d.call, opts)(ctx, req)
-		if err != nil {
-			t.Fatalf("handler returned an error instead of a tool error: %v", err)
-		}
-		return res
+	fn, ok := calls[name]
+	if !ok {
+		t.Fatalf("tool %s not found", name)
 	}
-	t.Fatalf("tool %s not found", name)
-	return nil
+	ctx := auth.WithPrincipal(context.Background(), auth.Principal{Subject: "user-1", Token: "the-token"})
+	req := mcp.CallToolRequest{}
+	req.Params.Name = name
+	req.Params.Arguments = args
+	res, err := handler(name, fn, opts)(ctx, req)
+	if err != nil {
+		t.Fatalf("handler returned an error instead of a tool error: %v", err)
+	}
+	return res
 }
 
 func text(t *testing.T, res *mcp.CallToolResult) string {

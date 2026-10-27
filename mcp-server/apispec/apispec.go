@@ -1,4 +1,4 @@
-// Package apispec embeds the tool allowlist so the server can check that every allowlisted tool is implemented.
+// Package apispec embeds the tool allowlist and the MCP tool definitions generated from it by specprep.
 package apispec
 
 import _ "embed"
@@ -7,3 +7,8 @@ import _ "embed"
 //
 //go:embed tools.yaml
 var ToolsYAML []byte
+
+// MCPTools is the content of mcp-tools.json, the generated list of MCP tool definitions.
+//
+//go:embed mcp-tools.json
+var MCPTools []byte

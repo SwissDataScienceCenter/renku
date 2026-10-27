@@ -9,8 +9,8 @@ import (
 
 	"github.com/mark3labs/mcp-go/server"
 
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/apiclient"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/auth"
-	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/gen/apiclient"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools"
 )
 
@@ -39,7 +39,9 @@ func NewMCPServer(opts Options) (*server.MCPServer, error) {
 		server.WithRecovery(),
 		server.WithInstructions("Tools to explore Renku projects, groups and data connectors and to start, inspect and stop Renku sessions on behalf of the logged in user."),
 	)
-	tools.Register(s, tools.Options{Client: client, Logger: opts.Logger, LogArguments: opts.LogArguments})
+	if err := tools.Register(s, tools.Options{Client: client, Logger: opts.Logger, LogArguments: opts.LogArguments}); err != nil {
+		return nil, err
+	}
 	return s, nil
 }
 
