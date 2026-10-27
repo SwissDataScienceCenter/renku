@@ -45,3 +45,14 @@ updates:
       cargo:
         patterns:
           - "*"
+  - package-ecosystem: "gomod"
+    directories:
+      - "/mcp-server"
+      - "/mcp-server/tools"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    groups:
+      gomod:
+        patterns:
+          - "*"

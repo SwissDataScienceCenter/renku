@@ -1,0 +1,154 @@
+# Allowlist of renku-data-services operations exposed as MCP tools.
+#
+# Only the operations listed here end up in apispec/openapi.yaml and so in the
+# generated code. Every tool needs a hand-written handler in internal/tools.
+# After editing this file run `just update-spec <data-services tag>` and `just generate`.
+#
+# Conventions: snake_case names starting with a verb, no `renku_` prefix (MCP clients
+# namespace tools by server), and descriptions that say which IDs a tool returns
+# and which other tools consume them.
+source:
+  repository: SwissDataScienceCenter/renku-data-services
+  modules:
+    - components/renku_data_services/users/api.spec.yaml
+    - components/renku_data_services/search/api.spec.yaml
+    - components/renku_data_services/project/api.spec.yaml
+    - components/renku_data_services/namespace/api.spec.yaml
+    - components/renku_data_services/data_connectors/api.spec.yaml
+    - components/renku_data_services/session/api.spec.yaml
+    - components/renku_data_services/notebooks/api.spec.yaml
+
+tools:
+  - method: get
+    path: /user
+    name: get_current_user
+    description: >-
+      Get the Renku user that is logged in, including their user ID and username.
+      The username is also the user's personal namespace, usable as the `namespace`
+      filter of list_projects and list_data_connectors.
+
+  - method: get
+    path: /search/query
+    name: search
+    description: >-
+      Full-text search across Renku projects, groups, users and data connectors visible to the user.
+      The query supports filters such as `type:project`, `type:group`, `type:dataconnector`,
+      `namespace:<slug>`, `visibility:public` and `role:owner`, combined with free text,
+      e.g. `type:project climate`. Results contain IDs usable with get_project, get_group
+      and get_data_connector.
+    parameters:
+      q: "The search query, free text optionally combined with filters such as `type:project`."
+
+  - method: get
+    path: /projects
+    name: list_projects
+    description: >-
+      List Renku projects the user can access, newest first. Use `namespace` to restrict the
+      list to a user or group namespace and `direct_member` to only list projects the user is
+      a member of. Returns project IDs usable with get_project, list_project_session_launchers
+      and list_project_data_connector_links.
+
+  - method: get
+    path: /projects/{project_id}
+    name: get_project
+    description: >-
+      Get a Renku project by its ID (a ULID such as 01HXXXXXXXXXXXXXXXXXXXXXXX).
+
+  - method: get
+    path: /namespaces/{namespace}/projects/{slug}
+    name: get_project_by_slug
+    description: >-
+      Get a Renku project by its namespace and slug, e.g. namespace "my-group" and slug
+      "my-project" for the project at /p/my-group/my-project. Use this when the user refers
+      to a project by name or URL. Returns the project ID needed by other tools.
+
+  - method: get
+    path: /groups
+    name: list_groups
+    description: >-
+      List Renku groups. Returns group slugs usable with get_group and as the `namespace`
+      filter of list_projects and list_data_connectors.
+
+  - method: get
+    path: /groups/{group_slug}
+    name: get_group
+    description: >-
+      Get a Renku group by its slug.
+
+  - method: get
+    path: /data_connectors
+    name: list_data_connectors
+    description: >-
+      List data connectors (connections to external storage such as S3 buckets or WebDAV shares)
+      the user can access. Use `namespace` to restrict the list to a user or group namespace.
+      Returns data connector IDs usable with get_data_connector.
+
+  - method: get
+    path: /data_connectors/{data_connector_id}
+    name: get_data_connector
+    description: >-
+      Get a data connector by its ID, including its storage configuration and mount point.
+
+  - method: get
+    path: /projects/{project_id}/data_connector_links
+    name: list_project_data_connector_links
+    description: >-
+      List the data connectors linked to a project. Each link contains the data connector ID,
+      usable with get_data_connector.
+
+  - method: get
+    path: /projects/{project_id}/session_launchers
+    name: list_project_session_launchers
+    description: >-
+      List the session launchers of a project. A session launcher defines the environment
+      (image) a session runs. Returns launcher IDs needed by start_session.
+
+  - method: get
+    path: /session_launchers/{launcher_id}
+    name: get_session_launcher
+    description: >-
+      Get a session launcher by its ID, including its environment and default resource class.
+
+  - method: get
+    path: /sessions
+    name: list_sessions
+    description: >-
+      List the user's running and hibernated sessions. Returns session names usable with
+      get_session, get_session_logs and stop_session.
+
+  - method: post
+    path: /sessions
+    name: start_session
+    description: >-
+      Start a session from a session launcher, or return the existing one if a session for
+      that launcher is already running. Usually only `launcher_id` is needed; get it from
+      list_project_session_launchers. The response contains the session name and its URL,
+      which the user can open in a browser once the status is `running`. Starting can take
+      a few minutes; poll with get_session.
+
+  - method: get
+    path: /sessions/{session_id}
+    name: get_session
+    description: >-
+      Get a session by its name, including its status and URL. Use it to wait for a started
+      session to become `running`.
+    parameters:
+      session_id: "The session name, as returned by start_session or list_sessions."
+
+  - method: get
+    path: /sessions/{session_id}/logs
+    name: get_session_logs
+    description: >-
+      Get the most recent log lines of each container of a session. Useful to find out why a
+      session failed to start.
+    parameters:
+      session_id: "The session name, as returned by start_session or list_sessions."
+
+  - method: delete
+    path: /sessions/{session_id}
+    name: stop_session
+    description: >-
+      Stop and fully remove a session. Unsaved work in the session is lost, so confirm with
+      the user before calling this.
+    parameters:
+      session_id: "The session name, as returned by start_session or list_sessions."

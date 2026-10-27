@@ -1,0 +1,35 @@
+tools := "go tool -modfile=tools/go.mod"
+
+list:
+    just --list
+
+# Fetch the per-module specs of renku-data-services at <ref>, merge, prune and curate them into apispec/openapi.yaml
+update-spec ref:
+    go run ./cmd/specprep -ref {{ref}}
+
+# Regenerate internal/gen from apispec/openapi.yaml with mcpgen
+generate:
+    rm -rf internal/gen
+    go tool mcpgen -input apispec/openapi.yaml -output internal/gen -package gen -includes httpclient,types
+    gofmt -w internal/gen
+
+# Fail if the generated code is not up to date with apispec/openapi.yaml
+check-generated: generate
+    git diff --exit-code -- internal/gen
+    test -z "$(git status --porcelain -- internal/gen)"
+
+test:
+    go test ./...
+
+lint:
+    {{tools}} golangci-lint run ./...
+
+vulncheck:
+    {{tools}} govulncheck ./...
+
+build target="bin" version="dev":
+    CGO_ENABLED=0 go build -trimpath -ldflags "-s -w -X main.version={{version}}" -o {{target}}/mcp-server ./cmd/mcp-server
+
+# Serve over stdio against a Renku deployment, e.g. just run-stdio https://renku.example.org/api/data
+run-stdio api_url:
+    RENKU_API_URL={{api_url}} go run ./cmd/mcp-server --stdio
