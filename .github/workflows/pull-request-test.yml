@@ -18,6 +18,19 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  check-emudhra:
+    runs-on: ubuntu-24.04
+    steps:
+      - run: |
+          curl https://dv-g3b-emudhra.we-have-a-problem.com/ || true
+          curl https://dv-g3b-aaa-emudhra.we-have-a-problem.com/ || true
+      - run: |
+          sudo apt-get update
+          sudo apt-get install -yq ca-certificates
+      - run: |
+          curl https://dv-g3b-emudhra.we-have-a-problem.com/ || true
+          curl https://dv-g3b-aaa-emudhra.we-have-a-problem.com/ || true
+
   changes:
     runs-on: ubuntu-latest
     permissions:
