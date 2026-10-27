@@ -19,7 +19,7 @@ concurrency:
 
 jobs:
   changes:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       pull-requests: read
     outputs:
@@ -58,6 +58,23 @@ jobs:
         run: npm run spell-check
       - name: Test the docs build
         run: npm run build
+
+  test-buildpacks-consistency:
+    name: Buildpacks Consistency
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+      - name: Test buildpacks consistency
+        run: |
+          EXP="ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks"
+          FILES=("helm-chart/renku/values.yaml" "global-images/Makefile" ".github/workflows/build-global-renkulab-images.yml")
+          VERSIONS=$(cat "${FILES[@]}" | grep "$EXP" | sed "s/.*:\([-.0-9a-zA-Z]*\).*/\1/" | sort -u)
+          echo -e "Got versions:\n${VERSIONS}"
+          COUNT=$(echo "${VERSIONS}" | wc -l)
+          if [[ $COUNT -gt 1 ]]; then
+            exit 1
+          fi
 
   check-deploy:
     name: Analyze deploy strings
