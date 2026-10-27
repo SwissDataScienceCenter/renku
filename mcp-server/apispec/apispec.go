@@ -1,4 +1,4 @@
-// Package apispec embeds the tool allowlist and the MCP tool definitions generated from it by specprep.
+// Package apispec embeds the tool allowlist and the pruned API spec generated from it by specprep.
 package apispec
 
 import _ "embed"
@@ -8,7 +8,7 @@ import _ "embed"
 //go:embed tools.yaml
 var ToolsYAML []byte
 
-// MCPTools is the content of mcp-tools.json, the generated list of MCP tool definitions.
+// OpenAPI is the content of openapi.yaml, the generated spec the MCP tools are served from.
 //
-//go:embed mcp-tools.json
-var MCPTools []byte
+//go:embed openapi.yaml
+var OpenAPI []byte

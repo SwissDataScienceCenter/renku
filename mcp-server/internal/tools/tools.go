@@ -1,5 +1,4 @@
-// Package tools implements the MCP tools defined in apispec/mcp-tools.json on
-// top of the generated API client in internal/apiclient.
+// Package tools serves the operations of apispec/openapi.yaml as MCP tools, see internal/toolspec.
 package tools
 
 import (
@@ -14,7 +13,6 @@ import (
 	"log/slog"
 	"net/http"
 	"runtime/debug"
-	"slices"
 	"strconv"
 	"strings"
 	"time"
@@ -22,8 +20,8 @@ import (
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 
 	"github.com/SwissDataScienceCenter/renku/mcp-server/apispec"
-	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/apiclient"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/auth"
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/toolspec"
 )
 
 // maxResponseBytes caps how much of an API response is read, to protect the server and the model's context.
@@ -31,20 +29,12 @@ const maxResponseBytes = 4 << 20
 
 // Options configures how tools call the Renku API.
 type Options struct {
-	Client *apiclient.Client
-	Logger *slog.Logger
+	// APIURL is the base URL of the Renku data API, e.g. http://renku-gateway/api/data.
+	APIURL     string
+	HTTPClient *http.Client
+	Logger     *slog.Logger
 	// LogArguments adds the tool arguments to the per-call log line. They can contain free text entered by users.
 	LogArguments bool
-}
-
-// call performs the API request of one tool. Argument errors are reported back to the model.
-type call func(ctx context.Context, c *apiclient.Client, args map[string]any, edit apiclient.RequestEditorFn) (*http.Response, error)
-
-// definition is one tool of apispec/mcp-tools.json.
-type definition struct {
-	Name        string          `json:"name"`
-	Description string          `json:"description"`
-	InputSchema json.RawMessage `json:"inputSchema"`
 }
 
 // argumentError is an invalid tool argument, reported to the model so it can correct the call.
@@ -52,33 +42,24 @@ type argumentError struct{ err error }
 
 func (e argumentError) Error() string { return e.err.Error() }
 
-// Register adds the tools of apispec/mcp-tools.json to s. It fails unless every tool there is implemented by calls and vice versa.
+// Register adds a tool for every operation of apispec/openapi.yaml to s.
 func Register(s *mcp.Server, opts Options) error {
-	var definitions []definition
-	if err := json.Unmarshal(apispec.MCPTools, &definitions); err != nil {
-		return fmt.Errorf("parsing apispec/mcp-tools.json: %w", err)
+	tools, err := toolspec.Load(apispec.OpenAPI)
+	if err != nil {
+		return fmt.Errorf("apispec/openapi.yaml: %w", err)
 	}
-	for _, d := range definitions {
-		fn, ok := calls[d.Name]
-		if !ok {
-			return fmt.Errorf("tool %s of apispec/mcp-tools.json is not implemented", d.Name)
-		}
-		s.AddTool(&mcp.Tool{Name: d.Name, Description: d.Description, InputSchema: d.InputSchema}, handler(d.Name, fn, opts))
-	}
-	for name := range calls {
-		if !slices.ContainsFunc(definitions, func(d definition) bool { return d.Name == name }) {
-			return fmt.Errorf("tool %s is implemented but missing from apispec/mcp-tools.json", name)
-		}
+	for _, t := range tools {
+		s.AddTool(&mcp.Tool{Name: t.Name, Description: t.Description, InputSchema: t.InputSchema}, handler(t, opts))
 	}
 	return nil
 }
 
-func handler(name string, fn call, opts Options) mcp.ToolHandler {
+func handler(tool toolspec.Tool, opts Options) mcp.ToolHandler {
 	return func(ctx context.Context, req *mcp.CallToolRequest) (result *mcp.CallToolResult, _ error) {
 		start := time.Now()
 		requestID := newRequestID()
 		principal, clientIP := caller(ctx, req)
-		attrs := []any{"tool", name, "sub", principal.Subject, "request_id", requestID}
+		attrs := []any{"tool", tool.Name, "sub", principal.Subject, "request_id", requestID}
 		// The SDK does not recover panics of tool handlers, which would take down the whole server.
 		defer func() {
 			if r := recover(); r != nil {
@@ -91,20 +72,18 @@ func handler(name string, fn call, opts Options) mcp.ToolHandler {
 			attrs = append(attrs, "arguments", args)
 		}
 
-		edit := func(_ context.Context, r *http.Request) error {
-			if principal.Token != "" {
-				r.Header.Set("Authorization", "Bearer "+principal.Token)
-			}
-			r.Header.Set("X-Request-Id", requestID)
-			// Lets the gateway rate limit per end user instead of per MCP server pod when it trusts X-Real-IP.
-			if clientIP != "" {
-				r.Header.Set("X-Real-IP", clientIP)
-			}
-			return nil
-		}
 		var res *http.Response
 		if err == nil {
-			res, err = fn(ctx, opts.Client, args, edit)
+			res, err = send(ctx, tool, opts, args, func(r *http.Request) {
+				if principal.Token != "" {
+					r.Header.Set("Authorization", "Bearer "+principal.Token)
+				}
+				r.Header.Set("X-Request-Id", requestID)
+				// Lets the gateway rate limit per end user instead of per MCP server pod when it trusts X-Real-IP.
+				if clientIP != "" {
+					r.Header.Set("X-Real-IP", clientIP)
+				}
+			})
 		}
 		if err != nil {
 			var argErr argumentError
@@ -153,6 +132,19 @@ func caller(ctx context.Context, req *mcp.CallToolRequest) (auth.Principal, stri
 		principal, _ = auth.PrincipalFrom(ctx)
 	}
 	return principal, clientIP
+}
+
+// send validates the arguments and performs the API request of a call. Invalid arguments are returned as argumentError.
+func send(ctx context.Context, tool toolspec.Tool, opts Options, args map[string]any, edit func(*http.Request)) (*http.Response, error) {
+	if err := tool.Validate(args); err != nil {
+		return nil, argumentError{err}
+	}
+	r, err := tool.Request(ctx, opts.APIURL, args)
+	if err != nil {
+		return nil, argumentError{err}
+	}
+	edit(r)
+	return opts.HTTPClient.Do(r)
 }
 
 // arguments decodes the raw tool arguments, which the SDK does not validate for tools with a raw input schema.

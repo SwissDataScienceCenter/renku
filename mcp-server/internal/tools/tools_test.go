@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"io"
 	"log/slog"
-	"maps"
 	"net/http"
 	"net/http/httptest"
 	"slices"
@@ -16,35 +15,41 @@ import (
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 
 	"github.com/SwissDataScienceCenter/renku/mcp-server/apispec"
-	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/apiclient"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/auth"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/specprep"
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/toolspec"
 )
 
-func TestEveryAllowlistedToolIsImplemented(t *testing.T) {
+// Fails if apispec/openapi.yaml was not regenerated after editing tools.yaml.
+func TestSpecMatchesTheAllowlist(t *testing.T) {
 	cfg, err := specprep.ParseConfig(apispec.ToolsYAML)
 	if err != nil {
 		t.Fatal(err)
 	}
-	var allowlisted []string
+	tools, err := toolspec.Load(apispec.OpenAPI)
+	if err != nil {
+		t.Fatal(err)
+	}
+	served := map[string]string{}
+	for _, tool := range tools {
+		served[tool.Name] = tool.Description
+	}
+	if len(served) != len(cfg.Tools) {
+		t.Errorf("apispec/openapi.yaml has %d tools, tools.yaml %d", len(served), len(cfg.Tools))
+	}
 	for _, tool := range cfg.Tools {
-		allowlisted = append(allowlisted, tool.Name)
+		if served[tool.Name] != strings.TrimSpace(tool.Description) {
+			t.Errorf("tool %s is missing from apispec/openapi.yaml or has an outdated description", tool.Name)
+		}
 	}
-	implemented := slices.Collect(maps.Keys(calls))
-	slices.Sort(allowlisted)
-	slices.Sort(implemented)
-	if !slices.Equal(allowlisted, implemented) {
-		t.Fatalf("tools.yaml and internal/tools disagree\nallowlisted: %v\nimplemented: %v", allowlisted, implemented)
-	}
-	// Fails if apispec/mcp-tools.json was not regenerated after editing tools.yaml.
 	if err := Register(mcp.NewServer(&mcp.Implementation{Name: "test", Version: "dev"}, nil), Options{}); err != nil {
 		t.Fatal(err)
 	}
 }
 
 type recordedRequest struct {
-	method, path, query, authorization, requestID string
-	body                                          []byte
+	method, path, query, authorization, requestID, contentType string
+	body                                                       []byte
 }
 
 // fakeGateway mimics the Renku gateway for the routes the tests use.
@@ -54,7 +59,7 @@ func fakeGateway(t *testing.T) (*httptest.Server, *[]recordedRequest) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		body, _ := io.ReadAll(r.Body)
 		requests = append(requests, recordedRequest{
-			method: r.Method, path: r.URL.Path, query: r.URL.RawQuery,
+			method: r.Method, path: r.URL.EscapedPath(), query: r.URL.RawQuery, contentType: r.Header.Get("Content-Type"),
 			authorization: r.Header.Get("Authorization"), requestID: r.Header.Get("X-Request-Id"), body: body,
 		})
 		w.Header().Set("Content-Type", "application/json")
@@ -83,28 +88,33 @@ func fakeGateway(t *testing.T) (*httptest.Server, *[]recordedRequest) {
 		case "DELETE /api/data/sessions/session-1":
 			w.WriteHeader(http.StatusNoContent)
 		default:
-			w.WriteHeader(http.StatusTeapot)
+			_, _ = w.Write([]byte(`{}`))
 		}
 	}))
 	t.Cleanup(srv.Close)
 	return srv, &requests
 }
 
-func callTool(t *testing.T, gatewayURL, name string, args map[string]any, logs io.Writer) *mcp.CallToolResult {
+func tool(t *testing.T, name string) toolspec.Tool {
 	t.Helper()
-	client, err := apiclient.NewClient(gatewayURL + "/api/data")
+	tools, err := toolspec.Load(apispec.OpenAPI)
 	if err != nil {
 		t.Fatal(err)
 	}
+	i := slices.IndexFunc(tools, func(tool toolspec.Tool) bool { return tool.Name == name })
+	if i < 0 {
+		t.Fatalf("tool %s not found", name)
+	}
+	return tools[i]
+}
+
+func callTool(t *testing.T, gatewayURL, name string, args map[string]any, logs io.Writer) *mcp.CallToolResult {
+	t.Helper()
 	if logs == nil {
 		logs = io.Discard
 	}
-	opts := Options{Client: client, Logger: slog.New(slog.NewJSONHandler(logs, nil))}
-	fn, ok := calls[name]
-	if !ok {
-		t.Fatalf("tool %s not found", name)
-	}
-	return callHandler(t, handler(name, fn, opts), name, args)
+	opts := Options{APIURL: gatewayURL + "/api/data", HTTPClient: http.DefaultClient, Logger: slog.New(slog.NewJSONHandler(logs, nil))}
+	return callHandler(t, handler(tool(t, name), opts), name, args)
 }
 
 func callHandler(t *testing.T, h mcp.ToolHandler, name string, args map[string]any) *mcp.CallToolResult {
@@ -133,6 +143,65 @@ func text(t *testing.T, res *mcp.CallToolResult) string {
 	return c.Text
 }
 
+type requestCase struct {
+	tool                string
+	args                map[string]any
+	method, path, query string
+	body                string
+}
+
+// TestEveryToolSendsTheExpectedRequest covers the request encoding of every tool against the real spec.
+func TestEveryToolSendsTheExpectedRequest(t *testing.T) {
+	const ulid = "01J0000000000000000000000C"
+	tests := []requestCase{
+		{"get_current_user", nil, "GET", "/api/data/user", "", ""},
+		{"search", map[string]any{"q": "type:project climate", "page": 2, "per_page": 50, "include_counts": true}, "GET", "/api/data/search/query", "include_counts=true&page=2&per_page=50&q=type%3Aproject+climate", ""},
+		{"list_projects", map[string]any{"namespace": "my-group", "direct_member": true}, "GET", "/api/data/projects", "direct_member=true&namespace=my-group", ""},
+		{"get_project", map[string]any{"project_id": ulid, "with_documentation": false}, "GET", "/api/data/projects/" + ulid, "with_documentation=false", ""},
+		{"get_project_by_slug", map[string]any{"namespace": "my group", "slug": "my-project"}, "GET", "/api/data/namespaces/my%20group/projects/my-project", "", ""},
+		{"list_groups", map[string]any{"page": 1}, "GET", "/api/data/groups", "page=1", ""},
+		{"get_group", map[string]any{"group_slug": "my-group"}, "GET", "/api/data/groups/my-group", "", ""},
+		{"list_data_connectors", map[string]any{"namespace": "my-group"}, "GET", "/api/data/data_connectors", "namespace=my-group", ""},
+		{"get_data_connector", map[string]any{"data_connector_id": ulid}, "GET", "/api/data/data_connectors/" + ulid, "", ""},
+		{"list_project_data_connector_links", map[string]any{"project_id": ulid}, "GET", "/api/data/projects/" + ulid + "/data_connector_links", "", ""},
+		{"list_project_session_launchers", map[string]any{"project_id": ulid}, "GET", "/api/data/projects/" + ulid + "/session_launchers", "", ""},
+		{"get_session_launcher", map[string]any{"launcher_id": ulid}, "GET", "/api/data/session_launchers/" + ulid, "", ""},
+		{"list_sessions", map[string]any{"session_type": "interactive"}, "GET", "/api/data/sessions", "session_type=interactive", ""},
+		{"start_session", map[string]any{"body": map[string]any{"launcher_id": ulid, "disk_storage": 10}}, "POST", "/api/data/sessions", "", `{"disk_storage":10,"launcher_id":"` + ulid + `"}`},
+		{"get_session", map[string]any{"session_id": "session-1"}, "GET", "/api/data/sessions/session-1", "", ""},
+		{"get_session_logs", map[string]any{"session_id": "session-1", "max_lines": 1000000}, "GET", "/api/data/sessions/session-1/logs", "max_lines=1000000", ""},
+		{"stop_session", map[string]any{"session_id": "session-1"}, "DELETE", "/api/data/sessions/session-1", "", ""},
+	}
+	tools, err := toolspec.Load(apispec.OpenAPI)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, tool := range tools {
+		if !slices.ContainsFunc(tests, func(tt requestCase) bool { return tt.tool == tool.Name }) {
+			t.Errorf("tool %s is not covered", tool.Name)
+		}
+	}
+	for _, tt := range tests {
+		t.Run(tt.tool, func(t *testing.T) {
+			gw, requests := fakeGateway(t)
+			res := callTool(t, gw.URL, tt.tool, tt.args, nil)
+			if len(*requests) != 1 {
+				t.Fatalf("expected one request, got %d: %s", len(*requests), text(t, res))
+			}
+			r := (*requests)[0]
+			if r.method != tt.method || r.path != tt.path || r.query != tt.query {
+				t.Errorf("request = %s %s?%s, want %s %s?%s", r.method, r.path, r.query, tt.method, tt.path, tt.query)
+			}
+			if string(r.body) != tt.body {
+				t.Errorf("body = %s, want %s", r.body, tt.body)
+			}
+			if wantJSON := tt.body != ""; wantJSON != (r.contentType == "application/json") {
+				t.Errorf("Content-Type = %q", r.contentType)
+			}
+		})
+	}
+}
+
 func TestListToolForwardsTokenAndQueryAndReportsPagination(t *testing.T) {
 	gw, requests := fakeGateway(t)
 	res := callTool(t, gw.URL, "list_projects", map[string]any{"namespace": "my-group", "page": float64(1), "per_page": float64(20)}, nil)
@@ -150,10 +219,8 @@ func TestListToolForwardsTokenAndQueryAndReportsPagination(t *testing.T) {
 	if r.requestID == "" {
 		t.Error("X-Request-Id is not set")
 	}
-	for _, want := range []string{"namespace=my-group", "page=1", "per_page=20"} {
-		if !strings.Contains(r.query, want) {
-			t.Errorf("query %q does not contain %q", r.query, want)
-		}
+	if r.query != "namespace=my-group&page=1&per_page=20" {
+		t.Errorf("query = %q", r.query)
 	}
 
 	got := text(t, res)
@@ -221,27 +288,48 @@ func TestLogsSubjectButNotTokenOrArguments(t *testing.T) {
 }
 
 func TestInvalidArguments(t *testing.T) {
-	gw, requests := fakeGateway(t)
-	res := callTool(t, gw.URL, "get_project", map[string]any{}, nil)
-	if !res.IsError || !strings.Contains(text(t, res), "project_id is required") {
-		t.Errorf("unexpected result %+v", res)
+	tests := []struct {
+		name, tool string
+		args       map[string]any
+		want       string
+	}{
+		{"missing path parameter", "get_project", map[string]any{}, "project_id"},
+		{"pattern", "get_project", map[string]any{"project_id": "not-a-ulid-but-26-chars-xx"}, "project_id"},
+		{"wrong type", "list_projects", map[string]any{"page": "one"}, "page"},
+		{"out of range", "list_projects", map[string]any{"per_page": 1000}, "per_page"},
+		{"not an integer", "list_projects", map[string]any{"page": 1.5}, "page"},
+		{"enum", "list_sessions", map[string]any{"session_type": "batch"}, "session_type"},
+		{"unknown argument", "list_projects", map[string]any{"namespcae": "my-group"}, "namespcae"},
+		{"missing body", "start_session", map[string]any{}, "body"},
+		{"missing body property", "start_session", map[string]any{"body": map[string]any{}}, "launcher_id"},
 	}
-	res = callTool(t, gw.URL, "start_session", map[string]any{"body": map[string]any{}}, nil)
-	if !res.IsError || !strings.Contains(text(t, res), "launcher_id is required") {
-		t.Errorf("unexpected result %+v", res)
-	}
-	if len(*requests) != 0 {
-		t.Errorf("invalid calls must not reach the API, got %d requests", len(*requests))
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			gw, requests := fakeGateway(t)
+			var logs bytes.Buffer
+			res := callTool(t, gw.URL, tt.tool, tt.args, &logs)
+			if !res.IsError || !strings.HasPrefix(text(t, res), "Invalid arguments: ") || !strings.Contains(text(t, res), tt.want) {
+				t.Errorf("expected an invalid arguments error mentioning %q, got %q", tt.want, text(t, res))
+			}
+			if !strings.Contains(logs.String(), `"outcome":"invalid_arguments"`) {
+				t.Errorf("not logged as invalid arguments: %s", logs.String())
+			}
+			if len(*requests) != 0 {
+				t.Errorf("invalid calls must not reach the API, got %d requests", len(*requests))
+			}
+		})
 	}
 }
 
+// panicTransport fails every request with a panic.
+type panicTransport struct{}
+
+func (panicTransport) RoundTrip(*http.Request) (*http.Response, error) { panic("boom") }
+
 func TestPanicIsReturnedAsToolError(t *testing.T) {
 	var logs bytes.Buffer
-	opts := Options{Logger: slog.New(slog.NewJSONHandler(&logs, nil))}
-	boom := func(context.Context, *apiclient.Client, map[string]any, apiclient.RequestEditorFn) (*http.Response, error) {
-		panic("boom")
-	}
-	res := callHandler(t, handler("boom", boom, opts), "boom", nil)
+	opts := Options{APIURL: "http://gateway/api/data", HTTPClient: &http.Client{Transport: panicTransport{}}, Logger: slog.New(slog.NewJSONHandler(&logs, nil))}
+	res := callHandler(t, handler(tool(t, "get_current_user"), opts), "get_current_user", nil)
 	if !res.IsError || strings.Contains(text(t, res), "boom") {
 		t.Errorf("unexpected result %q", text(t, res))
 	}
@@ -252,11 +340,7 @@ func TestPanicIsReturnedAsToolError(t *testing.T) {
 
 func TestArgumentsMustBeAnObject(t *testing.T) {
 	gw, requests := fakeGateway(t)
-	client, err := apiclient.NewClient(gw.URL + "/api/data")
-	if err != nil {
-		t.Fatal(err)
-	}
-	h := handler("list_projects", calls["list_projects"], Options{Client: client, Logger: slog.New(slog.NewJSONHandler(io.Discard, nil))})
+	h := handler(tool(t, "list_projects"), Options{APIURL: gw.URL + "/api/data", HTTPClient: http.DefaultClient, Logger: slog.New(slog.NewJSONHandler(io.Discard, nil))})
 	res, err := h(context.Background(), &mcp.CallToolRequest{Params: &mcp.CallToolParamsRaw{Name: "list_projects", Arguments: json.RawMessage(`[1]`)}})
 	if err != nil {
 		t.Fatal(err)

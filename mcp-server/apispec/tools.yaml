@@ -1,8 +1,8 @@
 # Allowlist of renku-data-services operations exposed as MCP tools.
 #
-# Only the operations listed here end up in apispec/openapi.yaml, apispec/mcp-tools.json
-# and the generated client. Every tool needs a hand-written handler in internal/tools.
-# After editing this file run `just update-spec <data-services tag>` and `just generate`.
+# Only the operations listed here end up in apispec/openapi.yaml, which the MCP server
+# serves its tools from (see internal/toolspec); no hand-written code is needed per tool.
+# After editing this file run `just update-spec <data-services tag>`.
 #
 # Conventions: snake_case names starting with a verb, no `renku_` prefix (MCP clients
 # namespace tools by server), and descriptions that say which IDs a tool returns

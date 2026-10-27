@@ -1,7 +1,6 @@
 package specprep
 
 import (
-	"encoding/json"
 	"strings"
 	"testing"
 
@@ -9,7 +8,7 @@ import (
 )
 
 const projectsModule = `
-openapi: 3.0.2
+openapi: 3.1.0
 info: {title: projects, version: v1}
 servers: [{url: /api/data}]
 paths:
@@ -79,8 +78,8 @@ components:
       required: [owner]
       properties:
         owner: {$ref: "#/components/schemas/Ulid"}
-        description: {type: string, nullable: true, example: "A project", x-internal: true}
-        size: {type: integer, minimum: 0, exclusiveMinimum: true}
+        description: {type: [string, "null"], example: "A project", x-internal: true}
+        name: {type: string, pattern: "^(?!x)", discriminator: {propertyName: name}}
         tags: {type: array, items: {type: string}}
     ErrorResponse:
       type: object
@@ -95,7 +94,7 @@ components:
 `
 
 const sessionsModule = `
-openapi: 3.0.2
+openapi: 3.1.0
 info: {title: sessions, version: v1}
 servers: [{url: /api/data}]
 paths:
@@ -139,8 +138,8 @@ func testConfig(tools ...Tool) *Config {
 	}
 }
 
-// prepare runs Prepare and returns the parsed spec and the tool definitions by name.
-func prepare(t *testing.T, cfg *Config, modules map[string]string) (map[string]any, map[string]ToolDefinition) {
+// prepare runs Prepare and returns the parsed spec and the warnings.
+func prepare(t *testing.T, cfg *Config, modules map[string]string) (map[string]any, []string) {
 	t.Helper()
 	raw := map[string][]byte{}
 	for k, v := range modules {
@@ -157,15 +156,7 @@ func prepare(t *testing.T, cfg *Config, modules map[string]string) (map[string]a
 	if err := yaml.Unmarshal(out.Spec, &doc); err != nil {
 		t.Fatal(err)
 	}
-	var list []ToolDefinition
-	if err := json.Unmarshal(out.Tools, &list); err != nil {
-		t.Fatal(err)
-	}
-	tools := map[string]ToolDefinition{}
-	for _, tool := range list {
-		tools[tool.Name] = tool
-	}
-	return doc, tools
+	return doc, out.Warnings
 }
 
 func get(t *testing.T, v any, path ...string) any {
@@ -190,7 +181,7 @@ func TestPrepareMergesAndPrunes(t *testing.T) {
 		// Ulid is defined identically in both modules, so the definitions are the same and one is used.
 		Tool{Method: "get", Path: "/sessions/{session_id}", Name: "get_session", Description: "Get a session."},
 	)
-	doc, tools := prepare(t, cfg, map[string]string{"projects.yaml": projectsModule, "sessions.yaml": sessionsModule})
+	doc, _ := prepare(t, cfg, map[string]string{"projects.yaml": projectsModule, "sessions.yaml": sessionsModule})
 
 	paths := get(t, doc, "paths").(map[string]any)
 	if len(paths) != 3 {
@@ -199,13 +190,13 @@ func TestPrepareMergesAndPrunes(t *testing.T) {
 	if _, ok := get(t, doc, "paths", "/projects").(map[string]any)["post"]; ok {
 		t.Error("post /projects is not allowlisted but was kept")
 	}
-	if len(tools) != 3 || tools["list_projects"].Description != `List "projects".` {
-		t.Errorf("expected the 3 allowlisted tools with their curated descriptions, got %v", tools)
-	}
 
 	op := get(t, doc, "paths", "/projects", "get").(map[string]any)
-	if op["operationId"] != "list_projects" {
-		t.Errorf("operationId = %v", op["operationId"])
+	if op["operationId"] != "list_projects" || op["description"] != `List "projects".` {
+		t.Errorf("the operationId and description should be the name and curated description of the tool, got %v and %v", op["operationId"], op["description"])
+	}
+	if _, ok := op["summary"]; ok {
+		t.Error("the upstream summary should not be kept")
 	}
 
 	responses := get(t, op, "responses").(map[string]any)
@@ -264,51 +255,27 @@ func TestPrepareHoistsPathParametersAndAppliesOverrides(t *testing.T) {
 	}
 }
 
-func TestPrepareBuildsInputSchemas(t *testing.T) {
-	cfg := testConfig(
-		Tool{Method: "get", Path: "/projects", Name: "list_projects", Description: "List projects."},
-		Tool{
-			Method: "get", Path: "/projects/{project_id}", Name: "get_project", Description: "Get a project.",
-			Parameters: map[string]string{"project_id": "The project ULID."},
-		},
-		Tool{Method: "post", Path: "/projects", Name: "create_project", Description: "Create a project."},
-	)
-	_, tools := prepare(t, cfg, map[string]string{"projects.yaml": projectsModule, "sessions.yaml": sessionsModule})
+func TestPrepareCleansSchemas(t *testing.T) {
+	cfg := testConfig(Tool{Method: "post", Path: "/projects", Name: "create_project", Description: "Create a project."})
+	doc, warnings := prepare(t, cfg, map[string]string{"projects.yaml": projectsModule, "sessions.yaml": sessionsModule})
 
-	list := tools["list_projects"].InputSchema
-	if get(t, list, "type") != "object" || len(get(t, list, "properties").(map[string]any)) != 3 {
-		t.Errorf("expected an object with the 3 flattened query parameters, got %v", list)
-	}
-	if required := get(t, list, "required").([]any); len(required) != 1 || required[0] != "namespace" {
-		t.Errorf("required = %v", required)
-	}
-	if get(t, list, "properties", "per_page", "default") != float64(20) {
-		t.Errorf("per_page default lost: %v", list)
-	}
-
-	project := get(t, tools["get_project"].InputSchema, "properties", "project_id")
-	if get(t, project, "description") != "The project ULID." || get(t, project, "minLength") != float64(26) {
-		t.Errorf("project_id should be the inlined Ulid schema with the overridden description, got %v", project)
-	}
-
-	create := tools["create_project"].InputSchema
-	if required := get(t, create, "required").([]any); len(required) != 1 || required[0] != "body" {
-		t.Errorf("the required request body should be the required body argument, got %v", required)
-	}
-	body := get(t, create, "properties", "body", "properties")
+	body := get(t, doc, "paths", "/projects", "post", "requestBody", "content", "application/json", "schema", "properties")
 	if get(t, body, "owner", "minLength") != float64(26) {
 		t.Errorf("owner should be the inlined Ulid schema, got %v", get(t, body, "owner"))
 	}
 	description := get(t, body, "description").(map[string]any)
 	if types := description["type"].([]any); len(types) != 2 || types[1] != "null" {
-		t.Errorf("nullable should become a null type, got %v", description)
+		t.Errorf("the 3.1 null type should be kept, got %v", description)
 	}
 	if examples := description["examples"].([]any); len(examples) != 1 || description["example"] != nil || description["x-internal"] != nil {
 		t.Errorf("example should become examples and extensions should be dropped, got %v", description)
 	}
-	size := get(t, body, "size").(map[string]any)
-	if size["exclusiveMinimum"] != float64(0) || size["minimum"] != nil {
-		t.Errorf("boolean exclusiveMinimum should become a number, got %v", size)
+	name := get(t, body, "name").(map[string]any)
+	if name["pattern"] != nil || name["discriminator"] != nil || name["type"] != "string" {
+		t.Errorf("the lookahead pattern and the discriminator should be dropped, got %v", name)
+	}
+	if len(warnings) != 1 || !strings.Contains(warnings[0], "tool create_project: body.name: dropped pattern") {
+		t.Errorf("expected a warning about the dropped pattern, got %v", warnings)
 	}
 }
 
@@ -329,12 +296,32 @@ func TestPrepareUsesTheComponentsOfEachModule(t *testing.T) {
 		Tool{Method: "get", Path: "/projects/{project_id}", Name: "get_project", Description: "Get a project."},
 		Tool{Method: "get", Path: "/sessions/{session_id}", Name: "get_session", Description: "Get a session."},
 	)
-	_, tools := prepare(t, cfg, map[string]string{"projects.yaml": projectsModule, "sessions.yaml": conflicting})
-	if get(t, tools["get_project"].InputSchema, "properties", "project_id", "minLength") != float64(26) {
+	doc, _ := prepare(t, cfg, map[string]string{"projects.yaml": projectsModule, "sessions.yaml": conflicting})
+	project := get(t, doc, "paths", "/projects/{project_id}", "get", "parameters").([]any)[0]
+	if get(t, project, "schema", "minLength") != float64(26) {
 		t.Error("get_project should use the Ulid of the projects module")
 	}
-	if get(t, tools["get_session"].InputSchema, "properties", "session_id", "minLength") != float64(20) {
+	session := get(t, doc, "paths", "/sessions/{session_id}", "get", "parameters").([]any)[0]
+	if get(t, session, "schema", "minLength") != float64(20) {
 		t.Error("get_session should use the Ulid of the sessions module")
+	}
+}
+
+func TestPrepareRejectsSpecsTheServerCannotServe(t *testing.T) {
+	header := strings.Replace(sessionsModule, "in: path", "in: header", 1)
+	cfg := testConfig(Tool{Method: "get", Path: "/sessions/{session_id}", Name: "get_session", Description: "Get a session."})
+	_, err := Prepare(cfg, "v1", map[string][]byte{"projects.yaml": []byte(projectsModule), "sessions.yaml": []byte(header)})
+	if err == nil || !strings.Contains(err.Error(), "the MCP server cannot serve the generated spec") {
+		t.Fatalf("expected an error from the tool loader, got %v", err)
+	}
+}
+
+func TestPrepareRequiresOpenAPI31(t *testing.T) {
+	old := strings.Replace(sessionsModule, "openapi: 3.1.0", "openapi: 3.0.2", 1)
+	cfg := testConfig(Tool{Method: "get", Path: "/sessions", Name: "list_sessions", Description: "List sessions."})
+	_, err := Prepare(cfg, "v1", map[string][]byte{"projects.yaml": []byte(projectsModule), "sessions.yaml": []byte(old)})
+	if err == nil || !strings.Contains(err.Error(), "only OpenAPI 3.1.x is supported") {
+		t.Fatalf("expected a version error, got %v", err)
 	}
 }
 

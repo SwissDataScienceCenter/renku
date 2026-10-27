@@ -1,10 +1,4 @@
 version: "2"
-linters:
-  exclusions:
-    # Skips internal/apiclient, see `just generate`
-    generated: lax
 formatters:
   enable:
     - gofmt
-  exclusions:
-    generated: lax

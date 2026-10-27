@@ -2,7 +2,6 @@ package specprep
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"maps"
 	"slices"
@@ -12,21 +11,16 @@ import (
 	"github.com/pb33f/libopenapi/datamodel/high/base"
 	v3 "github.com/pb33f/libopenapi/datamodel/high/v3"
 	"sigs.k8s.io/yaml"
+
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/toolspec"
 )
 
 // Output is the result of Prepare.
 type Output struct {
-	// Spec is the pruned OpenAPI document the API client is generated from.
+	// Spec is the pruned OpenAPI document the MCP server serves its tools from.
 	Spec []byte
-	// Tools is the JSON list of the MCP tool definitions served by the server.
-	Tools []byte
-}
-
-// ToolDefinition is the definition of one MCP tool in Output.Tools.
-type ToolDefinition struct {
-	Name        string         `json:"name"`
-	Description string         `json:"description"`
-	InputSchema map[string]any `json:"inputSchema"`
+	// Warnings are changes made to the upstream schemas that the user should know about.
+	Warnings []string
 }
 
 type module struct {
@@ -34,7 +28,8 @@ type module struct {
 	model *v3.Document
 }
 
-// Prepare builds the pruned OpenAPI document and the MCP tool definitions for the allowlisted tools.
+// Prepare builds the pruned OpenAPI document with one operation per allowlisted tool. The
+// operationId and description of each operation are the name and description of the tool.
 // modules maps each path in cfg.Source.Modules to the raw content of that spec.
 // ref is the git ref the modules were taken from and is recorded in the output.
 //
@@ -56,8 +51,8 @@ func Prepare(cfg *Config, ref string, modules map[string][]byte) (*Output, error
 			return nil, fmt.Errorf("parsing module %s: %w", name, err)
 		}
 		version := doc.GetVersion()
-		if !strings.HasPrefix(version, "3.0.") {
-			return nil, fmt.Errorf("module %s: only OpenAPI 3.0.x is supported, got %q", name, version)
+		if !strings.HasPrefix(version, "3.1.") {
+			return nil, fmt.Errorf("module %s: only OpenAPI 3.1.x is supported, got %q", name, version)
 		}
 		model, err := doc.BuildV3Model()
 		if err != nil {
@@ -76,13 +71,13 @@ func Prepare(cfg *Config, ref string, modules map[string][]byte) (*Output, error
 	}
 
 	paths := map[string]any{}
-	var tools []ToolDefinition
+	var warnings []string
 	for _, t := range cfg.Tools {
-		op, schema, err := operation(mods, t)
+		warn := func(w string) { warnings = append(warnings, fmt.Sprintf("tool %s: %s", t.Name, w)) }
+		op, err := operation(mods, t, warn)
 		if err != nil {
 			return nil, fmt.Errorf("tool %s (%s %s): %w", t.Name, t.Method, t.Path, err)
 		}
-		tools = append(tools, ToolDefinition{Name: t.Name, Description: strings.TrimSpace(t.Description), InputSchema: schema})
 		item, _ := paths[t.Path].(map[string]any)
 		if item == nil {
 			item = map[string]any{}
@@ -109,15 +104,14 @@ func Prepare(cfg *Config, ref string, modules map[string][]byte) (*Output, error
 	spec.WriteString("# Edit apispec/tools.yaml and run 'just update-spec <ref>' instead.\n")
 	spec.Write(body)
 
-	toolsJSON, err := json.MarshalIndent(tools, "", "  ")
-	if err != nil {
-		return nil, err
+	if _, err := toolspec.Load(spec.Bytes()); err != nil {
+		return nil, fmt.Errorf("the MCP server cannot serve the generated spec: %w", err)
 	}
-	return &Output{Spec: spec.Bytes(), Tools: append(toolsJSON, '\n')}, nil
+	return &Output{Spec: spec.Bytes(), Warnings: warnings}, nil
 }
 
-// operation builds the operation of a tool for the output spec and the input schema of the tool.
-func operation(mods []module, t Tool) (map[string]any, map[string]any, error) {
+// operation builds the operation of a tool for the output spec.
+func operation(mods []module, t Tool, warn func(string)) (map[string]any, error) {
 	var found string
 	var item *v3.PathItem
 	var op *v3.Operation
@@ -134,30 +128,33 @@ func operation(mods []module, t Tool) (map[string]any, map[string]any, error) {
 			continue
 		}
 		if found != "" {
-			return nil, nil, fmt.Errorf("operation is defined in both %s and %s", found, m.name)
+			return nil, fmt.Errorf("operation is defined in both %s and %s", found, m.name)
 		}
 		found, item, op = m.name, pathItem, o
 	}
 	if op == nil {
-		return nil, nil, fmt.Errorf("operation not found in any module")
+		return nil, fmt.Errorf("operation not found in any module")
 	}
 
 	params, err := parameters(slices.Concat(item.Parameters, op.Parameters))
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 	for name, description := range t.Parameters {
 		i := slices.IndexFunc(params, func(p map[string]any) bool { return p["name"] == name })
 		if i < 0 {
-			return nil, nil, fmt.Errorf("parameter override %q does not match any parameter", name)
+			return nil, fmt.Errorf("parameter override %q does not match any parameter", name)
 		}
 		params[i]["description"] = description
 	}
+	for _, p := range params {
+		p["schema"] = clean(p["schema"].(map[string]any), "parameter "+p["name"].(string), warn)
+	}
 
 	out := map[string]any{
-		// oapi-codegen derives the client method names from the operationId, e.g. GetSession.
 		"operationId": t.Name,
-		// The tools forward the raw responses, so the response schemas would only add unused types to the client.
+		"description": strings.TrimSpace(t.Description),
+		// The tools forward the raw responses, so the response schemas are not needed.
 		"responses": map[string]any{"default": map[string]any{"description": "The response of the Renku API."}},
 	}
 	if len(params) > 0 {
@@ -165,16 +162,17 @@ func operation(mods []module, t Tool) (map[string]any, map[string]any, error) {
 	}
 	if rb := op.RequestBody; rb != nil {
 		if rb.Content == nil {
-			return nil, nil, fmt.Errorf("request body has no content")
+			return nil, fmt.Errorf("request body has no content")
 		}
 		media, ok := rb.Content.Get("application/json")
 		if !ok {
-			return nil, nil, fmt.Errorf("request body: only application/json is supported")
+			return nil, fmt.Errorf("request body: only application/json is supported")
 		}
 		schema, err := inline(media.Schema)
 		if err != nil {
-			return nil, nil, fmt.Errorf("request body: %w", err)
+			return nil, fmt.Errorf("request body: %w", err)
 		}
+		schema = clean(schema, "body", warn)
 		body := map[string]any{"content": map[string]any{"application/json": map[string]any{"schema": schema}}}
 		if rb.Description != "" {
 			body["description"] = rb.Description
@@ -184,17 +182,11 @@ func operation(mods []module, t Tool) (map[string]any, map[string]any, error) {
 		}
 		out["requestBody"] = body
 	}
-
-	schema, err := inputSchema(out)
-	if err != nil {
-		return nil, nil, err
-	}
-	return out, schema, nil
+	return out, nil
 }
 
 // parameters merges path level and operation level parameters and flattens
-// exploded object query parameters, so that the client parameters and the
-// tool arguments are the same flat list.
+// exploded object query parameters into one argument per property.
 func parameters(all []*v3.Parameter) ([]map[string]any, error) {
 	var merged []*v3.Parameter
 	for _, p := range all {

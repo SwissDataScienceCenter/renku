@@ -3,13 +3,14 @@ package app
 
 import (
 	"context"
+	"fmt"
 	"log/slog"
 	"net/http"
+	"net/url"
 	"time"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 
-	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/apiclient"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/auth"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools"
 )
@@ -30,16 +31,21 @@ type Options struct {
 
 // NewMCPServer creates the MCP server with all tools registered.
 func NewMCPServer(opts Options) (*mcp.Server, error) {
-	client, err := apiclient.NewClient(opts.APIURL, apiclient.WithHTTPClient(&http.Client{Timeout: 60 * time.Second}))
-	if err != nil {
-		return nil, err
+	if u, err := url.Parse(opts.APIURL); err != nil || (u.Scheme != "http" && u.Scheme != "https") || u.Host == "" {
+		return nil, fmt.Errorf("invalid API URL %q, expected e.g. https://renku.example.org/api/data", opts.APIURL)
 	}
 	s := mcp.NewServer(&mcp.Implementation{Name: "renku", Version: opts.Version}, &mcp.ServerOptions{
 		Instructions: "Tools to explore Renku projects, groups and data connectors and to start, inspect and stop Renku sessions on behalf of the logged in user.",
 		// The tool list never changes and the server does not log to the client.
 		Capabilities: &mcp.ServerCapabilities{Tools: &mcp.ToolCapabilities{}},
 	})
-	if err := tools.Register(s, tools.Options{Client: client, Logger: opts.Logger, LogArguments: opts.LogArguments}); err != nil {
+	toolOpts := tools.Options{
+		APIURL:       opts.APIURL,
+		HTTPClient:   &http.Client{Timeout: 60 * time.Second},
+		Logger:       opts.Logger,
+		LogArguments: opts.LogArguments,
+	}
+	if err := tools.Register(s, toolOpts); err != nil {
 		return nil, err
 	}
 	return s, nil

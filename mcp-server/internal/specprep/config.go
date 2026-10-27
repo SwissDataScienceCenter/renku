@@ -1,6 +1,6 @@
 // Package specprep merges the per-module renku-data-services API specs and prunes
-// them down to the allowlisted operations. It produces the OpenAPI 3.0 document
-// the API client is generated from and the MCP tool definitions.
+// them down to the allowlisted operations. It produces the OpenAPI 3.1 document
+// the MCP server serves its tools from, see internal/toolspec.
 package specprep
 
 import (

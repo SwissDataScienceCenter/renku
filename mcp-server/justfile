@@ -3,18 +3,9 @@ tools := "go tool -modfile=tools/go.mod"
 list:
     just --list
 
-# Fetch the per-module specs of renku-data-services at <ref> and write apispec/openapi.yaml and apispec/mcp-tools.json
+# Fetch the per-module specs of renku-data-services at <ref> and write apispec/openapi.yaml
 update-spec ref:
     go run ./cmd/specprep -ref {{ref}}
-
-# Regenerate the API client in internal/apiclient from apispec/openapi.yaml
-generate:
-    go tool oapi-codegen -generate types,client -package apiclient -o internal/apiclient/client.gen.go apispec/openapi.yaml
-
-# Fail if the generated code is not up to date with apispec/openapi.yaml
-check-generated: generate
-    git diff --exit-code -- internal/apiclient
-    test -z "$(git status --porcelain -- internal/apiclient)"
 
 test:
     go test ./...
