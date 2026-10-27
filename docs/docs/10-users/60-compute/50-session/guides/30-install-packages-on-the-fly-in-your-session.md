@@ -9,7 +9,7 @@ Packages installed this way:
 - Are only available to you and they are lost when you stop and restart the session, so you'll need to reinstall them every time you launch or resume the session.
 - Are not shared with anyone else who launches a session from the same launcher.
 
-If you'd like a package to persist and be available to everyone who uses the launcher, add it to your project's environment definition file, rebuild the launcher and restart the session. See [How to create an environment with custom packages installed](../../environment/guides/create-environment-with-custom-packages-installed).
+If you'd like a package to persist and be available to everyone who uses the launcher, add it to your project's environment definition file, rebuild the launcher and restart the session. See [How to create an environment with custom packages installed](../../../environment/guides/create-environment-with-custom-packages-installed).
 
 :::
 
