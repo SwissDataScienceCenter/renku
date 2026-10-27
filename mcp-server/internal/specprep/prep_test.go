@@ -213,12 +213,12 @@ func TestPrepareMergesAndPrunes(t *testing.T) {
 		t.Errorf("responses should be replaced by a default response, got %v", responses)
 	}
 
-	schemas := get(t, doc, "components", "schemas").(map[string]any)
-	if len(schemas) != 1 || schemas["Ulid"] == nil {
-		t.Errorf("only the Ulid schema used by parameters should be kept, got %v", sortedKeys(schemas))
+	if _, ok := doc["components"]; ok {
+		t.Error("schemas should be inlined into the operations instead of kept as components")
 	}
-	if _, ok := get(t, doc, "components").(map[string]any)["responses"]; ok {
-		t.Error("response components should be dropped")
+	param := get(t, doc, "paths", "/sessions/{session_id}", "get", "parameters").([]any)[0]
+	if get(t, param, "schema", "minLength") != float64(26) {
+		t.Errorf("the Ulid reference should be inlined, got %v", param)
 	}
 	if get(t, doc, "info", "version") != "v1.2.3" {
 		t.Error("ref is not recorded as the info version")
@@ -323,27 +323,18 @@ func TestPrepareRejectsRecursiveSchemas(t *testing.T) {
 
 const conflictingUlid = "Ulid: {type: string, minLength: 20, maxLength: 26}"
 
-func TestPrepareFailsOnConflictingComponents(t *testing.T) {
+func TestPrepareUsesTheComponentsOfEachModule(t *testing.T) {
 	conflicting := strings.Replace(sessionsModule, "Ulid: {type: string, minLength: 26, maxLength: 26}", conflictingUlid, 1)
 	cfg := testConfig(
 		Tool{Method: "get", Path: "/projects/{project_id}", Name: "get_project", Description: "Get a project."},
 		Tool{Method: "get", Path: "/sessions/{session_id}", Name: "get_session", Description: "Get a session."},
 	)
-	_, err := Prepare(cfg, "v1", map[string][]byte{"projects.yaml": []byte(projectsModule), "sessions.yaml": []byte(conflicting)})
-	if err == nil || !strings.Contains(err.Error(), "schemas/Ulid is defined differently in projects.yaml and sessions.yaml") {
-		t.Fatalf("expected a conflict error for Ulid, got %v", err)
+	_, tools := prepare(t, cfg, map[string]string{"projects.yaml": projectsModule, "sessions.yaml": conflicting})
+	if get(t, tools["get_project"].InputSchema, "properties", "project_id", "minLength") != float64(26) {
+		t.Error("get_project should use the Ulid of the projects module")
 	}
-}
-
-func TestPrepareIgnoresConflictsOutsideTheAllowlist(t *testing.T) {
-	conflicting := strings.Replace(sessionsModule, "Ulid: {type: string, minLength: 26, maxLength: 26}", conflictingUlid, 1)
-	cfg := testConfig(
-		Tool{Method: "get", Path: "/projects/{project_id}", Name: "get_project", Description: "Get a project."},
-		Tool{Method: "get", Path: "/sessions", Name: "list_sessions", Description: "List sessions."},
-	)
-	_, err := Prepare(cfg, "v1", map[string][]byte{"projects.yaml": []byte(projectsModule), "sessions.yaml": []byte(conflicting)})
-	if err != nil {
-		t.Fatalf("components of operations that are not allowlisted must not conflict: %v", err)
+	if get(t, tools["get_session"].InputSchema, "properties", "session_id", "minLength") != float64(20) {
+		t.Error("get_session should use the Ulid of the sessions module")
 	}
 }
 

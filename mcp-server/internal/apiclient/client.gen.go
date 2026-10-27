@@ -16,14 +16,14 @@ import (
 	"github.com/oapi-codegen/runtime"
 )
 
-// Defines values for SessionType.
+// Defines values for ListSessionsParamsSessionType.
 const (
-	Interactive    SessionType = "interactive"
-	NonInteractive SessionType = "non-interactive"
+	Interactive    ListSessionsParamsSessionType = "interactive"
+	NonInteractive ListSessionsParamsSessionType = "non-interactive"
 )
 
-// Valid indicates whether the value is a known member of the SessionType enum.
-func (e SessionType) Valid() bool {
+// Valid indicates whether the value is a known member of the ListSessionsParamsSessionType enum.
+func (e ListSessionsParamsSessionType) Valid() bool {
 	switch e {
 	case Interactive:
 		return true
@@ -33,122 +33,6 @@ func (e SessionType) Valid() bool {
 		return false
 	}
 }
-
-// EnvVarOverride Override an env variable defined in the session launcher
-type EnvVarOverride struct {
-	// Name Example: MY_VAR
-	Name  string `json:"name"`
-	Value string `json:"value"`
-}
-
-// EnvVariableOverrides Environment variable overrides for the session pod
-type EnvVariableOverrides = []EnvVarOverride
-
-// PaginationRequestPage Result's page number starting from 1
-type PaginationRequestPage = int
-
-// PaginationRequestPerPage The number of results per page
-type PaginationRequestPerPage = int
-
-// RCloneConfig Dictionary of rclone key:value pairs (based on schema from '/storage_schema')
-type RCloneConfig map[string]RCloneConfig_AdditionalProperties
-
-// RCloneConfig0 defines model for RCloneConfig.0.
-type RCloneConfig0 = int
-
-// RCloneConfig1 defines model for RCloneConfig.1.
-type RCloneConfig1 = string
-
-// RCloneConfig2 defines model for RCloneConfig.2.
-type RCloneConfig2 = bool
-
-// RCloneConfig3 defines model for RCloneConfig.3.
-type RCloneConfig3 = map[string]interface{}
-
-// RCloneConfig_AdditionalProperties defines model for RCloneConfig.AdditionalProperties.
-type RCloneConfig_AdditionalProperties struct {
-	union json.RawMessage
-}
-
-// SessionDataConnectorOverride defines model for SessionDataConnectorOverride.
-type SessionDataConnectorOverride struct {
-	// Configuration Dictionary of rclone key:value pairs (based on schema from '/storage_schema')
-	Configuration   *RCloneConfig `json:"configuration,omitempty"`
-	DataConnectorId string        `json:"data_connector_id"`
-
-	// Readonly Whether this storage should be mounted readonly or not
-	Readonly *StorageReadOnly `json:"readonly,omitempty"`
-
-	// Skip The corresponding data connector will not be mounted if `skip` is set to `true`.
-	Skip *bool `json:"skip,omitempty"`
-
-	// SourcePath the source path to mount, usually starts with bucket/container name
-	//
-	// Example: bucket/my/storage/folder/
-	SourcePath *SourcePath `json:"source_path,omitempty"`
-
-	// TargetPath the target path relative to the working directory where the storage should be mounted
-	//
-	// Example: my/project/folder
-	TargetPath *TargetPath `json:"target_path,omitempty"`
-}
-
-// SessionDataConnectorsOverrideList defines model for SessionDataConnectorsOverrideList.
-type SessionDataConnectorsOverrideList = []SessionDataConnectorOverride
-
-// SessionPostRequest defines model for SessionPostRequest.
-type SessionPostRequest struct {
-	DataConnectorsOverrides *SessionDataConnectorsOverrideList `json:"data_connectors_overrides,omitempty"`
-
-	// DiskStorage The size of disk storage for the session, in gigabytes
-	DiskStorage *int `json:"disk_storage,omitempty"`
-
-	// EnvVariableOverrides Environment variable overrides for the session pod
-	EnvVariableOverrides *EnvVariableOverrides `json:"env_variable_overrides,omitempty"`
-	JobArgsOverride      *[]string             `json:"job_args_override,omitempty"`
-	JobCommandOverride   *[]string             `json:"job_command_override,omitempty"`
-
-	// LauncherId ULID identifier
-	LauncherId      Ulid `json:"launcher_id"`
-	ResourceClassId *int `json:"resource_class_id,omitempty"`
-
-	// SubmissionId When submitting a job, i.e. the launcher used is a job
-	// launcher, the submission id is required to deduplicate
-	// same job submissions and allows retries.
-	SubmissionId *SubmissionId `json:"submission_id,omitempty"`
-}
-
-// SessionType defines model for SessionType.
-type SessionType string
-
-// Slug A command-line/url friendly name for a namespace
-//
-// Example: a-slug-example
-type Slug = string
-
-// SourcePath the source path to mount, usually starts with bucket/container name
-//
-// Example: bucket/my/storage/folder/
-type SourcePath = string
-
-// StorageReadOnly Whether this storage should be mounted readonly or not
-type StorageReadOnly = bool
-
-// SubmissionId When submitting a job, i.e. the launcher used is a job
-// launcher, the submission id is required to deduplicate
-// same job submissions and allows retries.
-type SubmissionId = string
-
-// TargetPath the target path relative to the working directory where the storage should be mounted
-//
-// Example: my/project/folder
-type TargetPath = string
-
-// Ulid ULID identifier
-type Ulid = string
-
-// WithDocumentation Projects with or without possibly extensive documentation?
-type WithDocumentation = bool
 
 // ListDataConnectorsParams defines parameters for ListDataConnectors.
 type ListDataConnectorsParams struct {
@@ -165,10 +49,10 @@ type ListDataConnectorsParams struct {
 // ListGroupsParams defines parameters for ListGroups.
 type ListGroupsParams struct {
 	// Page the current page in paginated response
-	Page *PaginationRequestPage `form:"page,omitempty" json:"page,omitempty"`
+	Page *int `form:"page,omitempty" json:"page,omitempty"`
 
 	// PerPage the number of results per page in a paginated response
-	PerPage *PaginationRequestPerPage `form:"per_page,omitempty" json:"per_page,omitempty"`
+	PerPage *int `form:"per_page,omitempty" json:"per_page,omitempty"`
 
 	// DirectMember A flag to filter for where the user is a direct member.
 	DirectMember *bool `form:"direct_member,omitempty" json:"direct_member,omitempty"`
@@ -176,7 +60,7 @@ type ListGroupsParams struct {
 
 // GetProjectBySlugParams defines parameters for GetProjectBySlug.
 type GetProjectBySlugParams struct {
-	WithDocumentation *WithDocumentation `form:"with_documentation,omitempty" json:"with_documentation,omitempty"`
+	WithDocumentation *bool `form:"with_documentation,omitempty" json:"with_documentation,omitempty"`
 }
 
 // ListProjectsParams defines parameters for ListProjects.
@@ -196,7 +80,7 @@ type ListProjectsParams struct {
 
 // GetProjectParams defines parameters for GetProject.
 type GetProjectParams struct {
-	WithDocumentation *WithDocumentation `form:"with_documentation,omitempty" json:"with_documentation,omitempty"`
+	WithDocumentation *bool `form:"with_documentation,omitempty" json:"with_documentation,omitempty"`
 }
 
 // SearchParams defines parameters for Search.
@@ -217,7 +101,73 @@ type SearchParams struct {
 // ListSessionsParams defines parameters for ListSessions.
 type ListSessionsParams struct {
 	// SessionType Filter by session mode.
-	SessionType *SessionType `form:"session_type,omitempty" json:"session_type,omitempty"`
+	SessionType *ListSessionsParamsSessionType `form:"session_type,omitempty" json:"session_type,omitempty"`
+}
+
+// ListSessionsParamsSessionType defines parameters for ListSessions.
+type ListSessionsParamsSessionType string
+
+// StartSessionJSONBody defines parameters for StartSession.
+type StartSessionJSONBody struct {
+	DataConnectorsOverrides *[]struct {
+		// Configuration Dictionary of rclone key:value pairs (based on schema from '/storage_schema')
+		Configuration   *map[string]StartSessionJSONBody_DataConnectorsOverrides_Configuration_AdditionalProperties `json:"configuration,omitempty"`
+		DataConnectorId string                                                                                      `json:"data_connector_id"`
+
+		// Readonly Whether this storage should be mounted readonly or not
+		Readonly *bool `json:"readonly,omitempty"`
+
+		// Skip The corresponding data connector will not be mounted if `skip` is set to `true`.
+		Skip *bool `json:"skip,omitempty"`
+
+		// SourcePath the source path to mount, usually starts with bucket/container name
+		//
+		// Example: bucket/my/storage/folder/
+		SourcePath *string `json:"source_path,omitempty"`
+
+		// TargetPath the target path relative to the working directory where the storage should be mounted
+		//
+		// Example: my/project/folder
+		TargetPath *string `json:"target_path,omitempty"`
+	} `json:"data_connectors_overrides,omitempty"`
+
+	// DiskStorage The size of disk storage for the session, in gigabytes
+	DiskStorage *int `json:"disk_storage,omitempty"`
+
+	// EnvVariableOverrides Environment variable overrides for the session pod
+	EnvVariableOverrides *[]struct {
+		// Name Example: MY_VAR
+		Name  string `json:"name"`
+		Value string `json:"value"`
+	} `json:"env_variable_overrides,omitempty"`
+	JobArgsOverride    *[]string `json:"job_args_override,omitempty"`
+	JobCommandOverride *[]string `json:"job_command_override,omitempty"`
+
+	// LauncherId ULID identifier
+	LauncherId      string `json:"launcher_id"`
+	ResourceClassId *int   `json:"resource_class_id,omitempty"`
+
+	// SubmissionId When submitting a job, i.e. the launcher used is a job
+	// launcher, the submission id is required to deduplicate
+	// same job submissions and allows retries.
+	SubmissionId *string `json:"submission_id,omitempty"`
+}
+
+// StartSessionJSONBodyDataConnectorsOverridesConfiguration0 defines parameters for StartSession.
+type StartSessionJSONBodyDataConnectorsOverridesConfiguration0 = int
+
+// StartSessionJSONBodyDataConnectorsOverridesConfiguration1 defines parameters for StartSession.
+type StartSessionJSONBodyDataConnectorsOverridesConfiguration1 = string
+
+// StartSessionJSONBodyDataConnectorsOverridesConfiguration2 defines parameters for StartSession.
+type StartSessionJSONBodyDataConnectorsOverridesConfiguration2 = bool
+
+// StartSessionJSONBodyDataConnectorsOverridesConfiguration3 defines parameters for StartSession.
+type StartSessionJSONBodyDataConnectorsOverridesConfiguration3 = map[string]interface{}
+
+// StartSessionJSONBody_DataConnectorsOverrides_Configuration_AdditionalProperties defines parameters for StartSession.
+type StartSessionJSONBody_DataConnectorsOverrides_Configuration_AdditionalProperties struct {
+	union json.RawMessage
 }
 
 // GetSessionLogsParams defines parameters for GetSessionLogs.
@@ -227,24 +177,24 @@ type GetSessionLogsParams struct {
 }
 
 // StartSessionJSONRequestBody defines body for StartSession for application/json ContentType.
-type StartSessionJSONRequestBody = SessionPostRequest
+type StartSessionJSONRequestBody StartSessionJSONBody
 
-// AsRCloneConfig0 returns the union data inside the RCloneConfig_AdditionalProperties as a RCloneConfig0
-func (t RCloneConfig_AdditionalProperties) AsRCloneConfig0() (RCloneConfig0, error) {
-	var body RCloneConfig0
+// AsStartSessionJSONBodyDataConnectorsOverridesConfiguration0 returns the union data inside the StartSessionJSONBody_DataConnectorsOverrides_Configuration_AdditionalProperties as a StartSessionJSONBodyDataConnectorsOverridesConfiguration0
+func (t StartSessionJSONBody_DataConnectorsOverrides_Configuration_AdditionalProperties) AsStartSessionJSONBodyDataConnectorsOverridesConfiguration0() (StartSessionJSONBodyDataConnectorsOverridesConfiguration0, error) {
+	var body StartSessionJSONBodyDataConnectorsOverridesConfiguration0
 	err := json.Unmarshal(t.union, &body)
 	return body, err
 }
 
-// FromRCloneConfig0 overwrites any union data inside the RCloneConfig_AdditionalProperties as the provided RCloneConfig0
-func (t *RCloneConfig_AdditionalProperties) FromRCloneConfig0(v RCloneConfig0) error {
+// FromStartSessionJSONBodyDataConnectorsOverridesConfiguration0 overwrites any union data inside the StartSessionJSONBody_DataConnectorsOverrides_Configuration_AdditionalProperties as the provided StartSessionJSONBodyDataConnectorsOverridesConfiguration0
+func (t *StartSessionJSONBody_DataConnectorsOverrides_Configuration_AdditionalProperties) FromStartSessionJSONBodyDataConnectorsOverridesConfiguration0(v StartSessionJSONBodyDataConnectorsOverridesConfiguration0) error {
 	b, err := json.Marshal(v)
 	t.union = b
 	return err
 }
 
-// MergeRCloneConfig0 performs a merge with any union data inside the RCloneConfig_AdditionalProperties, using the provided RCloneConfig0
-func (t *RCloneConfig_AdditionalProperties) MergeRCloneConfig0(v RCloneConfig0) error {
+// MergeStartSessionJSONBodyDataConnectorsOverridesConfiguration0 performs a merge with any union data inside the StartSessionJSONBody_DataConnectorsOverrides_Configuration_AdditionalProperties, using the provided StartSessionJSONBodyDataConnectorsOverridesConfiguration0
+func (t *StartSessionJSONBody_DataConnectorsOverrides_Configuration_AdditionalProperties) MergeStartSessionJSONBodyDataConnectorsOverridesConfiguration0(v StartSessionJSONBodyDataConnectorsOverridesConfiguration0) error {
 	b, err := json.Marshal(v)
 	if err != nil {
 		return err
@@ -255,22 +205,22 @@ func (t *RCloneConfig_AdditionalProperties) MergeRCloneConfig0(v RCloneConfig0) 
 	return err
 }
 
-// AsRCloneConfig1 returns the union data inside the RCloneConfig_AdditionalProperties as a RCloneConfig1
-func (t RCloneConfig_AdditionalProperties) AsRCloneConfig1() (RCloneConfig1, error) {
-	var body RCloneConfig1
+// AsStartSessionJSONBodyDataConnectorsOverridesConfiguration1 returns the union data inside the StartSessionJSONBody_DataConnectorsOverrides_Configuration_AdditionalProperties as a StartSessionJSONBodyDataConnectorsOverridesConfiguration1
+func (t StartSessionJSONBody_DataConnectorsOverrides_Configuration_AdditionalProperties) AsStartSessionJSONBodyDataConnectorsOverridesConfiguration1() (StartSessionJSONBodyDataConnectorsOverridesConfiguration1, error) {
+	var body StartSessionJSONBodyDataConnectorsOverridesConfiguration1
 	err := json.Unmarshal(t.union, &body)
 	return body, err
 }
 
-// FromRCloneConfig1 overwrites any union data inside the RCloneConfig_AdditionalProperties as the provided RCloneConfig1
-func (t *RCloneConfig_AdditionalProperties) FromRCloneConfig1(v RCloneConfig1) error {
+// FromStartSessionJSONBodyDataConnectorsOverridesConfiguration1 overwrites any union data inside the StartSessionJSONBody_DataConnectorsOverrides_Configuration_AdditionalProperties as the provided StartSessionJSONBodyDataConnectorsOverridesConfiguration1
+func (t *StartSessionJSONBody_DataConnectorsOverrides_Configuration_AdditionalProperties) FromStartSessionJSONBodyDataConnectorsOverridesConfiguration1(v StartSessionJSONBodyDataConnectorsOverridesConfiguration1) error {
 	b, err := json.Marshal(v)
 	t.union = b
 	return err
 }
 
-// MergeRCloneConfig1 performs a merge with any union data inside the RCloneConfig_AdditionalProperties, using the provided RCloneConfig1
-func (t *RCloneConfig_AdditionalProperties) MergeRCloneConfig1(v RCloneConfig1) error {
+// MergeStartSessionJSONBodyDataConnectorsOverridesConfiguration1 performs a merge with any union data inside the StartSessionJSONBody_DataConnectorsOverrides_Configuration_AdditionalProperties, using the provided StartSessionJSONBodyDataConnectorsOverridesConfiguration1
+func (t *StartSessionJSONBody_DataConnectorsOverrides_Configuration_AdditionalProperties) MergeStartSessionJSONBodyDataConnectorsOverridesConfiguration1(v StartSessionJSONBodyDataConnectorsOverridesConfiguration1) error {
 	b, err := json.Marshal(v)
 	if err != nil {
 		return err
@@ -281,22 +231,22 @@ func (t *RCloneConfig_AdditionalProperties) MergeRCloneConfig1(v RCloneConfig1) 
 	return err
 }
 
-// AsRCloneConfig2 returns the union data inside the RCloneConfig_AdditionalProperties as a RCloneConfig2
-func (t RCloneConfig_AdditionalProperties) AsRCloneConfig2() (RCloneConfig2, error) {
-	var body RCloneConfig2
+// AsStartSessionJSONBodyDataConnectorsOverridesConfiguration2 returns the union data inside the StartSessionJSONBody_DataConnectorsOverrides_Configuration_AdditionalProperties as a StartSessionJSONBodyDataConnectorsOverridesConfiguration2
+func (t StartSessionJSONBody_DataConnectorsOverrides_Configuration_AdditionalProperties) AsStartSessionJSONBodyDataConnectorsOverridesConfiguration2() (StartSessionJSONBodyDataConnectorsOverridesConfiguration2, error) {
+	var body StartSessionJSONBodyDataConnectorsOverridesConfiguration2
 	err := json.Unmarshal(t.union, &body)
 	return body, err
 }
 
-// FromRCloneConfig2 overwrites any union data inside the RCloneConfig_AdditionalProperties as the provided RCloneConfig2
-func (t *RCloneConfig_AdditionalProperties) FromRCloneConfig2(v RCloneConfig2) error {
+// FromStartSessionJSONBodyDataConnectorsOverridesConfiguration2 overwrites any union data inside the StartSessionJSONBody_DataConnectorsOverrides_Configuration_AdditionalProperties as the provided StartSessionJSONBodyDataConnectorsOverridesConfiguration2
+func (t *StartSessionJSONBody_DataConnectorsOverrides_Configuration_AdditionalProperties) FromStartSessionJSONBodyDataConnectorsOverridesConfiguration2(v StartSessionJSONBodyDataConnectorsOverridesConfiguration2) error {
 	b, err := json.Marshal(v)
 	t.union = b
 	return err
 }
 
-// MergeRCloneConfig2 performs a merge with any union data inside the RCloneConfig_AdditionalProperties, using the provided RCloneConfig2
-func (t *RCloneConfig_AdditionalProperties) MergeRCloneConfig2(v RCloneConfig2) error {
+// MergeStartSessionJSONBodyDataConnectorsOverridesConfiguration2 performs a merge with any union data inside the StartSessionJSONBody_DataConnectorsOverrides_Configuration_AdditionalProperties, using the provided StartSessionJSONBodyDataConnectorsOverridesConfiguration2
+func (t *StartSessionJSONBody_DataConnectorsOverrides_Configuration_AdditionalProperties) MergeStartSessionJSONBodyDataConnectorsOverridesConfiguration2(v StartSessionJSONBodyDataConnectorsOverridesConfiguration2) error {
 	b, err := json.Marshal(v)
 	if err != nil {
 		return err
@@ -307,22 +257,22 @@ func (t *RCloneConfig_AdditionalProperties) MergeRCloneConfig2(v RCloneConfig2) 
 	return err
 }
 
-// AsRCloneConfig3 returns the union data inside the RCloneConfig_AdditionalProperties as a RCloneConfig3
-func (t RCloneConfig_AdditionalProperties) AsRCloneConfig3() (RCloneConfig3, error) {
-	var body RCloneConfig3
+// AsStartSessionJSONBodyDataConnectorsOverridesConfiguration3 returns the union data inside the StartSessionJSONBody_DataConnectorsOverrides_Configuration_AdditionalProperties as a StartSessionJSONBodyDataConnectorsOverridesConfiguration3
+func (t StartSessionJSONBody_DataConnectorsOverrides_Configuration_AdditionalProperties) AsStartSessionJSONBodyDataConnectorsOverridesConfiguration3() (StartSessionJSONBodyDataConnectorsOverridesConfiguration3, error) {
+	var body StartSessionJSONBodyDataConnectorsOverridesConfiguration3
 	err := json.Unmarshal(t.union, &body)
 	return body, err
 }
 
-// FromRCloneConfig3 overwrites any union data inside the RCloneConfig_AdditionalProperties as the provided RCloneConfig3
-func (t *RCloneConfig_AdditionalProperties) FromRCloneConfig3(v RCloneConfig3) error {
+// FromStartSessionJSONBodyDataConnectorsOverridesConfiguration3 overwrites any union data inside the StartSessionJSONBody_DataConnectorsOverrides_Configuration_AdditionalProperties as the provided StartSessionJSONBodyDataConnectorsOverridesConfiguration3
+func (t *StartSessionJSONBody_DataConnectorsOverrides_Configuration_AdditionalProperties) FromStartSessionJSONBodyDataConnectorsOverridesConfiguration3(v StartSessionJSONBodyDataConnectorsOverridesConfiguration3) error {
 	b, err := json.Marshal(v)
 	t.union = b
 	return err
 }
 
-// MergeRCloneConfig3 performs a merge with any union data inside the RCloneConfig_AdditionalProperties, using the provided RCloneConfig3
-func (t *RCloneConfig_AdditionalProperties) MergeRCloneConfig3(v RCloneConfig3) error {
+// MergeStartSessionJSONBodyDataConnectorsOverridesConfiguration3 performs a merge with any union data inside the StartSessionJSONBody_DataConnectorsOverrides_Configuration_AdditionalProperties, using the provided StartSessionJSONBodyDataConnectorsOverridesConfiguration3
+func (t *StartSessionJSONBody_DataConnectorsOverrides_Configuration_AdditionalProperties) MergeStartSessionJSONBodyDataConnectorsOverridesConfiguration3(v StartSessionJSONBodyDataConnectorsOverridesConfiguration3) error {
 	b, err := json.Marshal(v)
 	if err != nil {
 		return err
@@ -333,12 +283,12 @@ func (t *RCloneConfig_AdditionalProperties) MergeRCloneConfig3(v RCloneConfig3) 
 	return err
 }
 
-func (t RCloneConfig_AdditionalProperties) MarshalJSON() ([]byte, error) {
+func (t StartSessionJSONBody_DataConnectorsOverrides_Configuration_AdditionalProperties) MarshalJSON() ([]byte, error) {
 	b, err := t.union.MarshalJSON()
 	return b, err
 }
 
-func (t *RCloneConfig_AdditionalProperties) UnmarshalJSON(b []byte) error {
+func (t *StartSessionJSONBody_DataConnectorsOverrides_Configuration_AdditionalProperties) UnmarshalJSON(b []byte) error {
 	err := t.union.UnmarshalJSON(b)
 	return err
 }
@@ -417,108 +367,64 @@ func WithRequestEditorFn(fn RequestEditorFn) ClientOption {
 // The interface specification for the client above.
 type ClientInterface interface {
 
-	// ListDataConnectors Get all data connectors
-	//
-	// Corresponds with GET /data_connectors (the `ListDataConnectors` operationId).
+	// ListDataConnectors performs a GET /data_connectors (the `ListDataConnectors` operationId) request.
 	ListDataConnectors(ctx context.Context, params *ListDataConnectorsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// GetDataConnector Get data connector details
-	//
-	// Corresponds with GET /data_connectors/{data_connector_id} (the `GetDataConnector` operationId).
-	GetDataConnector(ctx context.Context, dataConnectorId Ulid, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// GetDataConnector performs a GET /data_connectors/{data_connector_id} (the `GetDataConnector` operationId) request.
+	GetDataConnector(ctx context.Context, dataConnectorId string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// ListGroups Get all groups
-	//
-	// Corresponds with GET /groups (the `ListGroups` operationId).
+	// ListGroups performs a GET /groups (the `ListGroups` operationId) request.
 	ListGroups(ctx context.Context, params *ListGroupsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// GetGroup Get a group
-	//
-	// Corresponds with GET /groups/{group_slug} (the `GetGroup` operationId).
-	GetGroup(ctx context.Context, groupSlug Slug, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// GetGroup performs a GET /groups/{group_slug} (the `GetGroup` operationId) request.
+	GetGroup(ctx context.Context, groupSlug string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// GetProjectBySlug Get a project by namespace and project slug
-	//
-	// Corresponds with GET /namespaces/{namespace}/projects/{slug} (the `GetProjectBySlug` operationId).
+	// GetProjectBySlug performs a GET /namespaces/{namespace}/projects/{slug} (the `GetProjectBySlug` operationId) request.
 	GetProjectBySlug(ctx context.Context, namespace string, slug string, params *GetProjectBySlugParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// ListProjects Get all projects
-	//
-	// Corresponds with GET /projects (the `ListProjects` operationId).
+	// ListProjects performs a GET /projects (the `ListProjects` operationId) request.
 	ListProjects(ctx context.Context, params *ListProjectsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// GetProject Get a project
-	//
-	// Corresponds with GET /projects/{project_id} (the `GetProject` operationId).
-	GetProject(ctx context.Context, projectId Ulid, params *GetProjectParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// GetProject performs a GET /projects/{project_id} (the `GetProject` operationId) request.
+	GetProject(ctx context.Context, projectId string, params *GetProjectParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// ListProjectDataConnectorLinks Get all links from data connectors to a given project
-	//
-	// Corresponds with GET /projects/{project_id}/data_connector_links (the `ListProjectDataConnectorLinks` operationId).
-	ListProjectDataConnectorLinks(ctx context.Context, projectId Ulid, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// ListProjectDataConnectorLinks performs a GET /projects/{project_id}/data_connector_links (the `ListProjectDataConnectorLinks` operationId) request.
+	ListProjectDataConnectorLinks(ctx context.Context, projectId string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// ListProjectSessionLaunchers Get a project's session launchers
-	//
-	// Corresponds with GET /projects/{project_id}/session_launchers (the `ListProjectSessionLaunchers` operationId).
-	ListProjectSessionLaunchers(ctx context.Context, projectId Ulid, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// ListProjectSessionLaunchers performs a GET /projects/{project_id}/session_launchers (the `ListProjectSessionLaunchers` operationId) request.
+	ListProjectSessionLaunchers(ctx context.Context, projectId string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// Search Run a search query.
-	//
-	// Please note: this description is replaced at runtime with the
-	// contents of the query manual markdown file. Everything added
-	// in this file will be replaced.
-	//
-	// Corresponds with GET /search/query (the `Search` operationId).
+	// Search performs a GET /search/query (the `Search` operationId) request.
 	Search(ctx context.Context, params *SearchParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// GetSessionLauncher Get a session launcher
-	//
-	// Corresponds with GET /session_launchers/{launcher_id} (the `GetSessionLauncher` operationId).
-	GetSessionLauncher(ctx context.Context, launcherId Ulid, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// GetSessionLauncher performs a GET /session_launchers/{launcher_id} (the `GetSessionLauncher` operationId) request.
+	GetSessionLauncher(ctx context.Context, launcherId string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// ListSessions Get a list of all sessions for a user
-	//
-	// Corresponds with GET /sessions (the `ListSessions` operationId).
+	// ListSessions performs a GET /sessions (the `ListSessions` operationId) request.
 	ListSessions(ctx context.Context, params *ListSessionsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// StartSessionWithBody Launch a new session
-	//
-	// Takes any type of body and a specified content type.
-	//
-	// Corresponds with POST /sessions (the `StartSession` operationId).
+	// StartSessionWithBody performs a POST /sessions (the `StartSession` operationId) request,
+	// with any type of body and a specified content type.
 	StartSessionWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// StartSession Launch a new session
-	//
+	// StartSession performs a POST /sessions (the `StartSession` operationId) request.
 	// Takes a body of the `application/json` content type.
-	//
-	// Corresponds with POST /sessions (the `StartSession` operationId).
 	StartSession(ctx context.Context, body StartSessionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// StopSession Fully remove a session
-	//
-	// Corresponds with DELETE /sessions/{session_id} (the `StopSession` operationId).
+	// StopSession performs a DELETE /sessions/{session_id} (the `StopSession` operationId) request.
 	StopSession(ctx context.Context, sessionId string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// GetSession Get information about a specific session
-	//
-	// Corresponds with GET /sessions/{session_id} (the `GetSession` operationId).
+	// GetSession performs a GET /sessions/{session_id} (the `GetSession` operationId) request.
 	GetSession(ctx context.Context, sessionId string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// GetSessionLogs Get all logs from a specific session
-	//
-	// Corresponds with GET /sessions/{session_id}/logs (the `GetSessionLogs` operationId).
+	// GetSessionLogs performs a GET /sessions/{session_id}/logs (the `GetSessionLogs` operationId) request.
 	GetSessionLogs(ctx context.Context, sessionId string, params *GetSessionLogsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// GetCurrentUser Get information about the currently logged in user
-	//
-	// Corresponds with GET /user (the `GetCurrentUser` operationId).
+	// GetCurrentUser performs a GET /user (the `GetCurrentUser` operationId) request.
 	GetCurrentUser(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 }
 
-// ListDataConnectors Get all data connectors
-//
-// Corresponds with GET /data_connectors (the `ListDataConnectors` operationId).
+// ListDataConnectors performs a GET /data_connectors (the `ListDataConnectors` operationId) request.
 func (c *Client) ListDataConnectors(ctx context.Context, params *ListDataConnectorsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewListDataConnectorsRequest(c.Server, params)
 	if err != nil {
@@ -531,10 +437,8 @@ func (c *Client) ListDataConnectors(ctx context.Context, params *ListDataConnect
 	return c.Client.Do(req)
 }
 
-// GetDataConnector Get data connector details
-//
-// Corresponds with GET /data_connectors/{data_connector_id} (the `GetDataConnector` operationId).
-func (c *Client) GetDataConnector(ctx context.Context, dataConnectorId Ulid, reqEditors ...RequestEditorFn) (*http.Response, error) {
+// GetDataConnector performs a GET /data_connectors/{data_connector_id} (the `GetDataConnector` operationId) request.
+func (c *Client) GetDataConnector(ctx context.Context, dataConnectorId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetDataConnectorRequest(c.Server, dataConnectorId)
 	if err != nil {
 		return nil, err
@@ -546,9 +450,7 @@ func (c *Client) GetDataConnector(ctx context.Context, dataConnectorId Ulid, req
 	return c.Client.Do(req)
 }
 
-// ListGroups Get all groups
-//
-// Corresponds with GET /groups (the `ListGroups` operationId).
+// ListGroups performs a GET /groups (the `ListGroups` operationId) request.
 func (c *Client) ListGroups(ctx context.Context, params *ListGroupsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewListGroupsRequest(c.Server, params)
 	if err != nil {
@@ -561,10 +463,8 @@ func (c *Client) ListGroups(ctx context.Context, params *ListGroupsParams, reqEd
 	return c.Client.Do(req)
 }
 
-// GetGroup Get a group
-//
-// Corresponds with GET /groups/{group_slug} (the `GetGroup` operationId).
-func (c *Client) GetGroup(ctx context.Context, groupSlug Slug, reqEditors ...RequestEditorFn) (*http.Response, error) {
+// GetGroup performs a GET /groups/{group_slug} (the `GetGroup` operationId) request.
+func (c *Client) GetGroup(ctx context.Context, groupSlug string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetGroupRequest(c.Server, groupSlug)
 	if err != nil {
 		return nil, err
@@ -576,9 +476,7 @@ func (c *Client) GetGroup(ctx context.Context, groupSlug Slug, reqEditors ...Req
 	return c.Client.Do(req)
 }
 
-// GetProjectBySlug Get a project by namespace and project slug
-//
-// Corresponds with GET /namespaces/{namespace}/projects/{slug} (the `GetProjectBySlug` operationId).
+// GetProjectBySlug performs a GET /namespaces/{namespace}/projects/{slug} (the `GetProjectBySlug` operationId) request.
 func (c *Client) GetProjectBySlug(ctx context.Context, namespace string, slug string, params *GetProjectBySlugParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetProjectBySlugRequest(c.Server, namespace, slug, params)
 	if err != nil {
@@ -591,9 +489,7 @@ func (c *Client) GetProjectBySlug(ctx context.Context, namespace string, slug st
 	return c.Client.Do(req)
 }
 
-// ListProjects Get all projects
-//
-// Corresponds with GET /projects (the `ListProjects` operationId).
+// ListProjects performs a GET /projects (the `ListProjects` operationId) request.
 func (c *Client) ListProjects(ctx context.Context, params *ListProjectsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewListProjectsRequest(c.Server, params)
 	if err != nil {
@@ -606,10 +502,8 @@ func (c *Client) ListProjects(ctx context.Context, params *ListProjectsParams, r
 	return c.Client.Do(req)
 }
 
-// GetProject Get a project
-//
-// Corresponds with GET /projects/{project_id} (the `GetProject` operationId).
-func (c *Client) GetProject(ctx context.Context, projectId Ulid, params *GetProjectParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+// GetProject performs a GET /projects/{project_id} (the `GetProject` operationId) request.
+func (c *Client) GetProject(ctx context.Context, projectId string, params *GetProjectParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetProjectRequest(c.Server, projectId, params)
 	if err != nil {
 		return nil, err
@@ -621,10 +515,8 @@ func (c *Client) GetProject(ctx context.Context, projectId Ulid, params *GetProj
 	return c.Client.Do(req)
 }
 
-// ListProjectDataConnectorLinks Get all links from data connectors to a given project
-//
-// Corresponds with GET /projects/{project_id}/data_connector_links (the `ListProjectDataConnectorLinks` operationId).
-func (c *Client) ListProjectDataConnectorLinks(ctx context.Context, projectId Ulid, reqEditors ...RequestEditorFn) (*http.Response, error) {
+// ListProjectDataConnectorLinks performs a GET /projects/{project_id}/data_connector_links (the `ListProjectDataConnectorLinks` operationId) request.
+func (c *Client) ListProjectDataConnectorLinks(ctx context.Context, projectId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewListProjectDataConnectorLinksRequest(c.Server, projectId)
 	if err != nil {
 		return nil, err
@@ -636,10 +528,8 @@ func (c *Client) ListProjectDataConnectorLinks(ctx context.Context, projectId Ul
 	return c.Client.Do(req)
 }
 
-// ListProjectSessionLaunchers Get a project's session launchers
-//
-// Corresponds with GET /projects/{project_id}/session_launchers (the `ListProjectSessionLaunchers` operationId).
-func (c *Client) ListProjectSessionLaunchers(ctx context.Context, projectId Ulid, reqEditors ...RequestEditorFn) (*http.Response, error) {
+// ListProjectSessionLaunchers performs a GET /projects/{project_id}/session_launchers (the `ListProjectSessionLaunchers` operationId) request.
+func (c *Client) ListProjectSessionLaunchers(ctx context.Context, projectId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewListProjectSessionLaunchersRequest(c.Server, projectId)
 	if err != nil {
 		return nil, err
@@ -651,13 +541,7 @@ func (c *Client) ListProjectSessionLaunchers(ctx context.Context, projectId Ulid
 	return c.Client.Do(req)
 }
 
-// Search Run a search query.
-//
-// Please note: this description is replaced at runtime with the
-// contents of the query manual markdown file. Everything added
-// in this file will be replaced.
-//
-// Corresponds with GET /search/query (the `Search` operationId).
+// Search performs a GET /search/query (the `Search` operationId) request.
 func (c *Client) Search(ctx context.Context, params *SearchParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewSearchRequest(c.Server, params)
 	if err != nil {
@@ -670,10 +554,8 @@ func (c *Client) Search(ctx context.Context, params *SearchParams, reqEditors ..
 	return c.Client.Do(req)
 }
 
-// GetSessionLauncher Get a session launcher
-//
-// Corresponds with GET /session_launchers/{launcher_id} (the `GetSessionLauncher` operationId).
-func (c *Client) GetSessionLauncher(ctx context.Context, launcherId Ulid, reqEditors ...RequestEditorFn) (*http.Response, error) {
+// GetSessionLauncher performs a GET /session_launchers/{launcher_id} (the `GetSessionLauncher` operationId) request.
+func (c *Client) GetSessionLauncher(ctx context.Context, launcherId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetSessionLauncherRequest(c.Server, launcherId)
 	if err != nil {
 		return nil, err
@@ -685,9 +567,7 @@ func (c *Client) GetSessionLauncher(ctx context.Context, launcherId Ulid, reqEdi
 	return c.Client.Do(req)
 }
 
-// ListSessions Get a list of all sessions for a user
-//
-// Corresponds with GET /sessions (the `ListSessions` operationId).
+// ListSessions performs a GET /sessions (the `ListSessions` operationId) request.
 func (c *Client) ListSessions(ctx context.Context, params *ListSessionsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewListSessionsRequest(c.Server, params)
 	if err != nil {
@@ -700,11 +580,8 @@ func (c *Client) ListSessions(ctx context.Context, params *ListSessionsParams, r
 	return c.Client.Do(req)
 }
 
-// StartSessionWithBody Launch a new session
-//
-// Takes any type of body and a specified content type.
-//
-// Corresponds with POST /sessions (the `StartSession` operationId).
+// StartSessionWithBody performs a POST /sessions (the `StartSession` operationId) request,
+// with any type of body and a specified content type.
 func (c *Client) StartSessionWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewStartSessionRequestWithBody(c.Server, contentType, body)
 	if err != nil {
@@ -717,11 +594,8 @@ func (c *Client) StartSessionWithBody(ctx context.Context, contentType string, b
 	return c.Client.Do(req)
 }
 
-// StartSession Launch a new session
-//
+// StartSession performs a POST /sessions (the `StartSession` operationId) request.
 // Takes a body of the `application/json` content type.
-//
-// Corresponds with POST /sessions (the `StartSession` operationId).
 func (c *Client) StartSession(ctx context.Context, body StartSessionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewStartSessionRequest(c.Server, body)
 	if err != nil {
@@ -734,9 +608,7 @@ func (c *Client) StartSession(ctx context.Context, body StartSessionJSONRequestB
 	return c.Client.Do(req)
 }
 
-// StopSession Fully remove a session
-//
-// Corresponds with DELETE /sessions/{session_id} (the `StopSession` operationId).
+// StopSession performs a DELETE /sessions/{session_id} (the `StopSession` operationId) request.
 func (c *Client) StopSession(ctx context.Context, sessionId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewStopSessionRequest(c.Server, sessionId)
 	if err != nil {
@@ -749,9 +621,7 @@ func (c *Client) StopSession(ctx context.Context, sessionId string, reqEditors .
 	return c.Client.Do(req)
 }
 
-// GetSession Get information about a specific session
-//
-// Corresponds with GET /sessions/{session_id} (the `GetSession` operationId).
+// GetSession performs a GET /sessions/{session_id} (the `GetSession` operationId) request.
 func (c *Client) GetSession(ctx context.Context, sessionId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetSessionRequest(c.Server, sessionId)
 	if err != nil {
@@ -764,9 +634,7 @@ func (c *Client) GetSession(ctx context.Context, sessionId string, reqEditors ..
 	return c.Client.Do(req)
 }
 
-// GetSessionLogs Get all logs from a specific session
-//
-// Corresponds with GET /sessions/{session_id}/logs (the `GetSessionLogs` operationId).
+// GetSessionLogs performs a GET /sessions/{session_id}/logs (the `GetSessionLogs` operationId) request.
 func (c *Client) GetSessionLogs(ctx context.Context, sessionId string, params *GetSessionLogsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetSessionLogsRequest(c.Server, sessionId, params)
 	if err != nil {
@@ -779,9 +647,7 @@ func (c *Client) GetSessionLogs(ctx context.Context, sessionId string, params *G
 	return c.Client.Do(req)
 }
 
-// GetCurrentUser Get information about the currently logged in user
-//
-// Corresponds with GET /user (the `GetCurrentUser` operationId).
+// GetCurrentUser performs a GET /user (the `GetCurrentUser` operationId) request.
 func (c *Client) GetCurrentUser(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetCurrentUserRequest(c.Server)
 	if err != nil {
@@ -873,7 +739,7 @@ func NewListDataConnectorsRequest(server string, params *ListDataConnectorsParam
 }
 
 // NewGetDataConnectorRequest constructs an http.Request for the GetDataConnector method
-func NewGetDataConnectorRequest(server string, dataConnectorId Ulid) (*http.Request, error) {
+func NewGetDataConnectorRequest(server string, dataConnectorId string) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -985,7 +851,7 @@ func NewListGroupsRequest(server string, params *ListGroupsParams) (*http.Reques
 }
 
 // NewGetGroupRequest constructs an http.Request for the GetGroup method
-func NewGetGroupRequest(server string, groupSlug Slug) (*http.Request, error) {
+func NewGetGroupRequest(server string, groupSlug string) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -1177,7 +1043,7 @@ func NewListProjectsRequest(server string, params *ListProjectsParams) (*http.Re
 }
 
 // NewGetProjectRequest constructs an http.Request for the GetProject method
-func NewGetProjectRequest(server string, projectId Ulid, params *GetProjectParams) (*http.Request, error) {
+func NewGetProjectRequest(server string, projectId string, params *GetProjectParams) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -1238,7 +1104,7 @@ func NewGetProjectRequest(server string, projectId Ulid, params *GetProjectParam
 }
 
 // NewListProjectDataConnectorLinksRequest constructs an http.Request for the ListProjectDataConnectorLinks method
-func NewListProjectDataConnectorLinksRequest(server string, projectId Ulid) (*http.Request, error) {
+func NewListProjectDataConnectorLinksRequest(server string, projectId string) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -1272,7 +1138,7 @@ func NewListProjectDataConnectorLinksRequest(server string, projectId Ulid) (*ht
 }
 
 // NewListProjectSessionLaunchersRequest constructs an http.Request for the ListProjectSessionLaunchers method
-func NewListProjectSessionLaunchersRequest(server string, projectId Ulid) (*http.Request, error) {
+func NewListProjectSessionLaunchersRequest(server string, projectId string) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -1396,7 +1262,7 @@ func NewSearchRequest(server string, params *SearchParams) (*http.Request, error
 }
 
 // NewGetSessionLauncherRequest constructs an http.Request for the GetSessionLauncher method
-func NewGetSessionLauncherRequest(server string, launcherId Ulid) (*http.Request, error) {
+func NewGetSessionLauncherRequest(server string, launcherId string) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -1723,134 +1589,94 @@ func WithBaseURL(baseURL string) ClientOption {
 // ClientWithResponsesInterface is the interface specification for the client with responses above.
 type ClientWithResponsesInterface interface {
 
-	// ListDataConnectorsWithResponse Get all data connectors
+	// ListDataConnectorsWithResponse performs a GET /data_connectors (the `ListDataConnectors` operationId) request.
 	//
 	// Returns a wrapper object for the known response body format(s).
-	//
-	// Corresponds with GET /data_connectors (the `ListDataConnectors` operationId).
 	ListDataConnectorsWithResponse(ctx context.Context, params *ListDataConnectorsParams, reqEditors ...RequestEditorFn) (*ListDataConnectorsResponse, error)
 
-	// GetDataConnectorWithResponse Get data connector details
+	// GetDataConnectorWithResponse performs a GET /data_connectors/{data_connector_id} (the `GetDataConnector` operationId) request.
 	//
 	// Returns a wrapper object for the known response body format(s).
-	//
-	// Corresponds with GET /data_connectors/{data_connector_id} (the `GetDataConnector` operationId).
-	GetDataConnectorWithResponse(ctx context.Context, dataConnectorId Ulid, reqEditors ...RequestEditorFn) (*GetDataConnectorResponse, error)
+	GetDataConnectorWithResponse(ctx context.Context, dataConnectorId string, reqEditors ...RequestEditorFn) (*GetDataConnectorResponse, error)
 
-	// ListGroupsWithResponse Get all groups
+	// ListGroupsWithResponse performs a GET /groups (the `ListGroups` operationId) request.
 	//
 	// Returns a wrapper object for the known response body format(s).
-	//
-	// Corresponds with GET /groups (the `ListGroups` operationId).
 	ListGroupsWithResponse(ctx context.Context, params *ListGroupsParams, reqEditors ...RequestEditorFn) (*ListGroupsResponse, error)
 
-	// GetGroupWithResponse Get a group
+	// GetGroupWithResponse performs a GET /groups/{group_slug} (the `GetGroup` operationId) request.
 	//
 	// Returns a wrapper object for the known response body format(s).
-	//
-	// Corresponds with GET /groups/{group_slug} (the `GetGroup` operationId).
-	GetGroupWithResponse(ctx context.Context, groupSlug Slug, reqEditors ...RequestEditorFn) (*GetGroupResponse, error)
+	GetGroupWithResponse(ctx context.Context, groupSlug string, reqEditors ...RequestEditorFn) (*GetGroupResponse, error)
 
-	// GetProjectBySlugWithResponse Get a project by namespace and project slug
+	// GetProjectBySlugWithResponse performs a GET /namespaces/{namespace}/projects/{slug} (the `GetProjectBySlug` operationId) request.
 	//
 	// Returns a wrapper object for the known response body format(s).
-	//
-	// Corresponds with GET /namespaces/{namespace}/projects/{slug} (the `GetProjectBySlug` operationId).
 	GetProjectBySlugWithResponse(ctx context.Context, namespace string, slug string, params *GetProjectBySlugParams, reqEditors ...RequestEditorFn) (*GetProjectBySlugResponse, error)
 
-	// ListProjectsWithResponse Get all projects
+	// ListProjectsWithResponse performs a GET /projects (the `ListProjects` operationId) request.
 	//
 	// Returns a wrapper object for the known response body format(s).
-	//
-	// Corresponds with GET /projects (the `ListProjects` operationId).
 	ListProjectsWithResponse(ctx context.Context, params *ListProjectsParams, reqEditors ...RequestEditorFn) (*ListProjectsResponse, error)
 
-	// GetProjectWithResponse Get a project
+	// GetProjectWithResponse performs a GET /projects/{project_id} (the `GetProject` operationId) request.
 	//
 	// Returns a wrapper object for the known response body format(s).
-	//
-	// Corresponds with GET /projects/{project_id} (the `GetProject` operationId).
-	GetProjectWithResponse(ctx context.Context, projectId Ulid, params *GetProjectParams, reqEditors ...RequestEditorFn) (*GetProjectResponse, error)
+	GetProjectWithResponse(ctx context.Context, projectId string, params *GetProjectParams, reqEditors ...RequestEditorFn) (*GetProjectResponse, error)
 
-	// ListProjectDataConnectorLinksWithResponse Get all links from data connectors to a given project
+	// ListProjectDataConnectorLinksWithResponse performs a GET /projects/{project_id}/data_connector_links (the `ListProjectDataConnectorLinks` operationId) request.
 	//
 	// Returns a wrapper object for the known response body format(s).
-	//
-	// Corresponds with GET /projects/{project_id}/data_connector_links (the `ListProjectDataConnectorLinks` operationId).
-	ListProjectDataConnectorLinksWithResponse(ctx context.Context, projectId Ulid, reqEditors ...RequestEditorFn) (*ListProjectDataConnectorLinksResponse, error)
+	ListProjectDataConnectorLinksWithResponse(ctx context.Context, projectId string, reqEditors ...RequestEditorFn) (*ListProjectDataConnectorLinksResponse, error)
 
-	// ListProjectSessionLaunchersWithResponse Get a project's session launchers
+	// ListProjectSessionLaunchersWithResponse performs a GET /projects/{project_id}/session_launchers (the `ListProjectSessionLaunchers` operationId) request.
 	//
 	// Returns a wrapper object for the known response body format(s).
-	//
-	// Corresponds with GET /projects/{project_id}/session_launchers (the `ListProjectSessionLaunchers` operationId).
-	ListProjectSessionLaunchersWithResponse(ctx context.Context, projectId Ulid, reqEditors ...RequestEditorFn) (*ListProjectSessionLaunchersResponse, error)
+	ListProjectSessionLaunchersWithResponse(ctx context.Context, projectId string, reqEditors ...RequestEditorFn) (*ListProjectSessionLaunchersResponse, error)
 
-	// SearchWithResponse Run a search query.
-	//
-	// Please note: this description is replaced at runtime with the
-	// contents of the query manual markdown file. Everything added
-	// in this file will be replaced.
+	// SearchWithResponse performs a GET /search/query (the `Search` operationId) request.
 	//
 	// Returns a wrapper object for the known response body format(s).
-	//
-	// Corresponds with GET /search/query (the `Search` operationId).
 	SearchWithResponse(ctx context.Context, params *SearchParams, reqEditors ...RequestEditorFn) (*SearchResponse, error)
 
-	// GetSessionLauncherWithResponse Get a session launcher
+	// GetSessionLauncherWithResponse performs a GET /session_launchers/{launcher_id} (the `GetSessionLauncher` operationId) request.
 	//
 	// Returns a wrapper object for the known response body format(s).
-	//
-	// Corresponds with GET /session_launchers/{launcher_id} (the `GetSessionLauncher` operationId).
-	GetSessionLauncherWithResponse(ctx context.Context, launcherId Ulid, reqEditors ...RequestEditorFn) (*GetSessionLauncherResponse, error)
+	GetSessionLauncherWithResponse(ctx context.Context, launcherId string, reqEditors ...RequestEditorFn) (*GetSessionLauncherResponse, error)
 
-	// ListSessionsWithResponse Get a list of all sessions for a user
+	// ListSessionsWithResponse performs a GET /sessions (the `ListSessions` operationId) request.
 	//
 	// Returns a wrapper object for the known response body format(s).
-	//
-	// Corresponds with GET /sessions (the `ListSessions` operationId).
 	ListSessionsWithResponse(ctx context.Context, params *ListSessionsParams, reqEditors ...RequestEditorFn) (*ListSessionsResponse, error)
 
-	// StartSessionWithBodyWithResponse Launch a new session
+	// StartSessionWithBodyWithResponse performs a POST /sessions (the `StartSession` operationId) request,
+	// with any type of body and a specified content type.
 	//
-	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
-	//
-	// Corresponds with POST /sessions (the `StartSession` operationId).
+	// Returns a wrapper object for the known response body format(s).
 	StartSessionWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*StartSessionResponse, error)
 
-	// StartSessionWithResponse Launch a new session
-	//
+	// StartSessionWithResponse performs a POST /sessions (the `StartSession` operationId) request.
 	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
-	//
-	// Corresponds with POST /sessions (the `StartSession` operationId).
 	StartSessionWithResponse(ctx context.Context, body StartSessionJSONRequestBody, reqEditors ...RequestEditorFn) (*StartSessionResponse, error)
 
-	// StopSessionWithResponse Fully remove a session
+	// StopSessionWithResponse performs a DELETE /sessions/{session_id} (the `StopSession` operationId) request.
 	//
 	// Returns a wrapper object for the known response body format(s).
-	//
-	// Corresponds with DELETE /sessions/{session_id} (the `StopSession` operationId).
 	StopSessionWithResponse(ctx context.Context, sessionId string, reqEditors ...RequestEditorFn) (*StopSessionResponse, error)
 
-	// GetSessionWithResponse Get information about a specific session
+	// GetSessionWithResponse performs a GET /sessions/{session_id} (the `GetSession` operationId) request.
 	//
 	// Returns a wrapper object for the known response body format(s).
-	//
-	// Corresponds with GET /sessions/{session_id} (the `GetSession` operationId).
 	GetSessionWithResponse(ctx context.Context, sessionId string, reqEditors ...RequestEditorFn) (*GetSessionResponse, error)
 
-	// GetSessionLogsWithResponse Get all logs from a specific session
+	// GetSessionLogsWithResponse performs a GET /sessions/{session_id}/logs (the `GetSessionLogs` operationId) request.
 	//
 	// Returns a wrapper object for the known response body format(s).
-	//
-	// Corresponds with GET /sessions/{session_id}/logs (the `GetSessionLogs` operationId).
 	GetSessionLogsWithResponse(ctx context.Context, sessionId string, params *GetSessionLogsParams, reqEditors ...RequestEditorFn) (*GetSessionLogsResponse, error)
 
-	// GetCurrentUserWithResponse Get information about the currently logged in user
+	// GetCurrentUserWithResponse performs a GET /user (the `GetCurrentUser` operationId) request.
 	//
 	// Returns a wrapper object for the known response body format(s).
-	//
-	// Corresponds with GET /user (the `GetCurrentUser` operationId).
 	GetCurrentUserWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetCurrentUserResponse, error)
 }
 
@@ -2432,11 +2258,9 @@ func (r GetCurrentUserResponse) ContentType() string {
 	return ""
 }
 
-// ListDataConnectorsWithResponse Get all data connectors
+// ListDataConnectorsWithResponse performs a GET /data_connectors (the `ListDataConnectors` operationId) request.
 //
 // Returns a wrapper object for the known response body format(s).
-//
-// Corresponds with GET /data_connectors (the `ListDataConnectors` operationId).
 func (c *ClientWithResponses) ListDataConnectorsWithResponse(ctx context.Context, params *ListDataConnectorsParams, reqEditors ...RequestEditorFn) (*ListDataConnectorsResponse, error) {
 	rsp, err := c.ListDataConnectors(ctx, params, reqEditors...)
 	if err != nil {
@@ -2445,12 +2269,10 @@ func (c *ClientWithResponses) ListDataConnectorsWithResponse(ctx context.Context
 	return ParseListDataConnectorsResponse(rsp)
 }
 
-// GetDataConnectorWithResponse Get data connector details
+// GetDataConnectorWithResponse performs a GET /data_connectors/{data_connector_id} (the `GetDataConnector` operationId) request.
 //
 // Returns a wrapper object for the known response body format(s).
-//
-// Corresponds with GET /data_connectors/{data_connector_id} (the `GetDataConnector` operationId).
-func (c *ClientWithResponses) GetDataConnectorWithResponse(ctx context.Context, dataConnectorId Ulid, reqEditors ...RequestEditorFn) (*GetDataConnectorResponse, error) {
+func (c *ClientWithResponses) GetDataConnectorWithResponse(ctx context.Context, dataConnectorId string, reqEditors ...RequestEditorFn) (*GetDataConnectorResponse, error) {
 	rsp, err := c.GetDataConnector(ctx, dataConnectorId, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -2458,11 +2280,9 @@ func (c *ClientWithResponses) GetDataConnectorWithResponse(ctx context.Context, 
 	return ParseGetDataConnectorResponse(rsp)
 }
 
-// ListGroupsWithResponse Get all groups
+// ListGroupsWithResponse performs a GET /groups (the `ListGroups` operationId) request.
 //
 // Returns a wrapper object for the known response body format(s).
-//
-// Corresponds with GET /groups (the `ListGroups` operationId).
 func (c *ClientWithResponses) ListGroupsWithResponse(ctx context.Context, params *ListGroupsParams, reqEditors ...RequestEditorFn) (*ListGroupsResponse, error) {
 	rsp, err := c.ListGroups(ctx, params, reqEditors...)
 	if err != nil {
@@ -2471,12 +2291,10 @@ func (c *ClientWithResponses) ListGroupsWithResponse(ctx context.Context, params
 	return ParseListGroupsResponse(rsp)
 }
 
-// GetGroupWithResponse Get a group
+// GetGroupWithResponse performs a GET /groups/{group_slug} (the `GetGroup` operationId) request.
 //
 // Returns a wrapper object for the known response body format(s).
-//
-// Corresponds with GET /groups/{group_slug} (the `GetGroup` operationId).
-func (c *ClientWithResponses) GetGroupWithResponse(ctx context.Context, groupSlug Slug, reqEditors ...RequestEditorFn) (*GetGroupResponse, error) {
+func (c *ClientWithResponses) GetGroupWithResponse(ctx context.Context, groupSlug string, reqEditors ...RequestEditorFn) (*GetGroupResponse, error) {
 	rsp, err := c.GetGroup(ctx, groupSlug, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -2484,11 +2302,9 @@ func (c *ClientWithResponses) GetGroupWithResponse(ctx context.Context, groupSlu
 	return ParseGetGroupResponse(rsp)
 }
 
-// GetProjectBySlugWithResponse Get a project by namespace and project slug
+// GetProjectBySlugWithResponse performs a GET /namespaces/{namespace}/projects/{slug} (the `GetProjectBySlug` operationId) request.
 //
 // Returns a wrapper object for the known response body format(s).
-//
-// Corresponds with GET /namespaces/{namespace}/projects/{slug} (the `GetProjectBySlug` operationId).
 func (c *ClientWithResponses) GetProjectBySlugWithResponse(ctx context.Context, namespace string, slug string, params *GetProjectBySlugParams, reqEditors ...RequestEditorFn) (*GetProjectBySlugResponse, error) {
 	rsp, err := c.GetProjectBySlug(ctx, namespace, slug, params, reqEditors...)
 	if err != nil {
@@ -2497,11 +2313,9 @@ func (c *ClientWithResponses) GetProjectBySlugWithResponse(ctx context.Context, 
 	return ParseGetProjectBySlugResponse(rsp)
 }
 
-// ListProjectsWithResponse Get all projects
+// ListProjectsWithResponse performs a GET /projects (the `ListProjects` operationId) request.
 //
 // Returns a wrapper object for the known response body format(s).
-//
-// Corresponds with GET /projects (the `ListProjects` operationId).
 func (c *ClientWithResponses) ListProjectsWithResponse(ctx context.Context, params *ListProjectsParams, reqEditors ...RequestEditorFn) (*ListProjectsResponse, error) {
 	rsp, err := c.ListProjects(ctx, params, reqEditors...)
 	if err != nil {
@@ -2510,12 +2324,10 @@ func (c *ClientWithResponses) ListProjectsWithResponse(ctx context.Context, para
 	return ParseListProjectsResponse(rsp)
 }
 
-// GetProjectWithResponse Get a project
+// GetProjectWithResponse performs a GET /projects/{project_id} (the `GetProject` operationId) request.
 //
 // Returns a wrapper object for the known response body format(s).
-//
-// Corresponds with GET /projects/{project_id} (the `GetProject` operationId).
-func (c *ClientWithResponses) GetProjectWithResponse(ctx context.Context, projectId Ulid, params *GetProjectParams, reqEditors ...RequestEditorFn) (*GetProjectResponse, error) {
+func (c *ClientWithResponses) GetProjectWithResponse(ctx context.Context, projectId string, params *GetProjectParams, reqEditors ...RequestEditorFn) (*GetProjectResponse, error) {
 	rsp, err := c.GetProject(ctx, projectId, params, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -2523,12 +2335,10 @@ func (c *ClientWithResponses) GetProjectWithResponse(ctx context.Context, projec
 	return ParseGetProjectResponse(rsp)
 }
 
-// ListProjectDataConnectorLinksWithResponse Get all links from data connectors to a given project
+// ListProjectDataConnectorLinksWithResponse performs a GET /projects/{project_id}/data_connector_links (the `ListProjectDataConnectorLinks` operationId) request.
 //
 // Returns a wrapper object for the known response body format(s).
-//
-// Corresponds with GET /projects/{project_id}/data_connector_links (the `ListProjectDataConnectorLinks` operationId).
-func (c *ClientWithResponses) ListProjectDataConnectorLinksWithResponse(ctx context.Context, projectId Ulid, reqEditors ...RequestEditorFn) (*ListProjectDataConnectorLinksResponse, error) {
+func (c *ClientWithResponses) ListProjectDataConnectorLinksWithResponse(ctx context.Context, projectId string, reqEditors ...RequestEditorFn) (*ListProjectDataConnectorLinksResponse, error) {
 	rsp, err := c.ListProjectDataConnectorLinks(ctx, projectId, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -2536,12 +2346,10 @@ func (c *ClientWithResponses) ListProjectDataConnectorLinksWithResponse(ctx cont
 	return ParseListProjectDataConnectorLinksResponse(rsp)
 }
 
-// ListProjectSessionLaunchersWithResponse Get a project's session launchers
+// ListProjectSessionLaunchersWithResponse performs a GET /projects/{project_id}/session_launchers (the `ListProjectSessionLaunchers` operationId) request.
 //
 // Returns a wrapper object for the known response body format(s).
-//
-// Corresponds with GET /projects/{project_id}/session_launchers (the `ListProjectSessionLaunchers` operationId).
-func (c *ClientWithResponses) ListProjectSessionLaunchersWithResponse(ctx context.Context, projectId Ulid, reqEditors ...RequestEditorFn) (*ListProjectSessionLaunchersResponse, error) {
+func (c *ClientWithResponses) ListProjectSessionLaunchersWithResponse(ctx context.Context, projectId string, reqEditors ...RequestEditorFn) (*ListProjectSessionLaunchersResponse, error) {
 	rsp, err := c.ListProjectSessionLaunchers(ctx, projectId, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -2549,15 +2357,9 @@ func (c *ClientWithResponses) ListProjectSessionLaunchersWithResponse(ctx contex
 	return ParseListProjectSessionLaunchersResponse(rsp)
 }
 
-// SearchWithResponse Run a search query.
-//
-// Please note: this description is replaced at runtime with the
-// contents of the query manual markdown file. Everything added
-// in this file will be replaced.
+// SearchWithResponse performs a GET /search/query (the `Search` operationId) request.
 //
 // Returns a wrapper object for the known response body format(s).
-//
-// Corresponds with GET /search/query (the `Search` operationId).
 func (c *ClientWithResponses) SearchWithResponse(ctx context.Context, params *SearchParams, reqEditors ...RequestEditorFn) (*SearchResponse, error) {
 	rsp, err := c.Search(ctx, params, reqEditors...)
 	if err != nil {
@@ -2566,12 +2368,10 @@ func (c *ClientWithResponses) SearchWithResponse(ctx context.Context, params *Se
 	return ParseSearchResponse(rsp)
 }
 
-// GetSessionLauncherWithResponse Get a session launcher
+// GetSessionLauncherWithResponse performs a GET /session_launchers/{launcher_id} (the `GetSessionLauncher` operationId) request.
 //
 // Returns a wrapper object for the known response body format(s).
-//
-// Corresponds with GET /session_launchers/{launcher_id} (the `GetSessionLauncher` operationId).
-func (c *ClientWithResponses) GetSessionLauncherWithResponse(ctx context.Context, launcherId Ulid, reqEditors ...RequestEditorFn) (*GetSessionLauncherResponse, error) {
+func (c *ClientWithResponses) GetSessionLauncherWithResponse(ctx context.Context, launcherId string, reqEditors ...RequestEditorFn) (*GetSessionLauncherResponse, error) {
 	rsp, err := c.GetSessionLauncher(ctx, launcherId, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -2579,11 +2379,9 @@ func (c *ClientWithResponses) GetSessionLauncherWithResponse(ctx context.Context
 	return ParseGetSessionLauncherResponse(rsp)
 }
 
-// ListSessionsWithResponse Get a list of all sessions for a user
+// ListSessionsWithResponse performs a GET /sessions (the `ListSessions` operationId) request.
 //
 // Returns a wrapper object for the known response body format(s).
-//
-// Corresponds with GET /sessions (the `ListSessions` operationId).
 func (c *ClientWithResponses) ListSessionsWithResponse(ctx context.Context, params *ListSessionsParams, reqEditors ...RequestEditorFn) (*ListSessionsResponse, error) {
 	rsp, err := c.ListSessions(ctx, params, reqEditors...)
 	if err != nil {
@@ -2592,11 +2390,10 @@ func (c *ClientWithResponses) ListSessionsWithResponse(ctx context.Context, para
 	return ParseListSessionsResponse(rsp)
 }
 
-// StartSessionWithBodyWithResponse Launch a new session
+// StartSessionWithBodyWithResponse performs a POST /sessions (the `StartSession` operationId) request,
+// with any type of body and a specified content type.
 //
-// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
-//
-// Corresponds with POST /sessions (the `StartSession` operationId).
+// Returns a wrapper object for the known response body format(s).
 func (c *ClientWithResponses) StartSessionWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*StartSessionResponse, error) {
 	rsp, err := c.StartSessionWithBody(ctx, contentType, body, reqEditors...)
 	if err != nil {
@@ -2605,11 +2402,8 @@ func (c *ClientWithResponses) StartSessionWithBodyWithResponse(ctx context.Conte
 	return ParseStartSessionResponse(rsp)
 }
 
-// StartSessionWithResponse Launch a new session
-//
+// StartSessionWithResponse performs a POST /sessions (the `StartSession` operationId) request.
 // Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
-//
-// Corresponds with POST /sessions (the `StartSession` operationId).
 func (c *ClientWithResponses) StartSessionWithResponse(ctx context.Context, body StartSessionJSONRequestBody, reqEditors ...RequestEditorFn) (*StartSessionResponse, error) {
 	rsp, err := c.StartSession(ctx, body, reqEditors...)
 	if err != nil {
@@ -2618,11 +2412,9 @@ func (c *ClientWithResponses) StartSessionWithResponse(ctx context.Context, body
 	return ParseStartSessionResponse(rsp)
 }
 
-// StopSessionWithResponse Fully remove a session
+// StopSessionWithResponse performs a DELETE /sessions/{session_id} (the `StopSession` operationId) request.
 //
 // Returns a wrapper object for the known response body format(s).
-//
-// Corresponds with DELETE /sessions/{session_id} (the `StopSession` operationId).
 func (c *ClientWithResponses) StopSessionWithResponse(ctx context.Context, sessionId string, reqEditors ...RequestEditorFn) (*StopSessionResponse, error) {
 	rsp, err := c.StopSession(ctx, sessionId, reqEditors...)
 	if err != nil {
@@ -2631,11 +2423,9 @@ func (c *ClientWithResponses) StopSessionWithResponse(ctx context.Context, sessi
 	return ParseStopSessionResponse(rsp)
 }
 
-// GetSessionWithResponse Get information about a specific session
+// GetSessionWithResponse performs a GET /sessions/{session_id} (the `GetSession` operationId) request.
 //
 // Returns a wrapper object for the known response body format(s).
-//
-// Corresponds with GET /sessions/{session_id} (the `GetSession` operationId).
 func (c *ClientWithResponses) GetSessionWithResponse(ctx context.Context, sessionId string, reqEditors ...RequestEditorFn) (*GetSessionResponse, error) {
 	rsp, err := c.GetSession(ctx, sessionId, reqEditors...)
 	if err != nil {
@@ -2644,11 +2434,9 @@ func (c *ClientWithResponses) GetSessionWithResponse(ctx context.Context, sessio
 	return ParseGetSessionResponse(rsp)
 }
 
-// GetSessionLogsWithResponse Get all logs from a specific session
+// GetSessionLogsWithResponse performs a GET /sessions/{session_id}/logs (the `GetSessionLogs` operationId) request.
 //
 // Returns a wrapper object for the known response body format(s).
-//
-// Corresponds with GET /sessions/{session_id}/logs (the `GetSessionLogs` operationId).
 func (c *ClientWithResponses) GetSessionLogsWithResponse(ctx context.Context, sessionId string, params *GetSessionLogsParams, reqEditors ...RequestEditorFn) (*GetSessionLogsResponse, error) {
 	rsp, err := c.GetSessionLogs(ctx, sessionId, params, reqEditors...)
 	if err != nil {
@@ -2657,11 +2445,9 @@ func (c *ClientWithResponses) GetSessionLogsWithResponse(ctx context.Context, se
 	return ParseGetSessionLogsResponse(rsp)
 }
 
-// GetCurrentUserWithResponse Get information about the currently logged in user
+// GetCurrentUserWithResponse performs a GET /user (the `GetCurrentUser` operationId) request.
 //
 // Returns a wrapper object for the known response body format(s).
-//
-// Corresponds with GET /user (the `GetCurrentUser` operationId).
 func (c *ClientWithResponses) GetCurrentUserWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetCurrentUserResponse, error) {
 	rsp, err := c.GetCurrentUser(ctx, reqEditors...)
 	if err != nil {

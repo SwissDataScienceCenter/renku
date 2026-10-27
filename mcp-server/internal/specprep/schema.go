@@ -2,7 +2,6 @@ package specprep
 
 import (
 	"fmt"
-	"slices"
 	"strings"
 )
 
@@ -12,12 +11,11 @@ const bodyArgument = "body"
 // inputSchema builds the JSON Schema of the arguments of a tool from its prepared
 // operation. Every parameter becomes a top level argument and the JSON request body
 // becomes the body argument.
-func (p *preparer) inputSchema(op map[string]any) (map[string]any, error) {
+func inputSchema(op map[string]any) (map[string]any, error) {
 	properties := map[string]any{}
 	required := []any{}
-	params, _ := op["parameters"].([]any)
-	for _, item := range params {
-		param := item.(map[string]any)
+	params, _ := op["parameters"].([]map[string]any)
+	for _, param := range params {
 		name, _ := param["name"].(string)
 		if param["in"] != "path" && param["in"] != "query" {
 			return nil, fmt.Errorf("parameter %s: only path and query parameters are supported, got %v", name, param["in"])
@@ -25,10 +23,7 @@ func (p *preparer) inputSchema(op map[string]any) (map[string]any, error) {
 		if _, ok := properties[name]; ok || name == bodyArgument {
 			return nil, fmt.Errorf("parameter %s: argument name is already used", name)
 		}
-		schema, err := p.jsonSchema(param["schema"], nil)
-		if err != nil {
-			return nil, fmt.Errorf("parameter %s: %w", name, err)
-		}
+		schema := jsonSchema(param["schema"].(map[string]any))
 		if description, ok := param["description"]; ok {
 			schema["description"] = description
 		}
@@ -38,20 +33,9 @@ func (p *preparer) inputSchema(op map[string]any) (map[string]any, error) {
 		}
 	}
 
-	if op["requestBody"] != nil {
-		body, err := p.resolve(op["requestBody"], "requestBodies")
-		if err != nil {
-			return nil, fmt.Errorf("request body: %w", err)
-		}
-		content, _ := body["content"].(map[string]any)
-		media, ok := content["application/json"].(map[string]any)
-		if !ok {
-			return nil, fmt.Errorf("request body: only application/json is supported")
-		}
-		schema, err := p.jsonSchema(media["schema"], nil)
-		if err != nil {
-			return nil, fmt.Errorf("request body: %w", err)
-		}
+	if body, ok := op["requestBody"].(map[string]any); ok {
+		media := body["content"].(map[string]any)["application/json"].(map[string]any)
+		schema := jsonSchema(media["schema"].(map[string]any))
 		if description, ok := body["description"]; ok {
 			schema["description"] = description
 		}
@@ -68,53 +52,30 @@ func (p *preparer) inputSchema(op map[string]any) (map[string]any, error) {
 	return schema, nil
 }
 
-// jsonSchema converts an OpenAPI 3.0 schema into a self-contained JSON Schema by
-// inlining references and translating the OpenAPI specific keywords. refs holds the
-// references being inlined, to reject recursive schemas.
-func (p *preparer) jsonSchema(v any, refs []string) (map[string]any, error) {
-	s, ok := v.(map[string]any)
-	if !ok {
-		return nil, fmt.Errorf("schema is not an object")
-	}
-	if ref, ok := s["$ref"].(string); ok {
-		if slices.Contains(refs, ref) {
-			return nil, fmt.Errorf("recursive schema %s cannot be inlined", ref)
-		}
-		def, err := p.resolve(s, "schemas")
-		if err != nil {
-			return nil, err
-		}
-		return p.jsonSchema(def, append(slices.Clip(refs), ref))
-	}
-
+// jsonSchema converts an inlined OpenAPI 3.0 schema into a JSON Schema by
+// translating the OpenAPI specific keywords.
+func jsonSchema(s map[string]any) map[string]any {
 	out := map[string]any{}
 	for key, val := range s {
-		var err error
 		switch key {
 		case "properties":
 			props := map[string]any{}
 			for name, prop := range val.(map[string]any) {
-				if props[name], err = p.jsonSchema(prop, refs); err != nil {
-					return nil, fmt.Errorf("property %s: %w", name, err)
-				}
+				props[name] = jsonSchema(prop.(map[string]any))
 			}
 			out[key] = props
 		case "items", "not":
-			out[key], err = p.jsonSchema(val, refs)
+			out[key] = jsonSchema(val.(map[string]any))
 		case "additionalProperties":
-			if _, isBool := val.(bool); isBool {
-				out[key] = val
+			if sub, ok := val.(map[string]any); ok {
+				out[key] = jsonSchema(sub)
 			} else {
-				out[key], err = p.jsonSchema(val, refs)
+				out[key] = val
 			}
 		case "allOf", "oneOf", "anyOf":
 			var list []any
 			for _, item := range val.([]any) {
-				converted, err := p.jsonSchema(item, refs)
-				if err != nil {
-					return nil, err
-				}
-				list = append(list, converted)
+				list = append(list, jsonSchema(item.(map[string]any)))
 			}
 			out[key] = list
 		case "example":
@@ -123,11 +84,8 @@ func (p *preparer) jsonSchema(v any, refs []string) (map[string]any, error) {
 			// Translated below or not meaningful for tool arguments.
 		default:
 			if !strings.HasPrefix(key, "x-") {
-				out[key] = deepCopy(val)
+				out[key] = val
 			}
-		}
-		if err != nil {
-			return nil, err
 		}
 	}
 
@@ -142,29 +100,8 @@ func (p *preparer) jsonSchema(v any, refs []string) (map[string]any, error) {
 		if t, ok := out["type"].(string); ok {
 			out["type"] = []any{t, "null"}
 		} else {
-			return map[string]any{"anyOf": []any{out, map[string]any{"type": "null"}}}, nil
+			return map[string]any{"anyOf": []any{out, map[string]any{"type": "null"}}}
 		}
 	}
-	return out, nil
-}
-
-// resolve follows a reference to a collected component of the given kind.
-func (p *preparer) resolve(v any, kind string) (map[string]any, error) {
-	m, ok := v.(map[string]any)
-	if !ok {
-		return nil, fmt.Errorf("not an object")
-	}
-	ref, ok := m["$ref"].(string)
-	if !ok {
-		return m, nil
-	}
-	key, err := parseRef(ref)
-	if err != nil {
-		return nil, err
-	}
-	def, ok := p.components[key].(map[string]any)
-	if key.kind != kind || !ok {
-		return nil, fmt.Errorf("%s does not point to one of the %s", ref, kind)
-	}
-	return p.resolve(def, kind)
+	return out
 }
