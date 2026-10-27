@@ -10,12 +10,20 @@ import (
 	"log/slog"
 	"net/http"
 	"net/url"
+	"path"
 	"strings"
 	"sync/atomic"
 
 	"github.com/coreos/go-oidc/v3/oidc"
-	"github.com/mark3labs/mcp-go/server"
+	sdkauth "github.com/modelcontextprotocol/go-sdk/auth"
+	"github.com/modelcontextprotocol/go-sdk/oauthex"
 )
+
+// wellKnownPath is the RFC 9728 well-known prefix of the protected resource metadata.
+const wellKnownPath = "/.well-known/oauth-protected-resource"
+
+// tokenKey is the key of the raw access token in the Extra field of the token info.
+const tokenKey = "token"
 
 // Config configures token validation.
 type Config struct {
@@ -91,34 +99,62 @@ type claims struct {
 	AuthorizedParty string `json:"azp"`
 }
 
-// Verify validates a raw access token and returns the principal it identifies.
-func (a *Authenticator) Verify(ctx context.Context, raw string) (Principal, error) {
+// verify validates a raw access token.
+func (a *Authenticator) verify(ctx context.Context, raw string) (*oidc.IDToken, error) {
 	token, err := a.verifier.Verify(ctx, raw)
 	if err != nil {
-		return Principal{}, err
+		return nil, err
 	}
 	a.ready.Store(true)
 	var c claims
 	if err := token.Claims(&c); err != nil {
-		return Principal{}, fmt.Errorf("decoding claims: %w", err)
+		return nil, fmt.Errorf("decoding claims: %w", err)
 	}
 	if c.AuthorizedParty != a.cfg.AuthorizedParty {
-		return Principal{}, fmt.Errorf("token was issued to client %q, expected %q", c.AuthorizedParty, a.cfg.AuthorizedParty)
+		return nil, fmt.Errorf("token was issued to client %q, expected %q", c.AuthorizedParty, a.cfg.AuthorizedParty)
 	}
 	if token.Subject == "" {
-		return Principal{}, errors.New("token has no subject")
+		return nil, errors.New("token has no subject")
 	}
-	return Principal{Subject: token.Subject, Token: raw}, nil
+	return token, nil
+}
+
+// verifyToken is the token verifier of Middleware. Why a token was rejected is only
+// logged, the client gets a generic invalid token error.
+func (a *Authenticator) verifyToken(ctx context.Context, raw string, _ *http.Request) (*sdkauth.TokenInfo, error) {
+	token, err := a.verify(ctx, raw)
+	if err != nil {
+		a.logger.Info("rejected access token", "error", err)
+		return nil, sdkauth.ErrInvalidToken
+	}
+	return &sdkauth.TokenInfo{
+		// The SDK binds MCP sessions to UserID, so another user cannot take them over.
+		UserID:     token.Subject,
+		Expiration: token.Expiry,
+		Extra:      map[string]any{tokenKey: raw},
+	}, nil
+}
+
+// PrincipalFromTokenInfo returns the principal of the token info stored by Middleware.
+func PrincipalFromTokenInfo(info *sdkauth.TokenInfo) (Principal, bool) {
+	if info == nil {
+		return Principal{}, false
+	}
+	token, _ := info.Extra[tokenKey].(string)
+	return Principal{Subject: info.UserID, Token: token}, true
 }
 
 // MetadataPath is the path the protected resource metadata is served at.
 func (a *Authenticator) MetadataPath() string {
-	return server.ProtectedResourceMetadataPath(a.cfg.ResourceURL)
+	if p := strings.Trim(a.resource.Path, "/"); p != "" {
+		return path.Join(wellKnownPath, p)
+	}
+	return wellKnownPath
 }
 
 // MetadataHandler serves the RFC 9728 protected resource metadata.
 func (a *Authenticator) MetadataHandler() http.Handler {
-	return server.NewProtectedResourceMetadataHandler(server.ProtectedResourceMetadataConfig{
+	return sdkauth.ProtectedResourceMetadataHandler(&oauthex.ProtectedResourceMetadata{
 		Resource:               a.cfg.ResourceURL,
 		AuthorizationServers:   []string{a.cfg.Issuer},
 		BearerMethodsSupported: []string{"header"},
@@ -133,32 +169,13 @@ func (a *Authenticator) metadataURL() string {
 	return u.String()
 }
 
-// Middleware rejects requests without a valid bearer token and stores the principal in the request context.
+// Middleware rejects requests without a valid bearer token with a challenge pointing to the
+// protected resource metadata. The MCP SDK passes the token info it stores in the request
+// context on to the tool handlers, see PrincipalFromTokenInfo.
 func (a *Authenticator) Middleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		raw, ok := strings.CutPrefix(r.Header.Get("Authorization"), "Bearer ")
-		raw = strings.TrimSpace(raw)
-		if !ok || raw == "" {
-			a.unauthorized(w, "")
-			return
-		}
-		principal, err := a.Verify(r.Context(), raw)
-		if err != nil {
-			a.logger.Info("rejected access token", "error", err)
-			a.unauthorized(w, "invalid_token")
-			return
-		}
-		next.ServeHTTP(w, r.WithContext(WithPrincipal(r.Context(), principal)))
-	})
-}
-
-func (a *Authenticator) unauthorized(w http.ResponseWriter, errorCode string) {
-	challenge := fmt.Sprintf(`Bearer resource_metadata=%q`, a.metadataURL())
-	if errorCode != "" {
-		challenge += fmt.Sprintf(`, error=%q`, errorCode)
-	}
-	w.Header().Set("WWW-Authenticate", challenge)
-	http.Error(w, "unauthorized", http.StatusUnauthorized)
+	return sdkauth.RequireBearerToken(a.verifyToken, &sdkauth.RequireBearerTokenOptions{
+		ResourceMetadataURL: a.metadataURL(),
+	})(next)
 }
 
 // Ready reports whether the signing keys can be fetched, so the server can validate tokens.

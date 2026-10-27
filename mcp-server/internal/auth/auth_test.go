@@ -9,12 +9,12 @@ import (
 	"log/slog"
 	"net/http"
 	"net/http/httptest"
-	"strings"
 	"testing"
 	"time"
 
 	"github.com/go-jose/go-jose/v4"
 	"github.com/go-jose/go-jose/v4/jwt"
+	sdkauth "github.com/modelcontextprotocol/go-sdk/auth"
 )
 
 const (
@@ -98,25 +98,24 @@ func TestMiddleware(t *testing.T) {
 		return c
 	}
 	tests := []struct {
-		name          string
-		header        string
-		wantStatus    int
-		wantErrorCode bool
+		name       string
+		header     string
+		wantStatus int
 	}{
-		{"valid token", "Bearer " + kc.token(t, validClaims()), http.StatusOK, false},
-		{"no header", "", http.StatusUnauthorized, false},
-		{"not bearer", "Basic dXNlcjpwYXNz", http.StatusUnauthorized, false},
-		{"wrong issuer", "Bearer " + kc.token(t, with("iss", "https://evil.example.org/auth/realms/Renku")), http.StatusUnauthorized, true},
-		{"wrong audience", "Bearer " + kc.token(t, with("aud", []string{"account"})), http.StatusUnauthorized, true},
-		{"wrong authorized party", "Bearer " + kc.token(t, with("azp", "renku-cli")), http.StatusUnauthorized, true},
-		{"expired", "Bearer " + kc.token(t, with("exp", time.Now().Add(-time.Minute).Unix())), http.StatusUnauthorized, true},
-		{"bad signature", "Bearer " + signToken(t, otherKey, validClaims()), http.StatusUnauthorized, true},
-		{"garbage", "Bearer not-a-jwt", http.StatusUnauthorized, true},
+		{"valid token", "Bearer " + kc.token(t, validClaims()), http.StatusOK},
+		{"no header", "", http.StatusUnauthorized},
+		{"not bearer", "Basic dXNlcjpwYXNz", http.StatusUnauthorized},
+		{"wrong issuer", "Bearer " + kc.token(t, with("iss", "https://evil.example.org/auth/realms/Renku")), http.StatusUnauthorized},
+		{"wrong audience", "Bearer " + kc.token(t, with("aud", []string{"account"})), http.StatusUnauthorized},
+		{"wrong authorized party", "Bearer " + kc.token(t, with("azp", "renku-cli")), http.StatusUnauthorized},
+		{"expired", "Bearer " + kc.token(t, with("exp", time.Now().Add(-time.Minute).Unix())), http.StatusUnauthorized},
+		{"bad signature", "Bearer " + signToken(t, otherKey, validClaims()), http.StatusUnauthorized},
+		{"garbage", "Bearer not-a-jwt", http.StatusUnauthorized},
 	}
 
 	var seen Principal
 	handler := a.Middleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		seen, _ = PrincipalFrom(r.Context())
+		seen, _ = PrincipalFromTokenInfo(sdkauth.TokenInfoFromContext(r.Context()))
 		w.WriteHeader(http.StatusOK)
 	}))
 	for _, tt := range tests {
@@ -140,11 +139,8 @@ func TestMiddleware(t *testing.T) {
 			}
 			challenge := rec.Header().Get("WWW-Authenticate")
 			want := `Bearer resource_metadata="https://renku.example.org/.well-known/oauth-protected-resource/mcp"`
-			if !strings.HasPrefix(challenge, want) {
-				t.Errorf("WWW-Authenticate = %q, want prefix %q", challenge, want)
-			}
-			if got := strings.Contains(challenge, `error="invalid_token"`); got != tt.wantErrorCode {
-				t.Errorf("WWW-Authenticate = %q, invalid_token expected: %v", challenge, tt.wantErrorCode)
+			if challenge != want {
+				t.Errorf("WWW-Authenticate = %q, want %q", challenge, want)
 			}
 		})
 	}

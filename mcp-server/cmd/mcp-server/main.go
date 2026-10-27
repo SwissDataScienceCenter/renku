@@ -18,7 +18,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/mark3labs/mcp-go/server"
+	"github.com/modelcontextprotocol/go-sdk/mcp"
 
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/app"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/auth"
@@ -63,18 +63,20 @@ func run(ctx context.Context, logger *slog.Logger, stdio bool) error {
 	return runHTTP(ctx, logger, s)
 }
 
-func runStdio(ctx context.Context, logger *slog.Logger, s *server.MCPServer) error {
+func runStdio(ctx context.Context, logger *slog.Logger, s *mcp.Server) error {
 	token := os.Getenv("RENKU_ACCESS_TOKEN")
 	if token == "" {
 		logger.Warn("RENKU_ACCESS_TOKEN is not set, only public data is accessible")
 	}
-	principal := auth.Principal{Subject: "stdio", Token: token}
-	stdio := server.NewStdioServer(s)
-	stdio.SetContextFunc(func(ctx context.Context) context.Context { return auth.WithPrincipal(ctx, principal) })
-	return stdio.Listen(ctx, os.Stdin, os.Stdout)
+	// Tool handlers run with contexts derived from the one passed to Run.
+	ctx = auth.WithPrincipal(ctx, auth.Principal{Subject: "stdio", Token: token})
+	if err := s.Run(ctx, &mcp.StdioTransport{}); err != nil && !errors.Is(err, context.Canceled) {
+		return err
+	}
+	return nil
 }
 
-func runHTTP(ctx context.Context, logger *slog.Logger, s *server.MCPServer) error {
+func runHTTP(ctx context.Context, logger *slog.Logger, s *mcp.Server) error {
 	authenticator, err := auth.New(ctx, auth.Config{
 		Issuer:          os.Getenv("KEYCLOAK_ISSUER"),
 		JWKSURL:         os.Getenv("KEYCLOAK_JWKS_URL"),

@@ -13,8 +13,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mark3labs/mcp-go/mcp"
-	"github.com/mark3labs/mcp-go/server"
+	"github.com/modelcontextprotocol/go-sdk/mcp"
 
 	"github.com/SwissDataScienceCenter/renku/mcp-server/apispec"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/apiclient"
@@ -38,7 +37,7 @@ func TestEveryAllowlistedToolIsImplemented(t *testing.T) {
 		t.Fatalf("tools.yaml and internal/tools disagree\nallowlisted: %v\nimplemented: %v", allowlisted, implemented)
 	}
 	// Fails if apispec/mcp-tools.json was not regenerated after editing tools.yaml.
-	if err := Register(server.NewMCPServer("test", "dev"), Options{}); err != nil {
+	if err := Register(mcp.NewServer(&mcp.Implementation{Name: "test", Version: "dev"}, nil), Options{}); err != nil {
 		t.Fatal(err)
 	}
 }
@@ -105,11 +104,17 @@ func callTool(t *testing.T, gatewayURL, name string, args map[string]any, logs i
 	if !ok {
 		t.Fatalf("tool %s not found", name)
 	}
+	return callHandler(t, handler(name, fn, opts), name, args)
+}
+
+func callHandler(t *testing.T, h mcp.ToolHandler, name string, args map[string]any) *mcp.CallToolResult {
+	t.Helper()
 	ctx := auth.WithPrincipal(context.Background(), auth.Principal{Subject: "user-1", Token: "the-token"})
-	req := mcp.CallToolRequest{}
-	req.Params.Name = name
-	req.Params.Arguments = args
-	res, err := handler(name, fn, opts)(ctx, req)
+	raw, err := json.Marshal(args)
+	if err != nil {
+		t.Fatal(err)
+	}
+	res, err := h(ctx, &mcp.CallToolRequest{Params: &mcp.CallToolParamsRaw{Name: name, Arguments: raw}})
 	if err != nil {
 		t.Fatalf("handler returned an error instead of a tool error: %v", err)
 	}
@@ -121,7 +126,7 @@ func text(t *testing.T, res *mcp.CallToolResult) string {
 	if len(res.Content) != 1 {
 		t.Fatalf("expected one content item, got %d", len(res.Content))
 	}
-	c, ok := res.Content[0].(mcp.TextContent)
+	c, ok := res.Content[0].(*mcp.TextContent)
 	if !ok {
 		t.Fatalf("expected text content, got %T", res.Content[0])
 	}
@@ -224,6 +229,40 @@ func TestInvalidArguments(t *testing.T) {
 	res = callTool(t, gw.URL, "start_session", map[string]any{"body": map[string]any{}}, nil)
 	if !res.IsError || !strings.Contains(text(t, res), "launcher_id is required") {
 		t.Errorf("unexpected result %+v", res)
+	}
+	if len(*requests) != 0 {
+		t.Errorf("invalid calls must not reach the API, got %d requests", len(*requests))
+	}
+}
+
+func TestPanicIsReturnedAsToolError(t *testing.T) {
+	var logs bytes.Buffer
+	opts := Options{Logger: slog.New(slog.NewJSONHandler(&logs, nil))}
+	boom := func(context.Context, *apiclient.Client, map[string]any, apiclient.RequestEditorFn) (*http.Response, error) {
+		panic("boom")
+	}
+	res := callHandler(t, handler("boom", boom, opts), "boom", nil)
+	if !res.IsError || strings.Contains(text(t, res), "boom") {
+		t.Errorf("unexpected result %q", text(t, res))
+	}
+	if !strings.Contains(logs.String(), `"outcome":"panic"`) {
+		t.Errorf("panic not logged: %s", logs.String())
+	}
+}
+
+func TestArgumentsMustBeAnObject(t *testing.T) {
+	gw, requests := fakeGateway(t)
+	client, err := apiclient.NewClient(gw.URL + "/api/data")
+	if err != nil {
+		t.Fatal(err)
+	}
+	h := handler("list_projects", calls["list_projects"], Options{Client: client, Logger: slog.New(slog.NewJSONHandler(io.Discard, nil))})
+	res, err := h(context.Background(), &mcp.CallToolRequest{Params: &mcp.CallToolParamsRaw{Name: "list_projects", Arguments: json.RawMessage(`[1]`)}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !res.IsError || !strings.Contains(text(t, res), "arguments must be a JSON object") {
+		t.Errorf("unexpected result %q", text(t, res))
 	}
 	if len(*requests) != 0 {
 		t.Errorf("invalid calls must not reach the API, got %d requests", len(*requests))

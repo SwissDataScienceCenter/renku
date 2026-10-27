@@ -16,9 +16,7 @@ import (
 
 	"github.com/go-jose/go-jose/v4"
 	"github.com/go-jose/go-jose/v4/jwt"
-	"github.com/mark3labs/mcp-go/client"
-	"github.com/mark3labs/mcp-go/client/transport"
-	"github.com/mark3labs/mcp-go/mcp"
+	"github.com/modelcontextprotocol/go-sdk/mcp"
 
 	"github.com/SwissDataScienceCenter/renku/mcp-server/apispec"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/auth"
@@ -29,6 +27,7 @@ const issuer = "https://renku.example.org/auth/realms/Renku"
 
 type testEnv struct {
 	mcpURL string
+	server *mcp.Server
 	key    *rsa.PrivateKey
 	// gatewayAuth is the Authorization header the fake gateway received last.
 	gatewayAuth string
@@ -66,6 +65,7 @@ func newTestEnv(t *testing.T) *testEnv {
 	if err != nil {
 		t.Fatal(err)
 	}
+	env.server = s
 	// The resource URL only matters for the metadata, the test server URL is not known before it starts.
 	authenticator, err := auth.New(context.Background(), auth.Config{
 		Issuer: issuer, JWKSURL: jwks.URL, Audience: "renku", AuthorizedParty: "renku-mcp", ResourceURL: "https://renku.example.org/mcp",
@@ -100,26 +100,18 @@ func TestEndToEnd(t *testing.T) {
 	token := env.token(t)
 	ctx := context.Background()
 
-	c, err := client.NewStreamableHttpClient(env.mcpURL, transport.WithHTTPHeaders(map[string]string{"Authorization": "Bearer " + token, "X-Real-IP": "203.0.113.7"}))
+	httpClient := &http.Client{Transport: headerTransport{"Authorization": "Bearer " + token, "X-Real-IP": "203.0.113.7"}}
+	c, err := mcp.NewClient(&mcp.Implementation{Name: "test", Version: "1"}, nil).
+		Connect(ctx, &mcp.StreamableClientTransport{Endpoint: env.mcpURL, HTTPClient: httpClient, DisableStandaloneSSE: true}, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
 	defer func() { _ = c.Close() }()
-	if err := c.Start(ctx); err != nil {
-		t.Fatal(err)
-	}
-	initReq := mcp.InitializeRequest{}
-	initReq.Params.ProtocolVersion = mcp.LATEST_PROTOCOL_VERSION
-	initReq.Params.ClientInfo = mcp.Implementation{Name: "test", Version: "1"}
-	initRes, err := c.Initialize(ctx, initReq)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if initRes.ServerInfo.Name != "renku" {
-		t.Errorf("server name = %q", initRes.ServerInfo.Name)
+	if name := c.InitializeResult().ServerInfo.Name; name != "renku" {
+		t.Errorf("server name = %q", name)
 	}
 
-	toolsRes, err := c.ListTools(ctx, mcp.ListToolsRequest{})
+	toolsRes, err := c.ListTools(ctx, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -141,21 +133,57 @@ func TestEndToEnd(t *testing.T) {
 		t.Errorf("tools/list = %v, want exactly the allowlist %v", listed, allowlisted)
 	}
 
-	callReq := mcp.CallToolRequest{}
-	callReq.Params.Name = "get_current_user"
-	res, err := c.CallTool(ctx, callReq)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if res.IsError || len(res.Content) != 1 || !strings.Contains(res.Content[0].(mcp.TextContent).Text, `"username":"jane"`) {
-		t.Errorf("unexpected result %+v", res)
-	}
+	assertCurrentUser(t, c)
 	if env.gatewayAuth != "Bearer "+token {
 		t.Errorf("gateway received Authorization %q, want the caller's token", env.gatewayAuth)
 	}
 	if env.gatewayRealIP != "203.0.113.7" {
 		t.Errorf("gateway received X-Real-IP %q, want the end user's address", env.gatewayRealIP)
 	}
+}
+
+// TestStdioUsesPrincipalFromContext covers the stdio mode of cmd/mcp-server, where the
+// principal is stored in the context passed to Run instead of coming from a request.
+func TestStdioUsesPrincipalFromContext(t *testing.T) {
+	env := newTestEnv(t)
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	serverTransport, clientTransport := mcp.NewInMemoryTransports()
+	go func() {
+		_ = env.server.Run(auth.WithPrincipal(ctx, auth.Principal{Subject: "stdio", Token: "local-token"}), serverTransport)
+	}()
+	c, err := mcp.NewClient(&mcp.Implementation{Name: "test", Version: "1"}, nil).Connect(ctx, clientTransport, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer func() { _ = c.Close() }()
+
+	assertCurrentUser(t, c)
+	if env.gatewayAuth != "Bearer local-token" {
+		t.Errorf("gateway received Authorization %q, want the token of the context", env.gatewayAuth)
+	}
+}
+
+func assertCurrentUser(t *testing.T, c *mcp.ClientSession) {
+	t.Helper()
+	res, err := c.CallTool(context.Background(), &mcp.CallToolParams{Name: "get_current_user"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if res.IsError || len(res.Content) != 1 || !strings.Contains(res.Content[0].(*mcp.TextContent).Text, `"username":"jane"`) {
+		t.Errorf("unexpected result %+v", res)
+	}
+}
+
+// headerTransport adds fixed headers to every request.
+type headerTransport map[string]string
+
+func (h headerTransport) RoundTrip(r *http.Request) (*http.Response, error) {
+	r = r.Clone(r.Context())
+	for k, v := range h {
+		r.Header.Set(k, v)
+	}
+	return http.DefaultTransport.RoundTrip(r)
 }
 
 func TestUnauthenticatedRequestIsRejectedWithChallenge(t *testing.T) {

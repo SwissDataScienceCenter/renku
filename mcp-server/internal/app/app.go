@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/mark3labs/mcp-go/server"
+	"github.com/modelcontextprotocol/go-sdk/mcp"
 
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/apiclient"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/auth"
@@ -29,16 +29,16 @@ type Options struct {
 }
 
 // NewMCPServer creates the MCP server with all tools registered.
-func NewMCPServer(opts Options) (*server.MCPServer, error) {
+func NewMCPServer(opts Options) (*mcp.Server, error) {
 	client, err := apiclient.NewClient(opts.APIURL, apiclient.WithHTTPClient(&http.Client{Timeout: 60 * time.Second}))
 	if err != nil {
 		return nil, err
 	}
-	s := server.NewMCPServer("renku", opts.Version,
-		server.WithToolCapabilities(false),
-		server.WithRecovery(),
-		server.WithInstructions("Tools to explore Renku projects, groups and data connectors and to start, inspect and stop Renku sessions on behalf of the logged in user."),
-	)
+	s := mcp.NewServer(&mcp.Implementation{Name: "renku", Version: opts.Version}, &mcp.ServerOptions{
+		Instructions: "Tools to explore Renku projects, groups and data connectors and to start, inspect and stop Renku sessions on behalf of the logged in user.",
+		// The tool list never changes and the server does not log to the client.
+		Capabilities: &mcp.ServerCapabilities{Tools: &mcp.ToolCapabilities{}},
+	})
 	if err := tools.Register(s, tools.Options{Client: client, Logger: opts.Logger, LogArguments: opts.LogArguments}); err != nil {
 		return nil, err
 	}
@@ -46,21 +46,16 @@ func NewMCPServer(opts Options) (*server.MCPServer, error) {
 }
 
 // NewHTTPHandler serves the MCP endpoint behind authentication, the protected resource metadata and health checks.
-func NewHTTPHandler(s *server.MCPServer, authenticator *auth.Authenticator, logger *slog.Logger) http.Handler {
-	mcpHandler := server.NewStreamableHTTPServer(s,
-		server.WithStateLess(true),
-		server.WithDisableStreaming(true),
-		server.WithStreamableHTTPLogger(logger),
-		server.WithHTTPContextFunc(func(ctx context.Context, r *http.Request) context.Context {
-			if p, ok := auth.PrincipalFrom(r.Context()); ok {
-				ctx = auth.WithPrincipal(ctx, p)
-			}
-			return tools.WithClientIP(ctx, r.Header.Get("X-Real-IP"))
-		}),
-	)
+func NewHTTPHandler(s *mcp.Server, authenticator *auth.Authenticator, logger *slog.Logger) http.Handler {
+	mcpHandler := mcp.NewStreamableHTTPHandler(func(*http.Request) *mcp.Server { return s }, &mcp.StreamableHTTPOptions{
+		Stateless:           true,
+		JSONResponse:        true,
+		Logger:              logger,
+		MaxRequestBodyBytes: maxRequestBytes,
+	})
 
 	mux := http.NewServeMux()
-	mux.Handle(MCPPath, authenticator.Middleware(http.MaxBytesHandler(mcpHandler, maxRequestBytes)))
+	mux.Handle(MCPPath, authenticator.Middleware(mcpHandler))
 	mux.Handle(authenticator.MetadataPath(), authenticator.MetadataHandler())
 	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, _ *http.Request) { w.WriteHeader(http.StatusOK) })
 	mux.HandleFunc("GET /readyz", func(w http.ResponseWriter, r *http.Request) {

@@ -13,13 +13,13 @@ import (
 	"io"
 	"log/slog"
 	"net/http"
+	"runtime/debug"
 	"slices"
 	"strconv"
 	"strings"
 	"time"
 
-	"github.com/mark3labs/mcp-go/mcp"
-	"github.com/mark3labs/mcp-go/server"
+	"github.com/modelcontextprotocol/go-sdk/mcp"
 
 	"github.com/SwissDataScienceCenter/renku/mcp-server/apispec"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/apiclient"
@@ -38,7 +38,7 @@ type Options struct {
 }
 
 // call performs the API request of one tool. Argument errors are reported back to the model.
-type call func(ctx context.Context, c *apiclient.Client, req mcp.CallToolRequest, edit apiclient.RequestEditorFn) (*http.Response, error)
+type call func(ctx context.Context, c *apiclient.Client, args map[string]any, edit apiclient.RequestEditorFn) (*http.Response, error)
 
 // definition is one tool of apispec/mcp-tools.json.
 type definition struct {
@@ -47,20 +47,13 @@ type definition struct {
 	InputSchema json.RawMessage `json:"inputSchema"`
 }
 
-type clientIPKey struct{}
-
-// WithClientIP stores the address of the end user, as reported by the ingress, so it can be passed on to the gateway.
-func WithClientIP(ctx context.Context, ip string) context.Context {
-	return context.WithValue(ctx, clientIPKey{}, ip)
-}
-
 // argumentError is an invalid tool argument, reported to the model so it can correct the call.
 type argumentError struct{ err error }
 
 func (e argumentError) Error() string { return e.err.Error() }
 
 // Register adds the tools of apispec/mcp-tools.json to s. It fails unless every tool there is implemented by calls and vice versa.
-func Register(s *server.MCPServer, opts Options) error {
+func Register(s *mcp.Server, opts Options) error {
 	var definitions []definition
 	if err := json.Unmarshal(apispec.MCPTools, &definitions); err != nil {
 		return fmt.Errorf("parsing apispec/mcp-tools.json: %w", err)
@@ -70,7 +63,7 @@ func Register(s *server.MCPServer, opts Options) error {
 		if !ok {
 			return fmt.Errorf("tool %s of apispec/mcp-tools.json is not implemented", d.Name)
 		}
-		s.AddTool(mcp.NewToolWithRawSchema(d.Name, d.Description, d.InputSchema), handler(d.Name, fn, opts))
+		s.AddTool(&mcp.Tool{Name: d.Name, Description: d.Description, InputSchema: d.InputSchema}, handler(d.Name, fn, opts))
 	}
 	for name := range calls {
 		if !slices.ContainsFunc(definitions, func(d definition) bool { return d.Name == name }) {
@@ -80,14 +73,22 @@ func Register(s *server.MCPServer, opts Options) error {
 	return nil
 }
 
-func handler(name string, fn call, opts Options) server.ToolHandlerFunc {
-	return func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+func handler(name string, fn call, opts Options) mcp.ToolHandler {
+	return func(ctx context.Context, req *mcp.CallToolRequest) (result *mcp.CallToolResult, _ error) {
 		start := time.Now()
 		requestID := newRequestID()
-		principal, _ := auth.PrincipalFrom(ctx)
+		principal, clientIP := caller(ctx, req)
 		attrs := []any{"tool", name, "sub", principal.Subject, "request_id", requestID}
+		// The SDK does not recover panics of tool handlers, which would take down the whole server.
+		defer func() {
+			if r := recover(); r != nil {
+				opts.Logger.Error("tool call", append(attrs, "outcome", "panic", "error", r, "stack", string(debug.Stack()), "duration", time.Since(start))...)
+				result = toolError("The tool failed unexpectedly. Try again later.")
+			}
+		}()
+		args, err := arguments(req)
 		if opts.LogArguments {
-			attrs = append(attrs, "arguments", req.GetArguments())
+			attrs = append(attrs, "arguments", args)
 		}
 
 		edit := func(_ context.Context, r *http.Request) error {
@@ -96,43 +97,77 @@ func handler(name string, fn call, opts Options) server.ToolHandlerFunc {
 			}
 			r.Header.Set("X-Request-Id", requestID)
 			// Lets the gateway rate limit per end user instead of per MCP server pod when it trusts X-Real-IP.
-			if ip, ok := ctx.Value(clientIPKey{}).(string); ok && ip != "" {
-				r.Header.Set("X-Real-IP", ip)
+			if clientIP != "" {
+				r.Header.Set("X-Real-IP", clientIP)
 			}
 			return nil
 		}
-		res, err := fn(ctx, opts.Client, req, edit)
+		var res *http.Response
+		if err == nil {
+			res, err = fn(ctx, opts.Client, args, edit)
+		}
 		if err != nil {
 			var argErr argumentError
 			if errors.As(err, &argErr) {
 				opts.Logger.Info("tool call", append(attrs, "outcome", "invalid_arguments", "duration", time.Since(start))...)
-				return mcp.NewToolResultError("Invalid arguments: " + argErr.Error()), nil
+				return toolError("Invalid arguments: " + argErr.Error()), nil
 			}
 			opts.Logger.Error("tool call", append(attrs, "outcome", "upstream_unreachable", "error", err, "duration", time.Since(start))...)
-			return mcp.NewToolResultError("The Renku API could not be reached. Try again later."), nil
+			return toolError("The Renku API could not be reached. Try again later."), nil
 		}
 		defer func() { _ = res.Body.Close() }()
 		body, err := io.ReadAll(io.LimitReader(res.Body, maxResponseBytes+1))
 		if err != nil {
 			opts.Logger.Error("tool call", append(attrs, "outcome", "upstream_read_failed", "status", res.StatusCode, "error", err, "duration", time.Since(start))...)
-			return mcp.NewToolResultError("The response of the Renku API could not be read. Try again later."), nil
+			return toolError("The response of the Renku API could not be read. Try again later."), nil
 		}
 		attrs = append(attrs, "status", res.StatusCode, "duration", time.Since(start))
 
 		switch {
 		case res.StatusCode >= 500:
 			opts.Logger.Error("tool call", append(attrs, "outcome", "upstream_error", "body", truncate(string(body), 1000))...)
-			return mcp.NewToolResultError(fmt.Sprintf("The Renku API failed with status %d. Try again later.", res.StatusCode)), nil
+			return toolError(fmt.Sprintf("The Renku API failed with status %d. Try again later.", res.StatusCode)), nil
 		case res.StatusCode >= 400:
 			opts.Logger.Info("tool call", append(attrs, "outcome", "client_error")...)
-			return mcp.NewToolResultError(fmt.Sprintf("The Renku API rejected the request with status %d: %s", res.StatusCode, errorMessage(body))), nil
+			return toolError(fmt.Sprintf("The Renku API rejected the request with status %d: %s", res.StatusCode, errorMessage(body))), nil
 		case len(body) > maxResponseBytes:
 			opts.Logger.Warn("tool call", append(attrs, "outcome", "response_too_large")...)
-			return mcp.NewToolResultError("The response of the Renku API is too large. Narrow down the request, e.g. with a smaller per_page."), nil
+			return toolError("The response of the Renku API is too large. Narrow down the request, e.g. with a smaller per_page."), nil
 		}
 		opts.Logger.Info("tool call", append(attrs, "outcome", "ok")...)
 		return successResult(res, body), nil
 	}
+}
+
+// caller returns the user a tool is called for and their address as reported by the ingress.
+// Over HTTP both come from the request, over stdio the principal is stored in ctx.
+func caller(ctx context.Context, req *mcp.CallToolRequest) (auth.Principal, string) {
+	var principal auth.Principal
+	var ok bool
+	var clientIP string
+	if req.Extra != nil {
+		principal, ok = auth.PrincipalFromTokenInfo(req.Extra.TokenInfo)
+		clientIP = req.Extra.Header.Get("X-Real-IP")
+	}
+	if !ok {
+		principal, _ = auth.PrincipalFrom(ctx)
+	}
+	return principal, clientIP
+}
+
+// arguments decodes the raw tool arguments, which the SDK does not validate for tools with a raw input schema.
+func arguments(req *mcp.CallToolRequest) (map[string]any, error) {
+	args := map[string]any{}
+	if len(req.Params.Arguments) > 0 {
+		if err := json.Unmarshal(req.Params.Arguments, &args); err != nil {
+			return nil, argumentError{fmt.Errorf("arguments must be a JSON object: %w", err)}
+		}
+	}
+	return args, nil
+}
+
+func toolError(message string) *mcp.CallToolResult {
+	return &mcp.CallToolResult{IsError: true, Content: []mcp.Content{&mcp.TextContent{Text: message}}}
 }
 
 // Pagination is the paging information returned by list endpoints.
@@ -160,14 +195,14 @@ func paginationFrom(h http.Header) *Pagination {
 func successResult(res *http.Response, body []byte) *mcp.CallToolResult {
 	if len(bytes.TrimSpace(body)) == 0 {
 		return &mcp.CallToolResult{
-			Content:           []mcp.Content{mcp.NewTextContent(fmt.Sprintf("Done (status %d).", res.StatusCode))},
+			Content:           []mcp.Content{&mcp.TextContent{Text: fmt.Sprintf("Done (status %d).", res.StatusCode)}},
 			StructuredContent: map[string]any{"status": res.StatusCode},
 		}
 	}
 	var compact bytes.Buffer
 	if err := json.Compact(&compact, body); err != nil {
 		// Not JSON, e.g. plain text; pass it through as is.
-		return mcp.NewToolResultText(string(body))
+		return &mcp.CallToolResult{Content: []mcp.Content{&mcp.TextContent{Text: string(body)}}}
 	}
 	structured := map[string]any{"data": json.RawMessage(compact.Bytes())}
 	text := compact.String()
@@ -176,7 +211,7 @@ func successResult(res *http.Response, body []byte) *mcp.CallToolResult {
 		text += "\n\n" + p.summary()
 	}
 	return &mcp.CallToolResult{
-		Content:           []mcp.Content{mcp.NewTextContent(text)},
+		Content:           []mcp.Content{&mcp.TextContent{Text: text}},
 		StructuredContent: structured,
 	}
 }
