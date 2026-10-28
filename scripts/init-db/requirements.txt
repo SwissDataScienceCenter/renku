@@ -1,4 +1,4 @@
-psycopg2-binary==2.9.6
-tenacity==8.2.2
-requests==2.32.4
-kubernetes==24.2.0
+psycopg2-binary==2.9.13
+tenacity==9.2.1
+requests==2.34.2
+kubernetes==37.0.1
