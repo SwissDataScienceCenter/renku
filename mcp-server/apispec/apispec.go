@@ -6,14 +6,9 @@ import (
 	"io/fs"
 )
 
-// ToolsYAML is the content of tools.yaml.
-//
-//go:embed tools.yaml
-var ToolsYAML []byte
-
 //go:embed modules
 var modules embed.FS
 
-// Modules holds the module specs listed in tools.yaml, at their paths in the renku-data-services
+// Modules holds the module specs listed in Tools, at their paths in the renku-data-services
 // repository. They are copied unchanged from the repository by 'just update-spec <ref>'.
 var Modules, _ = fs.Sub(modules, "modules")

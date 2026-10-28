@@ -2,65 +2,37 @@ package toolspec
 
 import (
 	"fmt"
-	"os"
 	"regexp"
 	"strings"
-
-	"sigs.k8s.io/yaml"
 )
 
-// Config is the content of apispec/tools.yaml.
+// Config is the tool allowlist, see apispec.Tools.
 type Config struct {
-	Source Source       `json:"source"`
-	Tools  []ToolConfig `json:"tools"`
+	Source Source
+	Tools  []ToolConfig
 }
 
 // Source describes where the per-module specs come from.
 type Source struct {
 	// Repository is the GitHub repository, e.g. SwissDataScienceCenter/renku-data-services.
-	Repository string `json:"repository"`
+	Repository string
 	// Modules are the paths of the module specs inside the repository, and inside apispec/modules.
-	Modules []string `json:"modules"`
+	Modules []string
 }
 
 // ToolConfig is one allowlisted API operation exposed as an MCP tool.
 type ToolConfig struct {
-	Method      string `json:"method"`
-	Path        string `json:"path"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
+	Method      string
+	Path        string
+	Name        string
+	Description string
 	// Parameters overrides the descriptions of individual parameters, keyed by parameter name.
-	Parameters map[string]string `json:"parameters,omitempty"`
+	Parameters map[string]string
 }
 
 var toolNamePattern = regexp.MustCompile(`^[a-z][a-z0-9_]*$`)
 
 var supportedMethods = map[string]bool{"get": true, "post": true, "put": true, "patch": true, "delete": true}
-
-// LoadConfig reads and validates a tools.yaml file.
-func LoadConfig(path string) (*Config, error) {
-	raw, err := os.ReadFile(path)
-	if err != nil {
-		return nil, err
-	}
-	cfg, err := ParseConfig(raw)
-	if err != nil {
-		return nil, fmt.Errorf("%s: %w", path, err)
-	}
-	return cfg, nil
-}
-
-// ParseConfig parses and validates the content of a tools.yaml file.
-func ParseConfig(raw []byte) (*Config, error) {
-	var cfg Config
-	if err := yaml.UnmarshalStrict(raw, &cfg); err != nil {
-		return nil, fmt.Errorf("parsing tools config: %w", err)
-	}
-	if err := cfg.Validate(); err != nil {
-		return nil, fmt.Errorf("invalid tools config: %w", err)
-	}
-	return &cfg, nil
-}
 
 // Validate checks the config for mistakes that would otherwise surface as confusing build errors.
 func (c *Config) Validate() error {

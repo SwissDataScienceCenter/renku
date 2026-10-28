@@ -1,4 +1,4 @@
-// Package tools serves the operations allowlisted in apispec/tools.yaml as MCP tools, see internal/toolspec.
+// Package tools serves the operations allowlisted in apispec.Tools as MCP tools, see internal/toolspec.
 package tools
 
 import (
@@ -42,9 +42,9 @@ type argumentError struct{ err error }
 
 func (e argumentError) Error() string { return e.err.Error() }
 
-// Register adds a tool for every operation allowlisted in apispec/tools.yaml to s.
+// Register adds a tool for every operation allowlisted in apispec.Tools to s.
 func Register(s *mcp.Server, opts Options) error {
-	tools, err := toolspec.Load(apispec.ToolsYAML, apispec.Modules)
+	tools, err := toolspec.Load(&apispec.Tools, apispec.Modules)
 	if err != nil {
 		return fmt.Errorf("building the tools: %w", err)
 	}

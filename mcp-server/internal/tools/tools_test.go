@@ -19,7 +19,7 @@ import (
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/toolspec"
 )
 
-// Fails if the tools cannot be built from tools.yaml and the module specs.
+// Fails if the tools cannot be built from apispec.Tools and the module specs.
 func TestToolsBuildFromTheEmbeddedSpecs(t *testing.T) {
 	if err := Register(mcp.NewServer(&mcp.Implementation{Name: "test", Version: "dev"}, nil), Options{}); err != nil {
 		t.Fatal(err)
@@ -76,7 +76,7 @@ func fakeGateway(t *testing.T) (*httptest.Server, *[]recordedRequest) {
 
 func tool(t *testing.T, name string) toolspec.Tool {
 	t.Helper()
-	tools, err := toolspec.Load(apispec.ToolsYAML, apispec.Modules)
+	tools, err := toolspec.Load(&apispec.Tools, apispec.Modules)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -151,7 +151,7 @@ func TestEveryToolSendsTheExpectedRequest(t *testing.T) {
 		{"get_session_logs", map[string]any{"session_id": "session-1", "max_lines": 1000000}, "GET", "/api/data/sessions/session-1/logs", "max_lines=1000000", ""},
 		{"stop_session", map[string]any{"session_id": "session-1"}, "DELETE", "/api/data/sessions/session-1", "", ""},
 	}
-	tools, err := toolspec.Load(apispec.ToolsYAML, apispec.Modules)
+	tools, err := toolspec.Load(&apispec.Tools, apispec.Modules)
 	if err != nil {
 		t.Fatal(err)
 	}

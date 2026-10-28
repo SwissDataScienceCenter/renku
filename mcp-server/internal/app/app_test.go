@@ -20,7 +20,6 @@ import (
 
 	"github.com/SwissDataScienceCenter/renku/mcp-server/apispec"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/auth"
-	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/toolspec"
 )
 
 const issuer = "https://renku.example.org/auth/realms/Renku"
@@ -119,12 +118,8 @@ func TestEndToEnd(t *testing.T) {
 	for _, tool := range toolsRes.Tools {
 		listed = append(listed, tool.Name)
 	}
-	cfg, err := toolspec.ParseConfig(apispec.ToolsYAML)
-	if err != nil {
-		t.Fatal(err)
-	}
 	var allowlisted []string
-	for _, tool := range cfg.Tools {
+	for _, tool := range apispec.Tools.Tools {
 		allowlisted = append(allowlisted, tool.Name)
 	}
 	slices.Sort(listed)

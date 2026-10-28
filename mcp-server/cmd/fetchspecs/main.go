@@ -1,5 +1,5 @@
 // Command fetchspecs downloads the renku-data-services module specs listed in
-// apispec/tools.yaml at a git ref into apispec/modules, which the MCP server
+// apispec.Tools at a git ref into apispec/modules, which the MCP server
 // builds its tools from at startup. It fails if the tools cannot be built from them.
 package main
 
@@ -14,11 +14,11 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/SwissDataScienceCenter/renku/mcp-server/apispec"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/toolspec"
 )
 
 func main() {
-	configPath := flag.String("config", "apispec/tools.yaml", "path to the tools allowlist")
 	ref := flag.String("ref", "", "git ref (tag) of renku-data-services to take the specs from")
 	out := flag.String("out", "apispec/modules", "directory the module specs are written to, it is replaced")
 	localDir := flag.String("local-dir", "", "read the module specs from a local renku-data-services checkout instead of GitHub")
@@ -27,13 +27,11 @@ func main() {
 	if *ref == "" {
 		log.Fatal("-ref is required")
 	}
-	cfg, err := toolspec.LoadConfig(*configPath)
-	if err != nil {
-		log.Fatal(err)
-	}
+	cfg := &apispec.Tools
 	modules := map[string][]byte{}
 	for _, m := range cfg.Source.Modules {
 		var content []byte
+		var err error
 		if *localDir != "" {
 			content, err = os.ReadFile(filepath.Join(*localDir, m))
 		} else {
@@ -48,7 +46,7 @@ func main() {
 		log.Fatalf("the MCP server cannot build its tools from %s@%s: %v", cfg.Source.Repository, *ref, err)
 	}
 
-	// Replace the directory so that modules no longer listed in tools.yaml are removed.
+	// Replace the directory so that modules no longer listed in apispec.Tools are removed.
 	if err := os.RemoveAll(*out); err != nil {
 		log.Fatal(err)
 	}

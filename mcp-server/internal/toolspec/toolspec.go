@@ -1,4 +1,4 @@
-// Package toolspec builds the MCP tools of the operations allowlisted in apispec/tools.yaml
+// Package toolspec builds the MCP tools of the operations allowlisted in apispec.Tools
 // from the renku-data-services API specs, and the API request of a tool call.
 //
 // The input schema of a tool combines the parameters and the request body of the
@@ -42,14 +42,11 @@ type Tool struct {
 	Body bool
 }
 
-// Load builds the tools of a tools.yaml config. The module specs it lists are read from modules.
-func Load(toolsYAML []byte, modules fs.FS) ([]Tool, error) {
-	cfg, err := ParseConfig(toolsYAML)
-	if err != nil {
-		return nil, err
-	}
+// Load builds the tools of a config. The module specs it lists are read from modules.
+func Load(cfg *Config, modules fs.FS) ([]Tool, error) {
 	raw := map[string][]byte{}
 	for _, m := range cfg.Source.Modules {
+		var err error
 		if raw[m], err = fs.ReadFile(modules, m); err != nil {
 			return nil, fmt.Errorf("reading module %s: %w", m, err)
 		}

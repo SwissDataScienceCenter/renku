@@ -3,7 +3,7 @@ tools := "go tool -modfile=tools/go.mod"
 list:
     just --list
 
-# Fetch the module specs of renku-data-services listed in apispec/tools.yaml at <ref> into apispec/modules
+# Fetch the module specs of renku-data-services listed in apispec.Tools (apispec/tools.go) at <ref> into apispec/modules
 update-spec ref:
     go run ./cmd/fetchspecs -ref {{ref}}
 
