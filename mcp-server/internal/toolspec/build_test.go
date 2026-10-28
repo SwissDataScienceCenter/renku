@@ -188,7 +188,7 @@ func TestBuildBuildsTheAllowlistedTools(t *testing.T) {
 	}
 
 	list := tools["list_projects"]
-	if list.Description != `List "projects".` || list.Method != "GET" || list.Path != "/projects" || list.Body {
+	if list.Description != `List "projects".` || list.Binding.Method != "GET" || list.Binding.Path != "/projects" || list.Binding.Body {
 		t.Errorf("unexpected tool %+v", list)
 	}
 	if list.InputSchema["type"] != "object" || list.InputSchema["additionalProperties"] != false {
@@ -196,8 +196,8 @@ func TestBuildBuildsTheAllowlistedTools(t *testing.T) {
 	}
 
 	session := tools["get_session"]
-	if !slices.Equal(session.PathParameters, []string{"session_id"}) {
-		t.Errorf("path parameters = %v", session.PathParameters)
+	if !slices.Equal(session.Binding.PathParameters, []string{"session_id"}) {
+		t.Errorf("path parameters = %v", session.Binding.PathParameters)
 	}
 	if get(t, session.InputSchema, "properties", "session_id", "minLength") != float64(26) {
 		t.Errorf("the Ulid reference should be inlined, got %v", session.InputSchema)
@@ -207,7 +207,7 @@ func TestBuildBuildsTheAllowlistedTools(t *testing.T) {
 	}
 
 	create := tools["create_project"]
-	if !create.Body || len(create.PathParameters)+len(create.QueryParameters) != 0 {
+	if !create.Binding.Body || len(create.Binding.PathParameters)+len(create.Binding.QueryParameters) != 0 {
 		t.Errorf("unexpected tool %+v", create)
 	}
 	if required := get(t, create.InputSchema, "required").([]string); !slices.Equal(required, []string{BodyArgument}) {
@@ -221,8 +221,8 @@ func TestBuildBuildsTheAllowlistedTools(t *testing.T) {
 func TestBuildFlattensExplodedQueryObjects(t *testing.T) {
 	tool := build(t, ToolConfig{Spec: projectsSpec, Method: "get", Path: "/projects", Name: "list_projects", Description: "List projects."})["list_projects"]
 
-	if !slices.Equal(tool.QueryParameters, []string{"namespace", "page", "per_page"}) {
-		t.Fatalf("expected page, per_page and namespace parameters, got %v", tool.QueryParameters)
+	if !slices.Equal(tool.Binding.QueryParameters, []string{"namespace", "page", "per_page"}) {
+		t.Fatalf("expected page, per_page and namespace parameters, got %v", tool.Binding.QueryParameters)
 	}
 	if required := get(t, tool.InputSchema, "required").([]string); !slices.Equal(required, []string{"namespace"}) {
 		t.Errorf("required flags not taken from the object schema: %v", required)
@@ -242,7 +242,7 @@ func TestBuildHoistsPathParametersAndAppliesOverrides(t *testing.T) {
 		Parameters: map[string]string{"project_id": "The project ULID."},
 	})["get_project"]
 
-	if !slices.Equal(tool.PathParameters, []string{"project_id"}) || !slices.Equal(tool.QueryParameters, []string{"with_documentation"}) {
+	if !slices.Equal(tool.Binding.PathParameters, []string{"project_id"}) || !slices.Equal(tool.Binding.QueryParameters, []string{"with_documentation"}) {
 		t.Fatalf("expected the path level parameter on the operation, got %+v", tool)
 	}
 	if get(t, tool.InputSchema, "properties", "project_id", "description") != "The project ULID." {

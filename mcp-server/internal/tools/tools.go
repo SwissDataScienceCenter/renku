@@ -140,7 +140,7 @@ func caller(ctx context.Context, req *mcp.CallToolRequest) (auth.Principal, stri
 
 // send performs the API request of a call. Arguments that cannot be put into a request are returned as argumentError.
 func send(ctx context.Context, tool toolspec.Tool, opts Options, args map[string]any, edit func(*http.Request)) (*http.Response, error) {
-	r, err := tool.Request(ctx, opts.APIURL, args)
+	r, err := tool.Binding.Request(ctx, opts.APIURL, args)
 	if err != nil {
 		return nil, argumentError{err}
 	}

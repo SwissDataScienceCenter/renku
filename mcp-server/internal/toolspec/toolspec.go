@@ -21,21 +21,28 @@ import (
 	"strings"
 )
 
-// BodyArgument is the tool argument that holds the request body.
+// BodyArgument is the tool argument that holds the request body in the MCP input schema.
 const BodyArgument = "body"
 
 // Tool is one API operation exposed as an MCP tool.
 type Tool struct {
 	Name        string
 	Description string
-	// InputSchema is the JSON Schema of the arguments, advertised to clients.
+	// InputSchema is the JSON Schema of the arguments, advertised to MCP clients.
 	InputSchema map[string]any
+	// Binding is how the arguments of a call become the API request.
+	Binding Binding
+}
 
+// Binding is where the arguments of a MCP tool call go in the API request of its operation.
+type Binding struct {
 	// Method is the uppercase HTTP method of the operation.
 	Method string
 	// Path is the path template of the operation, relative to the API base URL.
-	Path            string
-	PathParameters  []string
+	Path string
+	// PathParameters are the arguments substituted into the {name} placeholders of Path.
+	PathParameters []string
+	// QueryParameters are the arguments sent as query parameters.
 	QueryParameters []string
 	// Body is whether the operation takes a JSON request body.
 	Body bool
@@ -44,15 +51,15 @@ type Tool struct {
 // Request builds the API request of a call. baseURL is the URL the paths
 // are relative to, e.g. http://renku-gateway/api/data. It only fails for
 // arguments that cannot be put into a request, all other checks are left to the API.
-func (t Tool) Request(ctx context.Context, baseURL string, args map[string]any) (*http.Request, error) {
+func (b Binding) Request(ctx context.Context, baseURL string, args map[string]any) (*http.Request, error) {
 	// Unknown arguments would otherwise be dropped silently, so the model would not notice misspelled ones.
 	for name := range args {
-		if !slices.Contains(t.PathParameters, name) && !slices.Contains(t.QueryParameters, name) && (name != BodyArgument || !t.Body) {
+		if !slices.Contains(b.PathParameters, name) && !slices.Contains(b.QueryParameters, name) && (name != BodyArgument || !b.Body) {
 			return nil, fmt.Errorf("unknown argument %s", name)
 		}
 	}
-	path := t.Path
-	for _, name := range t.PathParameters {
+	path := b.Path
+	for _, name := range b.PathParameters {
 		if args[name] == nil {
 			return nil, fmt.Errorf("missing required argument %s", name)
 		}
@@ -60,10 +67,15 @@ func (t Tool) Request(ctx context.Context, baseURL string, args map[string]any) 
 		if err != nil {
 			return nil, fmt.Errorf("%s: %w", name, err)
 		}
+		// url.PathEscape keeps these as they are, and the empty, . and .. segments would
+		// make the request reach another endpoint once the path is normalized.
+		if value == "" || value == "." || value == ".." {
+			return nil, fmt.Errorf("%s: %q is not a valid path segment", name, value)
+		}
 		path = strings.ReplaceAll(path, "{"+name+"}", url.PathEscape(value))
 	}
 	query := url.Values{}
-	for _, name := range t.QueryParameters {
+	for _, name := range b.QueryParameters {
 		values, ok := args[name].([]any)
 		if !ok {
 			values = []any{args[name]}
@@ -86,14 +98,14 @@ func (t Tool) Request(ctx context.Context, baseURL string, args map[string]any) 
 	}
 
 	var body io.Reader
-	if value, ok := args[BodyArgument]; t.Body && ok {
+	if value, ok := args[BodyArgument]; b.Body && ok {
 		raw, err := json.Marshal(value)
 		if err != nil {
 			return nil, fmt.Errorf("%s: %w", BodyArgument, err)
 		}
 		body = bytes.NewReader(raw)
 	}
-	req, err := http.NewRequestWithContext(ctx, t.Method, target, body)
+	req, err := http.NewRequestWithContext(ctx, b.Method, target, body)
 	if err != nil {
 		return nil, err
 	}

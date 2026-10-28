@@ -7,17 +7,17 @@ import (
 	"testing"
 )
 
-func load(*testing.T) map[string]Tool {
-	return map[string]Tool{
-		"list_projects":  {Name: "list_projects", Method: "GET", Path: "/projects", QueryParameters: []string{"namespace", "page", "tags", "archived"}},
-		"create_project": {Name: "create_project", Method: "POST", Path: "/projects", Body: true},
-		"get_file":       {Name: "get_file", Method: "GET", Path: "/projects/{project_id}/files/{path}", PathParameters: []string{"project_id", "path"}},
+func load(*testing.T) map[string]Binding {
+	return map[string]Binding{
+		"list_projects":  {Method: "GET", Path: "/projects", QueryParameters: []string{"namespace", "page", "tags", "archived"}},
+		"create_project": {Method: "POST", Path: "/projects", Body: true},
+		"get_file":       {Method: "GET", Path: "/projects/{project_id}/files/{path}", PathParameters: []string{"project_id", "path"}},
 	}
 }
 
-func request(t *testing.T, tool Tool, args map[string]any) (method, target, body string) {
+func request(t *testing.T, binding Binding, args map[string]any) (method, target, body string) {
 	t.Helper()
-	r, err := tool.Request(context.Background(), "http://gateway/api/data/", args)
+	r, err := binding.Request(context.Background(), "http://gateway/api/data/", args)
 	if err != nil {
 		t.Fatalf("Request: %v", err)
 	}
@@ -73,6 +73,9 @@ func TestRequestErrors(t *testing.T) {
 		{"body of a tool without one", "list_projects", map[string]any{"body": map[string]any{}}, "unknown argument body"},
 		{"missing path parameter", "get_file", map[string]any{"project_id": "p1"}, "missing required argument path"},
 		{"object path parameter", "get_file", map[string]any{"project_id": "p1", "path": map[string]any{}}, "path: expected a string"},
+		{"empty path parameter", "get_file", map[string]any{"project_id": "", "path": "a"}, `project_id: "" is not a valid path segment`},
+		{"dot path parameter", "get_file", map[string]any{"project_id": "p1", "path": "."}, `path: "." is not a valid path segment`},
+		{"dot dot path parameter", "get_file", map[string]any{"project_id": "..", "path": "a"}, `project_id: ".." is not a valid path segment`},
 		{"object query parameter", "list_projects", map[string]any{"namespace": map[string]any{}}, "namespace: expected a string"},
 	}
 	for _, tt := range tests {

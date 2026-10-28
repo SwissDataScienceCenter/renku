@@ -80,7 +80,58 @@ func newTool(t ToolConfig) (Tool, error) {
 		return Tool{}, fmt.Errorf("operation not found in its spec")
 	}
 
-	tool := Tool{Name: t.Name, Description: strings.TrimSpace(t.Description), Method: strings.ToUpper(t.Method), Path: t.Path}
+	args, err := operationArguments(item, op)
+	if err != nil {
+		return Tool{}, err
+	}
+	properties := args.schema["properties"].(map[string]any)
+	for name, description := range t.Parameters {
+		prop, ok := properties[name].(map[string]any)
+		if !ok || name == BodyArgument {
+			return Tool{}, fmt.Errorf("parameter override %q does not match any parameter", name)
+		}
+		prop["description"] = description
+	}
+
+	var inTemplate []string
+	for _, m := range templateParam.FindAllStringSubmatch(t.Path, -1) {
+		inTemplate = append(inTemplate, m[1])
+	}
+	if !slices.Equal(slices.Sorted(slices.Values(inTemplate)), slices.Sorted(slices.Values(args.path))) {
+		return Tool{}, fmt.Errorf("path parameters %v do not match the path template", args.path)
+	}
+
+	return Tool{
+		Name:        t.Name,
+		Description: strings.TrimSpace(t.Description),
+		InputSchema: args.schema,
+		Binding: Binding{
+			Method:          strings.ToUpper(t.Method),
+			Path:            t.Path,
+			PathParameters:  args.path,
+			QueryParameters: args.query,
+			Body:            args.body,
+		},
+	}, nil
+}
+
+// arguments are the tool arguments of an operation: the input schema advertised to
+// clients and where Binding.Request puts each argument in the API request.
+type arguments struct {
+	// The input schema that will be used by the mcp tool.
+	schema map[string]any
+	// The names of parameters from schema that are path parameters when calling the API
+	path []string
+	// The names of parameters from schema that are query parameters when calling the API
+	query []string
+	// Whether the API request needs a body, if set to true the schema field contains a "body" property.
+	body bool
+}
+
+// operationArguments builds the arguments of op from its parameters, those of its
+// path item, and its request body. It does not modify item or op.
+func operationArguments(item *v3.PathItem, op *v3.Operation) (arguments, error) {
+	var args arguments
 	properties := map[string]any{}
 	required := []string{}
 	add := func(name string, schema map[string]any, isRequired bool) error {
@@ -101,29 +152,22 @@ func newTool(t ToolConfig) (Tool, error) {
 		params = append(params, p)
 	}
 	for _, p := range params {
-		if err := addParameter(&tool, p, add); err != nil {
-			return Tool{}, fmt.Errorf("parameter %s: %w", p.Name, err)
+		if err := addParameter(&args, p, add); err != nil {
+			return arguments{}, fmt.Errorf("parameter %s: %w", p.Name, err)
 		}
-	}
-	for name, description := range t.Parameters {
-		prop, ok := properties[name].(map[string]any)
-		if !ok {
-			return Tool{}, fmt.Errorf("parameter override %q does not match any parameter", name)
-		}
-		prop["description"] = description
 	}
 
 	if rb := op.RequestBody; rb != nil {
 		if rb.Content == nil {
-			return Tool{}, fmt.Errorf("request body has no content")
+			return arguments{}, fmt.Errorf("request body has no content")
 		}
 		media, ok := rb.Content.Get("application/json")
 		if !ok {
-			return Tool{}, fmt.Errorf("request body: only application/json is supported")
+			return arguments{}, fmt.Errorf("request body: only application/json is supported")
 		}
 		schema, err := inline(media.Schema)
 		if err != nil {
-			return Tool{}, fmt.Errorf("request body: %w", err)
+			return arguments{}, fmt.Errorf("request body: %w", err)
 		}
 		if rb.Description != "" {
 			schema["description"] = rb.Description
@@ -132,26 +176,23 @@ func newTool(t ToolConfig) (Tool, error) {
 		if rb.Required != nil && *rb.Required {
 			required = append(required, BodyArgument)
 		}
-		tool.Body = true
+		args.body = true
 	}
 
-	var inTemplate []string
-	for _, m := range templateParam.FindAllStringSubmatch(t.Path, -1) {
-		inTemplate = append(inTemplate, m[1])
+	// Unknown arguments are rejected, see Binding.Request.
+	args.schema = map[string]any{
+		"type":                 "object",
+		"properties":           properties,
+		"required":             required,
+		"additionalProperties": false,
 	}
-	if !slices.Equal(slices.Sorted(slices.Values(inTemplate)), slices.Sorted(slices.Values(tool.PathParameters))) {
-		return Tool{}, fmt.Errorf("path parameters %v do not match the path template", tool.PathParameters)
-	}
-
-	// Unknown arguments are rejected, see Tool.Request.
-	tool.InputSchema = map[string]any{"type": "object", "properties": properties, "required": required, "additionalProperties": false}
-	return tool, nil
+	return args, nil
 }
 
-// addParameter adds the arguments of a parameter to tool. Exploded object query
+// addParameter adds the arguments of a parameter to args. Exploded object query
 // parameters are flattened into one argument per property, which is equivalent on the wire.
-// Parameters that Tool.Request cannot serialize the way the API expects are rejected.
-func addParameter(tool *Tool, p *v3.Parameter, add func(string, map[string]any, bool) error) error {
+// Parameters that Binding.Request cannot serialize the way the API expects are rejected.
+func addParameter(args *arguments, p *v3.Parameter, add func(string, map[string]any, bool) error) error {
 	if p.Schema == nil {
 		return fmt.Errorf("only parameters with a schema are supported")
 	}
@@ -171,7 +212,7 @@ func addParameter(tool *Tool, p *v3.Parameter, add func(string, map[string]any, 
 		if err := checkScalar(schema, false); err != nil {
 			return err
 		}
-		tool.PathParameters = append(tool.PathParameters, p.Name)
+		args.path = append(args.path, p.Name)
 	case "query":
 		if (p.Style != "" && p.Style != "form") || (p.Explode != nil && !*p.Explode) {
 			return fmt.Errorf("only exploded form style query parameters are supported")
@@ -185,14 +226,14 @@ func addParameter(tool *Tool, p *v3.Parameter, add func(string, map[string]any, 
 				if err := add(name, prop, slices.Contains(propsRequired, name)); err != nil {
 					return err
 				}
-				tool.QueryParameters = append(tool.QueryParameters, name)
+				args.query = append(args.query, name)
 			}
 			return nil
 		}
 		if err := checkScalar(schema, true); err != nil {
 			return err
 		}
-		tool.QueryParameters = append(tool.QueryParameters, p.Name)
+		args.query = append(args.query, p.Name)
 	default:
 		return fmt.Errorf("only path and query parameters are supported, got %q", p.In)
 	}
