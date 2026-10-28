@@ -57,8 +57,7 @@ func Register(s *mcp.Server, opts Options) error {
 func handler(tool toolspec.Tool, opts Options) mcp.ToolHandler {
 	return func(ctx context.Context, req *mcp.CallToolRequest) (result *mcp.CallToolResult, _ error) {
 		start := time.Now()
-		requestID := newRequestID()
-		principal, clientIP := caller(ctx, req)
+		principal, clientIP, requestID := caller(ctx, req)
 		attrs := []any{"tool", tool.Name, "sub", principal.Subject, "request_id", requestID}
 		// The SDK does not recover panics of tool handlers, which would take down the whole server.
 		defer func() {
@@ -118,20 +117,25 @@ func handler(tool toolspec.Tool, opts Options) mcp.ToolHandler {
 	}
 }
 
-// caller returns the user a tool is called for and their address as reported by the ingress.
-// Over HTTP both come from the request, over stdio the principal is stored in ctx.
-func caller(ctx context.Context, req *mcp.CallToolRequest) (auth.Principal, string) {
+// caller returns the user a tool is called for, their address as reported by the ingress and the request ID.
+// Over HTTP all come from the request, over stdio the principal is stored in ctx and the request ID is generated.
+func caller(ctx context.Context, req *mcp.CallToolRequest) (auth.Principal, string, string) {
 	var principal auth.Principal
 	var ok bool
-	var clientIP string
+	var clientIP, requestID string
 	if req.Extra != nil {
 		principal, ok = auth.PrincipalFromTokenInfo(req.Extra.TokenInfo)
 		clientIP = req.Extra.Header.Get("X-Real-IP")
+		// Set by the HTTP server, so that the HTTP request and the tool call are logged with the same ID.
+		requestID = req.Extra.Header.Get("X-Request-Id")
 	}
 	if !ok {
 		principal, _ = auth.PrincipalFrom(ctx)
 	}
-	return principal, clientIP
+	if requestID == "" {
+		requestID = newRequestID()
+	}
+	return principal, clientIP, requestID
 }
 
 // send performs the API request of a call. Arguments that cannot be put into a request are returned as argumentError.

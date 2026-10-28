@@ -32,6 +32,8 @@ type testEnv struct {
 	gatewayAuth string
 	// gatewayRealIP is the X-Real-IP header the fake gateway received last.
 	gatewayRealIP string
+	// gatewayRequestID is the X-Request-Id header the fake gateway received last.
+	gatewayRequestID string
 }
 
 func newTestEnv(t *testing.T) *testEnv {
@@ -50,6 +52,7 @@ func newTestEnv(t *testing.T) *testEnv {
 	gateway := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		env.gatewayAuth = r.Header.Get("Authorization")
 		env.gatewayRealIP = r.Header.Get("X-Real-IP")
+		env.gatewayRequestID = r.Header.Get("X-Request-Id")
 		if r.URL.Path != "/api/data/user" {
 			w.WriteHeader(http.StatusNotFound)
 			return
@@ -99,7 +102,7 @@ func TestEndToEnd(t *testing.T) {
 	token := env.token(t)
 	ctx := context.Background()
 
-	httpClient := &http.Client{Transport: headerTransport{"Authorization": "Bearer " + token, "X-Real-IP": "203.0.113.7"}}
+	httpClient := &http.Client{Transport: headerTransport{"Authorization": "Bearer " + token, "X-Real-IP": "203.0.113.7", "X-Request-Id": "req-1"}}
 	c, err := mcp.NewClient(&mcp.Implementation{Name: "test", Version: "1"}, nil).
 		Connect(ctx, &mcp.StreamableClientTransport{Endpoint: env.mcpURL, HTTPClient: httpClient, DisableStandaloneSSE: true}, nil)
 	if err != nil {
@@ -134,6 +137,9 @@ func TestEndToEnd(t *testing.T) {
 	}
 	if env.gatewayRealIP != "203.0.113.7" {
 		t.Errorf("gateway received X-Real-IP %q, want the end user's address", env.gatewayRealIP)
+	}
+	if env.gatewayRequestID != "req-1" {
+		t.Errorf("gateway received X-Request-Id %q, want the ID of the HTTP request", env.gatewayRequestID)
 	}
 }
 

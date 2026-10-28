@@ -9,6 +9,8 @@ import (
 	"net/url"
 	"time"
 
+	"github.com/labstack/echo/v5"
+	"github.com/labstack/echo/v5/middleware"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/auth"
@@ -60,18 +62,49 @@ func NewHTTPHandler(s *mcp.Server, authenticator *auth.Authenticator, logger *sl
 		MaxRequestBodyBytes: maxRequestBytes,
 	})
 
-	mux := http.NewServeMux()
-	mux.Handle(MCPPath, authenticator.Middleware(mcpHandler))
-	mux.Handle(authenticator.MetadataPath(), authenticator.MetadataHandler())
-	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, _ *http.Request) { w.WriteHeader(http.StatusOK) })
-	mux.HandleFunc("GET /readyz", func(w http.ResponseWriter, r *http.Request) {
-		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
+	e := echo.New()
+	e.Use(
+		middleware.RequestIDWithConfig(middleware.RequestIDConfig{
+			// Tool handlers read the ID from the request headers to log it and pass it on to the Renku API.
+			RequestIDHandler: func(c *echo.Context, requestID string) { c.Request().Header.Set(echo.HeaderXRequestID, requestID) },
+		}),
+		middleware.RequestLoggerWithConfig(middleware.RequestLoggerConfig{
+			// Probes would flood the logs.
+			Skipper: func(c *echo.Context) bool {
+				p := c.Request().URL.Path
+				return p == "/healthz" || p == "/readyz"
+			},
+			LogRequestID: true,
+			LogMethod:    true,
+			LogURIPath:   true,
+			LogStatus:    true,
+			LogLatency:   true,
+			LogRemoteIP:  true,
+			HandleError:  true,
+			LogValuesFunc: func(c *echo.Context, v middleware.RequestLoggerValues) error {
+				attrs := []any{"request_id", v.RequestID, "method", v.Method, "path", v.URIPath, "status", v.Status, "duration", v.Latency, "remote_ip", v.RemoteIP}
+				if v.Error != nil {
+					logger.ErrorContext(c.Request().Context(), "http request", append(attrs, "error", v.Error)...)
+					return nil
+				}
+				logger.InfoContext(c.Request().Context(), "http request", attrs...)
+				return nil
+			},
+		}),
+		// After the request logger, so that recovered panics are logged with a stack trace and status 500.
+		// It does not cover tool handlers, which the SDK runs in their own goroutines, see internal/tools.
+		middleware.RecoverWithConfig(middleware.RecoverConfig{DisableStackAll: true}),
+	)
+	e.Any(MCPPath, echo.WrapHandler(authenticator.Middleware(mcpHandler)))
+	e.GET(authenticator.MetadataPath(), echo.WrapHandler(authenticator.MetadataHandler()))
+	e.GET("/healthz", func(c *echo.Context) error { return c.NoContent(http.StatusOK) })
+	e.GET("/readyz", func(c *echo.Context) error {
+		ctx, cancel := context.WithTimeout(c.Request().Context(), 5*time.Second)
 		defer cancel()
 		if !authenticator.Ready(ctx) {
-			http.Error(w, "signing keys not available", http.StatusServiceUnavailable)
-			return
+			return c.String(http.StatusServiceUnavailable, "signing keys not available")
 		}
-		w.WriteHeader(http.StatusOK)
+		return c.NoContent(http.StatusOK)
 	})
-	return mux
+	return e
 }
