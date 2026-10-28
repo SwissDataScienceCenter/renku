@@ -122,7 +122,7 @@ func TestEndToEnd(t *testing.T) {
 		listed = append(listed, tool.Name)
 	}
 	var allowlisted []string
-	for _, tool := range apispec.Tools.Tools {
+	for _, tool := range apispec.Tools {
 		allowlisted = append(allowlisted, tool.Name)
 	}
 	slices.Sort(listed)

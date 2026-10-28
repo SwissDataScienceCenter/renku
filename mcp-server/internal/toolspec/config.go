@@ -4,24 +4,14 @@ import (
 	"fmt"
 	"regexp"
 	"strings"
+
+	v3 "github.com/pb33f/libopenapi/datamodel/high/v3"
 )
 
-// Config is the tool allowlist, see apispec.Tools.
-type Config struct {
-	Source Source
-	Tools  []ToolConfig
-}
-
-// Source describes where the per-module specs come from.
-type Source struct {
-	// Repository is the GitHub repository, e.g. SwissDataScienceCenter/renku-data-services.
-	Repository string
-	// Modules are the paths of the module specs inside the repository, and inside apispec/modules.
-	Modules []string
-}
-
-// ToolConfig is one allowlisted API operation exposed as an MCP tool.
+// ToolConfig is one allowlisted API operation exposed as an MCP tool, see apispec.Tools.
 type ToolConfig struct {
+	// Spec is the module spec that defines the operation, see Parse.
+	Spec        *v3.Document
 	Method      string
 	Path        string
 	Name        string
@@ -34,20 +24,14 @@ var toolNamePattern = regexp.MustCompile(`^[a-z][a-z0-9_]*$`)
 
 var supportedMethods = map[string]bool{"get": true, "post": true, "put": true, "patch": true, "delete": true}
 
-// Validate checks the config for mistakes that would otherwise surface as confusing build errors.
-func (c *Config) Validate() error {
-	if c.Source.Repository == "" {
-		return fmt.Errorf("source.repository is required")
-	}
-	if len(c.Source.Modules) == 0 {
-		return fmt.Errorf("source.modules must not be empty")
-	}
-	if len(c.Tools) == 0 {
+// validate checks the tools for mistakes that would otherwise surface as confusing build errors.
+func validate(tools []ToolConfig) error {
+	if len(tools) == 0 {
 		return fmt.Errorf("tools must not be empty")
 	}
 	names := map[string]bool{}
 	operations := map[string]bool{}
-	for i, t := range c.Tools {
+	for i, t := range tools {
 		if !toolNamePattern.MatchString(t.Name) {
 			return fmt.Errorf("tools[%d]: name %q must match %s", i, t.Name, toolNamePattern)
 		}
@@ -55,6 +39,9 @@ func (c *Config) Validate() error {
 			return fmt.Errorf("tools[%d]: duplicate name %q", i, t.Name)
 		}
 		names[t.Name] = true
+		if t.Spec == nil {
+			return fmt.Errorf("tools[%d] (%s): spec is required", i, t.Name)
+		}
 		if !supportedMethods[t.Method] {
 			return fmt.Errorf("tools[%d] (%s): unsupported method %q, use lowercase get/post/put/patch/delete", i, t.Name, t.Method)
 		}

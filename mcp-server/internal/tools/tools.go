@@ -44,7 +44,7 @@ func (e argumentError) Error() string { return e.err.Error() }
 
 // Register adds a tool for every operation allowlisted in apispec.Tools to s.
 func Register(s *mcp.Server, opts Options) error {
-	tools, err := toolspec.Load(&apispec.Tools, apispec.Modules)
+	tools, err := toolspec.Build(apispec.Tools)
 	if err != nil {
 		return fmt.Errorf("building the tools: %w", err)
 	}

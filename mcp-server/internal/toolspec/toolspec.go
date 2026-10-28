@@ -14,7 +14,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/fs"
 	"net/http"
 	"net/url"
 	"slices"
@@ -40,18 +39,6 @@ type Tool struct {
 	QueryParameters []string
 	// Body is whether the operation takes a JSON request body.
 	Body bool
-}
-
-// Load builds the tools of a config. The module specs it lists are read from modules.
-func Load(cfg *Config, modules fs.FS) ([]Tool, error) {
-	raw := map[string][]byte{}
-	for _, m := range cfg.Source.Modules {
-		var err error
-		if raw[m], err = fs.ReadFile(modules, m); err != nil {
-			return nil, fmt.Errorf("reading module %s: %w", m, err)
-		}
-	}
-	return Build(cfg, raw)
 }
 
 // Request builds the API request of a call. baseURL is the URL the paths

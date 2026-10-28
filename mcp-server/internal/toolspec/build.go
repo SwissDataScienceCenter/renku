@@ -13,57 +13,44 @@ import (
 	"sigs.k8s.io/yaml"
 )
 
-type module struct {
-	name  string
-	model *v3.Document
-}
-
 var templateParam = regexp.MustCompile(`\{([^}]+)\}`)
 
-// Build builds one tool per allowlisted operation of cfg.
-// modules maps each path in cfg.Source.Modules to the raw content of that spec.
+// Parse parses a module spec, which must be OpenAPI 3.1.
+func Parse(raw []byte) (*v3.Document, error) {
+	doc, err := libopenapi.NewDocument(raw)
+	if err != nil {
+		return nil, err
+	}
+	if version := doc.GetVersion(); !strings.HasPrefix(version, "3.1.") {
+		return nil, fmt.Errorf("only OpenAPI 3.1.x is supported, got %q", version)
+	}
+	model, err := doc.BuildV3Model()
+	if err != nil {
+		return nil, err
+	}
+	return &model.Model, nil
+}
+
+// Build builds one tool per allowlisted operation, from the spec each tool points to.
 //
 // The schemas of the parameters and the request body are inlined with all references
 // resolved and otherwise kept as they are upstream, so clients see everything the API
 // spec says about the arguments.
-func Build(cfg *Config, modules map[string][]byte) ([]Tool, error) {
-	if err := cfg.Validate(); err != nil {
+func Build(configs []ToolConfig) ([]Tool, error) {
+	if err := validate(configs); err != nil {
 		return nil, err
 	}
-	var mods []module
-	var serverURL string
-	for i, name := range cfg.Source.Modules {
-		raw, ok := modules[name]
-		if !ok {
-			return nil, fmt.Errorf("module %s was not provided", name)
+	// The tool paths are relative to one base URL.
+	serverURL := specServerURL(configs[0].Spec)
+	for _, t := range configs {
+		if url := specServerURL(t.Spec); url != serverURL {
+			return nil, fmt.Errorf("tool %s: server url %q of its spec differs from %q", t.Name, url, serverURL)
 		}
-		doc, err := libopenapi.NewDocument(raw)
-		if err != nil {
-			return nil, fmt.Errorf("parsing module %s: %w", name, err)
-		}
-		if version := doc.GetVersion(); !strings.HasPrefix(version, "3.1.") {
-			return nil, fmt.Errorf("module %s: only OpenAPI 3.1.x is supported, got %q", name, version)
-		}
-		model, err := doc.BuildV3Model()
-		if err != nil {
-			return nil, fmt.Errorf("module %s: %w", name, err)
-		}
-		var url string
-		if len(model.Model.Servers) > 0 {
-			url = model.Model.Servers[0].URL
-		}
-		// The tool paths are relative to one base URL.
-		if i == 0 {
-			serverURL = url
-		} else if url != serverURL {
-			return nil, fmt.Errorf("module %s: server url %q differs from %q", name, url, serverURL)
-		}
-		mods = append(mods, module{name: name, model: &model.Model})
 	}
 
 	var tools []Tool
-	for _, t := range cfg.Tools {
-		tool, err := newTool(mods, t)
+	for _, t := range configs {
+		tool, err := newTool(t)
 		if err != nil {
 			return nil, fmt.Errorf("tool %s (%s %s): %w", t.Name, t.Method, t.Path, err)
 		}
@@ -72,30 +59,25 @@ func Build(cfg *Config, modules map[string][]byte) ([]Tool, error) {
 	return tools, nil
 }
 
-// newTool builds the MCP tool of an allowlisted operation.
-func newTool(mods []module, t ToolConfig) (Tool, error) {
-	var found string
+func specServerURL(spec *v3.Document) string {
+	if len(spec.Servers) == 0 {
+		return ""
+	}
+	return spec.Servers[0].URL
+}
+
+// newTool builds the MCP tool of an allowlisted operation from the spec that defines it.
+func newTool(t ToolConfig) (Tool, error) {
 	var item *v3.PathItem
 	var op *v3.Operation
-	for _, m := range mods {
-		if m.model.Paths == nil {
-			continue
-		}
-		pathItem, ok := m.model.Paths.PathItems.Get(t.Path)
-		if !ok {
-			continue
-		}
-		o, ok := pathItem.GetOperations().Get(t.Method)
-		if !ok {
-			continue
-		}
-		if found != "" {
-			return Tool{}, fmt.Errorf("operation is defined in both %s and %s", found, m.name)
-		}
-		found, item, op = m.name, pathItem, o
+	if t.Spec.Paths != nil {
+		item, _ = t.Spec.Paths.PathItems.Get(t.Path)
+	}
+	if item != nil {
+		op, _ = item.GetOperations().Get(t.Method)
 	}
 	if op == nil {
-		return Tool{}, fmt.Errorf("operation not found in any module")
+		return Tool{}, fmt.Errorf("operation not found in its spec")
 	}
 
 	tool := Tool{Name: t.Name, Description: strings.TrimSpace(t.Description), Method: strings.ToUpper(t.Method), Path: t.Path}

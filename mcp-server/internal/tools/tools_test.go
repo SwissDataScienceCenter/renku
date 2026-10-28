@@ -76,7 +76,7 @@ func fakeGateway(t *testing.T) (*httptest.Server, *[]recordedRequest) {
 
 func tool(t *testing.T, name string) toolspec.Tool {
 	t.Helper()
-	tools, err := toolspec.Load(&apispec.Tools, apispec.Modules)
+	tools, err := toolspec.Build(apispec.Tools)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -151,7 +151,7 @@ func TestEveryToolSendsTheExpectedRequest(t *testing.T) {
 		{"get_session_logs", map[string]any{"session_id": "session-1", "max_lines": 1000000}, "GET", "/api/data/sessions/session-1/logs", "max_lines=1000000", ""},
 		{"stop_session", map[string]any{"session_id": "session-1"}, "DELETE", "/api/data/sessions/session-1", "", ""},
 	}
-	tools, err := toolspec.Load(&apispec.Tools, apispec.Modules)
+	tools, err := toolspec.Build(apispec.Tools)
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -1,6 +1,6 @@
-// Command fetchspecs downloads the renku-data-services module specs listed in
-// apispec.Tools at a git ref into apispec/modules, which the MCP server
-// builds its tools from at startup. It fails if the tools cannot be built from them.
+// Command fetchspecs copies the renku-data-services module specs listed in modules,
+// at a git ref on GitHub or from a local checkout, into apispec/modules, where they
+// are embedded and parsed by package apispec. It fails if a spec cannot be parsed.
 package main
 
 import (
@@ -14,43 +14,60 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/SwissDataScienceCenter/renku/mcp-server/apispec"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/toolspec"
 )
 
+// repository is the GitHub repository the module specs are taken from.
+const repository = "SwissDataScienceCenter/renku-data-services"
+
+// modules are the paths of the module specs inside the repository, and inside apispec/modules.
+var modules = []string{
+	"components/renku_data_services/users/api.spec.yaml",
+	"components/renku_data_services/search/api.spec.yaml",
+	"components/renku_data_services/project/api.spec.yaml",
+	"components/renku_data_services/namespace/api.spec.yaml",
+	"components/renku_data_services/data_connectors/api.spec.yaml",
+	"components/renku_data_services/session/api.spec.yaml",
+	"components/renku_data_services/notebooks/api.spec.yaml",
+}
+
 func main() {
-	ref := flag.String("ref", "", "git ref (tag) of renku-data-services to take the specs from")
+	ref := flag.String("ref", "", "git ref (tag) of renku-data-services on GitHub to take the specs from")
+	localDir := flag.String("local-dir", "", "local renku-data-services checkout to take the specs from instead of GitHub")
 	out := flag.String("out", "apispec/modules", "directory the module specs are written to, it is replaced")
-	localDir := flag.String("local-dir", "", "read the module specs from a local renku-data-services checkout instead of GitHub")
 	flag.Parse()
 
-	if *ref == "" {
-		log.Fatal("-ref is required")
+	if (*ref == "") == (*localDir == "") {
+		log.Fatal("exactly one of -ref and -local-dir is required")
 	}
-	cfg := &apispec.Tools
-	modules := map[string][]byte{}
-	for _, m := range cfg.Source.Modules {
+	// origin is where the specs are taken from, for the messages and the SOURCE file.
+	origin := fmt.Sprintf("%s@%s", repository, *ref)
+	if *localDir != "" {
+		origin = "the local checkout " + *localDir
+	}
+	fetched := map[string][]byte{}
+	for _, m := range modules {
 		var content []byte
 		var err error
 		if *localDir != "" {
 			content, err = os.ReadFile(filepath.Join(*localDir, m))
 		} else {
-			content, err = fetch(fmt.Sprintf("https://raw.githubusercontent.com/%s/%s/%s", cfg.Source.Repository, *ref, m))
+			content, err = fetch(fmt.Sprintf("https://raw.githubusercontent.com/%s/%s/%s", repository, *ref, m))
 		}
 		if err != nil {
 			log.Fatalf("reading module %s: %v", m, err)
 		}
-		modules[m] = content
-	}
-	if _, err := toolspec.Build(cfg, modules); err != nil {
-		log.Fatalf("the MCP server cannot build its tools from %s@%s: %v", cfg.Source.Repository, *ref, err)
+		if _, err := toolspec.Parse(content); err != nil {
+			log.Fatalf("module %s of %s: %v", m, origin, err)
+		}
+		fetched[m] = content
 	}
 
-	// Replace the directory so that modules no longer listed in apispec.Tools are removed.
+	// Replace the directory so that modules no longer listed are removed.
 	if err := os.RemoveAll(*out); err != nil {
 		log.Fatal(err)
 	}
-	for name, content := range modules {
+	for name, content := range fetched {
 		path := filepath.Join(*out, name)
 		if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
 			log.Fatal(err)
@@ -59,11 +76,11 @@ func main() {
 			log.Fatal(err)
 		}
 	}
-	source := fmt.Sprintf("Copied unchanged from %s@%s by 'just update-spec %s'.\n", cfg.Source.Repository, *ref, *ref)
+	source := fmt.Sprintf("Copied unchanged from %s by fetchspecs.\n", origin)
 	if err := os.WriteFile(filepath.Join(*out, "SOURCE"), []byte(source), 0o644); err != nil {
 		log.Fatal(err)
 	}
-	log.Printf("wrote %d module specs from %s@%s to %s", len(modules), cfg.Source.Repository, *ref, *out)
+	log.Printf("wrote %d module specs from %s to %s", len(fetched), origin, *out)
 }
 
 func fetch(url string) ([]byte, error) {

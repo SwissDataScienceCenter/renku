@@ -4,6 +4,8 @@ import (
 	"slices"
 	"strings"
 	"testing"
+
+	v3 "github.com/pb33f/libopenapi/datamodel/high/v3"
 )
 
 const projectsModule = `
@@ -132,23 +134,23 @@ components:
           schema: {$ref: "#/components/schemas/ErrorResponse"}
 `
 
-func testConfig(tools ...ToolConfig) *Config {
-	return &Config{
-		Source: Source{Repository: "org/repo", Modules: []string{"projects.yaml", "sessions.yaml"}},
-		Tools:  tools,
+var (
+	projectsSpec = mustParse(projectsModule)
+	sessionsSpec = mustParse(sessionsModule)
+)
+
+func mustParse(raw string) *v3.Document {
+	spec, err := Parse([]byte(raw))
+	if err != nil {
+		panic(err)
 	}
+	return spec
 }
 
-var testModules = map[string]string{"projects.yaml": projectsModule, "sessions.yaml": sessionsModule}
-
 // build runs Build and returns the tools by name.
-func build(t *testing.T, cfg *Config, modules map[string]string) map[string]Tool {
+func build(t *testing.T, configs ...ToolConfig) map[string]Tool {
 	t.Helper()
-	raw := map[string][]byte{}
-	for k, v := range modules {
-		raw[k] = []byte(v)
-	}
-	tools, err := Build(cfg, raw)
+	tools, err := Build(configs)
 	if err != nil {
 		t.Fatalf("Build: %v", err)
 	}
@@ -175,13 +177,12 @@ func get(t *testing.T, v any, path ...string) any {
 }
 
 func TestBuildBuildsTheAllowlistedTools(t *testing.T) {
-	cfg := testConfig(
-		ToolConfig{Method: "get", Path: "/projects", Name: "list_projects", Description: `List "projects".`},
-		ToolConfig{Method: "get", Path: "/projects/{project_id}", Name: "get_project", Description: "Get a project."},
-		ToolConfig{Method: "get", Path: "/sessions/{session_id}", Name: "get_session", Description: "Get a session."},
-		ToolConfig{Method: "post", Path: "/projects", Name: "create_project", Description: "Create a project."},
+	tools := build(t,
+		ToolConfig{Spec: projectsSpec, Method: "get", Path: "/projects", Name: "list_projects", Description: `List "projects".`},
+		ToolConfig{Spec: projectsSpec, Method: "get", Path: "/projects/{project_id}", Name: "get_project", Description: "Get a project."},
+		ToolConfig{Spec: sessionsSpec, Method: "get", Path: "/sessions/{session_id}", Name: "get_session", Description: "Get a session."},
+		ToolConfig{Spec: projectsSpec, Method: "post", Path: "/projects", Name: "create_project", Description: "Create a project."},
 	)
-	tools := build(t, cfg, testModules)
 	if len(tools) != 4 {
 		t.Fatalf("expected only the 4 allowlisted tools, got %v", tools)
 	}
@@ -218,8 +219,7 @@ func TestBuildBuildsTheAllowlistedTools(t *testing.T) {
 }
 
 func TestBuildFlattensExplodedQueryObjects(t *testing.T) {
-	cfg := testConfig(ToolConfig{Method: "get", Path: "/projects", Name: "list_projects", Description: "List projects."})
-	tool := build(t, cfg, testModules)["list_projects"]
+	tool := build(t, ToolConfig{Spec: projectsSpec, Method: "get", Path: "/projects", Name: "list_projects", Description: "List projects."})["list_projects"]
 
 	if !slices.Equal(tool.QueryParameters, []string{"namespace", "page", "per_page"}) {
 		t.Fatalf("expected page, per_page and namespace parameters, got %v", tool.QueryParameters)
@@ -237,11 +237,10 @@ func TestBuildFlattensExplodedQueryObjects(t *testing.T) {
 }
 
 func TestBuildHoistsPathParametersAndAppliesOverrides(t *testing.T) {
-	cfg := testConfig(ToolConfig{
-		Method: "get", Path: "/projects/{project_id}", Name: "get_project", Description: "Get a project.",
+	tool := build(t, ToolConfig{
+		Spec: projectsSpec, Method: "get", Path: "/projects/{project_id}", Name: "get_project", Description: "Get a project.",
 		Parameters: map[string]string{"project_id": "The project ULID."},
-	})
-	tool := build(t, cfg, testModules)["get_project"]
+	})["get_project"]
 
 	if !slices.Equal(tool.PathParameters, []string{"project_id"}) || !slices.Equal(tool.QueryParameters, []string{"with_documentation"}) {
 		t.Fatalf("expected the path level parameter on the operation, got %+v", tool)
@@ -252,11 +251,10 @@ func TestBuildHoistsPathParametersAndAppliesOverrides(t *testing.T) {
 }
 
 func TestBuildKeepsTheUpstreamSchemas(t *testing.T) {
-	cfg := testConfig(
-		ToolConfig{Method: "post", Path: "/projects", Name: "create_project", Description: "Create a project."},
-		ToolConfig{Method: "get", Path: "/projects/{project_id}", Name: "get_project", Description: "Get a project."},
+	tools := build(t,
+		ToolConfig{Spec: projectsSpec, Method: "post", Path: "/projects", Name: "create_project", Description: "Create a project."},
+		ToolConfig{Spec: projectsSpec, Method: "get", Path: "/projects/{project_id}", Name: "get_project", Description: "Get a project."},
 	)
-	tools := build(t, cfg, testModules)
 
 	body := get(t, tools["create_project"].InputSchema, "properties", "body", "properties")
 	description := get(t, body, "description").(map[string]any)
@@ -282,8 +280,7 @@ func TestBuildKeepsTheUpstreamSchemas(t *testing.T) {
 
 func TestBuildRejectsRecursiveSchemas(t *testing.T) {
 	recursive := strings.Replace(projectsModule, "tags: {type: array, items: {type: string}}", `tags: {type: array, items: {$ref: "#/components/schemas/ProjectPost"}}`, 1)
-	cfg := testConfig(ToolConfig{Method: "post", Path: "/projects", Name: "create_project", Description: "Create a project."})
-	_, err := Build(cfg, map[string][]byte{"projects.yaml": []byte(recursive), "sessions.yaml": []byte(sessionsModule)})
+	_, err := Build([]ToolConfig{{Spec: mustParse(recursive), Method: "post", Path: "/projects", Name: "create_project", Description: "Create a project."}})
 	if err == nil || !strings.Contains(err.Error(), "recursive schema #/components/schemas/ProjectPost") {
 		t.Fatalf("expected a recursive schema error, got %v", err)
 	}
@@ -291,11 +288,10 @@ func TestBuildRejectsRecursiveSchemas(t *testing.T) {
 
 func TestBuildUsesTheComponentsOfEachModule(t *testing.T) {
 	conflicting := strings.Replace(sessionsModule, "Ulid: {type: string, minLength: 26, maxLength: 26}", "Ulid: {type: string, minLength: 20, maxLength: 26}", 1)
-	cfg := testConfig(
-		ToolConfig{Method: "get", Path: "/projects/{project_id}", Name: "get_project", Description: "Get a project."},
-		ToolConfig{Method: "get", Path: "/sessions/{session_id}", Name: "get_session", Description: "Get a session."},
+	tools := build(t,
+		ToolConfig{Spec: projectsSpec, Method: "get", Path: "/projects/{project_id}", Name: "get_project", Description: "Get a project."},
+		ToolConfig{Spec: mustParse(conflicting), Method: "get", Path: "/sessions/{session_id}", Name: "get_session", Description: "Get a session."},
 	)
-	tools := build(t, cfg, map[string]string{"projects.yaml": projectsModule, "sessions.yaml": conflicting})
 	if get(t, tools["get_project"].InputSchema, "properties", "project_id", "minLength") != float64(26) {
 		t.Error("get_project should use the Ulid of the projects module")
 	}
@@ -318,8 +314,7 @@ func TestBuildRejectsParametersTheServerCannotSend(t *testing.T) {
 			if changed == sessionsModule {
 				t.Fatalf("%q is not in the module", tt.old)
 			}
-			cfg := testConfig(ToolConfig{Method: "get", Path: "/sessions/{session_id}", Name: "get_session", Description: "Get a session."})
-			_, err := Build(cfg, map[string][]byte{"projects.yaml": []byte(projectsModule), "sessions.yaml": []byte(changed)})
+			_, err := Build([]ToolConfig{{Spec: mustParse(changed), Method: "get", Path: "/sessions/{session_id}", Name: "get_session", Description: "Get a session."}})
 			if err == nil || !strings.Contains(err.Error(), tt.want) {
 				t.Fatalf("expected an error containing %q, got %v", tt.want, err)
 			}
@@ -327,33 +322,44 @@ func TestBuildRejectsParametersTheServerCannotSend(t *testing.T) {
 	}
 }
 
-func TestBuildRequiresOpenAPI31(t *testing.T) {
+func TestParseRequiresOpenAPI31(t *testing.T) {
 	old := strings.Replace(sessionsModule, "openapi: 3.1.0", "openapi: 3.0.2", 1)
-	cfg := testConfig(ToolConfig{Method: "get", Path: "/sessions", Name: "list_sessions", Description: "List sessions."})
-	_, err := Build(cfg, map[string][]byte{"projects.yaml": []byte(projectsModule), "sessions.yaml": []byte(old)})
+	_, err := Parse([]byte(old))
 	if err == nil || !strings.Contains(err.Error(), "only OpenAPI 3.1.x is supported") {
 		t.Fatalf("expected a version error, got %v", err)
 	}
 }
 
 func TestBuildErrors(t *testing.T) {
-	modules := map[string][]byte{"projects.yaml": []byte(projectsModule), "sessions.yaml": []byte(sessionsModule)}
 	tests := []struct {
 		name string
 		tool ToolConfig
 		want string
 	}{
-		{"unknown operation", ToolConfig{Method: "delete", Path: "/projects", Name: "delete_projects", Description: "x"}, "operation not found"},
-		{"unknown parameter override", ToolConfig{Method: "get", Path: "/sessions", Name: "list_sessions", Description: "x", Parameters: map[string]string{"nope": "x"}}, `parameter override "nope"`},
-		{"invalid name", ToolConfig{Method: "get", Path: "/sessions", Name: "ListSessions", Description: "x"}, "must match"},
-		{"missing description", ToolConfig{Method: "get", Path: "/sessions", Name: "list_sessions"}, "description is required"},
+		{"unknown operation", ToolConfig{Spec: projectsSpec, Method: "delete", Path: "/projects", Name: "delete_projects", Description: "x"}, "operation not found in its spec"},
+		{"operation in another spec", ToolConfig{Spec: projectsSpec, Method: "get", Path: "/sessions", Name: "list_sessions", Description: "x"}, "operation not found in its spec"},
+		{"missing spec", ToolConfig{Method: "get", Path: "/sessions", Name: "list_sessions", Description: "x"}, "spec is required"},
+		{"unknown parameter override", ToolConfig{Spec: sessionsSpec, Method: "get", Path: "/sessions", Name: "list_sessions", Description: "x", Parameters: map[string]string{"nope": "x"}}, `parameter override "nope"`},
+		{"invalid name", ToolConfig{Spec: sessionsSpec, Method: "get", Path: "/sessions", Name: "ListSessions", Description: "x"}, "must match"},
+		{"missing description", ToolConfig{Spec: sessionsSpec, Method: "get", Path: "/sessions", Name: "list_sessions"}, "description is required"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			_, err := Build(testConfig(tt.tool), modules)
+			_, err := Build([]ToolConfig{tt.tool})
 			if err == nil || !strings.Contains(err.Error(), tt.want) {
 				t.Fatalf("expected error containing %q, got %v", tt.want, err)
 			}
 		})
+	}
+}
+
+func TestBuildRequiresOneServerURL(t *testing.T) {
+	otherServer := mustParse(strings.Replace(sessionsModule, "servers: [{url: /api/data}]", "servers: [{url: /api/other}]", 1))
+	_, err := Build([]ToolConfig{
+		{Spec: projectsSpec, Method: "get", Path: "/projects", Name: "list_projects", Description: "x"},
+		{Spec: otherServer, Method: "get", Path: "/sessions", Name: "list_sessions", Description: "x"},
+	})
+	if err == nil || !strings.Contains(err.Error(), `server url "/api/other" of its spec differs from "/api/data"`) {
+		t.Fatalf("expected a server url error, got %v", err)
 	}
 }
