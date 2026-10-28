@@ -1,0 +1,1213 @@
+openapi: 3.1.0
+info:
+  title: Renku Data Services API
+  description: |
+    Service that allows creating, updating, deleting, and managing Renku native projects.
+    All errors have the same format as the schema called ErrorResponse.
+  version: v1
+servers:
+  - url: /api/data
+paths:
+  /projects:
+    get:
+      summary: Get all projects
+      parameters:
+        - in: query
+          description: query parameters
+          name: params
+          style: form
+          explode: true
+          schema:
+            $ref: "#/components/schemas/ProjectGetQuery"
+      responses:
+        "200":
+          description: List of projects
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectsList"
+          headers:
+            page:
+              description: The index of the current page (starting at 1).
+              required: true
+              schema:
+                type: integer
+            per-page:
+              description: The number of items per page.
+              required: true
+              schema:
+                type: integer
+            total:
+              description: The total number of items.
+              required: true
+              schema:
+                type: integer
+            total-pages:
+              description: The total number of pages.
+              required: true
+              schema:
+                type: integer
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - projects
+    post:
+      summary: Create a new project
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProjectPost"
+      responses:
+        "201":
+          description: The project was created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - projects
+  /projects/{project_id}:
+    get:
+      summary: Get a project
+      parameters:
+        - in: path
+          name: project_id
+          required: true
+          schema:
+            $ref: "#/components/schemas/Ulid"
+        - in: query
+          name: with_documentation
+          required: false
+          schema:
+            $ref: "#/components/schemas/WithDocumentation"
+      responses:
+        "200":
+          description: The project
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+        "404":
+          description: The project does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - projects
+    patch:
+      summary: Update specific fields of an existing project
+      parameters:
+        - in: path
+          name: project_id
+          required: true
+          schema:
+            $ref: "#/components/schemas/Ulid"
+        - $ref: "#/components/parameters/If-Match"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProjectPatch"
+      responses:
+        "200":
+          description: The patched project
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+        "404":
+          description: The project does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - projects
+    delete:
+      summary: Remove a project
+      parameters:
+        - in: path
+          name: project_id
+          required: true
+          schema:
+            $ref: "#/components/schemas/Ulid"
+      responses:
+        "204":
+          description: The project was removed or did not exist in the first place
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - projects
+  /renku_v1_projects/migrations:
+    get:
+      summary: Return list of projects migrated from v1
+      responses:
+        "200":
+          description: List of project migrations
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectMigrationList"
+        "404":
+          description: No exist project migration
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - projects_migrations
+  /renku_v1_projects/{v1_id}/migrations:
+    get:
+      summary: Check if a v1 project has been migrated to v2
+      parameters:
+        - in: path
+          name: v1_id
+          required: true
+          description: The ID of the project in Renku v1
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Project exists in v2 and has been migrated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+        "404":
+          description: No corresponding project found in v2
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - projects
+    post:
+      summary: Create a new project migrated from Renku v1
+      parameters:
+        - in: path
+          name: v1_id
+          required: true
+          description: The ID of the Gitlab repository that represents the project in Renku v1
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProjectMigrationPost"
+      responses:
+        "201":
+          description: The project was created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - projects
+  /namespaces/{namespace}/projects/{slug}:
+    get:
+      summary: Get a project by namespace and project slug
+      parameters:
+        - in: path
+          name: namespace
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: slug
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: with_documentation
+          required: false
+          schema:
+            $ref: "#/components/schemas/WithDocumentation"
+      responses:
+        "200":
+          description: The project
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+        "404":
+          description: The project does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - projects
+  /projects/{project_id}/copies:
+    get:
+      summary: Get list of all copies of this project
+      parameters:
+        - in: path
+          name: project_id
+          required: true
+          schema:
+            $ref: "#/components/schemas/Ulid"
+        - in: query
+          description: When true, only return projects that the user has write access to
+          name: writable
+          required: false
+          schema:
+            type: boolean
+            default: false
+      responses:
+        "200":
+          description: The list of projects
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectsList"
+        "404":
+          description: The project does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - projects
+    post:
+      summary: Create a new copy
+      parameters:
+        - in: path
+          name: project_id
+          required: true
+          schema:
+            $ref: "#/components/schemas/Ulid"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProjectPost"
+      responses:
+        "201":
+          description: The project was created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+        "403":
+          description: The project was copied but at least one data connector cannot be copied due to lack of permission
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: The project does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - projects
+  /projects/{project_id}/migration_info:
+    get:
+      summary: Check if a v2 project is a project migrated from v1
+      parameters:
+        - in: path
+          name: project_id
+          required: true
+          schema:
+            $ref: "#/components/schemas/Ulid"
+      responses:
+        "200":
+          description: Project exists in v2 and is a migrated project from v1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectMigrationInfo"
+        "404":
+          description: No corresponding project migrated from v1
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - projects
+  /projects/{project_id}/members:
+    get:
+      summary: Get all members of a project
+      parameters:
+        - in: path
+          name: project_id
+          required: true
+          schema:
+            $ref: "#/components/schemas/Ulid"
+      responses:
+        "200":
+          description: The project's members
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectMemberListResponse"
+        "404":
+          description: The project does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - projects
+    patch:
+      summary: |
+        New members in the list are added to the project's members. If a member
+        already exists, then only the role is updated. No member will be deleted
+        in this endpoint.
+      parameters:
+        - in: path
+          name: project_id
+          required: true
+          schema:
+            $ref: "#/components/schemas/Ulid"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProjectMemberListPatchRequest"
+      responses:
+        "200":
+          description: The project's members were updated
+        "404":
+          description: The project does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - projects
+  /projects/{project_id}/members/{member_id}:
+    delete:
+      summary: Remove a member from a project
+      parameters:
+        - in: path
+          name: project_id
+          required: true
+          schema:
+            $ref: "#/components/schemas/Ulid"
+        - in: path
+          name: member_id
+          description: This is user's KeyCloak ID
+          required: true
+          schema:
+            $ref: "#/components/schemas/UserId"
+      responses:
+        "204":
+          description: The member was removed or wasn't part of project's members.
+        "404":
+          description: The project does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - projects
+  /projects/{project_id}/permissions:
+    parameters:
+      - in: path
+        name: project_id
+        required: true
+        schema:
+          $ref: "#/components/schemas/Ulid"
+    get:
+      summary: Get the permissions of the current user on the project
+      responses:
+        "200":
+          description: The set of permissions.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectPermissions"
+        "404":
+          description: The project does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - projects
+  /projects/{project_id}/session_secret_slots:
+    parameters:
+      - in: path
+        name: project_id
+        required: true
+        schema:
+          $ref: "#/components/schemas/Ulid"
+    get:
+      summary: Get the session secret slots of a project
+      responses:
+        "200":
+          description: The list of session secret slots
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionSecretSlotList"
+        "404":
+          description: The project does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - projects
+  /projects/{project_id}/session_secrets:
+    parameters:
+      - in: path
+        name: project_id
+        required: true
+        schema:
+          $ref: "#/components/schemas/Ulid"
+    get:
+      summary: Get the current user's secrets of a project
+      responses:
+        "200":
+          description: The list of secrets
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionSecretList"
+        "404":
+          description: The project does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - projects
+    patch:
+      summary: Save user secrets for a project
+      description: New secrets will be added and existing secrets will have their value updated. Using `null` as a value will remove the corresponding secret.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SessionSecretPatchList"
+      responses:
+        "201":
+          description: The secrets for the project were saved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionSecretList"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - projects
+    delete:
+      summary: Remove all user secrets for a project
+      responses:
+        "204":
+          description: The secrets were removed or did not exist in the first place or the project doesn't exist
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - projects
+  /session_secret_slots:
+    post:
+      summary: Create a new session secret slot
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SessionSecretSlotPost"
+      responses:
+        "201":
+          description: The secret slot was created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionSecretSlot"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - session_secret_slots
+  /session_secret_slots/{slot_id}:
+    parameters:
+      - in: path
+        name: slot_id
+        required: true
+        schema:
+          $ref: "#/components/schemas/Ulid"
+    get:
+      summary: Get the details of a session secret slot
+      responses:
+        "200":
+          description: The session secret slot
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionSecretSlot"
+        "404":
+          description: The secret slot does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - session_secret_slots
+    patch:
+      summary: Update specific fields of an existing session secret slot
+      parameters:
+        - $ref: "#/components/parameters/If-Match"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SessionSecretSlotPatch"
+      responses:
+        "200":
+          description: The patched session secret slot
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionSecretSlot"
+        "404":
+          description: The session secret slot does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - session_secret_slots
+    delete:
+      summary: Remove a session secret slot
+      responses:
+        "204":
+          description: The session secret slot was removed or did not exist in the first place
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - session_secret_slots
+components:
+  schemas:
+    ProjectsList:
+      description: A list of Renku projects
+      type: array
+      items:
+        $ref: "#/components/schemas/Project"
+      minItems: 0
+    Project:
+      description: A Renku native project definition and metadata
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/Ulid"
+        name:
+          $ref: "#/components/schemas/ProjectName"
+        namespace:
+          $ref: "#/components/schemas/SlugResponse"
+        slug:
+          $ref: "#/components/schemas/SlugResponse"
+        creation_date:
+          $ref: "#/components/schemas/CreationDate"
+        created_by:
+          $ref: "#/components/schemas/UserId"
+        updated_at:
+          $ref: "#/components/schemas/UpdatedAt"
+        repositories:
+          $ref: "#/components/schemas/RepositoriesList"
+        visibility:
+          $ref: "#/components/schemas/Visibility"
+        description:
+          $ref: "#/components/schemas/Description"
+        etag:
+          $ref: "#/components/schemas/ETag"
+        keywords:
+          $ref: "#/components/schemas/KeywordsList"
+        documentation:
+          $ref: "#/components/schemas/ProjectDocumentation"
+        template_id:
+          $ref: "#/components/schemas/Ulid"
+        is_template:
+          $ref: "#/components/schemas/IsTemplate"
+          default: False
+        secrets_mount_directory:
+          $ref: "#/components/schemas/SecretsMountDirectory"
+      required:
+        - "id"
+        - "name"
+        - "namespace"
+        - "slug"
+        - "created_by"
+        - "creation_date"
+        - "visibility"
+        - "secrets_mount_directory"
+      example:
+        id: "01AN4Z79ZS5XN0F25N3DB94T4R"
+        name: "Renku R Project"
+        namespace: "our-projects"
+        slug: "r-project"
+        created_by:
+          id: "owner-KC-id"
+        visibility: "public"
+        repositories:
+          - url: https://github.com/SwissDataScienceCenter/project-1.git
+          - url: git@github.com:SwissDataScienceCenter/project-2.git
+        keywords:
+          - "keyword 1"
+          - "keyword 2"
+        template_id: "01JC3CB5426KC7P5STS5X3KSS8"
+        secrets_mount_directory: "/secrets"
+    ProjectPost:
+      description: Project metadata to be created in Renku
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          $ref: "#/components/schemas/ProjectName"
+        namespace:
+          $ref: "#/components/schemas/Slug"
+        slug:
+          $ref: "#/components/schemas/Slug"
+        repositories:
+          $ref: "#/components/schemas/RepositoriesList"
+        visibility:
+          # When copying a project from a template project, the default visibility is the same as template project's
+          # visibility.
+          # Its default value is ``private``, when creating a project without copying.
+          $ref: "#/components/schemas/Visibility"
+        description:
+          $ref: "#/components/schemas/Description"
+        keywords:
+          $ref: "#/components/schemas/KeywordsList"
+        documentation:
+          $ref: "#/components/schemas/ProjectDocumentation"
+        secrets_mount_directory:
+          $ref: "#/components/schemas/SecretsMountDirectory"
+      required:
+        - name
+        - namespace
+    ProjectPatch:
+      type: object
+      description: Patch of a project
+      additionalProperties: false
+      properties:
+        name:
+          $ref: "#/components/schemas/ProjectName"
+        namespace:
+          $ref: "#/components/schemas/Slug"
+        slug:
+          $ref: "#/components/schemas/Slug"
+        repositories:
+          $ref: "#/components/schemas/RepositoriesList"
+        visibility:
+          $ref: "#/components/schemas/Visibility"
+        description:
+          $ref: "#/components/schemas/Description"
+        keywords:
+          $ref: "#/components/schemas/KeywordsList"
+        documentation:
+          $ref: "#/components/schemas/ProjectDocumentation"
+        template_id:
+          description:
+            template_id is set when copying a project from a template project and it cannot be modified.
+            This field can be either null or an empty string; a null value won't change it while an empty
+            string value will delete it, meaning that the project is unlinked from its template
+          type: string
+          # TODO: Once https://github.com/koxudaxi/datamodel-code-generator/issues/2191 is addressed use `enum: [""]`
+          # here and add `--enum-field-as-literal=one` flag to `codegen_params` in the `Makefile`
+          minLength: 0
+          maxLength: 0
+        is_template:
+          $ref: "#/components/schemas/IsTemplate"
+        secrets_mount_directory:
+          $ref: "#/components/schemas/SecretsMountDirectoryPatch"
+    ProjectMigrationPost:
+      description: Project v1 data to be migrated in Renku
+      type: object
+      additionalProperties: false
+      properties:
+        project:
+          $ref: "#/components/schemas/ProjectPost"
+        session_launcher:
+          $ref: "#/components/schemas/MigrationSessionLauncherPost"
+      required:
+        - "project"
+    MigrationSessionLauncherPost:
+      description: Data required to create a session launcher for a project migrated
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          $ref: "#/components/schemas/SessionName"
+        container_image:
+          $ref: "#/components/schemas/ContainerImage"
+        default_url:
+          allOf:
+            - $ref: "#/components/schemas/DefaultUrl"
+            - default: /lab
+          default: /lab
+        resource_class_id:
+          $ref: "#/components/schemas/ResourceClassId"
+        disk_storage:
+          $ref: "#/components/schemas/DiskStorage"
+      required:
+        - name
+        - container_image
+    SessionName:
+      description: Renku session name
+      type: string
+      minLength: 1
+      maxLength: 99
+      example: My Renku Session :)
+    ContainerImage:
+      description: A container image
+      type: string
+      maxLength: 500
+      minLength: 3
+      example: renku/renkulab-py:3.10-0.18.1
+    DefaultUrl:
+      description: The default path to open in a session
+      type: string
+      maxLength: 200
+      example: "/lab"
+    ResourceClassId:
+      description: The identifier of a resource class
+      type: [integer, "null"]
+      default: null
+    DiskStorage:
+      description: The size of disk storage for the session, in gigabytes
+      type: integer
+      minimum: 1
+      example: 8
+    Ulid:
+      description: ULID identifier
+      type: string
+      minLength: 26
+      maxLength: 26
+      pattern: "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" # This is case-insensitive
+    WithDocumentation:
+      description: Projects with or without possibly extensive documentation?
+      type: boolean
+    ProjectName:
+      description: Renku project name
+      type: string
+      minLength: 1
+      maxLength: 99
+      example: "My Renku Project :)"
+    Slug:
+      description: A command-line/url friendly name for a namespace
+      type: string
+      minLength: 1
+      maxLength: 99
+      # Slug regex rules
+      # from https://docs.gitlab.com/ee/user/reserved_names.html#limitations-on-usernames-project-and-group-names
+      # - cannot end in .git
+      # - cannot end in .atom
+      # - cannot contain any combination of two or more consecutive -._
+      # - has to start with letter or number
+      # - cannot contain uppercase characters
+      pattern: '^(?!.*\.git$|.*\.atom$|.*[\-._][\-._].*)[a-z0-9][a-z0-9\-_.]*$'
+      example: "a-slug-example"
+    SlugResponse:
+      description: A command-line/url friendly name for a namespace
+      type: string
+      minLength: 1
+      example: "a-slug-example"
+    CreationDate:
+      description: The date and time the resource was created (in UTC and ISO-8601 format)
+      type: string
+      format: date-time
+      example: "2023-11-01T17:32:28Z"
+    UpdatedAt:
+      description: The date and time the resource was updated (in UTC and ISO-8601 format)
+      type: string
+      format: date-time
+      example: "2023-11-01T17:32:28Z"
+    Description:
+      description: A description for the resource
+      type: string
+      maxLength: 500
+    Keyword:
+      description: A single keyword
+      type: string
+      minLength: 1
+      maxLength: 99
+    KeywordsList:
+      description: Project keywords
+      type: array
+      items:
+        $ref: "#/components/schemas/Keyword"
+      minItems: 0
+      example:
+        - "project"
+        - "keywords"
+    ProjectDocumentation:
+      description: Renku project documentation
+      type: string
+      minLength: 0
+      maxLength: 5000
+      example: "My Renku Project Documentation :)"
+    RepositoriesList:
+      description: A list of repositories
+      type: array
+      items:
+        $ref: "#/components/schemas/Repository"
+      minItems: 0
+      example:
+        - https://github.com/SwissDataScienceCenter/project-1.git
+        - git@github.com:SwissDataScienceCenter/project-2.git
+    Repository:
+      description: A git repository URL
+      type: string
+    Visibility:
+      description: Project's visibility levels
+      type: string
+      enum:
+        - private
+        - public
+    IsTemplate:
+      description: Shows if a project is a template or not
+      type: boolean
+    SecretsMountDirectory:
+      description: |
+        The location where the secrets will be provided inside sessions, if left unset it will default to `/secrets`.
+        Relative locations are supported and will be mounted relative to the session environment's mount directory.
+      type: string
+      minLength: 1
+      default: "/secrets"
+      example: "/secrets"
+    SecretsMountDirectoryPatch:
+      type: string
+      example: "/secrets"
+    ProjectMemberListPatchRequest:
+      description: List of members and their access level to the project
+      type: array
+      items:
+        $ref: "#/components/schemas/ProjectMemberPatchRequest"
+      minItems: 0
+      example:
+        - id: "some-keycloak-user-id"
+          role: "owner"
+        - id: "another-keycloak-user-id"
+          role: "viewer"
+    ProjectMemberPatchRequest:
+      description: A member and the access level to the project
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          $ref: "#/components/schemas/UserId"
+        role:
+          $ref: "#/components/schemas/Role"
+      required:
+        - "id"
+        - "role"
+      example:
+        id: "some-keycloak-user-id"
+        role: "owner"
+    ProjectMemberListResponse:
+      description: List of members with full info and their access level to the project
+      type: array
+      items:
+        $ref: "#/components/schemas/ProjectMemberResponse"
+      minItems: 0
+    ProjectMemberResponse:
+      description: A member with full info (namespace, name, ...) and the access level to the project
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          $ref: "#/components/schemas/UserId"
+        namespace:
+          $ref: "#/components/schemas/SlugResponse"
+        first_name:
+          $ref: "#/components/schemas/UserFirstLastName"
+        last_name:
+          $ref: "#/components/schemas/UserFirstLastName"
+        role:
+          $ref: "#/components/schemas/Role"
+      required:
+        - "id"
+        - "role"
+    Role:
+      description: Possible roles of members in a project
+      type: string
+      enum:
+        - viewer
+        - editor
+        - owner
+    UserId:
+      type: string
+      description: Keycloak user ID
+      example: f74a228b-1790-4276-af5f-25c2424e9b0c
+      pattern: "^[A-Za-z0-9]{1}[A-Za-z0-9-]+$"
+    UserFirstLastName:
+      type: string
+      description: First or last name of the user
+      example: John
+      minLength: 1
+      maxLength: 256
+    ETag:
+      type: string
+      description: Entity Tag
+      example: "9EE498F9D565D0C41E511377425F32F3"
+    ProjectGetQuery:
+      description: Query params for project get request
+      allOf:
+        - $ref: "#/components/schemas/PaginationRequest"
+        - properties:
+            namespace:
+              description: A namespace, used as a filter.
+              type: string
+              default: ""
+            direct_member:
+              description: A flag to filter projects where the user is a direct member.
+              type: boolean
+              default: false
+    ProjectMigrationList:
+      description: A list of project migrations
+      type: array
+      items:
+        $ref: "#/components/schemas/ProjectMigrationInfo"
+      minItems: 0
+    ProjectMigrationInfo:
+      description: Information if a project is a migrated project
+      type: object
+      properties:
+        project_id:
+          $ref: "#/components/schemas/Ulid"
+        v1_id:
+          description: The id of the project in v1
+          type: integer
+        launcher_id:
+          $ref: "#/components/schemas/Ulid"
+      required:
+        - v1_id
+        - project_id
+    ProjectPermissions:
+      description: The set of permissions on a project
+      type: object
+      properties:
+        write:
+          description: The user can edit the project
+          type: boolean
+        delete:
+          description: The user can delete the project
+          type: boolean
+        change_membership:
+          description: The user can manage project members
+          type: boolean
+    SessionSecretSlotList:
+      description: A list of session secret slots
+      type: array
+      items:
+        $ref: "#/components/schemas/SessionSecretSlot"
+    SessionSecretSlot:
+      description: A slot for a secret in a session
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          $ref: "#/components/schemas/Ulid"
+        project_id:
+          $ref: "#/components/schemas/Ulid"
+        name:
+          $ref: "#/components/schemas/SecretSlotName"
+        description:
+          $ref: "#/components/schemas/Description"
+        filename:
+          $ref: "#/components/schemas/SecretSlotFileName"
+        etag:
+          $ref: "#/components/schemas/ETag"
+      required:
+        - id
+        - project_id
+        - name
+        - filename
+        - etag
+    SessionSecretSlotPost:
+      type: object
+      additionalProperties: false
+      properties:
+        project_id:
+          $ref: "#/components/schemas/Ulid"
+        name:
+          $ref: "#/components/schemas/SecretSlotName"
+        description:
+          $ref: "#/components/schemas/Description"
+        filename:
+          $ref: "#/components/schemas/SecretSlotFileName"
+      required:
+        - project_id
+        - filename
+    SessionSecretSlotPatch:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          $ref: "#/components/schemas/SecretSlotName"
+        description:
+          $ref: "#/components/schemas/Description"
+        filename:
+          $ref: "#/components/schemas/SecretSlotFileName"
+    SessionSecretList:
+      description: A list of session launcher secrets
+      type: array
+      items:
+        $ref: "#/components/schemas/SessionSecret"
+    SessionSecret:
+      description: A user's secret in a session launcher
+      type: object
+      additionalProperties: false
+      properties:
+        secret_slot:
+          $ref: "#/components/schemas/SessionSecretSlot"
+        secret_id:
+          $ref: "#/components/schemas/Ulid"
+      required:
+        - secret_slot
+        - secret_id
+    SessionSecretPatchList:
+      type: array
+      items:
+        $ref: "#/components/schemas/SessionSecretPatch"
+    SessionSecretPatch:
+      allOf:
+        - type: object
+          additionalProperties: false
+          properties:
+            secret_slot_id:
+              $ref: "#/components/schemas/Ulid"
+          required:
+            - secret_slot_id
+        - oneOf:
+            - $ref: "#/components/schemas/SessionSecretPatchExistingSecret"
+            - $ref: "#/components/schemas/SessionSecretPatchSecretValue"
+    SessionSecretPatchExistingSecret:
+      type: object
+      additionalProperties: false
+      properties:
+        secret_id:
+          $ref: "#/components/schemas/Ulid"
+      required:
+        - secret_id
+    SessionSecretPatchSecretValue:
+      type: object
+      additionalProperties: false
+      properties:
+        value:
+          $ref: "#/components/schemas/SecretValueNullable"
+    SecretSlotName:
+      description: The name of a secret slot
+      type: string
+      minLength: 1
+      maxLength: 99
+      example: API Token
+    SecretSlotFileName:
+      description: The filename given to the corresponding secret in the session
+      type: string
+      minLength: 1
+      maxLength: 200
+      pattern: "^[a-zA-Z0-9_\\-.]+$"
+      example: api_token
+    SecretValueNullable:
+      description: Secret value that can be any text
+      type: [string, "null"]
+      minLength: 1
+      maxLength: 5000
+      example: My secret value
+    PaginationRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        page:
+          description: Result's page number starting from 1
+          type: integer
+          minimum: 1
+          default: 1
+        per_page:
+          description: The number of results per page
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+              exclusiveMinimum: 0
+              example: 1404
+            detail:
+              type: string
+              example: "A more detailed optional message showing what the problem was"
+            message:
+              type: string
+              example: "Something went wrong - please try again later"
+            trace_id:
+              type: string
+              example: "ac93950e9e114a55c67fb8e5ef519bbe"
+              description: Sentry trace ID for linking to corresponding log entries
+          required:
+            - "code"
+            - "message"
+      required:
+        - "error"
+  responses:
+    Error:
+      description: The schema for all 4xx and 5xx responses
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+
+  parameters:
+    If-Match:
+      in: header
+      name: If-Match
+      description: If-Match header, for avoiding mid-air collisions
+      required: true
+      schema:
+        $ref: "#/components/schemas/ETag"

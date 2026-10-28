@@ -1,4 +1,4 @@
-// Package tools serves the operations of apispec/openapi.yaml as MCP tools, see internal/toolspec.
+// Package tools serves the operations allowlisted in apispec/tools.yaml as MCP tools, see internal/toolspec.
 package tools
 
 import (
@@ -42,11 +42,11 @@ type argumentError struct{ err error }
 
 func (e argumentError) Error() string { return e.err.Error() }
 
-// Register adds a tool for every operation of apispec/openapi.yaml to s.
+// Register adds a tool for every operation allowlisted in apispec/tools.yaml to s.
 func Register(s *mcp.Server, opts Options) error {
-	tools, err := toolspec.Load(apispec.OpenAPI)
+	tools, err := toolspec.Load(apispec.ToolsYAML, apispec.Modules)
 	if err != nil {
-		return fmt.Errorf("apispec/openapi.yaml: %w", err)
+		return fmt.Errorf("building the tools: %w", err)
 	}
 	for _, t := range tools {
 		s.AddTool(&mcp.Tool{Name: t.Name, Description: t.Description, InputSchema: t.InputSchema}, handler(t, opts))
@@ -134,11 +134,8 @@ func caller(ctx context.Context, req *mcp.CallToolRequest) (auth.Principal, stri
 	return principal, clientIP
 }
 
-// send validates the arguments and performs the API request of a call. Invalid arguments are returned as argumentError.
+// send performs the API request of a call. Arguments that cannot be put into a request are returned as argumentError.
 func send(ctx context.Context, tool toolspec.Tool, opts Options, args map[string]any, edit func(*http.Request)) (*http.Response, error) {
-	if err := tool.Validate(args); err != nil {
-		return nil, argumentError{err}
-	}
 	r, err := tool.Request(ctx, opts.APIURL, args)
 	if err != nil {
 		return nil, argumentError{err}
@@ -147,7 +144,7 @@ func send(ctx context.Context, tool toolspec.Tool, opts Options, args map[string
 	return opts.HTTPClient.Do(r)
 }
 
-// arguments decodes the raw tool arguments, which the SDK does not validate for tools with a raw input schema.
+// arguments decodes the raw tool arguments. They are not validated against the input schema, the API validates them.
 func arguments(req *mcp.CallToolRequest) (map[string]any, error) {
 	args := map[string]any{}
 	if len(req.Params.Arguments) > 0 {

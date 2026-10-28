@@ -1,0 +1,686 @@
+openapi: 3.1.0
+info:
+  title: Renku Data Services API
+  description: |
+    This service is the main backend for Renku. It provides information about users, projects,
+    cloud storage, access to compute resources and many other things.
+  version: v1
+servers:
+  - url: /api/data
+paths:
+  /groups:
+    get:
+      summary: Get all groups
+      parameters:
+        - $ref: "#/components/parameters/PaginationRequestPage"
+        - $ref: "#/components/parameters/PaginationRequestPerPage"
+        - $ref: "#/components/parameters/OnlyDirectMember"
+      responses:
+        "200":
+          description: List of groups
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GroupResponseList"
+          headers:
+            page:
+              description: The index of the current page (starting at 1).
+              required: true
+              schema:
+                type: integer
+            per-page:
+              description: The number of items per page.
+              required: true
+              schema:
+                type: integer
+            total:
+              description: The total number of items.
+              required: true
+              schema:
+                type: integer
+            total-pages:
+              description: The total number of pages.
+              required: true
+              schema:
+                type: integer
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - groups
+    post:
+      summary: Create a new group
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GroupPostRequest"
+      responses:
+        "201":
+          description: The group was created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GroupResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - groups
+  /groups/{group_slug}:
+    get:
+      summary: Get a group
+      parameters:
+        - in: path
+          name: group_slug
+          required: true
+          schema:
+            $ref: "#/components/schemas/Slug"
+      responses:
+        "200":
+          description: The group
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GroupResponse"
+        "404":
+          description: The group does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - groups
+    patch:
+      summary: Update specific fields of an existing group
+      parameters:
+        - in: path
+          name: group_slug
+          required: true
+          schema:
+            $ref: "#/components/schemas/Slug"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GroupPatchRequest"
+      responses:
+        "200":
+          description: The patched group
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GroupResponse"
+        "404":
+          description: The group does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - groups
+    delete:
+      summary: Remove a group
+      parameters:
+        - in: path
+          name: group_slug
+          required: true
+          schema:
+            $ref: "#/components/schemas/Slug"
+      responses:
+        "204":
+          description: The group was removed or did not exist in the first place
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - groups
+  /groups/{group_slug}/members:
+    get:
+      summary: Get all members of a group
+      parameters:
+        - in: path
+          name: group_slug
+          required: true
+          schema:
+            $ref: "#/components/schemas/Slug"
+      responses:
+        "200":
+          description: The group's members
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GroupMemberResponseList"
+        "404":
+          description: The group does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - groups
+    patch:
+      summary: |
+        New members in the list are added to the group's members. If a member
+        already exists, then only the role is updated. No member will be deleted
+        in this endpoint.
+      parameters:
+        - in: path
+          name: group_slug
+          required: true
+          schema:
+            $ref: "#/components/schemas/Slug"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GroupMemberPatchRequestList"
+      responses:
+        "200":
+          description: The group's members were updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GroupMemberPatchRequestList"
+        "404":
+          description: The group does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - groups
+  /groups/{group_slug}/members/{user_id}:
+    delete:
+      summary: Remove a member from a group
+      parameters:
+        - in: path
+          name: group_slug
+          required: true
+          schema:
+            $ref: "#/components/schemas/Slug"
+        - in: path
+          name: user_id
+          description: This is user's KeyCloak ID
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: The member was removed or wasn't part of group's members.
+        "404":
+          description: The group does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - groups
+  /groups/{group_slug}/permissions:
+    parameters:
+      - in: path
+        name: group_slug
+        required: true
+        schema:
+          $ref: "#/components/schemas/Slug"
+    get:
+      summary: Get the permissions of the current user on the group
+      responses:
+        "200":
+          description: The set of permissions.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GroupPermissions"
+        "404":
+          description: The group does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - groups
+  /namespaces:
+    get:
+      summary: Get all namespaces
+      parameters:
+        - $ref: "#/components/parameters/PaginationRequestPage"
+        - $ref: "#/components/parameters/PaginationRequestPerPage"
+        - $ref: "#/components/parameters/MinimumRole"
+        - $ref: "#/components/parameters/NamespaceKind"
+      responses:
+        "200":
+          description: List of namespaces
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NamespaceResponseList"
+          headers:
+            page:
+              description: The index of the current page (starting at 1).
+              required: true
+              schema:
+                type: integer
+            per-page:
+              description: The number of items per page.
+              required: true
+              schema:
+                type: integer
+            total:
+              description: The total number of items.
+              required: true
+              schema:
+                type: integer
+            total-pages:
+              description: The total number of pages.
+              required: true
+              schema:
+                type: integer
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - namespaces
+  /namespaces/{namespace_slug}:
+    get:
+      summary: Get a namespace
+      parameters:
+        - in: path
+          name: namespace_slug
+          required: true
+          schema:
+            $ref: "#/components/schemas/Slug"
+      responses:
+        "200":
+          description: The namespace
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NamespaceResponse"
+        "404":
+          description: The namespace does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - namespaces
+  /namespaces/{first_slug}/{second_slug}:
+    get:
+      summary: Get a namespace
+      parameters:
+        - in: path
+          name: first_slug
+          required: true
+          schema:
+            $ref: "#/components/schemas/Slug"
+        - in: path
+          name: second_slug
+          required: true
+          schema:
+            $ref: "#/components/schemas/Slug"
+      responses:
+        "200":
+          description: The namespace
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NamespaceResponse"
+        "404":
+          description: The namespace does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - namespaces
+components:
+  schemas:
+    GroupResponseList:
+      description: A list of Renku groups
+      type: array
+      items:
+        $ref: "#/components/schemas/GroupResponse"
+    GroupResponse:
+      description: A Renku group definition and metadata
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/Ulid"
+        name:
+          $ref: "#/components/schemas/NamespaceName"
+        slug:
+          $ref: "#/components/schemas/SlugResponse"
+        creation_date:
+          $ref: "#/components/schemas/CreationDate"
+        created_by:
+          $ref: "#/components/schemas/KeycloakId"
+        description:
+          $ref: "#/components/schemas/Description"
+      required:
+        - "id"
+        - "name"
+        - "slug"
+        - "created_by"
+        - "creation_date"
+      example:
+        id: "01AN4Z79ZS5XN0F25N3DB94T4R"
+        name: "R-Project Group"
+        slug: "r-project"
+        created_by: "owner-keycloak-id"
+        creation_date: "2024-03-04T13:04:45Z"
+    GroupPostRequest:
+      description: Group metadata to be created in Renku
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          $ref: "#/components/schemas/NamespaceName"
+        slug:
+          $ref: "#/components/schemas/Slug"
+        description:
+          $ref: "#/components/schemas/Description"
+      required:
+        - "name"
+        - "slug"
+    GroupPatchRequest:
+      type: object
+      description: Patch of a group
+      additionalProperties: false
+      properties:
+        name:
+          $ref: "#/components/schemas/NamespaceName"
+        slug:
+          $ref: "#/components/schemas/Slug"
+        description:
+          $ref: "#/components/schemas/Description"
+    Ulid:
+      description: ULID identifier
+      type: string
+      minLength: 26
+      maxLength: 26
+      pattern: "^[0-7][0-9A-HJKMNP-TV-Z]{25}$"  # This is case-insensitive
+    NamespaceName:
+      description: Renku group or namespace name
+      type: string
+      minLength: 1
+      maxLength: 99
+      example: "My Renku Group :)"
+    Slug:
+      description: A command-line/url friendly name for a namespace
+      type: string
+      minLength: 1
+      maxLength: 99
+      # Slug regex rules
+      # from https://docs.gitlab.com/ee/user/reserved_names.html#limitations-on-usernames-project-and-group-names
+      # - cannot end in .git
+      # - cannot end in .atom
+      # - cannot contain any combination of two or more consecutive -._
+      # - has to start with letter or number
+      # - cannot contain uppercase characters
+      pattern: '^(?!.*\.git$|.*\.atom$|.*[\-._][\-._].*)[a-z0-9][a-z0-9\-_.]*$'
+      example: "a-slug-example"
+    SlugResponse:
+      description: A command-line/url friendly name for a namespace
+      type: string
+      minLength: 1
+      example: "a-slug-example"
+    CreationDate:
+      description: The date and time the resource was created (in UTC and ISO-8601 format)
+      type: string
+      format: date-time
+      example: "2023-11-01T17:32:28Z"
+    Description:
+      description: A description for the resource
+      type: string
+      maxLength: 500
+    GroupMemberResponse:
+      description: A group member response
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          $ref: "#/components/schemas/UserId"
+        namespace:
+          $ref: "#/components/schemas/Slug"
+        first_name:
+          $ref: "#/components/schemas/UserFirstLastName"
+        last_name:
+          $ref: "#/components/schemas/UserFirstLastName"
+        role:
+          $ref: "#/components/schemas/GroupRole"
+      required:
+        - "id"
+        - "role"
+      example:
+        id: "some-keycloak-user-id"
+        role: "owner"
+    GroupMemberPatchRequest:
+      description: Request to add a specific user as member of a group
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          $ref: "#/components/schemas/UserId"
+        role:
+          $ref: "#/components/schemas/GroupRole"
+      required:
+        - "id"
+        - "role"
+      example:
+        id: "some-keycloak-user-id"
+        role: "owner"
+    KeycloakId:
+      description: Member's KeyCloak ID
+      type: string
+      pattern: "^[A-Za-z0-9-]+$"
+      minLength: 1
+      example: "123-keycloak-user-id-456"
+    GroupMemberResponseList:
+      description: List of members and their access level to the group
+      type: array
+      items:
+        $ref: "#/components/schemas/GroupMemberResponse"
+      minItems: 0
+      example:
+        - id: "some-keycloak-user-id"
+          role: "owner"
+        - id: "another-keycloak-user-id"
+          role: "member"
+          namespace: "user-slug"
+          first_name: "John"
+          last_name: "Doe"
+    GroupMemberPatchRequestList:
+      description: List of members and their access level to the group
+      type: array
+      items:
+        $ref: "#/components/schemas/GroupMemberPatchRequest"
+      minItems: 0
+      example:
+        - id: "some-keycloak-user-id"
+          role: "owner"
+        - id: "another-keycloak-user-id"
+          role: "member"
+    GroupRole:
+      description: Possible roles of members in a group
+      type: string
+      enum:
+        - owner
+        - editor
+        - viewer
+    NamespaceKind:
+      description: Possible kinds of namespaces
+      type: string
+      enum:
+        - group
+        - user
+        - project
+    NamespaceResponseList:
+      description: A list of Renku namespaces
+      type: array
+      items:
+        $ref: "#/components/schemas/NamespaceResponse"
+    NamespaceResponse:
+      description: A Renku namespace definition and metadata
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/Ulid"
+        name:
+          $ref: "#/components/schemas/NamespaceName"
+        slug:
+          $ref: "#/components/schemas/SlugResponse"
+        creation_date:
+          $ref: "#/components/schemas/CreationDate"
+        created_by:
+          $ref: "#/components/schemas/KeycloakId"
+        namespace_kind:
+          $ref: "#/components/schemas/NamespaceKind"
+        path:
+          $ref: "#/components/schemas/SlugResponse"
+      required:
+        - "id"
+        - "namespace_kind"
+        - "slug"
+        - "path"
+      example:
+        id: "01AN4Z79ZS5XN0F25N3DB94T4R"
+        name: "R-Project Group"
+        slug: "r-project"
+        created_by: "owner-keycloak-id"
+        creation_date: "2024-03-04T13:04:45Z"
+        namespace_kind: "group"
+        path: "r-project"
+    UserId:
+      type: string
+      description: Keycloak user ID
+      example: f74a228b-1790-4276-af5f-25c2424e9b0c
+      pattern: "^[A-Za-z0-9]{1}[A-Za-z0-9-]+$"
+    UserFirstLastName:
+      type: string
+      description: First or last name of the user
+      example: John
+      minLength: 1
+      maxLength: 256
+    NamespaceGetQueryKind:
+      type: array
+      description: Which namespace kinds to include in the response
+      items:
+        $ref: "#/components/schemas/NamespaceKind"
+      default:
+        - user
+        - group
+      minItems: 1
+    GroupPermissions:
+      description: The set of permissions on a group
+      type: object
+      properties:
+        write:
+          description: The user can edit the group
+          type: boolean
+        delete:
+          description: The user can delete the group
+          type: boolean
+        change_membership:
+          description: The user can manage group members
+          type: boolean
+    PaginationRequestPage:
+      description: Result's page number starting from 1
+      type: integer
+      minimum: 1
+      default: 1
+    PaginationRequestPerPage:
+      description: The number of results per page
+      type: integer
+      minimum: 1
+      maximum: 100
+      default: 20
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+              exclusiveMinimum: 0
+              example: 1404
+            detail:
+              type: string
+              example: "A more detailed optional message showing what the problem was"
+            message:
+              type: string
+              example: "Something went wrong - please try again later"
+            trace_id:
+              type: string
+              example: "ac93950e9e114a55c67fb8e5ef519bbe"
+              description: Sentry trace ID for linking to corresponding log entries
+          required:
+            - "code"
+            - "message"
+      required:
+        - "error"
+  parameters:
+    PaginationRequestPage:
+      in: query
+      description: the current page in paginated response
+      name: page
+      style: form
+      explode: true
+      schema:
+        $ref: "#/components/schemas/PaginationRequestPage"
+    PaginationRequestPerPage:
+      in: query
+      description: the number of results per page in a paginated response
+      name: per_page
+      style: form
+      explode: true
+      schema:
+        $ref: "#/components/schemas/PaginationRequestPerPage"
+    MinimumRole:
+      in: query
+      description: The minimum role the user should have in the resources returned
+      name: minimum_role
+      style: form
+      explode: true
+      schema:
+        $ref: "#/components/schemas/GroupRole"
+    NamespaceKind:
+      in: query
+      description: environment kinds query parameter
+      name: kinds
+      style: form
+      explode: true
+      schema:
+        $ref: "#/components/schemas/NamespaceGetQueryKind"
+    OnlyDirectMember:
+      in: query
+      description: A flag to filter for where the user is a direct member.
+      name: direct_member
+      style: form
+      explode: true
+      schema:
+        type: boolean
+        default: false
+  responses:
+    Error:
+      description: The schema for all 4xx and 5xx responses
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"

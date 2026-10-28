@@ -3,9 +3,9 @@ tools := "go tool -modfile=tools/go.mod"
 list:
     just --list
 
-# Fetch the per-module specs of renku-data-services at <ref> and write apispec/openapi.yaml
+# Fetch the module specs of renku-data-services listed in apispec/tools.yaml at <ref> into apispec/modules
 update-spec ref:
-    go run ./cmd/specprep -ref {{ref}}
+    go run ./cmd/fetchspecs -ref {{ref}}
 
 test:
     go test ./...

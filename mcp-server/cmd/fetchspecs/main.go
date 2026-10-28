@@ -1,5 +1,6 @@
-// Command specprep fetches the per-module renku-data-services API specs at a
-// git ref and writes the merged and pruned spec the MCP server serves its tools from.
+// Command fetchspecs downloads the renku-data-services module specs listed in
+// apispec/tools.yaml at a git ref into apispec/modules, which the MCP server
+// builds its tools from at startup. It fails if the tools cannot be built from them.
 package main
 
 import (
@@ -13,20 +14,20 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/specprep"
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/toolspec"
 )
 
 func main() {
 	configPath := flag.String("config", "apispec/tools.yaml", "path to the tools allowlist")
 	ref := flag.String("ref", "", "git ref (tag) of renku-data-services to take the specs from")
-	out := flag.String("out", "apispec/openapi.yaml", "path of the generated spec")
+	out := flag.String("out", "apispec/modules", "directory the module specs are written to, it is replaced")
 	localDir := flag.String("local-dir", "", "read the module specs from a local renku-data-services checkout instead of GitHub")
 	flag.Parse()
 
 	if *ref == "" {
 		log.Fatal("-ref is required")
 	}
-	cfg, err := specprep.LoadConfig(*configPath)
+	cfg, err := toolspec.LoadConfig(*configPath)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -43,17 +44,28 @@ func main() {
 		}
 		modules[m] = content
 	}
-	output, err := specprep.Prepare(cfg, *ref, modules)
-	if err != nil {
+	if _, err := toolspec.Build(cfg, modules); err != nil {
+		log.Fatalf("the MCP server cannot build its tools from %s@%s: %v", cfg.Source.Repository, *ref, err)
+	}
+
+	// Replace the directory so that modules no longer listed in tools.yaml are removed.
+	if err := os.RemoveAll(*out); err != nil {
 		log.Fatal(err)
 	}
-	if err := os.WriteFile(*out, output.Spec, 0o644); err != nil {
+	for name, content := range modules {
+		path := filepath.Join(*out, name)
+		if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+			log.Fatal(err)
+		}
+		if err := os.WriteFile(path, content, 0o644); err != nil {
+			log.Fatal(err)
+		}
+	}
+	source := fmt.Sprintf("Copied unchanged from %s@%s by 'just update-spec %s'.\n", cfg.Source.Repository, *ref, *ref)
+	if err := os.WriteFile(filepath.Join(*out, "SOURCE"), []byte(source), 0o644); err != nil {
 		log.Fatal(err)
 	}
-	for _, w := range output.Warnings {
-		log.Printf("warning: %s", w)
-	}
-	log.Printf("wrote %s with %d tools from %s@%s", *out, len(cfg.Tools), cfg.Source.Repository, *ref)
+	log.Printf("wrote %d module specs from %s@%s to %s", len(modules), cfg.Source.Repository, *ref, *out)
 }
 
 func fetch(url string) ([]byte, error) {

@@ -1,7 +1,4 @@
-// Package specprep merges the per-module renku-data-services API specs and prunes
-// them down to the allowlisted operations. It produces the OpenAPI 3.1 document
-// the MCP server serves its tools from, see internal/toolspec.
-package specprep
+package toolspec
 
 import (
 	"fmt"
@@ -14,20 +11,20 @@ import (
 
 // Config is the content of apispec/tools.yaml.
 type Config struct {
-	Source Source `json:"source"`
-	Tools  []Tool `json:"tools"`
+	Source Source       `json:"source"`
+	Tools  []ToolConfig `json:"tools"`
 }
 
 // Source describes where the per-module specs come from.
 type Source struct {
 	// Repository is the GitHub repository, e.g. SwissDataScienceCenter/renku-data-services.
 	Repository string `json:"repository"`
-	// Modules are the paths of the module specs inside the repository.
+	// Modules are the paths of the module specs inside the repository, and inside apispec/modules.
 	Modules []string `json:"modules"`
 }
 
-// Tool is one allowlisted API operation exposed as an MCP tool.
-type Tool struct {
+// ToolConfig is one allowlisted API operation exposed as an MCP tool.
+type ToolConfig struct {
 	Method      string `json:"method"`
 	Path        string `json:"path"`
 	Name        string `json:"name"`
@@ -65,7 +62,7 @@ func ParseConfig(raw []byte) (*Config, error) {
 	return &cfg, nil
 }
 
-// Validate checks the config for mistakes that would otherwise surface as confusing generator errors.
+// Validate checks the config for mistakes that would otherwise surface as confusing build errors.
 func (c *Config) Validate() error {
 	if c.Source.Repository == "" {
 		return fmt.Errorf("source.repository is required")

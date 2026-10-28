@@ -16,32 +16,11 @@ import (
 
 	"github.com/SwissDataScienceCenter/renku/mcp-server/apispec"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/auth"
-	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/specprep"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/toolspec"
 )
 
-// Fails if apispec/openapi.yaml was not regenerated after editing tools.yaml.
-func TestSpecMatchesTheAllowlist(t *testing.T) {
-	cfg, err := specprep.ParseConfig(apispec.ToolsYAML)
-	if err != nil {
-		t.Fatal(err)
-	}
-	tools, err := toolspec.Load(apispec.OpenAPI)
-	if err != nil {
-		t.Fatal(err)
-	}
-	served := map[string]string{}
-	for _, tool := range tools {
-		served[tool.Name] = tool.Description
-	}
-	if len(served) != len(cfg.Tools) {
-		t.Errorf("apispec/openapi.yaml has %d tools, tools.yaml %d", len(served), len(cfg.Tools))
-	}
-	for _, tool := range cfg.Tools {
-		if served[tool.Name] != strings.TrimSpace(tool.Description) {
-			t.Errorf("tool %s is missing from apispec/openapi.yaml or has an outdated description", tool.Name)
-		}
-	}
+// Fails if the tools cannot be built from tools.yaml and the module specs.
+func TestToolsBuildFromTheEmbeddedSpecs(t *testing.T) {
 	if err := Register(mcp.NewServer(&mcp.Implementation{Name: "test", Version: "dev"}, nil), Options{}); err != nil {
 		t.Fatal(err)
 	}
@@ -97,7 +76,7 @@ func fakeGateway(t *testing.T) (*httptest.Server, *[]recordedRequest) {
 
 func tool(t *testing.T, name string) toolspec.Tool {
 	t.Helper()
-	tools, err := toolspec.Load(apispec.OpenAPI)
+	tools, err := toolspec.Load(apispec.ToolsYAML, apispec.Modules)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -172,7 +151,7 @@ func TestEveryToolSendsTheExpectedRequest(t *testing.T) {
 		{"get_session_logs", map[string]any{"session_id": "session-1", "max_lines": 1000000}, "GET", "/api/data/sessions/session-1/logs", "max_lines=1000000", ""},
 		{"stop_session", map[string]any{"session_id": "session-1"}, "DELETE", "/api/data/sessions/session-1", "", ""},
 	}
-	tools, err := toolspec.Load(apispec.OpenAPI)
+	tools, err := toolspec.Load(apispec.ToolsYAML, apispec.Modules)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -287,6 +266,7 @@ func TestLogsSubjectButNotTokenOrArguments(t *testing.T) {
 	}
 }
 
+// TestInvalidArguments covers the arguments that cannot be put into a request. All other checks are left to the API.
 func TestInvalidArguments(t *testing.T) {
 	tests := []struct {
 		name, tool string
@@ -294,14 +274,8 @@ func TestInvalidArguments(t *testing.T) {
 		want       string
 	}{
 		{"missing path parameter", "get_project", map[string]any{}, "project_id"},
-		{"pattern", "get_project", map[string]any{"project_id": "not-a-ulid-but-26-chars-xx"}, "project_id"},
-		{"wrong type", "list_projects", map[string]any{"page": "one"}, "page"},
-		{"out of range", "list_projects", map[string]any{"per_page": 1000}, "per_page"},
-		{"not an integer", "list_projects", map[string]any{"page": 1.5}, "page"},
-		{"enum", "list_sessions", map[string]any{"session_type": "batch"}, "session_type"},
 		{"unknown argument", "list_projects", map[string]any{"namespcae": "my-group"}, "namespcae"},
-		{"missing body", "start_session", map[string]any{}, "body"},
-		{"missing body property", "start_session", map[string]any{"body": map[string]any{}}, "launcher_id"},
+		{"object query parameter", "list_projects", map[string]any{"namespace": map[string]any{}}, "namespace"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -318,6 +292,14 @@ func TestInvalidArguments(t *testing.T) {
 				t.Errorf("invalid calls must not reach the API, got %d requests", len(*requests))
 			}
 		})
+	}
+}
+
+func TestArgumentsAreValidatedByTheAPI(t *testing.T) {
+	gw, requests := fakeGateway(t)
+	callTool(t, gw.URL, "list_projects", map[string]any{"per_page": 1000, "page": "one"}, nil)
+	if len(*requests) != 1 || (*requests)[0].query != "page=one&per_page=1000" {
+		t.Errorf("arguments that do not match the input schema should be sent to the API, got %v", *requests)
 	}
 }
 
