@@ -1,4 +1,4 @@
-package tools
+package mcp
 
 import (
 	"bytes"
@@ -12,16 +12,16 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/modelcontextprotocol/go-sdk/mcp"
+	sdkmcp "github.com/modelcontextprotocol/go-sdk/mcp"
 
 	"github.com/SwissDataScienceCenter/renku/mcp-server/apispec"
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/api2tool"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/auth"
-	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/toolspec"
 )
 
 // Fails if the tools cannot be built from apispec.Tools and the module specs.
 func TestToolsBuildFromTheEmbeddedSpecs(t *testing.T) {
-	if err := Register(mcp.NewServer(&mcp.Implementation{Name: "test", Version: "dev"}, nil), Options{}); err != nil {
+	if err := Register(sdkmcp.NewServer(&sdkmcp.Implementation{Name: "test", Version: "dev"}, nil), Options{}); err != nil {
 		t.Fatal(err)
 	}
 }
@@ -74,20 +74,20 @@ func fakeGateway(t *testing.T) (*httptest.Server, *[]recordedRequest) {
 	return srv, &requests
 }
 
-func tool(t *testing.T, name string) toolspec.Tool {
+func tool(t *testing.T, name string) api2tool.Tool {
 	t.Helper()
-	tools, err := toolspec.Build(apispec.Tools)
+	tools, err := api2tool.Build(apispec.Tools)
 	if err != nil {
 		t.Fatal(err)
 	}
-	i := slices.IndexFunc(tools, func(tool toolspec.Tool) bool { return tool.Name == name })
+	i := slices.IndexFunc(tools, func(tool api2tool.Tool) bool { return tool.Name == name })
 	if i < 0 {
 		t.Fatalf("tool %s not found", name)
 	}
 	return tools[i]
 }
 
-func callTool(t *testing.T, gatewayURL, name string, args map[string]any, logs io.Writer) *mcp.CallToolResult {
+func callTool(t *testing.T, gatewayURL, name string, args map[string]any, logs io.Writer) *sdkmcp.CallToolResult {
 	t.Helper()
 	if logs == nil {
 		logs = io.Discard
@@ -96,26 +96,26 @@ func callTool(t *testing.T, gatewayURL, name string, args map[string]any, logs i
 	return callHandler(t, handler(tool(t, name), opts), name, args)
 }
 
-func callHandler(t *testing.T, h mcp.ToolHandler, name string, args map[string]any) *mcp.CallToolResult {
+func callHandler(t *testing.T, h sdkmcp.ToolHandler, name string, args map[string]any) *sdkmcp.CallToolResult {
 	t.Helper()
 	ctx := auth.WithPrincipal(context.Background(), auth.Principal{Subject: "user-1", Token: "the-token"})
 	raw, err := json.Marshal(args)
 	if err != nil {
 		t.Fatal(err)
 	}
-	res, err := h(ctx, &mcp.CallToolRequest{Params: &mcp.CallToolParamsRaw{Name: name, Arguments: raw}})
+	res, err := h(ctx, &sdkmcp.CallToolRequest{Params: &sdkmcp.CallToolParamsRaw{Name: name, Arguments: raw}})
 	if err != nil {
 		t.Fatalf("handler returned an error instead of a tool error: %v", err)
 	}
 	return res
 }
 
-func text(t *testing.T, res *mcp.CallToolResult) string {
+func text(t *testing.T, res *sdkmcp.CallToolResult) string {
 	t.Helper()
 	if len(res.Content) != 1 {
 		t.Fatalf("expected one content item, got %d", len(res.Content))
 	}
-	c, ok := res.Content[0].(*mcp.TextContent)
+	c, ok := res.Content[0].(*sdkmcp.TextContent)
 	if !ok {
 		t.Fatalf("expected text content, got %T", res.Content[0])
 	}
@@ -151,7 +151,7 @@ func TestEveryToolSendsTheExpectedRequest(t *testing.T) {
 		{"get_session_logs", map[string]any{"session_id": "session-1", "max_lines": 1000000}, "GET", "/api/data/sessions/session-1/logs", "max_lines=1000000", ""},
 		{"stop_session", map[string]any{"session_id": "session-1"}, "DELETE", "/api/data/sessions/session-1", "", ""},
 	}
-	tools, err := toolspec.Build(apispec.Tools)
+	tools, err := api2tool.Build(apispec.Tools)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -323,7 +323,7 @@ func TestPanicIsReturnedAsToolError(t *testing.T) {
 func TestArgumentsMustBeAnObject(t *testing.T) {
 	gw, requests := fakeGateway(t)
 	h := handler(tool(t, "list_projects"), Options{APIURL: gw.URL + "/api/data", HTTPClient: http.DefaultClient, Logger: slog.New(slog.NewJSONHandler(io.Discard, nil))})
-	res, err := h(context.Background(), &mcp.CallToolRequest{Params: &mcp.CallToolParamsRaw{Name: "list_projects", Arguments: json.RawMessage(`[1]`)}})
+	res, err := h(context.Background(), &sdkmcp.CallToolRequest{Params: &sdkmcp.CallToolParamsRaw{Name: "list_projects", Arguments: json.RawMessage(`[1]`)}})
 	if err != nil {
 		t.Fatal(err)
 	}

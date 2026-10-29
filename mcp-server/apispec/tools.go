@@ -1,18 +1,18 @@
 package apispec
 
-import "github.com/SwissDataScienceCenter/renku/mcp-server/internal/toolspec"
+import "github.com/SwissDataScienceCenter/renku/mcp-server/internal/api2tool"
 
 // Tools is the allowlist of renku-data-services operations exposed as MCP tools.
 //
 // The MCP server builds a tool for each operation listed here at startup, from the
-// module spec each tool points to (see internal/toolspec); no hand-written code is
+// module spec each tool points to (see internal/api2tool); no hand-written code is
 // needed per tool. To take the specs from another data-services tag, or to add a
 // module, edit the list in cmd/fetchspecs and run `just update-spec <data-services tag>`.
 //
 // Conventions: snake_case names starting with a verb, no `renku_` prefix (MCP clients
 // namespace tools by server), and descriptions that say which IDs a tool returns
 // and which other tools consume them.
-var Tools = []toolspec.ToolConfig{
+var Tools = []api2tool.ToolConfig{
 	{
 		Spec:   usersSpec,
 		Method: "get",

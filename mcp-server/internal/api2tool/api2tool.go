@@ -1,4 +1,4 @@
-// Package toolspec builds the MCP tools of the operations allowlisted in apispec.Tools
+// Package api2tool builds the MCP tools of the operations allowlisted in apispec.Tools
 // from the renku-data-services API specs, and the API request of a tool call.
 //
 // The input schema of a tool combines the parameters and the request body of the
@@ -6,7 +6,7 @@
 // are not validated against it, the Renku API validates the requests it receives.
 // The arguments of a tool are its path and query parameters plus the request
 // body as the body argument.
-package toolspec
+package api2tool
 
 import (
 	"bytes"

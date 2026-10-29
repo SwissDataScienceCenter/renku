@@ -1,5 +1,5 @@
-// Package tools serves the operations allowlisted in apispec.Tools as MCP tools, see internal/toolspec.
-package tools
+// Package mcp serves the operations allowlisted in apispec.Tools as MCP tools, see internal/api2tool.
+package mcp
 
 import (
 	"bytes"
@@ -17,11 +17,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/modelcontextprotocol/go-sdk/mcp"
+	sdkmcp "github.com/modelcontextprotocol/go-sdk/mcp"
 
 	"github.com/SwissDataScienceCenter/renku/mcp-server/apispec"
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/api2tool"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/auth"
-	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/toolspec"
 )
 
 // maxResponseBytes caps how much of an API response is read, to protect the server and the model's context.
@@ -43,19 +43,19 @@ type argumentError struct{ err error }
 func (e argumentError) Error() string { return e.err.Error() }
 
 // Register adds a tool for every operation allowlisted in apispec.Tools to s.
-func Register(s *mcp.Server, opts Options) error {
-	tools, err := toolspec.Build(apispec.Tools)
+func Register(s *sdkmcp.Server, opts Options) error {
+	tools, err := api2tool.Build(apispec.Tools)
 	if err != nil {
 		return fmt.Errorf("building the tools: %w", err)
 	}
 	for _, t := range tools {
-		s.AddTool(&mcp.Tool{Name: t.Name, Description: t.Description, InputSchema: t.InputSchema}, handler(t, opts))
+		s.AddTool(&sdkmcp.Tool{Name: t.Name, Description: t.Description, InputSchema: t.InputSchema}, handler(t, opts))
 	}
 	return nil
 }
 
-func handler(tool toolspec.Tool, opts Options) mcp.ToolHandler {
-	return func(ctx context.Context, req *mcp.CallToolRequest) (result *mcp.CallToolResult, _ error) {
+func handler(tool api2tool.Tool, opts Options) sdkmcp.ToolHandler {
+	return func(ctx context.Context, req *sdkmcp.CallToolRequest) (result *sdkmcp.CallToolResult, _ error) {
 		start := time.Now()
 		principal, clientIP, requestID := caller(ctx, req)
 		attrs := []any{"tool", tool.Name, "sub", principal.Subject, "request_id", requestID}
@@ -119,7 +119,7 @@ func handler(tool toolspec.Tool, opts Options) mcp.ToolHandler {
 
 // caller returns the user a tool is called for, their address as reported by the ingress and the request ID.
 // Over HTTP all come from the request, over stdio the principal is stored in ctx and the request ID is generated.
-func caller(ctx context.Context, req *mcp.CallToolRequest) (auth.Principal, string, string) {
+func caller(ctx context.Context, req *sdkmcp.CallToolRequest) (auth.Principal, string, string) {
 	var principal auth.Principal
 	var ok bool
 	var clientIP, requestID string
@@ -139,7 +139,7 @@ func caller(ctx context.Context, req *mcp.CallToolRequest) (auth.Principal, stri
 }
 
 // send performs the API request of a call. Arguments that cannot be put into a request are returned as argumentError.
-func send(ctx context.Context, tool toolspec.Tool, opts Options, args map[string]any, edit func(*http.Request)) (*http.Response, error) {
+func send(ctx context.Context, tool api2tool.Tool, opts Options, args map[string]any, edit func(*http.Request)) (*http.Response, error) {
 	r, err := tool.Binding.Request(ctx, opts.APIURL, args)
 	if err != nil {
 		return nil, argumentError{err}
@@ -149,7 +149,7 @@ func send(ctx context.Context, tool toolspec.Tool, opts Options, args map[string
 }
 
 // arguments decodes the raw tool arguments. They are not validated against the input schema, the API validates them.
-func arguments(req *mcp.CallToolRequest) (map[string]any, error) {
+func arguments(req *sdkmcp.CallToolRequest) (map[string]any, error) {
 	args := map[string]any{}
 	if len(req.Params.Arguments) > 0 {
 		if err := json.Unmarshal(req.Params.Arguments, &args); err != nil {
@@ -159,8 +159,8 @@ func arguments(req *mcp.CallToolRequest) (map[string]any, error) {
 	return args, nil
 }
 
-func toolError(message string) *mcp.CallToolResult {
-	return &mcp.CallToolResult{IsError: true, Content: []mcp.Content{&mcp.TextContent{Text: message}}}
+func toolError(message string) *sdkmcp.CallToolResult {
+	return &sdkmcp.CallToolResult{IsError: true, Content: []sdkmcp.Content{&sdkmcp.TextContent{Text: message}}}
 }
 
 // Pagination is the paging information returned by list endpoints.
@@ -185,17 +185,17 @@ func paginationFrom(h http.Header) *Pagination {
 	return nil
 }
 
-func successResult(res *http.Response, body []byte) *mcp.CallToolResult {
+func successResult(res *http.Response, body []byte) *sdkmcp.CallToolResult {
 	if len(bytes.TrimSpace(body)) == 0 {
-		return &mcp.CallToolResult{
-			Content:           []mcp.Content{&mcp.TextContent{Text: fmt.Sprintf("Done (status %d).", res.StatusCode)}},
+		return &sdkmcp.CallToolResult{
+			Content:           []sdkmcp.Content{&sdkmcp.TextContent{Text: fmt.Sprintf("Done (status %d).", res.StatusCode)}},
 			StructuredContent: map[string]any{"status": res.StatusCode},
 		}
 	}
 	var compact bytes.Buffer
 	if err := json.Compact(&compact, body); err != nil {
 		// Not JSON, e.g. plain text; pass it through as is.
-		return &mcp.CallToolResult{Content: []mcp.Content{&mcp.TextContent{Text: string(body)}}}
+		return &sdkmcp.CallToolResult{Content: []sdkmcp.Content{&sdkmcp.TextContent{Text: string(body)}}}
 	}
 	structured := map[string]any{"data": json.RawMessage(compact.Bytes())}
 	text := compact.String()
@@ -203,8 +203,8 @@ func successResult(res *http.Response, body []byte) *mcp.CallToolResult {
 		structured["pagination"] = p
 		text += "\n\n" + p.summary()
 	}
-	return &mcp.CallToolResult{
-		Content:           []mcp.Content{&mcp.TextContent{Text: text}},
+	return &sdkmcp.CallToolResult{
+		Content:           []sdkmcp.Content{&sdkmcp.TextContent{Text: text}},
 		StructuredContent: structured,
 	}
 }

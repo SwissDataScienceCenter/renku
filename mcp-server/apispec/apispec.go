@@ -7,7 +7,7 @@ import (
 
 	v3 "github.com/pb33f/libopenapi/datamodel/high/v3"
 
-	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/toolspec"
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/api2tool"
 )
 
 // The module specs are copied unchanged from renku-data-services by cmd/fetchspecs,
@@ -34,7 +34,7 @@ func mustParse(path string) *v3.Document {
 	if err != nil {
 		panic(err)
 	}
-	spec, err := toolspec.Parse(raw)
+	spec, err := api2tool.Parse(raw)
 	if err != nil {
 		panic(fmt.Sprintf("module %s: %v", path, err))
 	}

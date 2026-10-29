@@ -14,7 +14,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/toolspec"
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/api2tool"
 )
 
 // repository is the GitHub repository the module specs are taken from.
@@ -57,7 +57,7 @@ func main() {
 		if err != nil {
 			log.Fatalf("reading module %s: %v", m, err)
 		}
-		if _, err := toolspec.Parse(content); err != nil {
+		if _, err := api2tool.Parse(content); err != nil {
 			log.Fatalf("module %s of %s: %v", m, origin, err)
 		}
 		fetched[m] = content

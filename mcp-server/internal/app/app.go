@@ -11,10 +11,10 @@ import (
 
 	"github.com/labstack/echo/v5"
 	"github.com/labstack/echo/v5/middleware"
-	"github.com/modelcontextprotocol/go-sdk/mcp"
+	sdkmcp "github.com/modelcontextprotocol/go-sdk/mcp"
 
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/auth"
-	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools"
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/mcp"
 )
 
 // MCPPath is where the streamable HTTP transport is served.
@@ -32,30 +32,30 @@ type Options struct {
 }
 
 // NewMCPServer creates the MCP server with all tools registered.
-func NewMCPServer(opts Options) (*mcp.Server, error) {
+func NewMCPServer(opts Options) (*sdkmcp.Server, error) {
 	if u, err := url.Parse(opts.APIURL); err != nil || (u.Scheme != "http" && u.Scheme != "https") || u.Host == "" {
 		return nil, fmt.Errorf("invalid API URL %q, expected e.g. https://renku.example.org/api/data", opts.APIURL)
 	}
-	s := mcp.NewServer(&mcp.Implementation{Name: "renku", Version: opts.Version}, &mcp.ServerOptions{
+	s := sdkmcp.NewServer(&sdkmcp.Implementation{Name: "renku", Version: opts.Version}, &sdkmcp.ServerOptions{
 		Instructions: "Tools to explore Renku projects, groups and data connectors and to start, inspect and stop Renku sessions on behalf of the logged in user.",
 		// The tool list never changes and the server does not log to the client.
-		Capabilities: &mcp.ServerCapabilities{Tools: &mcp.ToolCapabilities{}},
+		Capabilities: &sdkmcp.ServerCapabilities{Tools: &sdkmcp.ToolCapabilities{}},
 	})
-	toolOpts := tools.Options{
+	toolOpts := mcp.Options{
 		APIURL:       opts.APIURL,
 		HTTPClient:   &http.Client{Timeout: 60 * time.Second},
 		Logger:       opts.Logger,
 		LogArguments: opts.LogArguments,
 	}
-	if err := tools.Register(s, toolOpts); err != nil {
+	if err := mcp.Register(s, toolOpts); err != nil {
 		return nil, err
 	}
 	return s, nil
 }
 
 // NewHTTPHandler serves the MCP endpoint behind authentication, the protected resource metadata and health checks.
-func NewHTTPHandler(s *mcp.Server, authenticator *auth.Authenticator, logger *slog.Logger) http.Handler {
-	mcpHandler := mcp.NewStreamableHTTPHandler(func(*http.Request) *mcp.Server { return s }, &mcp.StreamableHTTPOptions{
+func NewHTTPHandler(s *sdkmcp.Server, authenticator *auth.Authenticator, logger *slog.Logger) http.Handler {
+	mcpHandler := sdkmcp.NewStreamableHTTPHandler(func(*http.Request) *sdkmcp.Server { return s }, &sdkmcp.StreamableHTTPOptions{
 		Stateless:           true,
 		JSONResponse:        true,
 		Logger:              logger,
@@ -92,7 +92,7 @@ func NewHTTPHandler(s *mcp.Server, authenticator *auth.Authenticator, logger *sl
 			},
 		}),
 		// After the request logger, so that recovered panics are logged with a stack trace and status 500.
-		// It does not cover tool handlers, which the SDK runs in their own goroutines, see internal/tools.
+		// It does not cover tool handlers, which the SDK runs in their own goroutines, see internal/mcp.
 		middleware.RecoverWithConfig(middleware.RecoverConfig{DisableStackAll: true}),
 	)
 	e.Any(MCPPath, echo.WrapHandler(authenticator.Middleware(mcpHandler)))

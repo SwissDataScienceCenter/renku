@@ -1,4 +1,4 @@
-package toolspec
+package api2tool
 
 import (
 	"fmt"
