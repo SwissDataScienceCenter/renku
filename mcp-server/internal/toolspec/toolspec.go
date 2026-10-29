@@ -19,6 +19,8 @@ import (
 	"slices"
 	"strconv"
 	"strings"
+
+	"github.com/google/jsonschema-go/jsonschema"
 )
 
 // BodyArgument is the tool argument that holds the request body in the MCP input schema.
@@ -29,7 +31,7 @@ type Tool struct {
 	Name        string
 	Description string
 	// InputSchema is the JSON Schema of the arguments, advertised to MCP clients.
-	InputSchema map[string]any
+	InputSchema *jsonschema.Schema
 	// Binding is how the arguments of a call become the API request.
 	Binding Binding
 }

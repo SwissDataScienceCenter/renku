@@ -1,12 +1,14 @@
 package toolspec
 
 import (
+	"encoding/json"
 	"fmt"
 	"maps"
 	"regexp"
 	"slices"
 	"strings"
 
+	"github.com/google/jsonschema-go/jsonschema"
 	"github.com/pb33f/libopenapi"
 	"github.com/pb33f/libopenapi/datamodel/high/base"
 	v3 "github.com/pb33f/libopenapi/datamodel/high/v3"
@@ -121,7 +123,7 @@ func newTool(t ToolConfig) (Tool, error) {
 		if i < 0 {
 			return Tool{}, fmt.Errorf("parameter override %q does not match any parameter", name)
 		}
-		args[i].schema["description"] = description
+		args[i].schema.Description = description
 	}
 	if slices.ContainsFunc(args, func(a argument) bool { return a.name == BodyArgument }) {
 		return Tool{}, fmt.Errorf("argument name %s is reserved for the request body", BodyArgument)
@@ -155,30 +157,28 @@ func newTool(t ToolConfig) (Tool, error) {
 // argument is a single tool argument of an operation.
 type argument struct {
 	name     string
-	schema   map[string]any
+	schema   *jsonschema.Schema
 	required bool
 }
 
 // inputSchema builds the input schema of a tool from its arguments.
-func inputSchema(args []argument) (map[string]any, error) {
-	properties := map[string]any{}
-	required := []string{}
+func inputSchema(args []argument) (*jsonschema.Schema, error) {
+	schema := &jsonschema.Schema{
+		Type:       "object",
+		Properties: map[string]*jsonschema.Schema{},
+		// Unknown arguments are rejected, see Binding.Request. {"not": {}} is the false schema.
+		AdditionalProperties: &jsonschema.Schema{Not: &jsonschema.Schema{}},
+	}
 	for _, arg := range args {
-		if _, ok := properties[arg.name]; ok {
+		if _, ok := schema.Properties[arg.name]; ok {
 			return nil, fmt.Errorf("argument name %s is already used", arg.name)
 		}
-		properties[arg.name] = arg.schema
+		schema.Properties[arg.name] = arg.schema
 		if arg.required {
-			required = append(required, arg.name)
+			schema.Required = append(schema.Required, arg.name)
 		}
 	}
-	// Unknown arguments are rejected, see Binding.Request.
-	return map[string]any{
-		"type":                 "object",
-		"properties":           properties,
-		"required":             required,
-		"additionalProperties": false,
-	}, nil
+	return schema, nil
 }
 
 // argumentNames returns the names of args.
@@ -204,7 +204,7 @@ func bodyArgument(rb *v3.RequestBody) (argument, error) {
 		return argument{}, err
 	}
 	if rb.Description != "" {
-		schema["description"] = rb.Description
+		schema.Description = rb.Description
 	}
 	return argument{name: BodyArgument, schema: schema, required: rb.Required != nil && *rb.Required}, nil
 }
@@ -245,7 +245,7 @@ func queryArguments(p *v3.Parameter) ([]argument, error) {
 	if props, propsRequired, ok := objectProperties(schema); ok {
 		var args []argument
 		for _, name := range slices.Sorted(maps.Keys(props)) {
-			prop, _ := props[name].(map[string]any)
+			prop := props[name]
 			if err := checkScalar(prop, true); err != nil {
 				return nil, fmt.Errorf("property %s: %w", name, err)
 			}
@@ -263,7 +263,7 @@ func queryArguments(p *v3.Parameter) ([]argument, error) {
 }
 
 // parameterSchema returns the schema of a parameter with all references resolved.
-func parameterSchema(p *v3.Parameter) (map[string]any, error) {
+func parameterSchema(p *v3.Parameter) (*jsonschema.Schema, error) {
 	if p.Schema == nil {
 		return nil, fmt.Errorf("only parameters with a schema are supported")
 	}
@@ -272,19 +272,19 @@ func parameterSchema(p *v3.Parameter) (map[string]any, error) {
 
 // describeParameter copies what the parameter says about its value into schema,
 // the schema is the only place clients see it.
-func describeParameter(schema map[string]any, p *v3.Parameter) error {
+func describeParameter(schema *jsonschema.Schema, p *v3.Parameter) error {
 	if p.Description != "" {
-		schema["description"] = p.Description
+		schema.Description = p.Description
 	}
 	if p.Deprecated {
-		schema["deprecated"] = true
+		schema.Deprecated = true
 	}
 	examples, err := parameterExamples(p)
 	if err != nil {
 		return err
 	}
-	if _, ok := schema["examples"]; !ok && len(examples) > 0 {
-		schema["examples"] = examples
+	if schema.Examples == nil && len(examples) > 0 {
+		schema.Examples = examples
 	}
 	return nil
 }
@@ -315,8 +315,8 @@ func parameterExamples(p *v3.Parameter) ([]any, error) {
 }
 
 // checkScalar rejects schemas whose values are not scalars, or with allowArray arrays of scalars.
-func checkScalar(schema map[string]any, allowArray bool) error {
-	if _, ok := schema["type"]; !ok {
+func checkScalar(schema *jsonschema.Schema, allowArray bool) error {
+	if schema == nil || (schema.Type == "" && schema.Types == nil) {
 		return fmt.Errorf("schema has no type")
 	}
 	if hasType(schema, "object") {
@@ -326,74 +326,69 @@ func checkScalar(schema map[string]any, allowArray bool) error {
 		if !allowArray {
 			return fmt.Errorf("array values are not supported")
 		}
-		if items, ok := schema["items"].(map[string]any); ok && (hasType(items, "array") || hasType(items, "object")) {
+		if items := schema.Items; items != nil && (hasType(items, "array") || hasType(items, "object")) {
 			return fmt.Errorf("arrays must contain scalars")
 		}
 	}
 	return nil
 }
 
-// hasType reports whether schema allows the JSON type typ, given as a string or a list of strings.
-func hasType(schema map[string]any, typ string) bool {
-	switch t := schema["type"].(type) {
-	case string:
-		return t == typ
-	case []any:
-		return slices.Contains(t, any(typ))
-	}
-	return false
+// hasType reports whether schema allows the JSON type typ.
+func hasType(schema *jsonschema.Schema, typ string) bool {
+	return schema.Type == typ || slices.Contains(schema.Types, typ)
 }
 
 // objectProperties collects the properties of an object schema, including
 // those of its allOf parts. ok is false when the schema is not a plain object.
-func objectProperties(s map[string]any) (props map[string]any, required []string, ok bool) {
-	if s["oneOf"] != nil || s["anyOf"] != nil {
+func objectProperties(s *jsonschema.Schema) (props map[string]*jsonschema.Schema, required []string, ok bool) {
+	if s == nil || s.OneOf != nil || s.AnyOf != nil {
 		return nil, nil, false
 	}
-	props = map[string]any{}
-	allOf, hasAllOf := s["allOf"].([]any)
-	for _, part := range allOf {
-		partMap, _ := part.(map[string]any)
-		partProps, partRequired, ok := objectProperties(partMap)
+	props = map[string]*jsonschema.Schema{}
+	for _, part := range s.AllOf {
+		partProps, partRequired, ok := objectProperties(part)
 		if !ok {
 			return nil, nil, false
 		}
 		maps.Copy(props, partProps)
 		required = append(required, partRequired...)
 	}
-	own, hasProps := s["properties"].(map[string]any)
-	if !hasAllOf && !hasProps && s["type"] != "object" {
+	if s.AllOf == nil && s.Properties == nil && s.Type != "object" {
 		return nil, nil, false
 	}
-	maps.Copy(props, own)
-	ownRequired, _ := s["required"].([]any)
-	for _, r := range ownRequired {
-		if name, ok := r.(string); ok {
-			required = append(required, name)
-		}
-	}
+	maps.Copy(props, s.Properties)
+	required = append(required, s.Required...)
 	return props, required, true
 }
 
 // inline renders a schema with all references resolved.
-func inline(proxy *base.SchemaProxy) (map[string]any, error) {
+func inline(proxy *base.SchemaProxy) (*jsonschema.Schema, error) {
 	schema, err := proxy.BuildSchema()
 	if err != nil {
 		return nil, err
 	}
-	raw, err := schema.RenderInline()
+	rawYAML, err := schema.RenderInline()
 	if err != nil {
 		return nil, err
 	}
-	var out map[string]any
-	if err := yaml.Unmarshal(raw, &out); err != nil {
+	raw, err := yaml.YAMLToJSON(rawYAML)
+	if err != nil {
 		return nil, err
 	}
-	// libopenapi keeps the reference that closes a cycle.
-	if ref := findRef(out); ref != "" {
+	// libopenapi keeps the reference that closes a cycle. It is looked for in the plain
+	// document because jsonschema.Schema has no exported way to walk all its subschemas.
+	var doc any
+	if err := json.Unmarshal(raw, &doc); err != nil {
+		return nil, err
+	}
+	if ref := findRef(doc); ref != "" {
 		return nil, fmt.Errorf("recursive schema %s cannot be inlined", ref)
 	}
-	return out, nil
+	var out jsonschema.Schema
+	if err := json.Unmarshal(raw, &out); err != nil {
+		return nil, err
+	}
+	return &out, nil
 }
 
 func findRef(v any) string {

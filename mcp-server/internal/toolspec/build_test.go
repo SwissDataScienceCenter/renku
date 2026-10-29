@@ -1,10 +1,12 @@
 package toolspec
 
 import (
+	"encoding/json"
 	"slices"
 	"strings"
 	"testing"
 
+	"github.com/google/jsonschema-go/jsonschema"
 	v3 "github.com/pb33f/libopenapi/datamodel/high/v3"
 )
 
@@ -161,6 +163,20 @@ func build(t *testing.T, configs ...ToolConfig) map[string]Tool {
 	return byName
 }
 
+// jsonView returns the JSON of schema as clients see it.
+func jsonView(t *testing.T, schema *jsonschema.Schema) map[string]any {
+	t.Helper()
+	raw, err := json.Marshal(schema)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var view map[string]any
+	if err := json.Unmarshal(raw, &view); err != nil {
+		t.Fatal(err)
+	}
+	return view
+}
+
 func get(t *testing.T, v any, path ...string) any {
 	t.Helper()
 	for _, p := range path {
@@ -191,7 +207,7 @@ func TestBuildBuildsTheAllowlistedTools(t *testing.T) {
 	if list.Description != `List "projects".` || list.Binding.Method != "GET" || list.Binding.Path != "/projects" || list.Binding.Body {
 		t.Errorf("unexpected tool %+v", list)
 	}
-	if list.InputSchema["type"] != "object" || list.InputSchema["additionalProperties"] != false {
+	if schema := jsonView(t, list.InputSchema); schema["type"] != "object" || schema["additionalProperties"] != false {
 		t.Errorf("the input schema should be a closed object, got %v", list.InputSchema)
 	}
 
@@ -199,10 +215,10 @@ func TestBuildBuildsTheAllowlistedTools(t *testing.T) {
 	if !slices.Equal(session.Binding.PathParameters, []string{"session_id"}) {
 		t.Errorf("path parameters = %v", session.Binding.PathParameters)
 	}
-	if get(t, session.InputSchema, "properties", "session_id", "minLength") != float64(26) {
+	if get(t, jsonView(t, session.InputSchema), "properties", "session_id", "minLength") != float64(26) {
 		t.Errorf("the Ulid reference should be inlined, got %v", session.InputSchema)
 	}
-	if required := get(t, session.InputSchema, "required").([]string); !slices.Equal(required, []string{"session_id"}) {
+	if required := get(t, jsonView(t, session.InputSchema), "required").([]any); !slices.Equal(required, []any{"session_id"}) {
 		t.Errorf("required = %v", required)
 	}
 
@@ -210,10 +226,10 @@ func TestBuildBuildsTheAllowlistedTools(t *testing.T) {
 	if !create.Binding.Body || len(create.Binding.PathParameters)+len(create.Binding.QueryParameters) != 0 {
 		t.Errorf("unexpected tool %+v", create)
 	}
-	if required := get(t, create.InputSchema, "required").([]string); !slices.Equal(required, []string{BodyArgument}) {
+	if required := get(t, jsonView(t, create.InputSchema), "required").([]any); !slices.Equal(required, []any{BodyArgument}) {
 		t.Errorf("the required request body should be the required body argument, got %v", required)
 	}
-	if get(t, create.InputSchema, "properties", "body", "properties", "owner", "minLength") != float64(26) {
+	if get(t, jsonView(t, create.InputSchema), "properties", "body", "properties", "owner", "minLength") != float64(26) {
 		t.Errorf("the body schema should be inlined, got %v", create.InputSchema)
 	}
 }
@@ -224,10 +240,10 @@ func TestBuildFlattensExplodedQueryObjects(t *testing.T) {
 	if !slices.Equal(tool.Binding.QueryParameters, []string{"namespace", "page", "per_page"}) {
 		t.Fatalf("expected page, per_page and namespace parameters, got %v", tool.Binding.QueryParameters)
 	}
-	if required := get(t, tool.InputSchema, "required").([]string); !slices.Equal(required, []string{"namespace"}) {
+	if required := get(t, jsonView(t, tool.InputSchema), "required").([]any); !slices.Equal(required, []any{"namespace"}) {
 		t.Errorf("required flags not taken from the object schema: %v", required)
 	}
-	props := get(t, tool.InputSchema, "properties")
+	props := get(t, jsonView(t, tool.InputSchema), "properties")
 	if get(t, props, "namespace", "description") != "A namespace filter, use `my-group`" {
 		t.Errorf("description = %v", get(t, props, "namespace"))
 	}
@@ -245,7 +261,7 @@ func TestBuildHoistsPathParametersAndAppliesOverrides(t *testing.T) {
 	if !slices.Equal(tool.Binding.PathParameters, []string{"project_id"}) || !slices.Equal(tool.Binding.QueryParameters, []string{"with_documentation"}) {
 		t.Fatalf("expected the path level parameter on the operation, got %+v", tool)
 	}
-	if get(t, tool.InputSchema, "properties", "project_id", "description") != "The project ULID." {
+	if get(t, jsonView(t, tool.InputSchema), "properties", "project_id", "description") != "The project ULID." {
 		t.Errorf("override not applied: %v", tool.InputSchema)
 	}
 }
@@ -256,7 +272,7 @@ func TestBuildKeepsTheUpstreamSchemas(t *testing.T) {
 		ToolConfig{Spec: projectsSpec, Method: "get", Path: "/projects/{project_id}", Name: "get_project", Description: "Get a project."},
 	)
 
-	body := get(t, tools["create_project"].InputSchema, "properties", "body", "properties")
+	body := get(t, jsonView(t, tools["create_project"].InputSchema), "properties", "body", "properties")
 	description := get(t, body, "description").(map[string]any)
 	if types := description["type"].([]any); len(types) != 2 || types[1] != "null" {
 		t.Errorf("the 3.1 null type should be kept, got %v", description)
@@ -269,7 +285,7 @@ func TestBuildKeepsTheUpstreamSchemas(t *testing.T) {
 		t.Errorf("the pattern and the discriminator should be kept, got %v", name)
 	}
 
-	param := get(t, tools["get_project"].InputSchema, "properties", "with_documentation").(map[string]any)
+	param := get(t, jsonView(t, tools["get_project"].InputSchema), "properties", "with_documentation").(map[string]any)
 	if param["description"] != "Include the documentation" || param["deprecated"] != true {
 		t.Errorf("the description and deprecation of the parameter should be on its schema, got %v", param)
 	}
@@ -292,10 +308,10 @@ func TestBuildUsesTheComponentsOfEachModule(t *testing.T) {
 		ToolConfig{Spec: projectsSpec, Method: "get", Path: "/projects/{project_id}", Name: "get_project", Description: "Get a project."},
 		ToolConfig{Spec: mustParse(conflicting), Method: "get", Path: "/sessions/{session_id}", Name: "get_session", Description: "Get a session."},
 	)
-	if get(t, tools["get_project"].InputSchema, "properties", "project_id", "minLength") != float64(26) {
+	if get(t, jsonView(t, tools["get_project"].InputSchema), "properties", "project_id", "minLength") != float64(26) {
 		t.Error("get_project should use the Ulid of the projects module")
 	}
-	if get(t, tools["get_session"].InputSchema, "properties", "session_id", "minLength") != float64(20) {
+	if get(t, jsonView(t, tools["get_session"].InputSchema), "properties", "session_id", "minLength") != float64(20) {
 		t.Error("get_session should use the Ulid of the sessions module")
 	}
 }

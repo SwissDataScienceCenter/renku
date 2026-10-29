@@ -742,7 +742,7 @@ components:
     BuildParameters:
       description: Build parameters
       allOf:
-        - ref: "#/components/schemas/CommandAndArgs"
+        - $ref: "#/components/schemas/CommandAndArgs"
         - type: object
           additionalProperties: false
           properties:
