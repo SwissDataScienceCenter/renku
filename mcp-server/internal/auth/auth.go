@@ -7,14 +7,18 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
 	"log/slog"
 	"net/http"
 	"net/url"
 	"path"
+	"slices"
 	"strings"
 	"sync/atomic"
 
 	"github.com/coreos/go-oidc/v3/oidc"
+	"github.com/go-jose/go-jose/v4"
+	"github.com/go-jose/go-jose/v4/jwt"
 	sdkauth "github.com/modelcontextprotocol/go-sdk/auth"
 	"github.com/modelcontextprotocol/go-sdk/oauthex"
 )
@@ -24,6 +28,12 @@ const wellKnownPath = "/.well-known/oauth-protected-resource"
 
 // tokenKey is the key of the raw access token in the Extra field of the token info.
 const tokenKey = "token"
+
+// adminKey is the key of the admin flag in the Extra field of the token info.
+const adminKey = "admin"
+
+// adminRole is the Keycloak realm role of Renku administrators.
+const adminRole = "renku-admin"
 
 // Config configures token validation.
 type Config struct {
@@ -40,12 +50,34 @@ type Config struct {
 	ResourceURL string
 }
 
+// redacted replaces an access token wherever it would be printed.
+const redacted = "[REDACTED]"
+
+// AccessToken is a raw access token. It is redacted when formatted, logged or encoded, so it
+// cannot leak by accident; string(token) is needed to use its value.
+type AccessToken string
+
+// Format implements fmt.Formatter for all verbs.
+func (AccessToken) Format(f fmt.State, _ rune) {
+	_, _ = io.WriteString(f, redacted)
+}
+
+// LogValue implements slog.LogValuer.
+func (AccessToken) LogValue() slog.Value {
+	return slog.StringValue(redacted)
+}
+
+// MarshalText implements encoding.TextMarshaler, which encoding/json uses as well.
+func (AccessToken) MarshalText() ([]byte, error) {
+	return []byte(redacted), nil
+}
+
 // Principal is the authenticated caller.
 type Principal struct {
 	// Subject is the Keycloak user ID (sub claim).
 	Subject string
 	// Token is the raw access token, forwarded to the Renku API.
-	Token string
+	Token AccessToken
 }
 
 type contextKey struct{}
@@ -97,32 +129,58 @@ func New(ctx context.Context, cfg Config, logger *slog.Logger) (*Authenticator, 
 
 type claims struct {
 	AuthorizedParty string `json:"azp"`
+	RealmAccess     struct {
+		Roles []string `json:"roles"`
+	} `json:"realm_access"`
 }
 
-// verify validates a raw access token.
-func (a *Authenticator) verify(ctx context.Context, raw string) (*oidc.IDToken, error) {
+// isAdmin reports whether the claims grant the Renku administrator role.
+func (c claims) isAdmin() bool {
+	return slices.Contains(c.RealmAccess.Roles, adminRole)
+}
+
+// IsAdminToken reports whether a raw access token grants the Renku administrator role. The
+// signature is not verified, which is enough to refuse a token: the role cannot be removed
+// from a genuine token without invalidating it, and the Renku API rejects forged tokens.
+func IsAdminToken(raw string) (bool, error) {
+	token, err := jwt.ParseSigned(raw, []jose.SignatureAlgorithm{
+		jose.RS256, jose.RS384, jose.RS512, jose.PS256, jose.PS384, jose.PS512,
+		jose.ES256, jose.ES384, jose.ES512, jose.EdDSA,
+	})
+	if err != nil {
+		return false, fmt.Errorf("parsing access token: %w", err)
+	}
+	var c claims
+	if err := token.UnsafeClaimsWithoutVerification(&c); err != nil {
+		return false, fmt.Errorf("decoding claims: %w", err)
+	}
+	return c.isAdmin(), nil
+}
+
+// verify validates a raw access token and returns it with its claims.
+func (a *Authenticator) verify(ctx context.Context, raw string) (*oidc.IDToken, claims, error) {
+	var c claims
 	token, err := a.verifier.Verify(ctx, raw)
 	if err != nil {
-		return nil, err
+		return nil, c, err
 	}
 	a.ready.Store(true)
-	var c claims
 	if err := token.Claims(&c); err != nil {
-		return nil, fmt.Errorf("decoding claims: %w", err)
+		return nil, c, fmt.Errorf("decoding claims: %w", err)
 	}
 	if c.AuthorizedParty != a.cfg.AuthorizedParty {
-		return nil, fmt.Errorf("token was issued to client %q, expected %q", c.AuthorizedParty, a.cfg.AuthorizedParty)
+		return nil, c, fmt.Errorf("token was issued to client %q, expected %q", c.AuthorizedParty, a.cfg.AuthorizedParty)
 	}
 	if token.Subject == "" {
-		return nil, errors.New("token has no subject")
+		return nil, c, errors.New("token has no subject")
 	}
-	return token, nil
+	return token, c, nil
 }
 
 // verifyToken is the token verifier of Middleware. Why a token was rejected is only
 // logged, the client gets a generic invalid token error.
 func (a *Authenticator) verifyToken(ctx context.Context, raw string, _ *http.Request) (*sdkauth.TokenInfo, error) {
-	token, err := a.verify(ctx, raw)
+	token, c, err := a.verify(ctx, raw)
 	if err != nil {
 		a.logger.Info("rejected access token", "error", err)
 		return nil, sdkauth.ErrInvalidToken
@@ -131,7 +189,7 @@ func (a *Authenticator) verifyToken(ctx context.Context, raw string, _ *http.Req
 		// The SDK binds MCP sessions to UserID, so another user cannot take them over.
 		UserID:     token.Subject,
 		Expiration: token.Expiry,
-		Extra:      map[string]any{tokenKey: raw},
+		Extra:      map[string]any{tokenKey: AccessToken(raw), adminKey: c.isAdmin()},
 	}, nil
 }
 
@@ -140,7 +198,7 @@ func PrincipalFromTokenInfo(info *sdkauth.TokenInfo) (Principal, bool) {
 	if info == nil {
 		return Principal{}, false
 	}
-	token, _ := info.Extra[tokenKey].(string)
+	token, _ := info.Extra[tokenKey].(AccessToken)
 	return Principal{Subject: info.UserID, Token: token}, true
 }
 
@@ -175,7 +233,22 @@ func (a *Authenticator) metadataURL() string {
 func (a *Authenticator) Middleware(next http.Handler) http.Handler {
 	return sdkauth.RequireBearerToken(a.verifyToken, &sdkauth.RequireBearerTokenOptions{
 		ResourceMetadataURL: a.metadataURL(),
-	})(next)
+	})(rejectAdmins(next, a.logger))
+}
+
+// rejectAdmins rejects requests of Renku administrators, so their elevated privileges cannot be
+// exercised through an MCP client. This is a 403 without a challenge rather than a 401, since
+// authenticating again would yield a token with the same role.
+func rejectAdmins(next http.Handler, logger *slog.Logger) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		info := sdkauth.TokenInfoFromContext(r.Context())
+		if admin, _ := info.Extra[adminKey].(bool); admin {
+			logger.Info("rejected access token of an administrator", "subject", info.UserID)
+			http.Error(w, "administrators cannot use the MCP server", http.StatusForbidden)
+			return
+		}
+		next.ServeHTTP(w, r)
+	})
 }
 
 // Ready reports whether the signing keys can be fetched, so the server can validate tokens.

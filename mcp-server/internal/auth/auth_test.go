@@ -1,14 +1,17 @@
 package auth
 
 import (
+	"bytes"
 	"context"
 	"crypto/rand"
 	"crypto/rsa"
 	"encoding/json"
+	"fmt"
 	"io"
 	"log/slog"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 	"time"
 
@@ -103,6 +106,8 @@ func TestMiddleware(t *testing.T) {
 		wantStatus int
 	}{
 		{"valid token", "Bearer " + kc.token(t, validClaims()), http.StatusOK},
+		{"non-admin roles", "Bearer " + kc.token(t, with("realm_access", map[string]any{"roles": []string{"offline_access"}})), http.StatusOK},
+		{"admin", "Bearer " + kc.token(t, with("realm_access", map[string]any{"roles": []string{"offline_access", "renku-admin"}})), http.StatusForbidden},
 		{"no header", "", http.StatusUnauthorized},
 		{"not bearer", "Basic dXNlcjpwYXNz", http.StatusUnauthorized},
 		{"wrong issuer", "Bearer " + kc.token(t, with("iss", "https://evil.example.org/auth/realms/Renku")), http.StatusUnauthorized},
@@ -137,12 +142,72 @@ func TestMiddleware(t *testing.T) {
 				}
 				return
 			}
+			if tt.wantStatus == http.StatusForbidden {
+				if rec.Header().Get("WWW-Authenticate") != "" {
+					t.Errorf("unexpected challenge %q, authenticating again does not help", rec.Header().Get("WWW-Authenticate"))
+				}
+				return
+			}
 			challenge := rec.Header().Get("WWW-Authenticate")
 			want := `Bearer resource_metadata="https://renku.example.org/.well-known/oauth-protected-resource/mcp"`
 			if challenge != want {
 				t.Errorf("WWW-Authenticate = %q, want %q", challenge, want)
 			}
 		})
+	}
+}
+
+func TestIsAdminToken(t *testing.T) {
+	kc := newTestKeycloak(t)
+	withRoles := func(roles ...string) map[string]any {
+		c := validClaims()
+		c["realm_access"] = map[string]any{"roles": roles}
+		return c
+	}
+	tests := []struct {
+		name      string
+		token     string
+		wantAdmin bool
+		wantErr   bool
+	}{
+		{"no roles", kc.token(t, validClaims()), false, false},
+		{"non-admin roles", kc.token(t, withRoles("offline_access")), false, false},
+		{"admin", kc.token(t, withRoles("offline_access", "renku-admin")), true, false},
+		{"garbage", "not-a-jwt", false, true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			admin, err := IsAdminToken(tt.token)
+			if (err != nil) != tt.wantErr {
+				t.Fatalf("err = %v, wantErr %v", err, tt.wantErr)
+			}
+			if admin != tt.wantAdmin {
+				t.Errorf("admin = %v, want %v", admin, tt.wantAdmin)
+			}
+		})
+	}
+}
+
+func TestAccessTokenIsNotPrintable(t *testing.T) {
+	p := Principal{Subject: "user-1", Token: "the-token"}
+	var logs bytes.Buffer
+	slog.New(slog.NewTextHandler(&logs, nil)).Info("principal", "token", p.Token, "principal", p)
+	slog.New(slog.NewJSONHandler(&logs, nil)).Info("principal", "token", p.Token, "principal", p)
+	encoded, err := json.Marshal(p)
+	if err != nil {
+		t.Fatal(err)
+	}
+	outputs := []string{
+		fmt.Sprint(p.Token), fmt.Sprintf("%s %q %v %x", p.Token, p.Token, p.Token, p.Token),
+		fmt.Sprintf("%v %+v %#v", p, p, p), logs.String(), string(encoded),
+	}
+	for _, out := range outputs {
+		if strings.Contains(out, "the-token") || strings.Contains(out, "746865") {
+			t.Errorf("token leaked: %s", out)
+		}
+	}
+	if string(p.Token) != "the-token" {
+		t.Errorf("string(token) = %q, want the raw token", string(p.Token))
 	}
 }
 

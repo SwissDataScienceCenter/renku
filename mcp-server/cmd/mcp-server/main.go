@@ -67,9 +67,13 @@ func runStdio(ctx context.Context, logger *slog.Logger, s *mcp.Server) error {
 	token := os.Getenv("RENKU_ACCESS_TOKEN")
 	if token == "" {
 		logger.Warn("RENKU_ACCESS_TOKEN is not set, only public data is accessible")
+	} else if admin, err := auth.IsAdminToken(token); err != nil {
+		return fmt.Errorf("RENKU_ACCESS_TOKEN: %w", err)
+	} else if admin {
+		return errors.New("RENKU_ACCESS_TOKEN belongs to an administrator, who cannot use the MCP server")
 	}
 	// Tool handlers run with contexts derived from the one passed to Run.
-	ctx = auth.WithPrincipal(ctx, auth.Principal{Subject: "stdio", Token: token})
+	ctx = auth.WithPrincipal(ctx, auth.Principal{Subject: "stdio", Token: auth.AccessToken(token)})
 	if err := s.Run(ctx, &mcp.StdioTransport{}); err != nil && !errors.Is(err, context.Canceled) {
 		return err
 	}

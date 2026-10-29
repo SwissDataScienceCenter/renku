@@ -75,7 +75,7 @@ func handler(tool toolspec.Tool, opts Options) mcp.ToolHandler {
 		if err == nil {
 			res, err = send(ctx, tool, opts, args, func(r *http.Request) {
 				if principal.Token != "" {
-					r.Header.Set("Authorization", "Bearer "+principal.Token)
+					r.Header.Set("Authorization", "Bearer "+string(principal.Token))
 				}
 				r.Header.Set("X-Request-Id", requestID)
 				// Lets the gateway rate limit per end user instead of per MCP server pod when it trusts X-Real-IP.
