@@ -80,177 +80,213 @@ func newTool(t ToolConfig) (Tool, error) {
 		return Tool{}, fmt.Errorf("operation not found in its spec")
 	}
 
-	args, err := operationArguments(item, op)
-	if err != nil {
-		return Tool{}, err
-	}
-	properties := args.schema["properties"].(map[string]any)
-	for name, description := range t.Parameters {
-		prop, ok := properties[name].(map[string]any)
-		if !ok || name == BodyArgument {
-			return Tool{}, fmt.Errorf("parameter override %q does not match any parameter", name)
-		}
-		prop["description"] = description
-	}
-
-	var inTemplate []string
-	for _, m := range templateParam.FindAllStringSubmatch(t.Path, -1) {
-		inTemplate = append(inTemplate, m[1])
-	}
-	if !slices.Equal(slices.Sorted(slices.Values(inTemplate)), slices.Sorted(slices.Values(args.path))) {
-		return Tool{}, fmt.Errorf("path parameters %v do not match the path template", args.path)
-	}
-
-	return Tool{
-		Name:        t.Name,
-		Description: strings.TrimSpace(t.Description),
-		InputSchema: args.schema,
-		Binding: Binding{
-			Method:          strings.ToUpper(t.Method),
-			Path:            t.Path,
-			PathParameters:  args.path,
-			QueryParameters: args.query,
-			Body:            args.body,
-		},
-	}, nil
-}
-
-// arguments are the tool arguments of an operation: the input schema advertised to
-// clients and where Binding.Request puts each argument in the API request.
-type arguments struct {
-	// The input schema that will be used by the mcp tool.
-	schema map[string]any
-	// The names of parameters from schema that are path parameters when calling the API
-	path []string
-	// The names of parameters from schema that are query parameters when calling the API
-	query []string
-	// Whether the API request needs a body, if set to true the schema field contains a "body" property.
-	body bool
-}
-
-// operationArguments builds the arguments of op from its parameters, those of its
-// path item, and its request body. It does not modify item or op.
-func operationArguments(item *v3.PathItem, op *v3.Operation) (arguments, error) {
-	var args arguments
-	properties := map[string]any{}
-	required := []string{}
-	add := func(name string, schema map[string]any, isRequired bool) error {
-		if _, ok := properties[name]; ok || name == BodyArgument {
-			return fmt.Errorf("argument name %s is already used", name)
-		}
-		properties[name] = schema
-		if isRequired {
-			required = append(required, name)
-		}
-		return nil
-	}
-
 	var params []*v3.Parameter
 	for _, p := range slices.Concat(item.Parameters, op.Parameters) {
 		// Operation level parameters override path level ones with the same name and location.
 		params = slices.DeleteFunc(params, func(m *v3.Parameter) bool { return m.Name == p.Name && m.In == p.In })
 		params = append(params, p)
 	}
+	var pathArgs, queryArgs []argument
 	for _, p := range params {
-		if err := addParameter(&args, p, add); err != nil {
-			return arguments{}, fmt.Errorf("parameter %s: %w", p.Name, err)
+		switch p.In {
+		case "path":
+			arg, err := pathArgument(p)
+			if err != nil {
+				return Tool{}, fmt.Errorf("parameter %s: %w", p.Name, err)
+			}
+			pathArgs = append(pathArgs, arg)
+		case "query":
+			args, err := queryArguments(p)
+			if err != nil {
+				return Tool{}, fmt.Errorf("parameter %s: %w", p.Name, err)
+			}
+			queryArgs = append(queryArgs, args...)
+		default:
+			return Tool{}, fmt.Errorf("parameter %s: only path and query parameters are supported, got %q", p.Name, p.In)
 		}
 	}
 
+	pathParams := argumentNames(pathArgs)
+	var inTemplate []string
+	for _, m := range templateParam.FindAllStringSubmatch(t.Path, -1) {
+		inTemplate = append(inTemplate, m[1])
+	}
+	if !slices.Equal(slices.Sorted(slices.Values(inTemplate)), slices.Sorted(slices.Values(pathParams))) {
+		return Tool{}, fmt.Errorf("path parameters %v do not match the path template", pathParams)
+	}
+
+	args := slices.Concat(pathArgs, queryArgs)
+	for name, description := range t.Parameters {
+		i := slices.IndexFunc(args, func(a argument) bool { return a.name == name })
+		if i < 0 {
+			return Tool{}, fmt.Errorf("parameter override %q does not match any parameter", name)
+		}
+		args[i].schema["description"] = description
+	}
+	if slices.ContainsFunc(args, func(a argument) bool { return a.name == BodyArgument }) {
+		return Tool{}, fmt.Errorf("argument name %s is reserved for the request body", BodyArgument)
+	}
 	if rb := op.RequestBody; rb != nil {
-		if rb.Content == nil {
-			return arguments{}, fmt.Errorf("request body has no content")
-		}
-		media, ok := rb.Content.Get("application/json")
-		if !ok {
-			return arguments{}, fmt.Errorf("request body: only application/json is supported")
-		}
-		schema, err := inline(media.Schema)
+		arg, err := bodyArgument(rb)
 		if err != nil {
-			return arguments{}, fmt.Errorf("request body: %w", err)
+			return Tool{}, fmt.Errorf("request body: %w", err)
 		}
-		if rb.Description != "" {
-			schema["description"] = rb.Description
-		}
-		properties[BodyArgument] = schema
-		if rb.Required != nil && *rb.Required {
-			required = append(required, BodyArgument)
-		}
-		args.body = true
+		args = append(args, arg)
+	}
+	schema, err := inputSchema(args)
+	if err != nil {
+		return Tool{}, err
 	}
 
+	return Tool{
+		Name:        t.Name,
+		Description: strings.TrimSpace(t.Description),
+		InputSchema: schema,
+		Binding: Binding{
+			Method:          strings.ToUpper(t.Method),
+			Path:            t.Path,
+			PathParameters:  pathParams,
+			QueryParameters: argumentNames(queryArgs),
+			Body:            op.RequestBody != nil,
+		},
+	}, nil
+}
+
+// argument is a single tool argument of an operation.
+type argument struct {
+	name     string
+	schema   map[string]any
+	required bool
+}
+
+// inputSchema builds the input schema of a tool from its arguments.
+func inputSchema(args []argument) (map[string]any, error) {
+	properties := map[string]any{}
+	required := []string{}
+	for _, arg := range args {
+		if _, ok := properties[arg.name]; ok {
+			return nil, fmt.Errorf("argument name %s is already used", arg.name)
+		}
+		properties[arg.name] = arg.schema
+		if arg.required {
+			required = append(required, arg.name)
+		}
+	}
 	// Unknown arguments are rejected, see Binding.Request.
-	args.schema = map[string]any{
+	return map[string]any{
 		"type":                 "object",
 		"properties":           properties,
 		"required":             required,
 		"additionalProperties": false,
-	}
-	return args, nil
+	}, nil
 }
 
-// addParameter adds the arguments of a parameter to args. Exploded object query
-// parameters are flattened into one argument per property, which is equivalent on the wire.
-// Parameters that Binding.Request cannot serialize the way the API expects are rejected.
-func addParameter(args *arguments, p *v3.Parameter, add func(string, map[string]any, bool) error) error {
-	if p.Schema == nil {
-		return fmt.Errorf("only parameters with a schema are supported")
+// argumentNames returns the names of args.
+func argumentNames(args []argument) []string {
+	var names []string
+	for _, arg := range args {
+		names = append(names, arg.name)
 	}
-	schema, err := inline(p.Schema)
-	if err != nil {
-		return err
-	}
-	isRequired := p.Required != nil && *p.Required
-	switch p.In {
-	case "path":
-		if !isRequired {
-			return fmt.Errorf("path parameters must be required")
-		}
-		if p.Style != "" && p.Style != "simple" {
-			return fmt.Errorf("unsupported style %q", p.Style)
-		}
-		if err := checkScalar(schema, false); err != nil {
-			return err
-		}
-		args.path = append(args.path, p.Name)
-	case "query":
-		if (p.Style != "" && p.Style != "form") || (p.Explode != nil && !*p.Explode) {
-			return fmt.Errorf("only exploded form style query parameters are supported")
-		}
-		if props, propsRequired, ok := objectProperties(schema); ok {
-			for _, name := range slices.Sorted(maps.Keys(props)) {
-				prop, _ := props[name].(map[string]any)
-				if err := checkScalar(prop, true); err != nil {
-					return fmt.Errorf("property %s: %w", name, err)
-				}
-				if err := add(name, prop, slices.Contains(propsRequired, name)); err != nil {
-					return err
-				}
-				args.query = append(args.query, name)
-			}
-			return nil
-		}
-		if err := checkScalar(schema, true); err != nil {
-			return err
-		}
-		args.query = append(args.query, p.Name)
-	default:
-		return fmt.Errorf("only path and query parameters are supported, got %q", p.In)
-	}
+	return names
+}
 
-	// Keep what the parameter says about the value, the schema is the only place clients see it.
+// bodyArgument builds the argument of a request body.
+func bodyArgument(rb *v3.RequestBody) (argument, error) {
+	if rb.Content == nil {
+		return argument{}, fmt.Errorf("no content")
+	}
+	media, ok := rb.Content.Get("application/json")
+	if !ok {
+		return argument{}, fmt.Errorf("only application/json is supported")
+	}
+	schema, err := inline(media.Schema)
+	if err != nil {
+		return argument{}, err
+	}
+	if rb.Description != "" {
+		schema["description"] = rb.Description
+	}
+	return argument{name: BodyArgument, schema: schema, required: rb.Required != nil && *rb.Required}, nil
+}
+
+// pathArgument builds the argument of a path parameter. Path parameters that
+// Binding.Request cannot serialize the way the API expects are rejected.
+func pathArgument(p *v3.Parameter) (argument, error) {
+	schema, err := parameterSchema(p)
+	if err != nil {
+		return argument{}, err
+	}
+	if p.Required == nil || !*p.Required {
+		return argument{}, fmt.Errorf("path parameters must be required")
+	}
+	if p.Style != "" && p.Style != "simple" {
+		return argument{}, fmt.Errorf("unsupported style %q", p.Style)
+	}
+	if err := checkScalar(schema, false); err != nil {
+		return argument{}, err
+	}
+	if err := describeParameter(schema, p); err != nil {
+		return argument{}, err
+	}
+	return argument{name: p.Name, schema: schema, required: true}, nil
+}
+
+// queryArguments builds the arguments of a query parameter. Exploded object query
+// parameters are flattened into one argument per property, which is equivalent on the wire.
+// Query parameters that Binding.Request cannot serialize the way the API expects are rejected.
+func queryArguments(p *v3.Parameter) ([]argument, error) {
+	schema, err := parameterSchema(p)
+	if err != nil {
+		return nil, err
+	}
+	if (p.Style != "" && p.Style != "form") || (p.Explode != nil && !*p.Explode) {
+		return nil, fmt.Errorf("only exploded form style query parameters are supported")
+	}
+	if props, propsRequired, ok := objectProperties(schema); ok {
+		var args []argument
+		for _, name := range slices.Sorted(maps.Keys(props)) {
+			prop, _ := props[name].(map[string]any)
+			if err := checkScalar(prop, true); err != nil {
+				return nil, fmt.Errorf("property %s: %w", name, err)
+			}
+			args = append(args, argument{name: name, schema: prop, required: slices.Contains(propsRequired, name)})
+		}
+		return args, nil
+	}
+	if err := checkScalar(schema, true); err != nil {
+		return nil, err
+	}
+	if err := describeParameter(schema, p); err != nil {
+		return nil, err
+	}
+	return []argument{{name: p.Name, schema: schema, required: p.Required != nil && *p.Required}}, nil
+}
+
+// parameterSchema returns the schema of a parameter with all references resolved.
+func parameterSchema(p *v3.Parameter) (map[string]any, error) {
+	if p.Schema == nil {
+		return nil, fmt.Errorf("only parameters with a schema are supported")
+	}
+	return inline(p.Schema)
+}
+
+// describeParameter copies what the parameter says about its value into schema,
+// the schema is the only place clients see it.
+func describeParameter(schema map[string]any, p *v3.Parameter) error {
 	if p.Description != "" {
 		schema["description"] = p.Description
 	}
 	if p.Deprecated {
 		schema["deprecated"] = true
 	}
-	if examples, err := parameterExamples(p); err != nil {
+	examples, err := parameterExamples(p)
+	if err != nil {
 		return err
-	} else if _, ok := schema["examples"]; !ok && len(examples) > 0 {
+	}
+	if _, ok := schema["examples"]; !ok && len(examples) > 0 {
 		schema["examples"] = examples
 	}
-	return add(p.Name, schema, isRequired)
+	return nil
 }
 
 // parameterExamples returns the example values of a parameter.
