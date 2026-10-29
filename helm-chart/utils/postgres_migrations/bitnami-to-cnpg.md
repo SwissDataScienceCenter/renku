@@ -6,7 +6,7 @@
 > [!IMPORTANT]
 >
 > The recommended route is to use the cloud-native PostgreSQL operator (CNPG). Either with the chart's built-in `cnpg.autoMigration: true`
-> or with an out-of-band CNPG cluster you manage (See [Ouf of Band CNPG cluster](#out-of-band-cnpg-cluster)),
+> or with an out-of-band CNPG cluster you manage (See [Ouf of Band CNPG cluster](#cnpg-cluster-creation)),
 > together with `postgresql.enabled: true`. The new Cluster can then import every database and role 
 > on creation and none of this is needed. The procedure below is the manual alternative, for a CNPG 
 > cluster or any external postgres instance.
@@ -90,7 +90,7 @@ spec:
     size: 8Gi
 ```
 
-### 3. Automatic data migration
+## Automatic data migration
 
 You can rely on CNPG built-in import mechanism.
 If it fails, delete / recreate the cluster to re-trigger.
@@ -98,7 +98,9 @@ If it fails, delete / recreate the cluster to re-trigger.
 The import copies the data once, when the Cluster is created. Anything written to the old instance
 after that is lost, so scale the services down first (as in step 1 of the manual migration).
 
-Add this to the cluster:
+### Cluster specification
+
+Create your cluster with this additional block:
 
 ```yaml
 spec:
@@ -144,7 +146,7 @@ spec:
         - {protocol: TCP, port: 5432}
 ```
 
-### 4. Chart upgrade
+### Chart upgrade
 
 Edit your values to point Renku at the CNPG generated secret directly.
 CNPG keeps it in `<cluster>-superuser` under the key `password`. Keep the old instance until you
