@@ -148,6 +148,11 @@ You may manage your own CNPG cluster outside of the chart, in this namespace or 
 restore the cluster as above, or let it import the data itself on creation (See the last
 part of this section).
 
+Order matters:
+1. Create policies
+2. Create the Cluster
+3. Upgrade the chart
+
 The Cluster needs a superuser to let renku setup jobs create databases and roles.
 CNPG defaults this off and deletes the secret.
 
@@ -252,11 +257,6 @@ spec:
 
 The import copies the data once, when the Cluster is created. Anything written to the old instance
 after that is lost, so scale the services down first (as in step 1 of the manual migration).
-
-Order matters:
-1. Create policies
-2. Create the Cluster
-3. Upgrade the chart
 
 Point Renku at the CNPG generated secret directly.
 CNPG keeps it in `<cluster>-superuser` under the key `password`. Keep the old instance until you
