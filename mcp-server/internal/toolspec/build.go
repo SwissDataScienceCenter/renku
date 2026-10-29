@@ -117,14 +117,13 @@ func newTool(t ToolConfig) (Tool, error) {
 		return Tool{}, fmt.Errorf("path parameters %v do not match the path template", pathParams)
 	}
 
-	args := slices.Concat(pathArgs, queryArgs)
-	for name, description := range t.Parameters {
-		i := slices.IndexFunc(args, func(a argument) bool { return a.name == name })
-		if i < 0 {
-			return Tool{}, fmt.Errorf("parameter override %q does not match any parameter", name)
-		}
-		args[i].schema.Description = description
+	if err := overrideDescriptions(pathArgs, t.PathDescriptions, "path"); err != nil {
+		return Tool{}, err
 	}
+	if err := overrideDescriptions(queryArgs, t.QueryDescriptions, "query"); err != nil {
+		return Tool{}, err
+	}
+	args := slices.Concat(pathArgs, queryArgs)
 	if slices.ContainsFunc(args, func(a argument) bool { return a.name == BodyArgument }) {
 		return Tool{}, fmt.Errorf("argument name %s is reserved for the request body", BodyArgument)
 	}
@@ -159,6 +158,19 @@ type argument struct {
 	name     string
 	schema   *jsonschema.Schema
 	required bool
+}
+
+// overrideDescriptions replaces the descriptions of the arguments named in descriptions.
+// kind is "path" or "query" and only used in errors.
+func overrideDescriptions(args []argument, descriptions map[string]string, kind string) error {
+	for name, description := range descriptions {
+		i := slices.IndexFunc(args, func(a argument) bool { return a.name == name })
+		if i < 0 {
+			return fmt.Errorf("%s description override %q does not match any %s parameter", kind, name, kind)
+		}
+		args[i].schema.Description = description
+	}
+	return nil
 }
 
 // inputSchema builds the input schema of a tool from its arguments.

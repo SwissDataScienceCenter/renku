@@ -255,14 +255,19 @@ func TestBuildFlattensExplodedQueryObjects(t *testing.T) {
 func TestBuildHoistsPathParametersAndAppliesOverrides(t *testing.T) {
 	tool := build(t, ToolConfig{
 		Spec: projectsSpec, Method: "get", Path: "/projects/{project_id}", Name: "get_project", Description: "Get a project.",
-		Parameters: map[string]string{"project_id": "The project ULID."},
+		PathDescriptions:  map[string]string{"project_id": "The project ULID."},
+		QueryDescriptions: map[string]string{"with_documentation": "Include the documentation."},
 	})["get_project"]
 
 	if !slices.Equal(tool.Binding.PathParameters, []string{"project_id"}) || !slices.Equal(tool.Binding.QueryParameters, []string{"with_documentation"}) {
 		t.Fatalf("expected the path level parameter on the operation, got %+v", tool)
 	}
-	if get(t, jsonView(t, tool.InputSchema), "properties", "project_id", "description") != "The project ULID." {
-		t.Errorf("override not applied: %v", tool.InputSchema)
+	props := get(t, jsonView(t, tool.InputSchema), "properties")
+	if get(t, props, "project_id", "description") != "The project ULID." {
+		t.Errorf("path override not applied: %v", tool.InputSchema)
+	}
+	if get(t, props, "with_documentation", "description") != "Include the documentation." {
+		t.Errorf("query override not applied: %v", tool.InputSchema)
 	}
 }
 
@@ -355,7 +360,9 @@ func TestBuildErrors(t *testing.T) {
 		{"unknown operation", ToolConfig{Spec: projectsSpec, Method: "delete", Path: "/projects", Name: "delete_projects", Description: "x"}, "operation not found in its spec"},
 		{"operation in another spec", ToolConfig{Spec: projectsSpec, Method: "get", Path: "/sessions", Name: "list_sessions", Description: "x"}, "operation not found in its spec"},
 		{"missing spec", ToolConfig{Method: "get", Path: "/sessions", Name: "list_sessions", Description: "x"}, "spec is required"},
-		{"unknown parameter override", ToolConfig{Spec: sessionsSpec, Method: "get", Path: "/sessions", Name: "list_sessions", Description: "x", Parameters: map[string]string{"nope": "x"}}, `parameter override "nope"`},
+		{"unknown query description override", ToolConfig{Spec: sessionsSpec, Method: "get", Path: "/sessions", Name: "list_sessions", Description: "x", QueryDescriptions: map[string]string{"nope": "x"}}, `query description override "nope" does not match any query parameter`},
+		{"path description override of a query parameter", ToolConfig{Spec: projectsSpec, Method: "get", Path: "/projects/{project_id}", Name: "get_project", Description: "x", PathDescriptions: map[string]string{"with_documentation": "x"}}, `path description override "with_documentation" does not match any path parameter`},
+		{"query description override of a path parameter", ToolConfig{Spec: projectsSpec, Method: "get", Path: "/projects/{project_id}", Name: "get_project", Description: "x", QueryDescriptions: map[string]string{"project_id": "x"}}, `query description override "project_id" does not match any query parameter`},
 		{"invalid name", ToolConfig{Spec: sessionsSpec, Method: "get", Path: "/sessions", Name: "ListSessions", Description: "x"}, "must match"},
 		{"missing description", ToolConfig{Spec: sessionsSpec, Method: "get", Path: "/sessions", Name: "list_sessions"}, "description is required"},
 	}

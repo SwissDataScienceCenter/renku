@@ -16,8 +16,15 @@ type ToolConfig struct {
 	Path        string
 	Name        string
 	Description string
-	// Parameters overrides the descriptions of individual parameters, keyed by parameter name.
-	Parameters map[string]string
+	// PathDescriptions replaces the descriptions the spec gives path parameters, keyed by
+	// parameter name. Use it where the spec's description is too vague for a model. A key that
+	// matches no path parameter fails the build.
+	PathDescriptions map[string]string
+	// QueryDescriptions replaces the descriptions the spec gives query parameters, keyed by tool
+	// argument name: the parameter name, or for an exploded object parameter the name of one of
+	// its properties (e.g. `q` of the search `params`). Use it where the spec's description is
+	// too vague for a model. A key that matches no query parameter fails the build.
+	QueryDescriptions map[string]string
 }
 
 var toolNamePattern = regexp.MustCompile(`^[a-z][a-z0-9_]*$`)

@@ -32,7 +32,7 @@ var Tools = []toolspec.ToolConfig{
 			"`namespace:<slug>`, `visibility:public` and `role:owner`, combined with free text, " +
 			"e.g. `type:project climate`. Results contain IDs usable with get_project, get_group " +
 			"and get_data_connector.",
-		Parameters: map[string]string{
+		QueryDescriptions: map[string]string{
 			"q": "The search query, free text optionally combined with filters such as `type:project`.",
 		},
 	},
@@ -142,7 +142,7 @@ var Tools = []toolspec.ToolConfig{
 		Name:   "get_session",
 		Description: "Get a session by its name, including its status and URL. Use it to wait for a started " +
 			"session to become `running`.",
-		Parameters: map[string]string{
+		PathDescriptions: map[string]string{
 			"session_id": sessionIDDescription,
 		},
 	},
@@ -153,7 +153,7 @@ var Tools = []toolspec.ToolConfig{
 		Name:   "get_session_logs",
 		Description: "Get the most recent log lines of each container of a session. Useful to find out why a " +
 			"session failed to start.",
-		Parameters: map[string]string{
+		PathDescriptions: map[string]string{
 			"session_id": sessionIDDescription,
 		},
 	},
@@ -164,7 +164,7 @@ var Tools = []toolspec.ToolConfig{
 		Name:   "stop_session",
 		Description: "Stop and fully remove a session. Unsaved work in the session is lost, so confirm with " +
 			"the user before calling this.",
-		Parameters: map[string]string{
+		PathDescriptions: map[string]string{
 			"session_id": sessionIDDescription,
 		},
 	},
