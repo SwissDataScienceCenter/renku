@@ -216,3 +216,18 @@ func TestHealthEndpoints(t *testing.T) {
 		}
 	}
 }
+
+func TestRateLimitMustBePositiveOnlyIfEnabled(t *testing.T) {
+	opts := Options{APIURL: "http://renku-gateway/api/data", Logger: slog.New(slog.DiscardHandler)}
+	if _, err := NewMCPServer(opts); err != nil {
+		t.Errorf("disabled rate limit without limits: %v", err)
+	}
+	opts.RateLimit = true
+	if _, err := NewMCPServer(opts); err == nil {
+		t.Error("enabled rate limit without limits was accepted")
+	}
+	opts.ToolCallsPerMinute, opts.ToolCallBurst = 60, 20
+	if _, err := NewMCPServer(opts); err != nil {
+		t.Errorf("enabled rate limit with limits: %v", err)
+	}
+}

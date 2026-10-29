@@ -48,11 +48,26 @@ func run(ctx context.Context, logger *slog.Logger, stdio bool) error {
 	if apiURL == "" {
 		return errors.New("RENKU_API_URL is required, e.g. https://renku.example.org/api/data")
 	}
+	rateLimit, err := boolEnvOr("MCP_TOOL_CALL_RATE_LIMIT_ENABLED", true)
+	if err != nil {
+		return err
+	}
+	perMinute, err := intEnv("MCP_TOOL_CALLS_PER_MINUTE", 60)
+	if err != nil {
+		return err
+	}
+	burst, err := intEnv("MCP_TOOL_CALL_BURST", 20)
+	if err != nil {
+		return err
+	}
 	s, err := app.NewMCPServer(app.Options{
-		APIURL:       apiURL,
-		Version:      version,
-		Logger:       logger,
-		LogArguments: boolEnv("MCP_LOG_TOOL_ARGUMENTS"),
+		APIURL:             apiURL,
+		Version:            version,
+		Logger:             logger,
+		LogArguments:       boolEnv("MCP_LOG_TOOL_ARGUMENTS"),
+		RateLimit:          rateLimit,
+		ToolCallsPerMinute: perMinute,
+		ToolCallBurst:      burst,
 	})
 	if err != nil {
 		return err
@@ -125,6 +140,30 @@ func envOr(key, fallback string) string {
 func boolEnv(key string) bool {
 	v, _ := strconv.ParseBool(os.Getenv(key))
 	return v
+}
+
+func boolEnvOr(key string, fallback bool) (bool, error) {
+	v := os.Getenv(key)
+	if v == "" {
+		return fallback, nil
+	}
+	b, err := strconv.ParseBool(v)
+	if err != nil {
+		return false, fmt.Errorf("%s must be a boolean: %w", key, err)
+	}
+	return b, nil
+}
+
+func intEnv(key string, fallback int) (int, error) {
+	v := os.Getenv(key)
+	if v == "" {
+		return fallback, nil
+	}
+	n, err := strconv.Atoi(v)
+	if err != nil {
+		return 0, fmt.Errorf("%s must be an integer: %w", key, err)
+	}
+	return n, nil
 }
 
 func logLevel() slog.Level {

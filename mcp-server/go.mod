@@ -11,6 +11,7 @@ require (
 	github.com/labstack/echo/v5 v5.4.2
 	github.com/modelcontextprotocol/go-sdk v1.8.0
 	github.com/pb33f/libopenapi v0.41.7
+	golang.org/x/time v0.15.0
 	sigs.k8s.io/yaml v1.6.0
 )
 
@@ -32,7 +33,6 @@ require (
 	golang.org/x/oauth2 v0.36.0 // indirect
 	golang.org/x/sync v0.24.0 // indirect
 	golang.org/x/sys v0.47.0 // indirect
-	golang.org/x/time v0.15.0 // indirect
 	golang.org/x/tools v0.48.0 // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 )

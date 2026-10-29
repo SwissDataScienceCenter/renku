@@ -29,6 +29,11 @@ type Options struct {
 	Version      string
 	Logger       *slog.Logger
 	LogArguments bool
+	// RateLimit enables limiting the tool calls of every user to ToolCallsPerMinute with bursts of
+	// ToolCallBurst, see mcp.RateLimit.
+	RateLimit          bool
+	ToolCallsPerMinute int
+	ToolCallBurst      int
 }
 
 // NewMCPServer creates the MCP server with all tools registered.
@@ -36,11 +41,17 @@ func NewMCPServer(opts Options) (*sdkmcp.Server, error) {
 	if u, err := url.Parse(opts.APIURL); err != nil || (u.Scheme != "http" && u.Scheme != "https") || u.Host == "" {
 		return nil, fmt.Errorf("invalid API URL %q, expected e.g. https://renku.example.org/api/data", opts.APIURL)
 	}
+	if opts.RateLimit && (opts.ToolCallsPerMinute <= 0 || opts.ToolCallBurst <= 0) {
+		return nil, fmt.Errorf("invalid rate limit of %d tool calls per minute with bursts of %d, both must be positive", opts.ToolCallsPerMinute, opts.ToolCallBurst)
+	}
 	s := sdkmcp.NewServer(&sdkmcp.Implementation{Name: "renku", Version: opts.Version}, &sdkmcp.ServerOptions{
 		Instructions: "Tools to explore Renku projects, groups and data connectors and to start, inspect and stop Renku sessions on behalf of the logged in user.",
 		// The tool list never changes and the server does not log to the client.
 		Capabilities: &sdkmcp.ServerCapabilities{Tools: &sdkmcp.ToolCapabilities{}},
 	})
+	if opts.RateLimit {
+		s.AddReceivingMiddleware(mcp.RateLimit(mcp.RateLimitOptions{PerMinute: opts.ToolCallsPerMinute, Burst: opts.ToolCallBurst, Logger: opts.Logger}))
+	}
 	toolOpts := mcp.Options{
 		APIURL:       opts.APIURL,
 		HTTPClient:   &http.Client{Timeout: 60 * time.Second},
