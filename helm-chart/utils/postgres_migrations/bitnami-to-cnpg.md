@@ -146,7 +146,7 @@ spec:
 
 ### 4. Chart upgrade
 
-Point Renku at the CNPG generated secret directly.
+Edit your values to point Renku at the CNPG generated secret directly.
 CNPG keeps it in `<cluster>-superuser` under the key `password`. Keep the old instance until you
 have verified the migration, then remove it.
 
@@ -165,6 +165,11 @@ global:
       existingSecretPasswordKey: password
 ```
 
+Then upgrade the chart to apply values:
+
+```sh
+helm -n renku upgrade $HELM_RELEASE renku/renku -f my-values.yaml
+```
 
 ## Manual migration
 
