@@ -161,6 +161,7 @@ apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
   name: mypg
+  namespace: renku
 spec:
   instances: 1
   enableSuperuserAccess: true
@@ -176,6 +177,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: mypg-ingress
+  namespace: renku
 spec:
   podSelector:
     matchLabels:
@@ -241,6 +243,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: mypg-to-legacy
+  namespace: renku
 spec:
   podSelector:
     matchLabels:
