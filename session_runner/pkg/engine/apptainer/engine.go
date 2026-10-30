@@ -334,7 +334,7 @@ func findSessionPort() (int, error) {
 	}
 	port := addr.Port
 	if err := l.Close(); err != nil {
-		return 0, nil
+		return 0, err
 	}
 	return port, nil
 }
