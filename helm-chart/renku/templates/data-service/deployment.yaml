@@ -248,6 +248,14 @@ spec:
                   name: {{ .Values.dataService.dataDeposits.envidat.s3.credentialsSecretName | quote }}
                   key: SECRET_ACCESS_KEY
             {{- end }}
+            - name: SCICAT_URL
+              value: {{ .Values.dataService.dataDeposits.scicat.url | quote }}
+            - name: SCICAT_API_URL
+              value: {{ .Values.dataService.dataDeposits.scicat.apiUrl | quote }}
+            - name: SCICAT_JOB_IMAGE
+              value: {{ .Values.dataService.dataDeposits.scicat.image | quote }}
+            - name: SCICAT_TEST_ENV
+              value: {{ .Values.dataService.dataDeposits.scicat.testEnv | default false | quote }}
             - name: RENKU_URL
               value: {{ (include "renku.baseUrl" .) | quote }}
             - name: PERSISTED_LOGS_ENABLED
@@ -266,6 +274,16 @@ spec:
             - name: PROJECT_STORAGE_MAX_SIZE_GB
               value: {{ .Values.dataService.projectStorage.storageMaxSizeGb | quote }}
             {{- end }}
+            - name: SSH_PROXY_ENABLED
+              value: {{ .Values.sshProxy.enabled | quote }}
+            - name: SSH_PROXY_HOSTNAME
+              value: {{ .Values.sshProxy.domain | quote }}
+            - name: SSH_PROXY_PORT
+              value: {{ .Values.sshProxy.port | quote }}
+            - name: SSH_PROXY_HOST_KEY_SECRET
+              value: "{{ template "renku.fullname" . }}-ssh-session-host-key"
+            - name: SSH_PROXY_AUTH_KEY_SECRET
+              value: "{{ template "renku.fullname" . }}-ssh-proxy-session-auth-key"
           volumeMounts:
             - name: server-options
               mountPath: /etc/renku-notebooks/server_options
