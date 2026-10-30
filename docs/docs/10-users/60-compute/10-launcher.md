@@ -23,6 +23,16 @@ Project's launchers are usable to everyone who can see the project. Anyone with 
 
 However, the sessions you launch and the jobs you submit are only accessible to you and are not shared across users. An app is the exception, since it is public and shared by the whole project (see [App](app)).
 
+### Listing launchers from the command line
+
+You can list available launchers from the terminal:
+
+```bash
+rnk launcher list
+```
+
+See the [CLI reference](/docs/users/cli/cli-reference) for more commands.
+
 ## Next steps
 
 - To create an interactive session launcher, see [Add a session launcher to your project](session/guides/add-a-session-launcher-to-your-project).
