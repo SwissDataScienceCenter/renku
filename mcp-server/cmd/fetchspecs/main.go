@@ -1,6 +1,6 @@
 // Command fetchspecs copies the renku-data-services module specs listed in modules,
-// at a git ref on GitHub or from a local checkout, into apispec/modules, where they
-// are embedded and parsed by package apispec. It fails if a spec cannot be parsed.
+// at a git ref on GitHub or from a local checkout, into the packages of internal/renkuapi,
+// where `go generate` turns them into API clients.
 package main
 
 import (
@@ -13,28 +13,29 @@ import (
 	"os"
 	"path/filepath"
 	"time"
-
-	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/api2tool"
 )
 
 // repository is the GitHub repository the module specs are taken from.
 const repository = "SwissDataScienceCenter/renku-data-services"
 
-// modules are the paths of the module specs inside the repository, and inside apispec/modules.
-var modules = []string{
-	"components/renku_data_services/users/api.spec.yaml",
-	"components/renku_data_services/search/api.spec.yaml",
-	"components/renku_data_services/project/api.spec.yaml",
-	"components/renku_data_services/namespace/api.spec.yaml",
-	"components/renku_data_services/data_connectors/api.spec.yaml",
-	"components/renku_data_services/session/api.spec.yaml",
-	"components/renku_data_services/notebooks/api.spec.yaml",
+// modules maps the paths of the module specs inside the repository to the package
+// directories under internal/renkuapi they are written to, as api.spec.yaml.
+var modules = map[string]string{
+	"components/renku_data_services/users/api.spec.yaml":           "users",
+	"components/renku_data_services/search/api.spec.yaml":          "search",
+	"components/renku_data_services/project/api.spec.yaml":         "project",
+	"components/renku_data_services/namespace/api.spec.yaml":       "namespace",
+	"components/renku_data_services/data_connectors/api.spec.yaml": "dataconnectors",
+	"components/renku_data_services/session/api.spec.yaml":         "session",
+	"components/renku_data_services/notebooks/api.spec.yaml":       "notebooks",
+	"components/renku_data_services/crc/api.spec.yaml":             "crc",
+	"components/renku_data_services/renku_apps/api.spec.yaml":      "renkuapps",
 }
 
 func main() {
-	ref := flag.String("ref", "", "git ref (tag) of renku-data-services on GitHub to take the specs from")
+	ref := flag.String("ref", "", "git ref of renku-data-services on GitHub to take the specs from")
 	localDir := flag.String("local-dir", "", "local renku-data-services checkout to take the specs from instead of GitHub")
-	out := flag.String("out", "apispec/modules", "directory the module specs are written to, it is replaced")
+	out := flag.String("out", "internal/renkuapi", "directory holding the client packages")
 	flag.Parse()
 
 	if (*ref == "") == (*localDir == "") {
@@ -45,8 +46,9 @@ func main() {
 	if *localDir != "" {
 		origin = "the local checkout " + *localDir
 	}
+	// Fetch everything before writing anything, so that a failure leaves the specs as they were.
 	fetched := map[string][]byte{}
-	for _, m := range modules {
+	for m, pkg := range modules {
 		var content []byte
 		var err error
 		if *localDir != "" {
@@ -57,30 +59,18 @@ func main() {
 		if err != nil {
 			log.Fatalf("reading module %s: %v", m, err)
 		}
-		if _, err := api2tool.Parse(content); err != nil {
-			log.Fatalf("module %s of %s: %v", m, origin, err)
-		}
-		fetched[m] = content
+		fetched[pkg] = content
 	}
-
-	// Replace the directory so that modules no longer listed are removed.
-	if err := os.RemoveAll(*out); err != nil {
-		log.Fatal(err)
-	}
-	for name, content := range fetched {
-		path := filepath.Join(*out, name)
-		if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
-			log.Fatal(err)
-		}
-		if err := os.WriteFile(path, content, 0o644); err != nil {
+	for pkg, content := range fetched {
+		if err := os.WriteFile(filepath.Join(*out, pkg, "api.spec.yaml"), content, 0o644); err != nil {
 			log.Fatal(err)
 		}
 	}
-	source := fmt.Sprintf("Copied unchanged from %s by fetchspecs.\n", origin)
+	source := fmt.Sprintf("The api.spec.yaml files were copied unchanged from %s by fetchspecs.\n", origin)
 	if err := os.WriteFile(filepath.Join(*out, "SOURCE"), []byte(source), 0o644); err != nil {
 		log.Fatal(err)
 	}
-	log.Printf("wrote %d module specs from %s to %s", len(fetched), origin, *out)
+	log.Printf("wrote %d module specs from %s to %s, run `go generate ./...` to update the clients", len(fetched), origin, *out)
 }
 
 func fetch(url string) ([]byte, error) {

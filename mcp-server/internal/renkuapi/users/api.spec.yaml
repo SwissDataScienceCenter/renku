@@ -1,0 +1,738 @@
+---
+openapi: 3.0.2
+info:
+  title: Renku Data Services API
+  description: |
+    This service is the main backend for Renku. It provides information about users, projects,
+    cloud storage, access to compute resources and many other things.
+  version: v1
+servers:
+  - url: /api/data
+paths:
+  /user:
+    get:
+      summary: Get information about the currently logged in user
+      responses:
+        "200":
+          description: The currently logged in user
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/SelfUserInfo"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - users
+  /user/secret_key:
+    get:
+      summary: Get the current users secret key
+      responses:
+        "200":
+          description: |
+            The secret key of the currently logged in user.
+            This endpoint is not publicly accessible.
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/UserSecretKey"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - secrets
+  /users:
+    get:
+      summary: List all users
+      parameters:
+        - in: query
+          style: form
+          explode: true
+          name: user_params
+          schema:
+            type: object
+            additionalProperties: false
+            properties:
+              exact_email:
+                type: string
+                description: Return the user(s) with an exact match on the email provided
+      responses:
+        "200":
+          description: The list of users in the service (this is a subset of what is in Keycloak)
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/UsersWithId"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - users
+  /users/{user_id}:
+    get:
+      summary: Get a specific user by their Keycloak ID
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: The requested user
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/UserWithId"
+        "404":
+          description: The user does not exist
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - users
+    delete:
+      summary: Delete a specific user by their Keycloak ID
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: The user was successfully deleted or did not exist
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - users
+  /user/secrets:
+    get:
+      summary: List all secrets for a user (keys only)
+      parameters:
+        - in: query
+          style: form
+          explode: true
+          name: user_secrets_params
+          schema:
+            type: object
+            additionalProperties: false
+            properties:
+              kind:
+                description: Filter results based on secret kind
+                $ref: "#/components/schemas/SecretKind"
+                default: general
+      responses:
+        "200":
+          description: The user's secrets
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/SecretsList"
+        "404":
+          description: The user does not exist
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - secrets
+    post:
+      summary: Create a new secret for the user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SecretPost"
+      responses:
+        "201":
+          description: Secret successfully created
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/SecretWithId"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - secrets
+  /user/secrets/{secret_id}:
+    get:
+      summary: Get a secret key by id
+      parameters:
+        - in: path
+          name: secret_id
+          required: true
+          schema:
+            $ref: "#/components/schemas/Ulid"
+      responses:
+        "200":
+          description: The secret
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/SecretWithId"
+        "404":
+          description: The user does not exist
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - secrets
+    patch:
+      summary: Change a secret
+      parameters:
+        - in: path
+          name: secret_id
+          required: true
+          schema:
+            $ref: "#/components/schemas/Ulid"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SecretPatch"
+      responses:
+        "201":
+          description: Secret successfully changed
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/SecretWithId"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - secrets
+    delete:
+      summary: Delete a secret
+      parameters:
+        - in: path
+          name: secret_id
+          required: true
+          schema:
+            $ref: "#/components/schemas/Ulid"
+      responses:
+        "204":
+          description: The secret was deleted or didn't exist
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - secrets
+
+  /user/ssh_keys:
+    get:
+      summary: List all SSH public keys for the logged in user
+      responses:
+        "200":
+          description: The user's SSH public keys
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SSHKeysList"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - ssh_keys
+    post:
+      summary: Register a new SSH public key for the logged in user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SSHKeyPost"
+      responses:
+        "201":
+          description: SSH public key successfully registered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SSHKey"
+        "409":
+          description: This SSH public key is already registered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - ssh_keys
+  /user/ssh_keys/{key_id}:
+    get:
+      summary: Get a specific SSH public key
+      parameters:
+        - in: path
+          name: key_id
+          required: true
+          schema:
+            $ref: "#/components/schemas/Ulid"
+      responses:
+        "200":
+          description: The SSH public key
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SSHKey"
+        "404":
+          description: The SSH public key does not exist or is not owned by the user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - ssh_keys
+    delete:
+      summary: Delete a specific SSH public key
+      parameters:
+        - in: path
+          name: key_id
+          required: true
+          schema:
+            $ref: "#/components/schemas/Ulid"
+      responses:
+        "204":
+          description: The SSH public key was deleted or did not exist
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - ssh_keys
+  /error:
+    get:
+      summary: Get a sample error response with status code 422
+      responses:
+        "422":
+          description: The error
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /version:
+    get:
+      summary: Get the version of the service
+      responses:
+        "200":
+          description: The error
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/Version"
+
+  "/user/preferences":
+    get:
+      summary: Get user preferences for the currently logged in user
+      responses:
+        "200":
+          description: The user preferences
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/UserPreferences"
+        "404":
+          description: The user has no preferences saved
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - user_preferences
+  "/user/preferences/dismiss_project_migration_banner":
+    post:
+      summary: Dismiss banner project migration
+      responses:
+        "200":
+          description: The updated user preferences
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/UserPreferences"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - user_preferences
+    delete:
+      summary: Remove dismiss banner project migration
+      responses:
+        "200":
+          description: The updated user preferences
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/UserPreferences"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - user_preferences
+  "/user/preferences/pinned_projects":
+    post:
+      summary: Add a pinned project
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/AddPinnedProject"
+      responses:
+        "200":
+          description: The updated user preferences
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/UserPreferences"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - user_preferences
+    delete:
+      summary: Remove one or all pinned projects
+      parameters:
+        - in: query
+          description: query parameters
+          name: delete_pinned_params
+          style: form
+          explode: true
+          schema:
+            type: object
+            additionalProperties: false
+            properties:
+              project_slug:
+                type: string
+                default: ""
+      responses:
+        "200":
+          description: The updated user preferences
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/UserPreferences"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - user_preferences
+
+components:
+  schemas:
+    UserWithId:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          $ref: "#/components/schemas/UserId"
+        username:
+          $ref: "#/components/schemas/Username"
+        email:
+          $ref: "#/components/schemas/UserEmail"
+        first_name:
+          $ref: "#/components/schemas/UserFirstLastName"
+        last_name:
+          $ref: "#/components/schemas/UserFirstLastName"
+      required:
+        - id
+        - username
+      example:
+        id: "some-random-keycloak-id"
+        username: "some-username"
+        first_name: "Jane"
+        last_name: "Doe"
+    UsersWithId:
+      type: array
+      items:
+        $ref: "#/components/schemas/UserWithId"
+      uniqueItems: true
+    SelfUserInfo:
+      description: Information about the currently logged in user
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          $ref: "#/components/schemas/UserId"
+        username:
+          $ref: "#/components/schemas/Username"
+        email:
+          $ref: "#/components/schemas/UserEmail"
+        first_name:
+          $ref: "#/components/schemas/UserFirstLastName"
+        last_name:
+          $ref: "#/components/schemas/UserFirstLastName"
+        is_admin:
+          description: Whether the user is a platform administrator or not
+          type: boolean
+          default: false
+      required:
+        - id
+        - username
+        - is_admin
+    UserSecretKey:
+      type: object
+      additionalProperties: false
+      properties:
+        secret_key:
+          type: string
+          description: The users secret key
+    Version:
+      type: object
+      properties:
+        version:
+          type: string
+      required: ["version"]
+    UserId:
+      type: string
+      description: Keycloak user ID
+      example: f74a228b-1790-4276-af5f-25c2424e9b0c
+      pattern: "^[A-Za-z0-9]{1}[A-Za-z0-9-]+$"
+    Username:
+      type: string
+      description: Handle of the user
+      example: some-username
+      minLength: 1
+      maxLength: 99
+    UserFirstLastName:
+      type: string
+      description: First or last name of the user
+      example: John
+      minLength: 1
+      maxLength: 256
+    UserEmail:
+      type: string
+      # We can get invalid emails when people log in via Github or other services
+      # It seems that in some cases Keycloak does not verify emails and this will then fail
+      # See: https://github.com/SwissDataScienceCenter/renku-data-services/issues/367
+      # format: email
+      description: User email
+      example: some-user@gmail.com
+    SecretsList:
+      description: A list of secrets
+      type: array
+      items:
+        $ref: "#/components/schemas/SecretWithId"
+      minItems: 0
+    SecretWithId:
+      description: A Renku secret
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          $ref: "#/components/schemas/Ulid"
+        name:
+          $ref: "#/components/schemas/SecretName"
+        kind:
+          $ref: "#/components/schemas/SecretKind"
+        expiration_timestamp:
+          $ref: "#/components/schemas/ExpirationTimestamp"
+        modification_date:
+          $ref: "#/components/schemas/ModificationDate"
+        default_filename:
+          $ref: "#/components/schemas/SecretDefaultFilename"
+        session_secret_slot_ids:
+          $ref: "#/components/schemas/UlidList"
+        data_connector_ids:
+          $ref: "#/components/schemas/UlidList"
+      required:
+        - "id"
+        - "name"
+        - "default_filename"
+        - "modification_date"
+        - "kind"
+        - "session_secret_slot_ids"
+        - "data_connector_ids"
+    SecretPost:
+      description: Secret metadata to be created
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          $ref: "#/components/schemas/SecretName"
+        value:
+          $ref: "#/components/schemas/SecretValue"
+        kind:
+          allOf:
+            - $ref: "#/components/schemas/SecretKind"
+          default: general
+        expiration_timestamp:
+          $ref: "#/components/schemas/ExpirationTimestamp"
+        default_filename:
+          $ref: "#/components/schemas/SecretDefaultFilename"
+      required:
+        - "name"
+        - "value"
+    SecretPatch:
+      type: object
+      description: Secret metadata to be modified
+      additionalProperties: false
+      properties:
+        name:
+          $ref: "#/components/schemas/SecretName"
+        value:
+          $ref: "#/components/schemas/SecretValue"
+        expiration_timestamp:
+          $ref: "#/components/schemas/ExpirationTimestamp"
+        default_filename:
+          $ref: "#/components/schemas/SecretDefaultFilename"
+    SecretName:
+      description: The name of a user secret
+      type: string
+      minLength: 1
+      maxLength: 99
+      example: API Token
+    SecretDefaultFilename:
+      description: |
+        Filename to give to this secret when mounted in Renku 1.0 sessions
+      type: string
+      minLength: 1
+      maxLength: 99
+      pattern: "^[a-zA-Z0-9_\\-.]*$"
+      example: "Data-S3-Secret_1"
+    Ulid:
+      description: ULID identifier
+      type: string
+      minLength: 26
+      maxLength: 26
+      pattern: "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" # This is case-insensitive
+    UlidList:
+      type: array
+      items:
+        $ref: "#/components/schemas/Ulid"
+    ModificationDate:
+      description: The date and time the secret was created or modified (this is always in UTC)
+      type: string
+      format: date-time
+      example: "2023-11-01T17:32:28Z"
+    SecretValue:
+      description: Secret value that can be any text
+      type: string
+      minLength: 1
+      maxLength: 5000
+    SecretKind:
+      description: Kind of secret
+      type: string
+      enum:
+        - general
+        - storage
+    ShowProjectMigrationBanner:
+      description: Should display project migration banner
+      type: boolean
+    ExpirationTimestamp:
+      description: The date and time the secret is not valid anymore (this is in any timezone)
+      type: string
+      nullable: true
+      format: date-time
+      example: "2030-11-01T17:32:28UTC+01:00"
+      default: null
+    UserPreferences:
+      type: object
+      description: The object containing user preferences
+      additionalProperties: false
+      properties:
+        user_id:
+          $ref: "#/components/schemas/UserId"
+        pinned_projects:
+          $ref: "#/components/schemas/PinnedProjects"
+        show_project_migration_banner:
+          $ref: "#/components/schemas/ShowProjectMigrationBanner"
+      required: ["user_id", "pinned_projects"]
+    PinnedProjects:
+      type: object
+      description: The list of projects a user has pinned on their dashboard
+      properties:
+        project_slugs:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProjectSlugResponse"
+    ProjectSlug:
+      type: string
+      description: The slug used to identify a project
+      minLength: 3
+      example: "user/my-project"
+      # limitations based on allowed characters in project slugs from Gitlab from here:
+      # https://docs.gitlab.com/ee/user/reserved_names.html
+      pattern: "^[a-zA-Z0-9]+([_.\\-/][a-zA-Z0-9]+)*[_.\\-/]?[a-zA-Z0-9]$"
+    ProjectSlugResponse:
+      type: string
+      description: The slug used to identify a project
+      minLength: 3
+      example: "user/my-project"
+    AddPinnedProject:
+      type: object
+      additionalProperties: false
+      properties:
+        project_slug:
+          $ref: "#/components/schemas/ProjectSlug"
+      required: ["project_slug"]
+    SSHKey:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          $ref: "#/components/schemas/Ulid"
+        public_key:
+          type: string
+          example: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAI... user@host"
+        key_type:
+          type: string
+          example: ssh-ed25519
+        fingerprint:
+          type: string
+          example: "SHA256:abc..."
+        name:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+      required: [id, public_key, key_type, fingerprint, created_at]
+    SSHKeyPost:
+      type: object
+      additionalProperties: false
+      properties:
+        public_key:
+          type: string
+          maxLength: 10000
+        name:
+          type: string
+          nullable: true
+          maxLength: 256
+      required: [public_key]
+    SSHKeysList:
+      type: array
+      items:
+        $ref: "#/components/schemas/SSHKey"
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+              minimum: 0
+              exclusiveMinimum: true
+              example: 1404
+            detail:
+              type: string
+              example: "A more detailed optional message showing what the problem was"
+            message:
+              type: string
+              example: "Something went wrong - please try again later"
+            trace_id:
+              type: string
+              example: "ac93950e9e114a55c67fb8e5ef519bbe"
+              description: Sentry trace ID for linking to corresponding log entries
+          required: ["code", "message"]
+      required: ["error"]
+  responses:
+    Error:
+      description: The schema for all 4xx and 5xx responses
+      content:
+        "application/json":
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
