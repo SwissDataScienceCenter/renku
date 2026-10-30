@@ -15,6 +15,8 @@ import (
 
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/auth"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/mcp"
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/renkuapi"
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools"
 )
 
 // MCPPath is where the streamable HTTP transport is served.
@@ -49,18 +51,17 @@ func NewMCPServer(opts Options) (*sdkmcp.Server, error) {
 		// The tool list never changes and the server does not log to the client.
 		Capabilities: &sdkmcp.ServerCapabilities{Tools: &sdkmcp.ToolCapabilities{}},
 	})
+	// Each call wraps the middleware added before, so the rate limit runs first and rejected calls are
+	// only logged by it.
+	s.AddReceivingMiddleware(mcp.LogToolCalls(mcp.LogOptions{Logger: opts.Logger, LogArguments: opts.LogArguments}))
 	if opts.RateLimit {
 		s.AddReceivingMiddleware(mcp.RateLimit(mcp.RateLimitOptions{PerMinute: opts.ToolCallsPerMinute, Burst: opts.ToolCallBurst, Logger: opts.Logger}))
 	}
-	toolOpts := mcp.Options{
-		APIURL:       opts.APIURL,
-		HTTPClient:   &http.Client{Timeout: 60 * time.Second},
-		Logger:       opts.Logger,
-		LogArguments: opts.LogArguments,
-	}
-	if err := mcp.Register(s, toolOpts); err != nil {
+	api, err := renkuapi.NewClients(opts.APIURL, &http.Client{Timeout: 60 * time.Second})
+	if err != nil {
 		return nil, err
 	}
+	tools.Register(s, api)
 	return s, nil
 }
 
@@ -103,7 +104,7 @@ func NewHTTPHandler(s *sdkmcp.Server, authenticator *auth.Authenticator, logger 
 			},
 		}),
 		// After the request logger, so that recovered panics are logged with a stack trace and status 500.
-		// It does not cover tool handlers, which the SDK runs in their own goroutines, see internal/mcp.
+		// It does not cover tool handlers, which the SDK runs in their own goroutines, see mcp.LogToolCalls.
 		middleware.RecoverWithConfig(middleware.RecoverConfig{DisableStackAll: true}),
 	)
 	e.Any(MCPPath, echo.WrapHandler(authenticator.Middleware(mcpHandler)))

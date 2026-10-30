@@ -79,7 +79,8 @@ func TestGetProjectReportsAnUnreachableAPI(t *testing.T) {
 	srv := httptest.NewServer(http.NotFoundHandler())
 	srv.Close()
 	_, err := callHandler(t, srv.URL+"/api/data", input{ProjectID: "01J0000000000000000000000A"})
-	if !errors.Is(err, toolkit.ErrUnreachable) {
+	var toolErr *toolkit.Error
+	if !errors.As(err, &toolErr) || toolErr.Outcome != toolkit.OutcomeUnreachable {
 		t.Errorf("error = %v", err)
 	}
 }

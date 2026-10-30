@@ -18,11 +18,12 @@ import (
 	"github.com/go-jose/go-jose/v4/jwt"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 
-	"github.com/SwissDataScienceCenter/renku/mcp-server/apispec"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/auth"
 )
 
 const issuer = "https://renku.example.org/auth/realms/Renku"
+
+const projectID = "01J0000000000000000000000A"
 
 type testEnv struct {
 	mcpURL string
@@ -53,12 +54,13 @@ func newTestEnv(t *testing.T) *testEnv {
 		env.gatewayAuth = r.Header.Get("Authorization")
 		env.gatewayRealIP = r.Header.Get("X-Real-IP")
 		env.gatewayRequestID = r.Header.Get("X-Request-Id")
-		if r.URL.Path != "/api/data/user" {
+		if r.URL.Path != "/api/data/projects/"+projectID {
 			w.WriteHeader(http.StatusNotFound)
 			return
 		}
 		w.Header().Set("Content-Type", "application/json")
-		_, _ = w.Write([]byte(`{"id": "user-1", "username": "jane"}`))
+		_, _ = w.Write([]byte(`{"id": "` + projectID + `", "name": "climate", "namespace": "my-group", "slug": "climate",
+			"visibility": "public", "created_by": "user-1", "creation_date": "2023-11-01T17:32:28Z"}`))
 	}))
 	t.Cleanup(gateway.Close)
 
@@ -117,21 +119,11 @@ func TestEndToEnd(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	var listed []string
-	for _, tool := range toolsRes.Tools {
-		listed = append(listed, tool.Name)
-	}
-	var allowlisted []string
-	for _, tool := range apispec.Tools {
-		allowlisted = append(allowlisted, tool.Name)
-	}
-	slices.Sort(listed)
-	slices.Sort(allowlisted)
-	if !slices.Equal(listed, allowlisted) {
-		t.Errorf("tools/list = %v, want exactly the allowlist %v", listed, allowlisted)
+	if !slices.ContainsFunc(toolsRes.Tools, func(tool *mcp.Tool) bool { return tool.Name == "get_project" }) {
+		t.Errorf("tools/list does not contain get_project: %v", toolsRes.Tools)
 	}
 
-	assertCurrentUser(t, c)
+	assertGetProject(t, c)
 	if env.gatewayAuth != "Bearer "+token {
 		t.Errorf("gateway received Authorization %q, want the caller's token", env.gatewayAuth)
 	}
@@ -159,19 +151,19 @@ func TestStdioUsesPrincipalFromContext(t *testing.T) {
 	}
 	defer func() { _ = c.Close() }()
 
-	assertCurrentUser(t, c)
+	assertGetProject(t, c)
 	if env.gatewayAuth != "Bearer local-token" {
 		t.Errorf("gateway received Authorization %q, want the token of the context", env.gatewayAuth)
 	}
 }
 
-func assertCurrentUser(t *testing.T, c *mcp.ClientSession) {
+func assertGetProject(t *testing.T, c *mcp.ClientSession) {
 	t.Helper()
-	res, err := c.CallTool(context.Background(), &mcp.CallToolParams{Name: "get_current_user"})
+	res, err := c.CallTool(context.Background(), &mcp.CallToolParams{Name: "get_project", Arguments: map[string]any{"project_id": projectID}})
 	if err != nil {
 		t.Fatal(err)
 	}
-	if res.IsError || len(res.Content) != 1 || !strings.Contains(res.Content[0].(*mcp.TextContent).Text, `"username":"jane"`) {
+	if res.IsError || len(res.Content) != 1 || !strings.Contains(res.Content[0].(*mcp.TextContent).Text, `"name":"climate"`) {
 		t.Errorf("unexpected result %+v", res)
 	}
 }

@@ -8,6 +8,8 @@ import (
 
 	sdkmcp "github.com/modelcontextprotocol/go-sdk/mcp"
 	"golang.org/x/time/rate"
+
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/toolkit"
 )
 
 // limiterScanInterval is how often the limiters of idle users are dropped.
@@ -39,11 +41,11 @@ func RateLimit(opts RateLimitOptions) sdkmcp.Middleware {
 			if !ok {
 				return next(ctx, method, req)
 			}
-			principal, _, requestID := caller(ctx, call)
-			if l.allow(principal.Subject) {
+			c := toolkit.CallerOf(ctx, call)
+			if l.allow(c.Principal.Subject) {
 				return next(ctx, method, req)
 			}
-			opts.Logger.Warn("tool call", "tool", call.Params.Name, "sub", principal.Subject, "request_id", requestID, "outcome", "rate_limited")
+			opts.Logger.Warn("tool call", "tool", call.Params.Name, "sub", c.Principal.Subject, "request_id", c.RequestID, "outcome", "rate_limited")
 			return toolError("Too many tool calls. Wait a few seconds before trying again."), nil
 		}
 	}

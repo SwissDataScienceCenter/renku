@@ -25,9 +25,9 @@ type input struct {
 func handler(api *renkuapi.Clients) mcp.ToolHandlerFor[input, *project.Project] {
 	return func(ctx context.Context, req *mcp.CallToolRequest, in input) (*mcp.CallToolResult, *project.Project, error) {
 		params := &project.GetProjectsProjectIdParams{WithDocumentation: &in.WithDocumentation}
-		res, err := api.Project.GetProjectsProjectIdWithResponse(ctx, in.ProjectID, params, toolkit.CallerHeaders(req))
+		res, err := api.Project.GetProjectsProjectIdWithResponse(ctx, in.ProjectID, params, toolkit.CallerHeaders(ctx, req))
 		if err != nil {
-			return nil, nil, toolkit.ErrUnreachable
+			return nil, nil, toolkit.RequestFailed(err)
 		}
 		if res.JSON200 == nil {
 			return nil, nil, toolkit.APIError(res.StatusCode(), res.Body)
