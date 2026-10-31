@@ -11,6 +11,10 @@ import (
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/deleteapp"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/deletedataconnector"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/deletesessionlauncher"
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/getapp"
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/getapplogs"
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/getbuild"
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/getbuildlogs"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/getcurrentuser"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/getdataconnector"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/getgroup"
@@ -21,11 +25,19 @@ import (
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/getsessionlogs"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/launchapp"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/linkdataconnector"
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/listapps"
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/listdataconnectorprojectlinks"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/listdataconnectors"
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/listenvironmentbuilds"
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/listenvironments"
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/listgroupmembers"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/listgroups"
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/listnamespaces"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/listprojectdataconnectorlinks"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/listprojects"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/listprojectsessionlaunchers"
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/listresourcepools"
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/listsessionlaunchers"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/listsessions"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/search"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/startsession"
@@ -41,26 +53,38 @@ var all = []func(*mcp.Server, *renkuapi.Clients){
 	listprojects.Register,
 	getproject.Register,
 	getprojectbyslug.Register,
+	listnamespaces.Register,
 	createproject.Register,
 	updateproject.Register,
 	listgroups.Register,
 	getgroup.Register,
+	listgroupmembers.Register,
 	listdataconnectors.Register,
 	getdataconnector.Register,
 	listprojectdataconnectorlinks.Register,
+	listdataconnectorprojectlinks.Register,
 	linkdataconnector.Register,
 	unlinkdataconnector.Register,
 	deletedataconnector.Register,
 	listprojectsessionlaunchers.Register,
+	listsessionlaunchers.Register,
 	getsessionlauncher.Register,
 	createsessionlauncher.Register,
 	updatesessionlauncher.Register,
 	deletesessionlauncher.Register,
+	listenvironments.Register,
+	listenvironmentbuilds.Register,
+	getbuild.Register,
+	getbuildlogs.Register,
+	listresourcepools.Register,
 	listsessions.Register,
 	startsession.Register,
 	getsession.Register,
 	getsessionlogs.Register,
 	stopsession.Register,
+	listapps.Register,
+	getapp.Register,
+	getapplogs.Register,
 	launchapp.Register,
 	deleteapp.Register,
 }

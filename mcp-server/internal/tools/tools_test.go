@@ -31,6 +31,9 @@ const launcherJSON = `{"id": "` + ulid + `", "project_id": "` + ulid + `", "name
 	"name": "python", "environment_kind": "GLOBAL", "environment_image_source": "image",
 	"container_image": "renku/renkulab-py", "default_url": "/lab", "uid": 1000, "gid": 1000, "port": 8080}}`
 
+const buildJSON = `{"id": "` + ulid + `", "environment_id": "` + ulid + `", "created_at": "2023-11-01T17:32:28Z",
+	"status": "failed", "error_reason": "StepOutOfMemory"}`
+
 type recordedRequest struct {
 	method, path, query, authorization, contentType, ifMatch string
 	body                                                     []byte
@@ -66,8 +69,15 @@ func fakeGateway(t *testing.T) (string, *[]recordedRequest) {
 				"storage": {"configuration": {"type": "s3", "provider": "AWS"}, "readonly": true, "sensitive_fields": [],
 				"source_path": "bucket/data", "target_path": "data", "storage_type": "s3"}}`))
 		case "GET /api/data/groups", "GET /api/data/data_connectors", "GET /api/data/projects/" + ulid + "/data_connector_links",
-			"GET /api/data/projects/" + ulid + "/session_launchers":
+			"GET /api/data/projects/" + ulid + "/session_launchers", "GET /api/data/namespaces", "GET /api/data/groups/my-group/members",
+			"GET /api/data/environments", "GET /api/data/resource_pools", "GET /api/data/session_launchers",
+			"GET /api/data/data_connectors/" + ulid + "/project_links", "GET /api/data/environments/" + ulid + "/builds",
+			"GET /api/data/apps":
 			_, _ = w.Write([]byte(`[]`))
+		case "GET /api/data/builds/" + ulid:
+			_, _ = w.Write([]byte(buildJSON))
+		case "GET /api/data/apps/app-1":
+			_, _ = w.Write([]byte(`{"name": "app-1", "project_id": "` + ulid + `", "launcher_id": "` + ulid + `", "status": "ready"}`))
 		case "GET /api/data/sessions":
 			_, _ = w.Write([]byte(`[` + sessionJSON + `]`))
 		case "POST /api/data/sessions":
@@ -185,6 +195,18 @@ func TestEveryToolSendsTheExpectedRequest(t *testing.T) {
 		{"delete_session_launcher", map[string]any{"launcher_id": ulid}, "DELETE", "/api/data/session_launchers/" + ulid, "", ""},
 		{"launch_app", map[string]any{"launcher_id": ulid}, "POST", "/api/data/apps", "", `{"launcher_id":"` + ulid + `"}`},
 		{"delete_app", map[string]any{"app_name": "app-1"}, "DELETE", "/api/data/apps/app-1", "", ""},
+		{"list_namespaces", map[string]any{"minimum_role": "editor", "kinds": []string{"user", "group"}, "page": 1}, "GET", "/api/data/namespaces", "page=1&minimum_role=editor&kinds=user&kinds=group", ""},
+		{"list_group_members", map[string]any{"group_slug": "my-group"}, "GET", "/api/data/groups/my-group/members", "", ""},
+		{"list_environments", map[string]any{"include_archived": true}, "GET", "/api/data/environments", "include_archived=true", ""},
+		{"list_resource_pools", map[string]any{"cpu": 0.5, "memory": 4, "gpu": 1, "max_storage": 20}, "GET", "/api/data/resource_pools", "cpu=0.5&gpu=1&max_storage=20&memory=4", ""},
+		{"list_session_launchers", nil, "GET", "/api/data/session_launchers", "", ""},
+		{"list_data_connector_project_links", map[string]any{"data_connector_id": ulid}, "GET", "/api/data/data_connectors/" + ulid + "/project_links", "", ""},
+		{"list_environment_builds", map[string]any{"environment_id": ulid}, "GET", "/api/data/environments/" + ulid + "/builds", "", ""},
+		{"get_build", map[string]any{"build_id": ulid}, "GET", "/api/data/builds/" + ulid, "", ""},
+		{"get_build_logs", map[string]any{"build_id": ulid, "max_lines": 100}, "GET", "/api/data/builds/" + ulid + "/logs", "max_lines=100", ""},
+		{"list_apps", map[string]any{"project_id": ulid}, "GET", "/api/data/apps", "project_id=" + ulid, ""},
+		{"get_app", map[string]any{"app_name": "app-1"}, "GET", "/api/data/apps/app-1", "", ""},
+		{"get_app_logs", map[string]any{"app_name": "app-1"}, "GET", "/api/data/apps/app-1/logs", "", ""},
 	}
 	apiURL, _ := fakeGateway(t)
 	listed, err := connect(t, apiURL).ListTools(context.Background(), nil)
@@ -264,6 +286,19 @@ func TestStartSessionReportsWhetherItCreatedTheSession(t *testing.T) {
 	}
 	out, _ := res.StructuredContent.(map[string]any)
 	if out["created"] != true {
+		t.Errorf("structured content = %v", res.StructuredContent)
+	}
+}
+
+// The build status is in a oneOf of the spec, which the generated type keeps in a private field.
+func TestGetBuildReturnsTheStatus(t *testing.T) {
+	apiURL, _ := fakeGateway(t)
+	res, err := connect(t, apiURL).CallTool(context.Background(), &mcp.CallToolParams{Name: "get_build", Arguments: map[string]any{"build_id": ulid}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	out, _ := res.StructuredContent.(map[string]any)
+	if out["status"] != "failed" || out["error_reason"] != "StepOutOfMemory" {
 		t.Errorf("structured content = %v", res.StructuredContent)
 	}
 }
