@@ -13,7 +13,7 @@ import (
 var tool = mcp.Tool{
 	Name: "get_app",
 	Description: "Get an app by its name, including its status and URL. The status is `pending`, `ready` " +
-		"or `failed`. After launch_app, poll every ~10 s until it is `ready` or `failed`, then give " +
+		"or `failed`. After launch_app, call wait_for_app until it is `ready` or `failed`, then give " +
 		"the user the `url`. An idle app scales to zero but still reports `ready`; it starts again on " +
 		"the next visit. If it failed, call get_app_logs.",
 	Annotations: &mcp.ToolAnnotations{ReadOnlyHint: true},

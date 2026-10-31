@@ -22,7 +22,7 @@ var tool = mcp.Tool{
 		"If a web app in a session cannot be configured to serve under $RENKU_BASE_URL_PATH, set " +
 		"`environment.strip_path_prefix` to true so Renku removes the prefix before forwarding " +
 		"requests. For a launcher built from code, changing the build fields starts a new build: " +
-		"poll it with list_environment_builds and get_build.",
+		"find it with list_environment_builds and wait for it with wait_for_build.",
 	Annotations: &mcp.ToolAnnotations{DestructiveHint: new(false), IdempotentHint: true},
 }
 

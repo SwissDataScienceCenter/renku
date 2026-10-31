@@ -14,7 +14,7 @@ var tool = mcp.Tool{
 	Name: "list_environment_builds",
 	Description: "List the image builds of an environment that is built from code. After creating or " +
 		"updating a session launcher with `environment_image_source: build`, call this with the " +
-		"launcher's `environment.id` to find the build, then poll get_build with its ID until it " +
+		"launcher's `environment.id` to find the build, then call wait_for_build with its ID until it " +
 		"succeeds or fails.",
 	Annotations: &mcp.ToolAnnotations{ReadOnlyHint: true},
 }

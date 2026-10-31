@@ -19,6 +19,7 @@ import (
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/auth"
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/toolkit"
 )
 
 const issuer = "https://renku.example.org/auth/realms/Renku"
@@ -37,6 +38,8 @@ type testEnv struct {
 	gatewayRequestID string
 	// gatewayDeletes counts the deletes of the session launcher with ID projectID.
 	gatewayDeletes int
+	// appPolls counts the requests for the app app-1, which is ready from the third on.
+	appPolls int
 }
 
 func newTestEnv(t *testing.T) *testEnv {
@@ -59,6 +62,16 @@ func newTestEnv(t *testing.T) *testEnv {
 		if r.Method == http.MethodDelete && r.URL.Path == "/api/data/session_launchers/"+projectID {
 			env.gatewayDeletes++
 			w.WriteHeader(http.StatusNoContent)
+			return
+		}
+		if r.URL.Path == "/api/data/apps/app-1" {
+			env.appPolls++
+			status := "pending"
+			if env.appPolls >= 3 {
+				status = "ready"
+			}
+			w.Header().Set("Content-Type", "application/json")
+			_, _ = w.Write([]byte(`{"name": "app-1", "project_id": "` + projectID + `", "launcher_id": "` + projectID + `", "status": "` + status + `"}`))
 			return
 		}
 		if r.URL.Path != "/api/data/projects/"+projectID {
@@ -166,6 +179,40 @@ func TestDeleteIsConfirmedOverStatelessHTTP(t *testing.T) {
 	}
 	if res.IsError || asked != 1 || env.gatewayDeletes != 1 {
 		t.Errorf("result %+v after asking %d times and deleting %d times", res, asked, env.gatewayDeletes)
+	}
+}
+
+// TestWaitReportsProgressOverStatelessHTTP covers progress notifications without a session: they are
+// sent on the SSE stream of the call, before its result.
+func TestWaitReportsProgressOverStatelessHTTP(t *testing.T) {
+	oldInterval := toolkit.PollInterval
+	toolkit.PollInterval = 10 * time.Millisecond
+	t.Cleanup(func() { toolkit.PollInterval = oldInterval })
+	env := newTestEnv(t)
+	ctx := context.Background()
+	var progress []string
+	client := mcp.NewClient(&mcp.Implementation{Name: "test", Version: "1"}, &mcp.ClientOptions{
+		ProgressNotificationHandler: func(_ context.Context, req *mcp.ProgressNotificationClientRequest) {
+			progress = append(progress, req.Params.Message)
+		},
+	})
+	httpClient := &http.Client{Transport: headerTransport{"Authorization": "Bearer " + env.token(t)}}
+	c, err := client.Connect(ctx, &mcp.StreamableClientTransport{Endpoint: env.mcpURL, HTTPClient: httpClient, DisableStandaloneSSE: true}, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer func() { _ = c.Close() }()
+	params := &mcp.CallToolParams{Name: "wait_for_app", Arguments: map[string]any{"app_name": "app-1"}}
+	params.SetProgressToken("wait-1")
+	res, err := c.CallTool(ctx, params)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if out, _ := res.StructuredContent.(map[string]any); res.IsError || out["status"] != "ready" {
+		t.Errorf("result = %+v", res)
+	}
+	if len(progress) != 2 || !strings.Contains(progress[0], "`pending`") {
+		t.Errorf("progress = %q, want one message for each pending poll", progress)
 	}
 }
 

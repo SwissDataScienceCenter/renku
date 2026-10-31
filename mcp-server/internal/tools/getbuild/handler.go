@@ -13,8 +13,8 @@ import (
 var tool = mcp.Tool{
 	Name: "get_build",
 	Description: "Get an image build by its ID, including its status: `in_progress`, `succeeded`, " +
-		"`failed` or `cancelled`. Poll every ~15 s until it is no longer `in_progress`; a session can " +
-		"only start once the build succeeded. If it failed, call get_build_logs to find out why.",
+		"`failed` or `cancelled`. To wait while it is `in_progress`, call wait_for_build; a session " +
+		"can only start once the build succeeded. If it failed, call get_build_logs to find out why.",
 	Annotations: &mcp.ToolAnnotations{ReadOnlyHint: true},
 }
 

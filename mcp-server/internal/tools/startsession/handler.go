@@ -18,7 +18,7 @@ var tool = mcp.Tool{
 		"that launcher is already running. Usually only `launcher_id` is needed; get it from " +
 		"list_project_session_launchers. The response contains the session name and its URL, " +
 		"which the user can open in a browser once the status is `running`. Starting can take " +
-		"a few minutes; poll with get_session. To use another resource class than the launcher's " +
+		"a few minutes; follow it with wait_for_session. To use another resource class than the launcher's " +
 		"default, pick one with list_resource_pools.\n\n" +
 		"This also starts a job from a launcher whose `launcher_type` is `non-interactive`. A job " +
 		"needs a `submission_id`, and can override the command and args of the container.\n\n" +

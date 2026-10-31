@@ -8,12 +8,15 @@ import (
 	"net/http/httptest"
 	"slices"
 	"strings"
+	"sync"
 	"testing"
+	"time"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/auth"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/renkuapi"
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/toolkit"
 )
 
 const ulid = "01J0000000000000000000000C"
@@ -85,6 +88,8 @@ func fakeGateway(t *testing.T) (string, *[]recordedRequest) {
 			_, _ = w.Write([]byte(sessionJSON))
 		case "GET /api/data/sessions/session-1":
 			_, _ = w.Write([]byte(sessionJSON))
+		case "GET /api/data/sessions/job-1":
+			_, _ = w.Write([]byte(strings.NewReplacer(`"starting"`, `"succeeded"`, `"interactive"`, `"non-interactive"`).Replace(sessionJSON)))
 		case "GET /api/data/sessions/session-1/logs":
 			_, _ = w.Write([]byte(`{"amalthea-session": "line 1\nline 2"}`))
 		case "POST /api/data/projects":
@@ -206,6 +211,9 @@ func TestEveryToolSendsTheExpectedRequest(t *testing.T) {
 		{"get_build_logs", map[string]any{"build_id": ulid, "max_lines": 100}, "GET", "/api/data/builds/" + ulid + "/logs", "max_lines=100", ""},
 		{"list_apps", map[string]any{"project_id": ulid}, "GET", "/api/data/apps", "project_id=" + ulid, ""},
 		{"get_app", map[string]any{"app_name": "app-1"}, "GET", "/api/data/apps/app-1", "", ""},
+		{"wait_for_session", map[string]any{"session_id": "job-1"}, "GET", "/api/data/sessions/job-1", "", ""},
+		{"wait_for_build", map[string]any{"build_id": ulid}, "GET", "/api/data/builds/" + ulid, "", ""},
+		{"wait_for_app", map[string]any{"app_name": "app-1"}, "GET", "/api/data/apps/app-1", "", ""},
 		{"get_app_logs", map[string]any{"app_name": "app-1"}, "GET", "/api/data/apps/app-1/logs", "", ""},
 	}
 	apiURL, _ := fakeGateway(t)
@@ -300,6 +308,35 @@ func TestGetBuildReturnsTheStatus(t *testing.T) {
 	out, _ := res.StructuredContent.(map[string]any)
 	if out["status"] != "failed" || out["error_reason"] != "StepOutOfMemory" {
 		t.Errorf("structured content = %v", res.StructuredContent)
+	}
+}
+
+// TestWaitForSessionReportsProgress waits for session-1, which stays `starting`.
+func TestWaitForSessionReportsProgress(t *testing.T) {
+	oldMax, oldInterval := toolkit.MaxWait, toolkit.PollInterval
+	toolkit.MaxWait, toolkit.PollInterval = 100*time.Millisecond, 10*time.Millisecond
+	t.Cleanup(func() { toolkit.MaxWait, toolkit.PollInterval = oldMax, oldInterval })
+	var mu sync.Mutex
+	var messages []string
+	apiURL, _ := fakeGateway(t)
+	c := connectClient(t, apiURL, &mcp.ClientOptions{ProgressNotificationHandler: func(_ context.Context, req *mcp.ProgressNotificationClientRequest) {
+		mu.Lock()
+		defer mu.Unlock()
+		messages = append(messages, req.Params.Message)
+	}})
+	params := &mcp.CallToolParams{Name: "wait_for_session", Arguments: map[string]any{"session_id": "session-1"}}
+	params.SetProgressToken("wait-1")
+	res, err := c.CallTool(context.Background(), params)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if res.IsError || !strings.Contains(text(res), "Call wait_for_session again") {
+		t.Errorf("result = %q", text(res))
+	}
+	mu.Lock()
+	defer mu.Unlock()
+	if len(messages) == 0 || !strings.Contains(messages[0], "`starting`") {
+		t.Errorf("progress messages = %q", messages)
 	}
 }
 

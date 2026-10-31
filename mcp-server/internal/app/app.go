@@ -33,7 +33,9 @@ const instructions = "Tools to work with Renku on behalf of the logged in user: 
 	"the smallest resource class that matches.\n" +
 	"- Confirm with the user before deleting anything, stopping a session or changing a project's visibility. " +
 	"Some clients ask the user themselves; if the user declines there, do not retry.\n" +
-	"- There are no wait tools. Poll get_session, get_build or get_app to follow progress."
+	"- To wait for a session, job, build or app, call wait_for_session, wait_for_build or wait_for_app " +
+	"rather than polling the get_ tools. They return after about a minute; call them again while the status " +
+	"has not changed."
 
 // Options configures the MCP server.
 type Options struct {

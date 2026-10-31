@@ -29,7 +29,7 @@ var tool = mcp.Tool{
 		"list_environments. Show the user the list and let them pick.\n" +
 		"2. Build from code: `environment_image_source` `build` with `repository`, `builder_variant` " +
 		"and `frontend_variant`. After creating the launcher, find the build with " +
-		"list_environment_builds and poll get_build until it succeeded before starting a session.\n" +
+		"list_environment_builds and wait for it with wait_for_build before starting a session.\n" +
 		"3. Custom image: `environment_image_source` `image` with `container_image`, and the `port`, " +
 		"`uid`, `gid` and directories the image needs.\n\n" +
 		"Apps (`launcher_type` `app`), with option 2 or 3:\n" +

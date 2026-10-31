@@ -203,13 +203,19 @@ func ListResult[T any](items []T, h http.Header) (*mcp.CallToolResult, any, erro
 		// The SDK returns out as JSON text.
 		return nil, out, nil
 	}
+	return ResultWithNote(out, out.Pagination.Summary())
+}
+
+// ResultWithNote returns out, the output of a tool, as JSON text followed by note, which tells the
+// model what to do next.
+func ResultWithNote(out any, note string) (*mcp.CallToolResult, any, error) {
 	text, err := json.Marshal(out)
 	if err != nil {
 		return nil, nil, fmt.Errorf("encoding the result: %w", err)
 	}
 	res := &mcp.CallToolResult{Content: []mcp.Content{
 		&mcp.TextContent{Text: string(text)},
-		&mcp.TextContent{Text: out.Pagination.Summary()},
+		&mcp.TextContent{Text: note},
 	}}
 	return res, out, nil
 }

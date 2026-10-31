@@ -45,6 +45,9 @@ import (
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/unlinkdataconnector"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/updateproject"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/updatesessionlauncher"
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/waitforapp"
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/waitforbuild"
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/waitforsession"
 )
 
 var all = []func(*mcp.Server, *renkuapi.Clients){
@@ -75,15 +78,18 @@ var all = []func(*mcp.Server, *renkuapi.Clients){
 	listenvironments.Register,
 	listenvironmentbuilds.Register,
 	getbuild.Register,
+	waitforbuild.Register,
 	getbuildlogs.Register,
 	listresourcepools.Register,
 	listsessions.Register,
 	startsession.Register,
 	getsession.Register,
+	waitforsession.Register,
 	getsessionlogs.Register,
 	stopsession.Register,
 	listapps.Register,
 	getapp.Register,
+	waitforapp.Register,
 	getapplogs.Register,
 	launchapp.Register,
 	deleteapp.Register,

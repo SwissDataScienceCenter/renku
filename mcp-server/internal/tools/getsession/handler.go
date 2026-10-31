@@ -12,10 +12,10 @@ import (
 
 var tool = mcp.Tool{
 	Name: "get_session",
-	Description: "Get a session by its name, including its status and URL. Use it to wait for a started " +
-		"session to become `running`: call it about every 10 seconds until the status is `running` " +
-		"or `failed`. Give the user the `external_url` of the session, which is its page in the " +
-		"Renku UI, never `url`. Only if `external_url` is null, give them " +
+	Description: "Get a session by its name, including its status and URL. To wait for a started " +
+		"session to become `running`, or for a job to end, call wait_for_session instead of polling " +
+		"this. Give the user the `external_url` of the session, which is its page in the Renku UI, " +
+		"never `url`. Only if `external_url` is null, give them " +
 		"{renku_url}/p/<namespace>/<project_slug>/sessions/show/<session_name>.",
 	Annotations: &mcp.ToolAnnotations{ReadOnlyHint: true},
 }
