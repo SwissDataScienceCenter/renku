@@ -13,8 +13,9 @@ import (
 
 var tool = mcp.Tool{
 	Name: "stop_session",
-	Description: "Stop and fully remove a session. Unsaved work in the session is lost, so confirm with " +
-		"the user before calling this.",
+	Description: "Stop and fully remove a session. Unsaved work in the session is lost. The user is " +
+		"asked to confirm when the client supports that; otherwise confirm with the user before " +
+		"calling this.",
 	Annotations: &mcp.ToolAnnotations{DestructiveHint: new(true), IdempotentHint: true},
 }
 
@@ -24,6 +25,9 @@ type input struct {
 
 func handler(api *renkuapi.Clients) mcp.ToolHandlerFor[input, any] {
 	return func(ctx context.Context, req *mcp.CallToolRequest, in input) (*mcp.CallToolResult, any, error) {
+		if res, err := toolkit.Confirm(req, "Stop session "+in.SessionID+", losing unsaved work in it"); res != nil || err != nil {
+			return res, nil, err
+		}
 		res, err := api.Notebooks.DeleteSessionsSessionIdWithResponse(ctx, in.SessionID, toolkit.CallerHeaders(ctx, req))
 		if err != nil {
 			return nil, nil, toolkit.RequestFailed(err)

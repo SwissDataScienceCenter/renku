@@ -18,7 +18,8 @@ var tool = mcp.Tool{
 		"that launcher is already running. Usually only `launcher_id` is needed; get it from " +
 		"list_project_session_launchers. The response contains the session name and its URL, " +
 		"which the user can open in a browser once the status is `running`. Starting can take " +
-		"a few minutes; poll with get_session.\n\n" +
+		"a few minutes; poll with get_session. To use another resource class than the launcher's " +
+		"default, pick one with list_resource_pools.\n\n" +
 		"This also starts a job from a launcher whose `launcher_type` is `non-interactive`. A job " +
 		"needs a `submission_id`, and can override the command and args of the container.\n\n" +
 		"Starting is idempotent: `created` is false if a matching session already existed and was " +
@@ -29,7 +30,7 @@ var tool = mcp.Tool{
 
 type input struct {
 	LauncherID         string   `json:"launcher_id" jsonschema:"The session launcher ID, a ULID."`
-	ResourceClassID    *int     `json:"resource_class_id,omitempty" jsonschema:"Use this resource class instead of the launcher's default."`
+	ResourceClassID    *int     `json:"resource_class_id,omitempty" jsonschema:"Use this resource class, from list_resource_pools, instead of the launcher's default."`
 	DiskStorage        *int     `json:"disk_storage,omitempty" jsonschema:"The disk storage of the session in GB, instead of the launcher's default."`
 	SubmissionID       *string  `json:"submission_id,omitempty" jsonschema:"Required for jobs: a unique ID for this submission, matching ^[a-z][-0-9a-z]{3,19}$. Reuse it to retry the same submission."`
 	JobCommandOverride []string `json:"job_command_override,omitempty" jsonschema:"Jobs only: replaces the command of the container."`

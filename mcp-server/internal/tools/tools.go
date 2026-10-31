@@ -6,6 +6,11 @@ import (
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/renkuapi"
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/createproject"
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/createsessionlauncher"
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/deleteapp"
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/deletedataconnector"
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/deletesessionlauncher"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/getcurrentuser"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/getdataconnector"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/getgroup"
@@ -14,6 +19,8 @@ import (
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/getsession"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/getsessionlauncher"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/getsessionlogs"
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/launchapp"
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/linkdataconnector"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/listdataconnectors"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/listgroups"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/listprojectdataconnectorlinks"
@@ -23,6 +30,9 @@ import (
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/search"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/startsession"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/stopsession"
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/unlinkdataconnector"
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/updateproject"
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/updatesessionlauncher"
 )
 
 var all = []func(*mcp.Server, *renkuapi.Clients){
@@ -31,18 +41,28 @@ var all = []func(*mcp.Server, *renkuapi.Clients){
 	listprojects.Register,
 	getproject.Register,
 	getprojectbyslug.Register,
+	createproject.Register,
+	updateproject.Register,
 	listgroups.Register,
 	getgroup.Register,
 	listdataconnectors.Register,
 	getdataconnector.Register,
 	listprojectdataconnectorlinks.Register,
+	linkdataconnector.Register,
+	unlinkdataconnector.Register,
+	deletedataconnector.Register,
 	listprojectsessionlaunchers.Register,
 	getsessionlauncher.Register,
+	createsessionlauncher.Register,
+	updatesessionlauncher.Register,
+	deletesessionlauncher.Register,
 	listsessions.Register,
 	startsession.Register,
 	getsession.Register,
 	getsessionlogs.Register,
 	stopsession.Register,
+	launchapp.Register,
+	deleteapp.Register,
 }
 
 // Register adds all tools to s. They call the Renku API with api.

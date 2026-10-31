@@ -35,6 +35,8 @@ type testEnv struct {
 	gatewayRealIP string
 	// gatewayRequestID is the X-Request-Id header the fake gateway received last.
 	gatewayRequestID string
+	// gatewayDeletes counts the deletes of the session launcher with ID projectID.
+	gatewayDeletes int
 }
 
 func newTestEnv(t *testing.T) *testEnv {
@@ -54,6 +56,11 @@ func newTestEnv(t *testing.T) *testEnv {
 		env.gatewayAuth = r.Header.Get("Authorization")
 		env.gatewayRealIP = r.Header.Get("X-Real-IP")
 		env.gatewayRequestID = r.Header.Get("X-Request-Id")
+		if r.Method == http.MethodDelete && r.URL.Path == "/api/data/session_launchers/"+projectID {
+			env.gatewayDeletes++
+			w.WriteHeader(http.StatusNoContent)
+			return
+		}
 		if r.URL.Path != "/api/data/projects/"+projectID {
 			w.WriteHeader(http.StatusNotFound)
 			return
@@ -132,6 +139,54 @@ func TestEndToEnd(t *testing.T) {
 	}
 	if env.gatewayRequestID != "req-1" {
 		t.Errorf("gateway received X-Request-Id %q, want the ID of the HTTP request", env.gatewayRequestID)
+	}
+}
+
+// TestDeleteIsConfirmedOverStatelessHTTP covers asking the user without a session: the tool returns
+// an input request and the client calls it again with the answer.
+func TestDeleteIsConfirmedOverStatelessHTTP(t *testing.T) {
+	env := newTestEnv(t)
+	ctx := context.Background()
+	var asked int
+	client := mcp.NewClient(&mcp.Implementation{Name: "test", Version: "1"}, &mcp.ClientOptions{
+		ElicitationHandler: func(context.Context, *mcp.ElicitRequest) (*mcp.ElicitResult, error) {
+			asked++
+			return &mcp.ElicitResult{Action: "accept", Content: map[string]any{"confirm": true}}, nil
+		},
+	})
+	httpClient := &http.Client{Transport: headerTransport{"Authorization": "Bearer " + env.token(t)}}
+	c, err := client.Connect(ctx, &mcp.StreamableClientTransport{Endpoint: env.mcpURL, HTTPClient: httpClient, DisableStandaloneSSE: true}, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer func() { _ = c.Close() }()
+	res, err := c.CallTool(ctx, &mcp.CallToolParams{Name: "delete_session_launcher", Arguments: map[string]any{"launcher_id": projectID}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if res.IsError || asked != 1 || env.gatewayDeletes != 1 {
+		t.Errorf("result %+v after asking %d times and deleting %d times", res, asked, env.gatewayDeletes)
+	}
+}
+
+// TestOldClientIsNotAskedOverStatelessHTTP covers clients older than protocol 2026-07-28, which a
+// stateless server cannot send an elicitation request to. The delete goes ahead without asking.
+func TestOldClientIsNotAskedOverStatelessHTTP(t *testing.T) {
+	env := newTestEnv(t)
+	body := `{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"delete_session_launcher","arguments":{"launcher_id":"` + projectID + `"}}}`
+	req, _ := http.NewRequest(http.MethodPost, env.mcpURL, strings.NewReader(body))
+	req.Header.Set("Authorization", "Bearer "+env.token(t))
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Accept", "application/json, text/event-stream")
+	req.Header.Set("MCP-Protocol-Version", "2025-06-18")
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer func() { _ = res.Body.Close() }()
+	raw, _ := io.ReadAll(res.Body)
+	if !strings.Contains(string(raw), "Deleted session launcher") || env.gatewayDeletes != 1 {
+		t.Errorf("status %d, response %s after deleting %d times", res.StatusCode, raw, env.gatewayDeletes)
 	}
 }
 

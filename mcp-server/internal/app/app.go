@@ -24,6 +24,17 @@ const MCPPath = "/mcp"
 
 const maxRequestBytes = 1 << 20
 
+// instructions holds only rules that apply across tools; guidance for one tool is in its description.
+const instructions = "Tools to work with Renku on behalf of the logged in user: projects, groups, data connectors, " +
+	"session launchers, sessions, jobs and apps.\n\n" +
+	"- If a tool fails with status 401, the user's login is no longer valid. Stop and ask the user to " +
+	"reconnect the Renku MCP server in their client; do not retry.\n" +
+	"- Call list_resource_pools before creating a session launcher or starting a session or job, and use " +
+	"the smallest resource class that matches.\n" +
+	"- Confirm with the user before deleting anything, stopping a session or changing a project's visibility. " +
+	"Some clients ask the user themselves; if the user declines there, do not retry.\n" +
+	"- There are no wait tools. Poll get_session, get_build or get_app to follow progress."
+
 // Options configures the MCP server.
 type Options struct {
 	// APIURL is the base URL of the Renku data API, e.g. http://renku-gateway/api/data.
@@ -47,7 +58,7 @@ func NewMCPServer(opts Options) (*sdkmcp.Server, error) {
 		return nil, fmt.Errorf("invalid rate limit of %d tool calls per minute with bursts of %d, both must be positive", opts.ToolCallsPerMinute, opts.ToolCallBurst)
 	}
 	s := sdkmcp.NewServer(&sdkmcp.Implementation{Name: "renku", Version: opts.Version}, &sdkmcp.ServerOptions{
-		Instructions: "Tools to explore Renku projects, groups and data connectors and to start, inspect and stop Renku sessions on behalf of the logged in user.",
+		Instructions: instructions,
 		// The tool list never changes and the server does not log to the client.
 		Capabilities: &sdkmcp.ServerCapabilities{Tools: &sdkmcp.ToolCapabilities{}},
 	})
@@ -67,9 +78,11 @@ func NewMCPServer(opts Options) (*sdkmcp.Server, error) {
 
 // NewHTTPHandler serves the MCP endpoint behind authentication, the protected resource metadata and health checks.
 func NewHTTPHandler(s *sdkmcp.Server, authenticator *auth.Authenticator, logger *slog.Logger) http.Handler {
+	// Without JSONResponse, responses are SSE streams, which can carry notifications about the call
+	// before its result. Stateless servers cannot send requests: tools ask the user with input requests
+	// in their result instead, see toolkit.Confirm.
 	mcpHandler := sdkmcp.NewStreamableHTTPHandler(func(*http.Request) *sdkmcp.Server { return s }, &sdkmcp.StreamableHTTPOptions{
 		Stateless:           true,
-		JSONResponse:        true,
 		Logger:              logger,
 		MaxRequestBodyBytes: maxRequestBytes,
 	})

@@ -53,6 +53,11 @@ func LogToolCalls(opts LogOptions) sdkmcp.Middleware {
 				return result, err
 			}
 			res, _ := result.(*sdkmcp.CallToolResult)
+			if res != nil && res.InputRequests != nil {
+				// The tool asks the user, e.g. to confirm a delete, and is called again with the answer.
+				opts.Logger.Info("tool call", append(attrs, "outcome", "input_required")...)
+				return result, err
+			}
 			if res == nil || !res.IsError {
 				opts.Logger.Info("tool call", append(attrs, "outcome", "ok")...)
 				return result, err

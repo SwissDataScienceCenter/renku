@@ -23,9 +23,17 @@ const sessionJSON = `{"name": "session-1", "image": "renku/renkulab-py", "launch
 	"started": null, "status": {"state": "starting", "ready_containers": 0, "total_containers": 2},
 	"url": "https://renku.example.org/sessions/session-1"}`
 
+const projectJSON = `{"id": "` + ulid + `", "name": "climate", "namespace": "my-group", "slug": "climate",
+	"visibility": "private", "created_by": "user-1", "creation_date": "2023-11-01T17:32:28Z", "etag": "abc"}`
+
+const launcherJSON = `{"id": "` + ulid + `", "project_id": "` + ulid + `", "name": "python", "launcher_type": "interactive",
+	"creation_date": "2023-11-01T17:32:28Z", "resource_class_id": 1, "environment": {"id": "` + ulid + `",
+	"name": "python", "environment_kind": "GLOBAL", "environment_image_source": "image",
+	"container_image": "renku/renkulab-py", "default_url": "/lab", "uid": 1000, "gid": 1000, "port": 8080}}`
+
 type recordedRequest struct {
-	method, path, query, authorization, contentType string
-	body                                            []byte
+	method, path, query, authorization, contentType, ifMatch string
+	body                                                     []byte
 }
 
 // fakeGateway answers every request with the response of the route, or {} for routes not listed.
@@ -36,7 +44,7 @@ func fakeGateway(t *testing.T) (string, *[]recordedRequest) {
 		body, _ := io.ReadAll(r.Body)
 		requests = append(requests, recordedRequest{
 			method: r.Method, path: r.URL.EscapedPath(), query: r.URL.RawQuery, body: body,
-			authorization: r.Header.Get("Authorization"), contentType: r.Header.Get("Content-Type"),
+			authorization: r.Header.Get("Authorization"), contentType: r.Header.Get("Content-Type"), ifMatch: r.Header.Get("If-Match"),
 		})
 		w.Header().Set("Content-Type", "application/json")
 		switch r.Method + " " + r.URL.Path {
@@ -69,7 +77,26 @@ func fakeGateway(t *testing.T) (string, *[]recordedRequest) {
 			_, _ = w.Write([]byte(sessionJSON))
 		case "GET /api/data/sessions/session-1/logs":
 			_, _ = w.Write([]byte(`{"amalthea-session": "line 1\nline 2"}`))
-		case "DELETE /api/data/sessions/session-1":
+		case "POST /api/data/projects":
+			w.WriteHeader(http.StatusCreated)
+			_, _ = w.Write([]byte(projectJSON))
+		case "PATCH /api/data/projects/" + ulid:
+			_, _ = w.Write([]byte(projectJSON))
+		case "POST /api/data/data_connectors/" + ulid + "/project_links":
+			w.WriteHeader(http.StatusCreated)
+			_, _ = w.Write([]byte(`{"id": "` + ulid + `", "data_connector_id": "` + ulid + `", "project_id": "` + ulid + `",
+				"created_by": "user-1", "creation_date": "2023-11-01T17:32:28Z"}`))
+		case "POST /api/data/session_launchers":
+			w.WriteHeader(http.StatusCreated)
+			_, _ = w.Write([]byte(launcherJSON))
+		case "PATCH /api/data/session_launchers/" + ulid:
+			_, _ = w.Write([]byte(launcherJSON))
+		case "POST /api/data/apps":
+			w.WriteHeader(http.StatusCreated)
+			_, _ = w.Write([]byte(`{"name": "app-1", "project_id": "` + ulid + `", "launcher_id": "` + ulid + `", "status": "pending"}`))
+		case "DELETE /api/data/sessions/session-1", "DELETE /api/data/data_connectors/" + ulid,
+			"DELETE /api/data/data_connectors/" + ulid + "/project_links/" + ulid, "DELETE /api/data/session_launchers/" + ulid,
+			"DELETE /api/data/apps/app-1":
 			w.WriteHeader(http.StatusNoContent)
 		default:
 			_, _ = w.Write([]byte(`{}`))
@@ -81,6 +108,12 @@ func fakeGateway(t *testing.T) (string, *[]recordedRequest) {
 
 // connect serves all tools to an MCP client, which calls them as the user user-1.
 func connect(t *testing.T, apiURL string) *mcp.ClientSession {
+	t.Helper()
+	return connectClient(t, apiURL, nil)
+}
+
+// connectClient is connect with a client created with opts.
+func connectClient(t *testing.T, apiURL string, opts *mcp.ClientOptions) *mcp.ClientSession {
 	t.Helper()
 	api, err := renkuapi.NewClients(apiURL, http.DefaultClient)
 	if err != nil {
@@ -95,7 +128,7 @@ func connect(t *testing.T, apiURL string) *mcp.ClientSession {
 		t.Fatal(err)
 	}
 	t.Cleanup(func() { _ = serverSession.Close() })
-	client := mcp.NewClient(&mcp.Implementation{Name: "test-client", Version: "dev"}, nil)
+	client := mcp.NewClient(&mcp.Implementation{Name: "test-client", Version: "dev"}, opts)
 	session, err := client.Connect(ctx, clientTransport, nil)
 	if err != nil {
 		t.Fatal(err)
@@ -142,6 +175,16 @@ func TestEveryToolSendsTheExpectedRequest(t *testing.T) {
 		{"get_session", map[string]any{"session_id": "session-1"}, "GET", "/api/data/sessions/session-1", "", ""},
 		{"get_session_logs", map[string]any{"session_id": "session-1", "max_lines": 1000000}, "GET", "/api/data/sessions/session-1/logs", "max_lines=1000000", ""},
 		{"stop_session", map[string]any{"session_id": "session-1"}, "DELETE", "/api/data/sessions/session-1", "", ""},
+		{"create_project", map[string]any{"name": "Climate", "namespace": "my-group", "repositories": []string{"https://github.com/org/repo.git"}}, "POST", "/api/data/projects", "", `{"name":"Climate","namespace":"my-group","repositories":["https://github.com/org/repo.git"]}`},
+		{"update_project", map[string]any{"project_id": ulid, "etag": "abc", "keywords": []string{}}, "PATCH", "/api/data/projects/" + ulid, "", `{"keywords":[]}`},
+		{"link_data_connector", map[string]any{"data_connector_id": ulid, "project_id": ulid}, "POST", "/api/data/data_connectors/" + ulid + "/project_links", "", `{"project_id":"` + ulid + `"}`},
+		{"unlink_data_connector", map[string]any{"data_connector_id": ulid, "link_id": ulid}, "DELETE", "/api/data/data_connectors/" + ulid + "/project_links/" + ulid, "", ""},
+		{"delete_data_connector", map[string]any{"data_connector_id": ulid}, "DELETE", "/api/data/data_connectors/" + ulid, "", ""},
+		{"create_session_launcher", map[string]any{"project_id": ulid, "name": "python", "resource_class_id": 2, "environment": map[string]any{"id": ulid}}, "POST", "/api/data/session_launchers", "", `{"environment":{"id":"` + ulid + `"},"launcher_type":"interactive","name":"python","project_id":"` + ulid + `","resource_class_id":2}`},
+		{"update_session_launcher", map[string]any{"launcher_id": ulid, "environment": map[string]any{"strip_path_prefix": true}}, "PATCH", "/api/data/session_launchers/" + ulid, "", `{"environment":{"strip_path_prefix":true}}`},
+		{"delete_session_launcher", map[string]any{"launcher_id": ulid}, "DELETE", "/api/data/session_launchers/" + ulid, "", ""},
+		{"launch_app", map[string]any{"launcher_id": ulid}, "POST", "/api/data/apps", "", `{"launcher_id":"` + ulid + `"}`},
+		{"delete_app", map[string]any{"app_name": "app-1"}, "DELETE", "/api/data/apps/app-1", "", ""},
 	}
 	apiURL, _ := fakeGateway(t)
 	listed, err := connect(t, apiURL).ListTools(context.Background(), nil)
@@ -236,5 +279,92 @@ func TestMissingRequiredArgumentIsRejected(t *testing.T) {
 	}
 	if len(*requests) != 0 {
 		t.Errorf("invalid calls must not reach the API, got %d requests", len(*requests))
+	}
+}
+
+func TestUpdateProjectSendsTheEtag(t *testing.T) {
+	apiURL, requests := fakeGateway(t)
+	_, err := connect(t, apiURL).CallTool(context.Background(), &mcp.CallToolParams{Name: "update_project", Arguments: map[string]any{"project_id": ulid, "etag": "abc", "name": "New"}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := (*requests)[0].ifMatch; got != "abc" {
+		t.Errorf("If-Match = %q", got)
+	}
+}
+
+// elicitingClient answers every elicitation with action and records the messages.
+func elicitingClient(action string, confirm bool, messages *[]string) *mcp.ClientOptions {
+	return &mcp.ClientOptions{ElicitationHandler: func(_ context.Context, req *mcp.ElicitRequest) (*mcp.ElicitResult, error) {
+		*messages = append(*messages, req.Params.Message)
+		return &mcp.ElicitResult{Action: action, Content: map[string]any{"confirm": confirm}}, nil
+	}}
+}
+
+func TestDeleteAsksTheUserToConfirm(t *testing.T) {
+	tests := []struct {
+		name          string
+		action        string
+		confirm       bool
+		wantRequested bool
+	}{
+		{"accepted", "accept", true, true},
+		{"accepted without confirming", "accept", false, false},
+		{"declined", "decline", false, false},
+		{"cancelled", "cancel", false, false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			apiURL, requests := fakeGateway(t)
+			var messages []string
+			session := connectClient(t, apiURL, elicitingClient(tt.action, tt.confirm, &messages))
+			res, err := session.CallTool(context.Background(), &mcp.CallToolParams{Name: "delete_session_launcher", Arguments: map[string]any{"launcher_id": ulid}})
+			if err != nil {
+				t.Fatal(err)
+			}
+			if len(messages) != 1 || !strings.Contains(messages[0], "Delete session launcher "+ulid) {
+				t.Errorf("elicitation messages = %q", messages)
+			}
+			if requested := len(*requests) == 1; requested != tt.wantRequested {
+				t.Errorf("%d API requests, want the delete sent: %v", len(*requests), tt.wantRequested)
+			}
+			if res.IsError == tt.wantRequested {
+				t.Errorf("result = %q", text(res))
+			}
+			if !tt.wantRequested && !strings.Contains(text(res), "did not agree") {
+				t.Errorf("result = %q", text(res))
+			}
+		})
+	}
+}
+
+func TestClientWithoutElicitationIsNotAsked(t *testing.T) {
+	apiURL, requests := fakeGateway(t)
+	res, err := connect(t, apiURL).CallTool(context.Background(), &mcp.CallToolParams{Name: "delete_app", Arguments: map[string]any{"app_name": "app-1"}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if res.IsError || len(*requests) != 1 {
+		t.Errorf("result = %q after %d requests", text(res), len(*requests))
+	}
+}
+
+func TestChangingVisibilityAsksTheUserToConfirm(t *testing.T) {
+	apiURL, requests := fakeGateway(t)
+	var messages []string
+	session := connectClient(t, apiURL, elicitingClient("decline", false, &messages))
+	// Other changes go ahead without asking.
+	if _, err := session.CallTool(context.Background(), &mcp.CallToolParams{Name: "update_project", Arguments: map[string]any{"project_id": ulid, "etag": "abc", "name": "New"}}); err != nil {
+		t.Fatal(err)
+	}
+	res, err := session.CallTool(context.Background(), &mcp.CallToolParams{Name: "update_project", Arguments: map[string]any{"project_id": ulid, "etag": "abc", "visibility": "public"}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(messages) != 1 || !strings.Contains(messages[0], "public") {
+		t.Errorf("elicitation messages = %q", messages)
+	}
+	if !res.IsError || len(*requests) != 1 {
+		t.Errorf("result = %q after %d requests, want only the first update sent", text(res), len(*requests))
 	}
 }
