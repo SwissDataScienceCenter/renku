@@ -46,7 +46,14 @@ func callHandler(t *testing.T, apiURL string, in input) (*project.Project, error
 	}
 	ctx := auth.WithPrincipal(context.Background(), auth.Principal{Subject: "user-1", Token: "the-token"})
 	_, out, err := handler(api)(ctx, &mcp.CallToolRequest{}, in)
-	return out, err
+	if err != nil {
+		return nil, err
+	}
+	p, ok := out.(*project.Project)
+	if !ok {
+		t.Fatalf("output is a %T", out)
+	}
+	return p, nil
 }
 
 func TestGetProject(t *testing.T) {

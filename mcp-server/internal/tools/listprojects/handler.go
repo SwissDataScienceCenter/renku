@@ -27,8 +27,8 @@ type input struct {
 	PerPage      *int   `json:"per_page,omitempty" jsonschema:"The number of results per page."`
 }
 
-func handler(api *renkuapi.Clients) mcp.ToolHandlerFor[input, *toolkit.List[project.Project]] {
-	return func(ctx context.Context, req *mcp.CallToolRequest, in input) (*mcp.CallToolResult, *toolkit.List[project.Project], error) {
+func handler(api *renkuapi.Clients) mcp.ToolHandlerFor[input, any] {
+	return func(ctx context.Context, req *mcp.CallToolRequest, in input) (*mcp.CallToolResult, any, error) {
 		query := &project.ProjectGetQuery{Page: in.Page, PerPage: in.PerPage}
 		if in.Namespace != "" {
 			query.Namespace = &in.Namespace
@@ -49,5 +49,5 @@ func handler(api *renkuapi.Clients) mcp.ToolHandlerFor[input, *toolkit.List[proj
 
 // Register adds the tool to the mcp server.
 func Register(s *mcp.Server, api *renkuapi.Clients) {
-	toolkit.AddTool(s, &tool, handler(api))
+	mcp.AddTool(s, &tool, handler(api))
 }

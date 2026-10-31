@@ -22,8 +22,8 @@ type input struct {
 	SessionType string `json:"session_type,omitempty" jsonschema:"Only list sessions of this type: interactive or non-interactive (jobs)."`
 }
 
-func handler(api *renkuapi.Clients) mcp.ToolHandlerFor[input, *toolkit.List[notebooks.SessionResponse]] {
-	return func(ctx context.Context, req *mcp.CallToolRequest, in input) (*mcp.CallToolResult, *toolkit.List[notebooks.SessionResponse], error) {
+func handler(api *renkuapi.Clients) mcp.ToolHandlerFor[input, any] {
+	return func(ctx context.Context, req *mcp.CallToolRequest, in input) (*mcp.CallToolResult, any, error) {
 		params := &notebooks.GetSessionsParams{}
 		if in.SessionType != "" {
 			params.SessionType = (*notebooks.SessionType)(&in.SessionType)
@@ -41,5 +41,5 @@ func handler(api *renkuapi.Clients) mcp.ToolHandlerFor[input, *toolkit.List[note
 
 // Register adds the tool to the mcp server.
 func Register(s *mcp.Server, api *renkuapi.Clients) {
-	toolkit.AddTool(s, &tool, handler(api))
+	mcp.AddTool(s, &tool, handler(api))
 }

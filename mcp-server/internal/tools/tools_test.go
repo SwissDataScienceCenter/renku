@@ -122,7 +122,7 @@ type requestCase struct {
 }
 
 // TestEveryToolSendsTheExpectedRequest calls every tool through an MCP client, which also checks
-// the input and output schemas the SDK infers and the outputs against them.
+// the input schemas the SDK infers.
 func TestEveryToolSendsTheExpectedRequest(t *testing.T) {
 	tests := []requestCase{
 		{"get_current_user", nil, "GET", "/api/data/user", "", ""},
@@ -149,6 +149,10 @@ func TestEveryToolSendsTheExpectedRequest(t *testing.T) {
 		t.Fatal(err)
 	}
 	for _, tool := range listed.Tools {
+		// The model reads the JSON text; a schema costs context and fails calls on any mismatch with the spec.
+		if tool.OutputSchema != nil {
+			t.Errorf("tool %s has an output schema", tool.Name)
+		}
 		if !slices.ContainsFunc(tests, func(tt requestCase) bool { return tt.tool == tool.Name }) {
 			t.Errorf("tool %s is not covered", tool.Name)
 		}

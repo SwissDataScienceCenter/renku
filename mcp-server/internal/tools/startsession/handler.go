@@ -41,8 +41,8 @@ type output struct {
 	Session *notebooks.SessionResponse `json:"session"`
 }
 
-func handler(api *renkuapi.Clients) mcp.ToolHandlerFor[input, *output] {
-	return func(ctx context.Context, req *mcp.CallToolRequest, in input) (*mcp.CallToolResult, *output, error) {
+func handler(api *renkuapi.Clients) mcp.ToolHandlerFor[input, any] {
+	return func(ctx context.Context, req *mcp.CallToolRequest, in input) (*mcp.CallToolResult, any, error) {
 		body := notebooks.SessionPostRequest{
 			LauncherId:      in.LauncherID,
 			ResourceClassId: in.ResourceClassID,
@@ -71,5 +71,5 @@ func handler(api *renkuapi.Clients) mcp.ToolHandlerFor[input, *output] {
 
 // Register adds the tool to the mcp server.
 func Register(s *mcp.Server, api *renkuapi.Clients) {
-	toolkit.AddTool(s, &tool, handler(api))
+	mcp.AddTool(s, &tool, handler(api))
 }

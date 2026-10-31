@@ -7,7 +7,6 @@ import (
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/renkuapi"
-	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/renkuapi/namespace"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/toolkit"
 )
 
@@ -21,8 +20,8 @@ type input struct {
 	GroupSlug string `json:"group_slug" jsonschema:"The slug of the group, as returned by list_groups."`
 }
 
-func handler(api *renkuapi.Clients) mcp.ToolHandlerFor[input, *namespace.GroupResponse] {
-	return func(ctx context.Context, req *mcp.CallToolRequest, in input) (*mcp.CallToolResult, *namespace.GroupResponse, error) {
+func handler(api *renkuapi.Clients) mcp.ToolHandlerFor[input, any] {
+	return func(ctx context.Context, req *mcp.CallToolRequest, in input) (*mcp.CallToolResult, any, error) {
 		res, err := api.Namespace.GetGroupsGroupSlugWithResponse(ctx, in.GroupSlug, toolkit.CallerHeaders(ctx, req))
 		if err != nil {
 			return nil, nil, toolkit.RequestFailed(err)
@@ -36,5 +35,5 @@ func handler(api *renkuapi.Clients) mcp.ToolHandlerFor[input, *namespace.GroupRe
 
 // Register adds the tool to the mcp server.
 func Register(s *mcp.Server, api *renkuapi.Clients) {
-	toolkit.AddTool(s, &tool, handler(api))
+	mcp.AddTool(s, &tool, handler(api))
 }

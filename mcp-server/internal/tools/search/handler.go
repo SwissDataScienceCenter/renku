@@ -28,8 +28,8 @@ type input struct {
 	PerPage       *int   `json:"per_page,omitempty" jsonschema:"The number of results per page."`
 }
 
-func handler(api *renkuapi.Clients) mcp.ToolHandlerFor[input, *search.SearchResult] {
-	return func(ctx context.Context, req *mcp.CallToolRequest, in input) (*mcp.CallToolResult, *search.SearchResult, error) {
+func handler(api *renkuapi.Clients) mcp.ToolHandlerFor[input, any] {
+	return func(ctx context.Context, req *mcp.CallToolRequest, in input) (*mcp.CallToolResult, any, error) {
 		query := &search.SearchQuery{Q: &in.Q, Page: in.Page, PerPage: in.PerPage}
 		if in.IncludeCounts {
 			query.IncludeCounts = &in.IncludeCounts
@@ -48,5 +48,5 @@ func handler(api *renkuapi.Clients) mcp.ToolHandlerFor[input, *search.SearchResu
 
 // Register adds the tool to the mcp server.
 func Register(s *mcp.Server, api *renkuapi.Clients) {
-	toolkit.AddTool(s, &tool, handler(api))
+	mcp.AddTool(s, &tool, handler(api))
 }

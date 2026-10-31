@@ -24,8 +24,8 @@ type input struct {
 	PerPage      *int `json:"per_page,omitempty" jsonschema:"The number of results per page."`
 }
 
-func handler(api *renkuapi.Clients) mcp.ToolHandlerFor[input, *toolkit.List[namespace.GroupResponse]] {
-	return func(ctx context.Context, req *mcp.CallToolRequest, in input) (*mcp.CallToolResult, *toolkit.List[namespace.GroupResponse], error) {
+func handler(api *renkuapi.Clients) mcp.ToolHandlerFor[input, any] {
+	return func(ctx context.Context, req *mcp.CallToolRequest, in input) (*mcp.CallToolResult, any, error) {
 		params := &namespace.GetGroupsParams{Page: in.Page, PerPage: in.PerPage}
 		if in.DirectMember {
 			params.DirectMember = &in.DirectMember
@@ -43,5 +43,5 @@ func handler(api *renkuapi.Clients) mcp.ToolHandlerFor[input, *toolkit.List[name
 
 // Register adds the tool to the mcp server.
 func Register(s *mcp.Server, api *renkuapi.Clients) {
-	toolkit.AddTool(s, &tool, handler(api))
+	mcp.AddTool(s, &tool, handler(api))
 }

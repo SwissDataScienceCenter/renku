@@ -7,7 +7,6 @@ import (
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/renkuapi"
-	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/renkuapi/notebooks"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/toolkit"
 )
 
@@ -25,8 +24,8 @@ type input struct {
 	SessionID string `json:"session_id" jsonschema:"The session name, as returned by start_session or list_sessions."`
 }
 
-func handler(api *renkuapi.Clients) mcp.ToolHandlerFor[input, *notebooks.SessionResponse] {
-	return func(ctx context.Context, req *mcp.CallToolRequest, in input) (*mcp.CallToolResult, *notebooks.SessionResponse, error) {
+func handler(api *renkuapi.Clients) mcp.ToolHandlerFor[input, any] {
+	return func(ctx context.Context, req *mcp.CallToolRequest, in input) (*mcp.CallToolResult, any, error) {
 		res, err := api.Notebooks.GetSessionsSessionIdWithResponse(ctx, in.SessionID, toolkit.CallerHeaders(ctx, req))
 		if err != nil {
 			return nil, nil, toolkit.RequestFailed(err)
@@ -40,5 +39,5 @@ func handler(api *renkuapi.Clients) mcp.ToolHandlerFor[input, *notebooks.Session
 
 // Register adds the tool to the mcp server.
 func Register(s *mcp.Server, api *renkuapi.Clients) {
-	toolkit.AddTool(s, &tool, handler(api))
+	mcp.AddTool(s, &tool, handler(api))
 }

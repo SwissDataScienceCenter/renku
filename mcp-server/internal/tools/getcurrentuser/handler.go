@@ -7,7 +7,6 @@ import (
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/renkuapi"
-	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/renkuapi/users"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/toolkit"
 )
 
@@ -21,8 +20,8 @@ var tool = mcp.Tool{
 
 type input struct{}
 
-func handler(api *renkuapi.Clients) mcp.ToolHandlerFor[input, *users.SelfUserInfo] {
-	return func(ctx context.Context, req *mcp.CallToolRequest, _ input) (*mcp.CallToolResult, *users.SelfUserInfo, error) {
+func handler(api *renkuapi.Clients) mcp.ToolHandlerFor[input, any] {
+	return func(ctx context.Context, req *mcp.CallToolRequest, _ input) (*mcp.CallToolResult, any, error) {
 		res, err := api.Users.GetUserWithResponse(ctx, toolkit.CallerHeaders(ctx, req))
 		if err != nil {
 			return nil, nil, toolkit.RequestFailed(err)
@@ -36,5 +35,5 @@ func handler(api *renkuapi.Clients) mcp.ToolHandlerFor[input, *users.SelfUserInf
 
 // Register adds the tool to the mcp server.
 func Register(s *mcp.Server, api *renkuapi.Clients) {
-	toolkit.AddTool(s, &tool, handler(api))
+	mcp.AddTool(s, &tool, handler(api))
 }

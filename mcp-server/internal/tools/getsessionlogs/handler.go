@@ -24,8 +24,8 @@ type input struct {
 	MaxLines  *int   `json:"max_lines,omitempty" jsonschema:"The maximum number of most recent lines to return for each container."`
 }
 
-func handler(api *renkuapi.Clients) mcp.ToolHandlerFor[input, notebooks.SessionLogsResponse] {
-	return func(ctx context.Context, req *mcp.CallToolRequest, in input) (*mcp.CallToolResult, notebooks.SessionLogsResponse, error) {
+func handler(api *renkuapi.Clients) mcp.ToolHandlerFor[input, any] {
+	return func(ctx context.Context, req *mcp.CallToolRequest, in input) (*mcp.CallToolResult, any, error) {
 		params := &notebooks.GetSessionsSessionIdLogsParams{MaxLines: in.MaxLines}
 		res, err := api.Notebooks.GetSessionsSessionIdLogsWithResponse(ctx, in.SessionID, params, toolkit.CallerHeaders(ctx, req))
 		if err != nil {
@@ -40,5 +40,5 @@ func handler(api *renkuapi.Clients) mcp.ToolHandlerFor[input, notebooks.SessionL
 
 // Register adds the tool to the mcp server.
 func Register(s *mcp.Server, api *renkuapi.Clients) {
-	toolkit.AddTool(s, &tool, handler(api))
+	mcp.AddTool(s, &tool, handler(api))
 }

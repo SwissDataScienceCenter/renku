@@ -25,8 +25,8 @@ type input struct {
 	WithDocumentation bool   `json:"with_documentation,omitempty" jsonschema:"Also return the project documentation."`
 }
 
-func handler(api *renkuapi.Clients) mcp.ToolHandlerFor[input, *project.Project] {
-	return func(ctx context.Context, req *mcp.CallToolRequest, in input) (*mcp.CallToolResult, *project.Project, error) {
+func handler(api *renkuapi.Clients) mcp.ToolHandlerFor[input, any] {
+	return func(ctx context.Context, req *mcp.CallToolRequest, in input) (*mcp.CallToolResult, any, error) {
 		params := &project.GetNamespacesNamespaceProjectsSlugParams{WithDocumentation: &in.WithDocumentation}
 		res, err := api.Project.GetNamespacesNamespaceProjectsSlugWithResponse(ctx, in.Namespace, in.Slug, params, toolkit.CallerHeaders(ctx, req))
 		if err != nil {
@@ -41,5 +41,5 @@ func handler(api *renkuapi.Clients) mcp.ToolHandlerFor[input, *project.Project] 
 
 // Register adds the tool to the mcp server.
 func Register(s *mcp.Server, api *renkuapi.Clients) {
-	toolkit.AddTool(s, &tool, handler(api))
+	mcp.AddTool(s, &tool, handler(api))
 }
