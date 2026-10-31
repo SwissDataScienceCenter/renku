@@ -38,5 +38,5 @@ func handler(api *renkuapi.Clients) mcp.ToolHandlerFor[input, *project.Project] 
 
 // Register adds the tool to the mcp server.
 func Register(s *mcp.Server, api *renkuapi.Clients) {
-	mcp.AddTool(s, &tool, handler(api))
+	toolkit.AddTool(s, &tool, handler(api))
 }

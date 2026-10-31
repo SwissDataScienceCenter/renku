@@ -10,14 +10,60 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"reflect"
 	"strconv"
 	"strings"
 
+	"github.com/google/jsonschema-go/jsonschema"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/auth"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/renkuapi"
 )
+
+// AddTool adds a tool to s, like mcp.AddTool. Unless the tool has an output schema, it is inferred
+// from Out like mcp.AddTool does, except for the oneOf types of the generated clients: they hold
+// their JSON in an unexported field, so the inferred schema would reject every value.
+func AddTool[In, Out any](s *mcp.Server, t *mcp.Tool, h mcp.ToolHandlerFor[In, Out]) {
+	if t.OutputSchema == nil && reflect.TypeFor[Out]() != reflect.TypeFor[any]() {
+		schema, err := outputSchema(reflect.TypeFor[Out]())
+		if err != nil {
+			panic(fmt.Sprintf("tool %s: output schema: %v", t.Name, err))
+		}
+		t.OutputSchema = schema
+	}
+	mcp.AddTool(s, t, h)
+}
+
+func outputSchema(t reflect.Type) (*jsonschema.Schema, error) {
+	if t.Kind() == reflect.Pointer {
+		t = t.Elem()
+	}
+	unions := map[reflect.Type]*jsonschema.Schema{}
+	collectUnions(t, unions, map[reflect.Type]bool{})
+	return jsonschema.ForType(t, &jsonschema.ForOptions{TypeSchemas: unions})
+}
+
+// collectUnions adds the oneOf types reachable from t to unions, with a schema that accepts any value.
+func collectUnions(t reflect.Type, unions map[reflect.Type]*jsonschema.Schema, seen map[reflect.Type]bool) {
+	if seen[t] {
+		return
+	}
+	seen[t] = true
+	switch t.Kind() {
+	case reflect.Pointer, reflect.Slice, reflect.Array, reflect.Map:
+		collectUnions(t.Elem(), unions, seen)
+	case reflect.Struct:
+		// oapi-codegen generates a oneOf as a struct with the single field "union json.RawMessage".
+		if t.NumField() == 1 && t.Field(0).Name == "union" && t.Field(0).Type == reflect.TypeFor[json.RawMessage]() {
+			unions[t] = &jsonschema.Schema{}
+			return
+		}
+		for i := range t.NumField() {
+			collectUnions(t.Field(i).Type, unions, seen)
+		}
+	}
+}
 
 // Caller is who a tool call is made for.
 type Caller struct {
@@ -182,6 +228,34 @@ func (p *Pagination) Summary() string {
 		s += fmt.Sprintf(" Call again with page=%d for more.", p.Page+1)
 	}
 	return s
+}
+
+// List is the output of a list tool. MCP clients expect an object as structured output, not an array.
+type List[T any] struct {
+	Items      []T         `json:"items"`
+	Pagination *Pagination `json:"pagination,omitempty" jsonschema:"Present if the list has more than one page."`
+}
+
+// ListResult returns the result of a list tool for the items of a response with headers h. The
+// pagination summary is added after the items, so the model knows to ask for the next page.
+func ListResult[T any](items []T, h http.Header) (*mcp.CallToolResult, *List[T], error) {
+	out := &List[T]{Items: items, Pagination: PaginationFrom(h)}
+	if out.Items == nil {
+		out.Items = []T{}
+	}
+	if out.Pagination == nil {
+		// The SDK returns out as JSON text.
+		return nil, out, nil
+	}
+	text, err := json.Marshal(out)
+	if err != nil {
+		return nil, nil, fmt.Errorf("encoding the result: %w", err)
+	}
+	res := &mcp.CallToolResult{Content: []mcp.Content{
+		&mcp.TextContent{Text: string(text)},
+		&mcp.TextContent{Text: out.Pagination.Summary()},
+	}}
+	return res, out, nil
 }
 
 // Truncate shortens s to n bytes, marking it with "..." if it was cut.
