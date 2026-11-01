@@ -1,26 +1,25 @@
 {{- if and .Values.mcpServer.enabled .Values.ingress.enabled }}
-{{- range .Values.ingress.hosts }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ template "renku.fullname" $ }}-mcp-server
+  name: {{ template "renku.fullname" . }}-mcp-server
   labels:
     app: renku-mcp-server
-    chart: {{ template "renku.chart" $ }}
-    release: {{ $.Release.Name }}
-    heritage: {{ $.Release.Service }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
   annotations:
-{{- range $key, $value := $.Values.ingress.annotations }}
+{{- range $key, $value := mergeOverwrite (deepCopy .Values.ingress.annotations) .Values.mcpServer.ingress.annotations }}
     {{ $key }}: {{ $value | quote }}
 {{- end }}
 spec:
-{{- if $.Values.ingress.className }}
-  ingressClassName: {{ $.Values.ingress.className }}
+{{- if .Values.ingress.className }}
+  ingressClassName: {{ .Values.ingress.className }}
 {{- end }}
-{{- if $.Values.ingress.tls }}
+{{- if .Values.ingress.tls }}
   tls:
-  {{- range $.Values.ingress.tls }}
+  {{- range .Values.ingress.tls }}
   - hosts:
     {{- range .hosts }}
     - {{ . }}
@@ -29,29 +28,25 @@ spec:
   {{- end }}
 {{- end }}
   rules:
+  {{- range .Values.ingress.hosts }}
   - host: {{ . }}
     http:
       paths:
       - path: /mcp
-        pathType: Prefix
-        backend:
-          service:
-            name: {{ template "renku.fullname" $ }}-mcp-server
-            port:
-              number: {{ $.Values.mcpServer.service.port }}
-      - path: /.well-known/oauth-protected-resource
         pathType: Exact
         backend:
           service:
             name: {{ template "renku.fullname" $ }}-mcp-server
             port:
               number: {{ $.Values.mcpServer.service.port }}
-      - path: /.well-known/oauth-authorization-server
+      # RFC 9728 protected resource metadata of the /mcp resource. It names Keycloak as the
+      # authorization server, whose metadata clients fetch from Keycloak directly.
+      - path: /.well-known/oauth-protected-resource/mcp
         pathType: Exact
         backend:
           service:
             name: {{ template "renku.fullname" $ }}-mcp-server
             port:
               number: {{ $.Values.mcpServer.service.port }}
-{{- end }}
+  {{- end }}
 {{- end }}

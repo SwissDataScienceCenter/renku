@@ -1501,19 +1501,47 @@ secretsStorage:
   tolerations: []
   affinity: {}
 
+## The Renku MCP server, which lets AI agents use Renku through the Model Context Protocol.
+## It is served at https://<global.renku.domain>/mcp. Users log in with the renku-mcp Keycloak client.
 mcpServer:
   enabled: false
   image:
-    repository: renku/renku-mcp-server
+    repository: renku/mcp-server
     tag: "latest"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
     port: 80
   replicaCount: 1
+  ## debug, info, warn or error
+  logLevel: info
+  ## Log the arguments of every tool call. Credentials are redacted.
+  logToolArguments: false
+  ## Rate limit of tool calls per user
+  rateLimit:
+    enabled: true
+    callsPerMinute: 60
+    burst: 20
+  keycloak:
+    ## Where the signing keys of the realm are fetched from, defaults to the public
+    ## Keycloak certs endpoint of the realm. Set it to fetch them in the cluster.
+    jwksUrl: ""
+    ## Redirect URIs of MCP clients added to the defaults of the renku-mcp client,
+    ## e.g. ["http://localhost:9090", "http://localhost:9090/callback"]
+    extraRedirectUris: []
+  ingress:
+    ## Annotations added to those of `ingress.annotations` on the MCP server ingress.
+    ## Tool calls that wait return after 50 s, so the proxy read timeout must be longer.
+    annotations:
+      nginx.ingress.kubernetes.io/proxy-read-timeout: "120"
+      nginx.ingress.kubernetes.io/proxy-buffering: "off"
+  ## Extra environment variables of the MCP server container
+  extraEnv: []
   podAnnotations: {}
   resources: {}
   nodeSelector: {}
+  tolerations: []
+  affinity: {}
 
 podSecurityContext: {}
 securityContext:

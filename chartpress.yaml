@@ -11,6 +11,7 @@ charts:
       - scripts/init-db
       - scripts/platform-init
       - renku-ssh-proxy
+      - mcp-server
     images:
       init-realm:
         contextPath: scripts/init-realm
@@ -39,3 +40,11 @@ charts:
         valuesPath: sshProxy.image
         paths:
           - renku-ssh-proxy
+      mcp-server:
+        contextPath: .
+        dockerfilePath: ./mcp-server/Dockerfile
+        valuesPath: mcpServer.image
+        buildArgs:
+          VERSION: "{TAG}"
+        paths:
+          - mcp-server

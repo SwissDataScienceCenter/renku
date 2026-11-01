@@ -61,12 +61,17 @@ On Team and Enterprise plans, an owner may have to add the connector for the org
 
 Once connected, the agent has access to the full Renku platform:
 
-- **Projects** — list, create, update, and delete projects; manage Git repositories and documentation
+- **Projects** — find, list, create, update, and delete projects
 - **Sessions** — launch interactive sessions, wait for them to start, view logs, stop them
 - **Jobs** — run non-interactive compute jobs and wait for results
 - **Data connectors** — create and link connectors for S3, WebDAV, DOI/Zenodo, Polybox, and other storage backends
-- **Session launchers** — create launchers with custom environments (built from code or a container image)
+- **Session launchers** — create launchers with custom environments (built from code or a container image) and follow image builds
+- **Apps** — launch apps, wait for them to be ready, and view their logs
 - **Resource classes** — query available compute resources and select the right class for a task
+- **Search** — search projects, groups, users, and data connectors
+
+Before deleting something, stopping a session, or changing the visibility of a project, the agent
+asks you to confirm, if your MCP client supports it.
 
 ## Example: start a session
 
@@ -84,6 +89,6 @@ The agent will:
 
 ## Security
 
-- The agent cannot perform operations if you are logged in as a Renku administrator. Log out and back in as a regular user first.
-- **Never share credentials with the agent.** If a data connector requires a password or API key, add it through the Renku UI — the agent will prompt you to do this rather than asking for the credentials directly.
+- Renku administrators cannot use the MCP server. Connect the agent with a regular user account instead.
+- **Never share credentials with the agent.** If a data connector requires a password or API key, add it through the Renku UI. The MCP server refuses credentials passed to it, and the agent will ask you to do this instead.
 - The agent acts on your behalf using your own Renku account and respects all existing permissions.

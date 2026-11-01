@@ -24,6 +24,8 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
+      # The server never calls the Kubernetes API.
+      automountServiceAccountToken: false
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
@@ -36,37 +38,63 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           ports:
             - name: http
-              containerPort: 9000
+              containerPort: 8080
               protocol: TCP
           env:
-            - name: MCP_TRANSPORT
-              value: "streamable-http"
-            - name: MCP_HOST
-              value: "0.0.0.0"
-            - name: MCP_PORT
-              value: "9000"
-            - name: RENKU_BASE_URL
-              value: {{ (printf "%s://%s" (include "renku.http" .) .Values.global.renku.domain) | quote }}
-            - name: KEYCLOAK_ISSUER_URL
+            - name: MCP_LISTEN_ADDR
+              value: ":8080"
+            # Through the gateway in the cluster, which forwards the user's bearer token to the data service.
+            - name: RENKU_API_URL
+              value: {{ printf "http://%s-gateway/api/data" (include "renku.fullname" .) | quote }}
+            # Must match the iss claim of the tokens, so this is the public Keycloak URL.
+            - name: KEYCLOAK_ISSUER
               value: {{ include "renku.keycloakIssuerUrl" . | quote }}
-            {{- include "certificates.env.python" $ | nindent 12 }}
+            {{- with .Values.mcpServer.keycloak.jwksUrl }}
+            - name: KEYCLOAK_JWKS_URL
+              value: {{ . | quote }}
+            {{- end }}
+            # The renku-mcp Keycloak client adds this audience, see setup-job-keycloak-realms.yaml.
+            - name: MCP_AUDIENCE
+              value: renku-mcp
+            - name: MCP_AUTHORIZED_PARTY
+              value: renku-mcp
+            - name: MCP_RESOURCE_URL
+              value: {{ printf "%s/mcp" (include "renku.baseUrl" .) | quote }}
+            - name: MCP_TOOL_CALL_RATE_LIMIT_ENABLED
+              value: {{ .Values.mcpServer.rateLimit.enabled | quote }}
+            - name: MCP_TOOL_CALLS_PER_MINUTE
+              value: {{ .Values.mcpServer.rateLimit.callsPerMinute | quote }}
+            - name: MCP_TOOL_CALL_BURST
+              value: {{ .Values.mcpServer.rateLimit.burst | quote }}
+            - name: MCP_LOG_TOOL_ARGUMENTS
+              value: {{ .Values.mcpServer.logToolArguments | quote }}
+            - name: LOG_LEVEL
+              value: {{ .Values.mcpServer.logLevel | quote }}
+            - name: SSL_CERT_FILE
+              value: /etc/ssl/certs/ca-certificates.crt
+            {{- with .Values.mcpServer.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
           livenessProbe:
-            tcpSocket:
+            httpGet:
+              path: /healthz
               port: http
-            initialDelaySeconds: 10
             periodSeconds: 10
             failureThreshold: 6
+          # Ready once the Keycloak signing keys can be fetched.
           readinessProbe:
-            tcpSocket:
+            httpGet:
+              path: /readyz
               port: http
-            initialDelaySeconds: 10
-            periodSeconds: 2
+            periodSeconds: 10
+            timeoutSeconds: 6
             failureThreshold: 2
           startupProbe:
-            tcpSocket:
+            httpGet:
+              path: /healthz
               port: http
-            periodSeconds: 5
-            failureThreshold: 60
+            periodSeconds: 2
+            failureThreshold: 30
           resources:
             {{- toYaml .Values.mcpServer.resources | nindent 12 }}
           volumeMounts:
@@ -75,6 +103,14 @@ spec:
         {{- include "certificates.volumes" . | nindent 8 }}
     {{- with .Values.mcpServer.nodeSelector }}
       nodeSelector:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.mcpServer.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.mcpServer.tolerations }}
+      tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
 {{- end }}

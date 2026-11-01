@@ -131,7 +131,7 @@ spec:
             - name: MCP_KC_CLIENT_ATTRIBUTES
               value: '{"pkce.code.challenge.method": "S256", "access.token.lifespan": "86400"}'
             - name: MCP_KC_CLIENT_EXTRA_REDIRECT_URIS
-              value: '["https://claude.ai/api/mcp/auth_callback", "http://localhost:8484", "http://localhost:8484/callback", "http://127.0.0.1:8484", "http://127.0.0.1:8484/callback"]'
+              value: {{ concat (list "https://claude.ai/api/mcp/auth_callback" "http://localhost:8484" "http://localhost:8484/callback" "http://127.0.0.1:8484" "http://127.0.0.1:8484/callback") .Values.mcpServer.keycloak.extraRedirectUris | toJson | squote }}
             # Lets the MCP server verify a token was issued for it and not for another
             # Renku client. Added alongside the "renku" audience every client gets, which
             # the data API still checks when the MCP server forwards the token.
