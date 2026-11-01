@@ -1,24 +1,9 @@
-import base64
-import hashlib
 import json
 import os
 from copy import deepcopy
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any, Dict, List, Optional
-
-
-def _codex_callback_uri(base_url: str, callback_port: int = 8484) -> str:
-    """Compute the deterministic Codex MCP OAuth callback URI for a given deployment URL.
-
-    Codex appends a SHA-256-based suffix to the callback path — see:
-    https://github.com/openai/codex/blob/main/codex-rs/rmcp-client/src/perform_oauth_login.rs
-    (callback_id_from_server_url / append_callback_id_to_redirect_uri)
-    """
-    mcp_url = base_url.rstrip("/") + "/mcp"
-    digest = hashlib.sha256(mcp_url.encode()).digest()
-    callback_id = base64.urlsafe_b64encode(digest[:9]).decode().rstrip("=")
-    return f"http://localhost:{callback_port}/callback/{callback_id}"
 
 
 @dataclass
@@ -316,11 +301,6 @@ class OIDCClientsConfig:
         mcp = None
         if os.environ.get("MCP_KC_CLIENT_ID"):
             mcp = OIDCClient.from_env(prefix="MCP_KC_CLIENT_")
-            # Automatically add the deterministic Codex callback URI so users don't
-            # have to compute or hardcode the SHA-256 suffix themselves.
-            codex_uri = _codex_callback_uri(mcp.base_url)
-            if codex_uri not in mcp.client_extra_redirect_uris:
-                mcp.client_extra_redirect_uris.append(codex_uri)
             mcp.consent_required = True
         return cls(
             renku=OIDCClient.from_env(prefix="RENKU_KC_CLIENT_"),

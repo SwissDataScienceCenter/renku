@@ -37,7 +37,7 @@ mcpServer:
     enabled: true
     callsPerMinute: 60
     burst: 20
-  keycloak:
+  oauth:
     # Fetch the realm signing keys from here instead of the public Keycloak URL.
     jwksUrl: ""
   ingress:
@@ -58,20 +58,28 @@ by the Renku realm setup job — no manual Keycloak configuration is needed.
 
 The client is a public OAuth 2.0 client using authorization code flow with PKCE (S256), and users
 are asked to consent before an MCP client gets access. Its access tokens carry the `renku-mcp`
-audience, which the MCP server requires. It supports the following redirect URIs out of the box:
+audience, which the MCP server requires. By default, it accepts these redirect URIs:
 
 - `https://claude.ai/api/mcp/auth_callback` — Claude.ai
-- `http://localhost:8484` and `/callback` variants — Claude Code and pi
-- the callback URI of Codex for your deployment
+- `http://localhost:8484`, `http://127.0.0.1:8484` and their `/callback` variants — Claude Code,
+  Codex and pi, set up with callback port 8484 as in the user documentation
 
-If users need additional redirect URIs (for other MCP clients or custom ports), add them to
-`mcpServer.keycloak.extraRedirectUris` in your values:
+To allow other MCP clients or another callback port, set the whole list in
+`mcpServer.oauth.redirectUris`, for example:
 
 ```yaml
 mcpServer:
-  keycloak:
-    extraRedirectUris: ["http://localhost:9090", "http://localhost:9090/callback"]
+  oauth:
+    redirectUris:
+      - https://claude.ai/api/mcp/auth_callback
+      - http://localhost:9090
+      - http://localhost:9090/callback
+      - http://127.0.0.1:9090
+      - http://127.0.0.1:9090/callback
 ```
+
+The realm setup job updates the `renku-mcp` client on the next deployment. If you change the port,
+tell your users, since the client setup in the user documentation uses port 8484.
 
 ## Security
 

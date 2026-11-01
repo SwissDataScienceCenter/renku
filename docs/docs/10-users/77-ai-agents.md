@@ -42,6 +42,22 @@ Add the following to your `.pi/mcp.json`:
 
 pi will prompt you to log in the first time it connects.
 
+### Codex
+
+Add the following to your `~/.codex/config.toml`:
+
+```toml
+[mcp_servers.renku]
+url = "https://renkulab.io/mcp"
+
+[mcp_servers.renku.oauth]
+client_id = "renku-mcp"
+callback_port = 8484
+callback_url = "http://localhost:8484/callback"
+```
+
+Then run `codex mcp login renku` to log in.
+
 ### Claude.ai
 
 Add Renku as a custom connector:

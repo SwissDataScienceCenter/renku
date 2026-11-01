@@ -49,7 +49,7 @@ spec:
             # Must match the iss claim of the tokens, so this is the public Keycloak URL.
             - name: KEYCLOAK_ISSUER
               value: {{ include "renku.keycloakIssuerUrl" . | quote }}
-            {{- with .Values.mcpServer.keycloak.jwksUrl }}
+            {{- with .Values.mcpServer.oauth.jwksUrl }}
             - name: KEYCLOAK_JWKS_URL
               value: {{ . | quote }}
             {{- end }}
