@@ -132,6 +132,17 @@ func APIError(status int, body []byte) error {
 	}
 }
 
+// Prefixed returns err with prefix before its message, keeping what is logged of a *Error.
+func Prefixed(err error, prefix string) error {
+	var e *Error
+	if errors.As(err, &e) {
+		c := *e
+		c.Message = prefix + c.Message
+		return &c
+	}
+	return fmt.Errorf("%s%w", prefix, err)
+}
+
 // errorMessage extracts the message of a data-services error response.
 func errorMessage(body []byte) string {
 	var e struct {

@@ -18,8 +18,8 @@ var tool = mcp.Tool{
 		"list_data_connector_project_links.\n\n" +
 		"This only works for data connectors in a user or group namespace. A data connector whose " +
 		"namespace is the project itself (`<group>/<project>`) belongs to the project: to remove it " +
-		"entirely, use delete_data_connector; to keep it, the user has to move it to a user or group " +
-		"namespace in the Renku UI first.",
+		"entirely, use delete_data_connector; to keep it, move it to a user or group namespace with " +
+		"update_data_connector first.",
 	Annotations: &mcp.ToolAnnotations{DestructiveHint: new(true), IdempotentHint: true},
 }
 

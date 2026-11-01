@@ -37,6 +37,11 @@ const launcherJSON = `{"id": "` + ulid + `", "project_id": "` + ulid + `", "name
 const buildJSON = `{"id": "` + ulid + `", "environment_id": "` + ulid + `", "created_at": "2023-11-01T17:32:28Z",
 	"status": "failed", "error_reason": "StepOutOfMemory"}`
 
+const dataConnectorJSON = `{"id": "` + ulid + `", "name": "data", "slug": "data", "namespace": "my-group",
+	"visibility": "private", "created_by": "user-1", "creation_date": "2023-11-01T17:32:28Z", "etag": "abc",
+	"storage": {"configuration": {"type": "s3", "provider": "AWS"}, "readonly": true, "sensitive_fields": [],
+	"source_path": "bucket/data", "target_path": "data", "storage_type": "s3"}}`
+
 type recordedRequest struct {
 	method, path, query, authorization, contentType, ifMatch string
 	body                                                     []byte
@@ -66,11 +71,11 @@ func fakeGateway(t *testing.T) (string, *[]recordedRequest) {
 				{"type": "Project", "id": "` + ulid + `", "name": "climate", "slug": "climate", "path": "my-group/climate",
 				 "visibility": "public", "creationDate": "2023-11-01T17:32:28Z"}],
 				"pagingInfo": {"page": {"limit": 10, "offset": 0}, "totalPages": 1, "totalResult": 1}}`))
-		case "GET /api/data/data_connectors/" + ulid:
-			_, _ = w.Write([]byte(`{"id": "` + ulid + `", "name": "data", "slug": "data", "namespace": "my-group",
-				"visibility": "private", "created_by": "user-1", "creation_date": "2023-11-01T17:32:28Z", "etag": "abc",
-				"storage": {"configuration": {"type": "s3", "provider": "AWS"}, "readonly": true, "sensitive_fields": [],
-				"source_path": "bucket/data", "target_path": "data", "storage_type": "s3"}}`))
+		case "GET /api/data/data_connectors/" + ulid, "PATCH /api/data/data_connectors/" + ulid:
+			_, _ = w.Write([]byte(dataConnectorJSON))
+		case "POST /api/data/data_connectors", "POST /api/data/data_connectors/global":
+			w.WriteHeader(http.StatusCreated)
+			_, _ = w.Write([]byte(dataConnectorJSON))
 		case "GET /api/data/groups", "GET /api/data/data_connectors", "GET /api/data/projects/" + ulid + "/data_connector_links",
 			"GET /api/data/projects/" + ulid + "/session_launchers", "GET /api/data/namespaces", "GET /api/data/groups/my-group/members",
 			"GET /api/data/environments", "GET /api/data/resource_pools", "GET /api/data/session_launchers",
@@ -98,6 +103,11 @@ func fakeGateway(t *testing.T) (string, *[]recordedRequest) {
 		case "PATCH /api/data/projects/" + ulid:
 			_, _ = w.Write([]byte(projectJSON))
 		case "POST /api/data/data_connectors/" + ulid + "/project_links":
+			if strings.Contains(string(body), "unknown") {
+				w.WriteHeader(http.StatusNotFound)
+				_, _ = w.Write([]byte(`{"error": {"code": 1404, "message": "Project does not exist."}}`))
+				return
+			}
 			w.WriteHeader(http.StatusCreated)
 			_, _ = w.Write([]byte(`{"id": "` + ulid + `", "data_connector_id": "` + ulid + `", "project_id": "` + ulid + `",
 				"created_by": "user-1", "creation_date": "2023-11-01T17:32:28Z"}`))
@@ -182,6 +192,9 @@ func TestEveryToolSendsTheExpectedRequest(t *testing.T) {
 		{"get_group", map[string]any{"group_slug": "my-group"}, "GET", "/api/data/groups/my-group", "", ""},
 		{"list_data_connectors", map[string]any{"namespace": "my-group"}, "GET", "/api/data/data_connectors", "namespace=my-group", ""},
 		{"get_data_connector", map[string]any{"data_connector_id": ulid}, "GET", "/api/data/data_connectors/" + ulid, "", ""},
+		{"create_data_connector", map[string]any{"name": "data", "namespace": "my-group", "storage": map[string]any{"configuration": map[string]any{"type": "s3", "provider": "AWS"}, "source_path": "bucket/data", "target_path": "data"}}, "POST", "/api/data/data_connectors", "", `{"name":"data","namespace":"my-group","storage":{"configuration":{"provider":"AWS","type":"s3"},"source_path":"bucket/data","target_path":"data"}}`},
+		{"create_global_data_connector", map[string]any{"doi": "10.5281/zenodo.123"}, "POST", "/api/data/data_connectors/global", "", `{"storage":{"configuration":{"doi":"10.5281/zenodo.123","type":"doi"},"readonly":true,"source_path":"","target_path":""}}`},
+		{"update_data_connector", map[string]any{"data_connector_id": ulid, "etag": "abc", "storage": map[string]any{"configuration": map[string]any{"region": nil}, "readonly": false}}, "PATCH", "/api/data/data_connectors/" + ulid, "", `{"storage":{"configuration":{"region":null},"readonly":false}}`},
 		{"list_project_data_connector_links", map[string]any{"project_id": ulid}, "GET", "/api/data/projects/" + ulid + "/data_connector_links", "", ""},
 		{"list_project_session_launchers", map[string]any{"project_id": ulid}, "GET", "/api/data/projects/" + ulid + "/session_launchers", "", ""},
 		{"get_session_launcher", map[string]any{"launcher_id": ulid}, "GET", "/api/data/session_launchers/" + ulid, "", ""},
@@ -438,5 +451,86 @@ func TestChangingVisibilityAsksTheUserToConfirm(t *testing.T) {
 	}
 	if !res.IsError || len(*requests) != 1 {
 		t.Errorf("result = %q after %d requests, want only the first update sent", text(res), len(*requests))
+	}
+}
+
+func TestCreateDataConnectorLinksItToTheProject(t *testing.T) {
+	for _, name := range []string{"create_data_connector", "create_global_data_connector"} {
+		t.Run(name, func(t *testing.T) {
+			apiURL, requests := fakeGateway(t)
+			args := map[string]any{"project_id": ulid, "name": "data", "namespace": "my-group",
+				"storage": map[string]any{"storage_url": "s3://bucket/data", "target_path": "data"}}
+			if name == "create_global_data_connector" {
+				args = map[string]any{"project_id": ulid, "doi": "10.5281/zenodo.123"}
+			}
+			res, err := connect(t, apiURL).CallTool(context.Background(), &mcp.CallToolParams{Name: name, Arguments: args})
+			if err != nil {
+				t.Fatal(err)
+			}
+			if res.IsError || len(*requests) != 2 {
+				t.Fatalf("result = %q after %d requests", text(res), len(*requests))
+			}
+			if r := (*requests)[1]; r.method != "POST" || r.path != "/api/data/data_connectors/"+ulid+"/project_links" || string(r.body) != `{"project_id":"`+ulid+`"}` {
+				t.Errorf("second request = %s %s %s", r.method, r.path, r.body)
+			}
+			out, _ := res.StructuredContent.(map[string]any)
+			if dc, _ := out["data_connector"].(map[string]any); dc["id"] != ulid || out["link"] == nil {
+				t.Errorf("structured content = %v", res.StructuredContent)
+			}
+		})
+	}
+}
+
+func TestCreateDataConnectorReportsAFailedLink(t *testing.T) {
+	apiURL, requests := fakeGateway(t)
+	args := map[string]any{"project_id": "unknown", "name": "data", "namespace": "my-group",
+		"storage": map[string]any{"storage_url": "s3://bucket/data", "target_path": "data"}}
+	res, err := connect(t, apiURL).CallTool(context.Background(), &mcp.CallToolParams{Name: "create_data_connector", Arguments: args})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !res.IsError || !strings.Contains(text(res), "The data connector "+ulid+" was created") ||
+		!strings.Contains(text(res), "Project does not exist.") || len(*requests) != 2 {
+		t.Errorf("result = %q after %d requests", text(res), len(*requests))
+	}
+}
+
+func TestDataConnectorCredentialsAreRefused(t *testing.T) {
+	tests := []struct {
+		tool string
+		args map[string]any
+	}{
+		{"create_data_connector", map[string]any{"name": "data", "namespace": "my-group", "storage": map[string]any{
+			"configuration": map[string]any{"type": "s3", "access_key_id": "AKIA123", "secret_access_key": "s3cr3t"}, "source_path": "bucket", "target_path": "data"}}},
+		{"create_data_connector", map[string]any{"name": "data", "namespace": "my-group", "storage": map[string]any{
+			"storage_url": "https://user:s3cr3t@dav.example.org/remote.php", "target_path": "data"}}},
+		{"update_data_connector", map[string]any{"data_connector_id": ulid, "etag": "abc", "storage": map[string]any{
+			"configuration": map[string]any{"pass": "s3cr3t"}}}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.tool, func(t *testing.T) {
+			apiURL, requests := fakeGateway(t)
+			res, err := connect(t, apiURL).CallTool(context.Background(), &mcp.CallToolParams{Name: tt.tool, Arguments: tt.args})
+			if err != nil {
+				t.Fatal(err)
+			}
+			if !res.IsError || !strings.Contains(text(res), "refusing to send credentials") || strings.Contains(text(res), "s3cr3t") {
+				t.Errorf("result = %q", text(res))
+			}
+			if len(*requests) != 0 {
+				t.Errorf("credentials sent to the API in %d requests", len(*requests))
+			}
+		})
+	}
+}
+
+func TestUpdateDataConnectorSendsTheEtag(t *testing.T) {
+	apiURL, requests := fakeGateway(t)
+	_, err := connect(t, apiURL).CallTool(context.Background(), &mcp.CallToolParams{Name: "update_data_connector", Arguments: map[string]any{"data_connector_id": ulid, "etag": "abc", "namespace": "user-1"}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if r := (*requests)[0]; r.ifMatch != "abc" || string(r.body) != `{"namespace":"user-1"}` {
+		t.Errorf("If-Match = %q, body = %s", r.ifMatch, r.body)
 	}
 }

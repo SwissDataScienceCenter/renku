@@ -107,6 +107,18 @@ func TestLogsArgumentsIfEnabled(t *testing.T) {
 	}
 }
 
+func TestLoggedArgumentsAreRedacted(t *testing.T) {
+	var logs bytes.Buffer
+	c, _ := loggedSession(t, LogOptions{Logger: slog.New(slog.NewJSONHandler(&logs, nil)), LogArguments: true})
+	call(t, c, "echo", map[string]any{"text": "my-group", "storage": map[string]any{"configuration": map[string]any{"secret_access_key": "s3cr3t"}}})
+	if strings.Contains(logs.String(), "s3cr3t") {
+		t.Errorf("credential logged: %s", logs.String())
+	}
+	if args, _ := logLine(t, &logs)["arguments"].(map[string]any); args["text"] != "my-group" {
+		t.Errorf("other arguments not logged: %s", logs.String())
+	}
+}
+
 func TestUpstreamErrorBodyIsLoggedOnly(t *testing.T) {
 	var logs bytes.Buffer
 	c, _ := loggedSession(t, LogOptions{Logger: slog.New(slog.NewJSONHandler(&logs, nil))})

@@ -6,6 +6,8 @@ import (
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/renkuapi"
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/createdataconnector"
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/createglobaldataconnector"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/createproject"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/createsessionlauncher"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/deleteapp"
@@ -43,6 +45,7 @@ import (
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/startsession"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/stopsession"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/unlinkdataconnector"
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/updatedataconnector"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/updateproject"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/updatesessionlauncher"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/waitforapp"
@@ -64,6 +67,9 @@ var all = []func(*mcp.Server, *renkuapi.Clients){
 	listgroupmembers.Register,
 	listdataconnectors.Register,
 	getdataconnector.Register,
+	createdataconnector.Register,
+	createglobaldataconnector.Register,
+	updatedataconnector.Register,
 	listprojectdataconnectorlinks.Register,
 	listdataconnectorprojectlinks.Register,
 	linkdataconnector.Register,

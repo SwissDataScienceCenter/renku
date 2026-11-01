@@ -3,6 +3,7 @@ package mcp
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"log/slog"
 	"runtime/debug"
@@ -17,6 +18,7 @@ import (
 type LogOptions struct {
 	Logger *slog.Logger
 	// LogArguments adds the tool arguments to the per-call log line. They can contain free text entered by users.
+	// Values that look like credentials are redacted, see toolkit.RedactSecrets.
 	LogArguments bool
 }
 
@@ -36,7 +38,7 @@ func LogToolCalls(opts LogOptions) sdkmcp.Middleware {
 			ctx = toolkit.WithCaller(ctx, c)
 			attrs := []any{"tool", call.Params.Name, "sub", c.Principal.Subject, "request_id", c.RequestID}
 			if opts.LogArguments {
-				attrs = append(attrs, "arguments", call.Params.Arguments)
+				attrs = append(attrs, "arguments", loggedArguments(call.Params.Arguments))
 			}
 			defer func() {
 				if r := recover(); r != nil {
@@ -85,6 +87,20 @@ func LogToolCalls(opts LogOptions) sdkmcp.Middleware {
 			return result, err
 		}
 	}
+}
+
+// loggedArguments returns the arguments of a tool call with credentials redacted. Tools refuse
+// credentials, but the call is logged all the same.
+func loggedArguments(raw json.RawMessage) any {
+	if len(raw) == 0 {
+		return nil
+	}
+	var args any
+	if err := json.Unmarshal(raw, &args); err != nil {
+		// The SDK rejects the call; the arguments could still hold a credential.
+		return "[invalid JSON]"
+	}
+	return toolkit.RedactSecrets(args)
 }
 
 func toolError(message string) *sdkmcp.CallToolResult {

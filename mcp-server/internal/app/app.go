@@ -31,11 +31,13 @@ const instructions = "Tools to work with Renku on behalf of the logged in user: 
 	"reconnect the Renku MCP server in their client; do not retry.\n" +
 	"- Call list_resource_pools before creating a session launcher or starting a session or job, and use " +
 	"the smallest resource class that matches.\n" +
-	"- Confirm with the user before deleting anything, stopping a session or changing a project's visibility. " +
+	"- Confirm with the user before deleting anything, stopping a session or changing the visibility of a project or data connector. " +
 	"Some clients ask the user themselves; if the user declines there, do not retry.\n" +
 	"- To wait for a session, job, build or app, call wait_for_session, wait_for_build or wait_for_app " +
 	"rather than polling the get_ tools. They return after about a minute; call them again while the status " +
-	"has not changed."
+	"has not changed.\n" +
+	"- Never pass credentials (passwords, access keys, tokens) as tool arguments, and do not ask the user for " +
+	"them: the tools refuse them. The user adds them to a data connector in the Renku UI."
 
 // Options configures the MCP server.
 type Options struct {
