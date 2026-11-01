@@ -35,8 +35,12 @@ func TestWaitTellsTheModelToCallAgain(t *testing.T) {
 	res, out, err := Wait(context.Background(), &mcp.CallToolRequest{}, "wait_for_thing", func(context.Context) (Status, error) {
 		return Status{Out: map[string]string{"status": "starting"}, State: "starting"}, nil
 	})
-	if err != nil || out == nil {
-		t.Fatalf("Wait = %v, %v", out, err)
+	// Clients that get structured content show the model only that, without the note.
+	if err != nil || res == nil || out != nil {
+		t.Fatalf("Wait = %v, %v, %v", res, out, err)
+	}
+	if got := res.Content[0].(*mcp.TextContent).Text; got != `{"status":"starting"}` {
+		t.Errorf("content = %q", got)
 	}
 	note := res.Content[1].(*mcp.TextContent).Text
 	if !strings.Contains(note, "Still `starting`") || !strings.Contains(note, "Call wait_for_thing again") {

@@ -290,12 +290,16 @@ func TestListToolReportsPagination(t *testing.T) {
 			TotalPages int `json:"total_pages"`
 		} `json:"pagination"`
 	}
-	raw, _ := json.Marshal(res.StructuredContent)
-	if err := json.Unmarshal(raw, &out); err != nil {
+	// Clients that get structured content show the model only that, without the summary.
+	if res.StructuredContent != nil {
+		t.Errorf("unexpected structured content %v", res.StructuredContent)
+	}
+	raw := res.Content[0].(*mcp.TextContent).Text
+	if err := json.Unmarshal([]byte(raw), &out); err != nil {
 		t.Fatal(err)
 	}
 	if len(out.Items) != 1 || out.Items[0].ID != ulid || out.Pagination.TotalPages != 3 {
-		t.Errorf("structured content = %s", raw)
+		t.Errorf("content = %s", raw)
 	}
 }
 

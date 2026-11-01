@@ -80,6 +80,19 @@ func NewMCPServer(opts Options) (*sdkmcp.Server, error) {
 	return s, nil
 }
 
+// mcpCORS lets MCP clients running in a browser, such as the MCP Inspector, call the MCP endpoint.
+// It answers preflights before authentication, since browsers send them without the Authorization
+// header. Any origin is allowed: requests are authenticated with a bearer token rather than cookies,
+// so another site cannot act as the user without having their token.
+var mcpCORS = middleware.CORSWithConfig(middleware.CORSConfig{
+	AllowOrigins: []string{"*"},
+	AllowMethods: []string{http.MethodGet, http.MethodPost, http.MethodDelete},
+	AllowHeaders: []string{"Authorization", "Content-Type", "Accept", "Last-Event-ID", "Mcp-Protocol-Version", "Mcp-Session-Id"},
+	// WWW-Authenticate points browser clients to the protected resource metadata after a 401.
+	ExposeHeaders: []string{"WWW-Authenticate", "Mcp-Protocol-Version", "Mcp-Session-Id"},
+	MaxAge:        int((24 * time.Hour).Seconds()),
+})
+
 // NewHTTPHandler serves the MCP endpoint behind authentication, the protected resource metadata and health checks.
 func NewHTTPHandler(s *sdkmcp.Server, authenticator *auth.Authenticator, logger *slog.Logger) http.Handler {
 	// Without JSONResponse, responses are SSE streams, which can carry notifications about the call
@@ -124,8 +137,9 @@ func NewHTTPHandler(s *sdkmcp.Server, authenticator *auth.Authenticator, logger 
 		// It does not cover tool handlers, which the SDK runs in their own goroutines, see mcp.LogToolCalls.
 		middleware.RecoverWithConfig(middleware.RecoverConfig{DisableStackAll: true}),
 	)
-	e.Any(MCPPath, echo.WrapHandler(authenticator.Middleware(mcpHandler)))
-	e.GET(authenticator.MetadataPath(), echo.WrapHandler(authenticator.MetadataHandler()))
+	e.Any(MCPPath, echo.WrapHandler(authenticator.Middleware(mcpHandler)), mcpCORS)
+	// The SDK handler answers preflights and sets the CORS headers itself.
+	e.Match([]string{http.MethodGet, http.MethodOptions}, authenticator.MetadataPath(), echo.WrapHandler(authenticator.MetadataHandler()))
 	e.GET("/healthz", func(c *echo.Context) error { return c.NoContent(http.StatusOK) })
 	e.GET("/readyz", func(c *echo.Context) error {
 		ctx, cancel := context.WithTimeout(c.Request().Context(), 5*time.Second)

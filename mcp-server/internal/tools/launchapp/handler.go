@@ -37,7 +37,7 @@ func handler(api *renkuapi.Clients) mcp.ToolHandlerFor[input, any] {
 			return nil, nil, toolkit.RequestFailed(err)
 		}
 		if res.JSON201 == nil {
-			return nil, nil, toolkit.APIError(res.StatusCode(), res.Body)
+			return nil, nil, toolkit.AppsAPIError(res.StatusCode(), res.Body)
 		}
 		return nil, res.JSON201, nil
 	}

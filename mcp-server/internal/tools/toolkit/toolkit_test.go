@@ -17,6 +17,28 @@ func TestClientErrorCarriesTheAPIMessage(t *testing.T) {
 	}
 }
 
+func TestFeatureAPIError(t *testing.T) {
+	tests := []struct {
+		name string
+		err  func(int, []byte) error
+		body string
+		want string
+	}{
+		{"apps disabled", AppsAPIError, `{"error": {"code": 1404, "message": "Requested URL /api/data/apps not found"}}`, "Apps are not enabled on this Renku deployment"},
+		{"missing app", AppsAPIError, `{"error": {"code": 1404, "message": "App with name 'a-1' does not exist or you do not have access to it."}}`, "status 404: App with name 'a-1' does not exist"},
+		{"builds disabled", BuildsAPIError, `{"error": {"code": 1404, "message": "Requested URL /api/data/builds/01HXXXXXXXXXXXXXXXXXXXXXXX not found"}}`, "Image builds from code are not enabled on this Renku deployment"},
+		{"missing build", BuildsAPIError, `{"error": {"code": 1404, "message": "Build does not exist."}}`, "status 404: Build does not exist."},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := tt.err(http.StatusNotFound, []byte(tt.body))
+			if !strings.Contains(err.Error(), tt.want) {
+				t.Errorf("error = %q, want it to contain %q", err, tt.want)
+			}
+		})
+	}
+}
+
 func TestServerErrorIsGeneric(t *testing.T) {
 	body := []byte(`{"error": {"code": 1500, "message": "database exploded at 10.0.0.12"}}`)
 	err := APIError(http.StatusInternalServerError, body)

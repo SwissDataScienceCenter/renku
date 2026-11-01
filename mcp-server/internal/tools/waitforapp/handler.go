@@ -32,7 +32,7 @@ func handler(api *renkuapi.Clients) mcp.ToolHandlerFor[input, any] {
 				return toolkit.Status{}, toolkit.RequestFailed(err)
 			}
 			if res.JSON200 == nil {
-				return toolkit.Status{}, toolkit.APIError(res.StatusCode(), res.Body)
+				return toolkit.Status{}, toolkit.AppsAPIError(res.StatusCode(), res.Body)
 			}
 			status := res.JSON200.Status
 			return toolkit.Status{Out: res.JSON200, State: string(status), Done: status != renkuapps.Pending}, nil

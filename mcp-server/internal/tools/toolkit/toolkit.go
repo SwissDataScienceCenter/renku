@@ -132,6 +132,37 @@ func APIError(status int, body []byte) error {
 	}
 }
 
+// FeatureAPIError is APIError for the API of an optional feature, e.g. "Apps". The data service only
+// serves such an API when the feature is enabled in the deployment; otherwise every request gets the
+// 404 of an unknown route, which the model would take for a missing resource.
+func FeatureAPIError(feature string, status int, body []byte) error {
+	if status == http.StatusNotFound && isUnknownRoute(body) {
+		return &Error{
+			Message: feature + " are not enabled on this Renku deployment. Tell the user to ask the Renku " +
+				"administrators to enable them; do not retry.",
+			Outcome: OutcomeClientError,
+			Status:  status,
+		}
+	}
+	return APIError(status, body)
+}
+
+// AppsAPIError is FeatureAPIError for the apps API.
+func AppsAPIError(status int, body []byte) error {
+	return FeatureAPIError("Apps", status, body)
+}
+
+// BuildsAPIError is FeatureAPIError for the image builds API.
+func BuildsAPIError(status int, body []byte) error {
+	return FeatureAPIError("Image builds from code", status, body)
+}
+
+// isUnknownRoute reports whether body is the error of a request to a path the data service does not
+// serve, e.g. "Requested URL /api/data/apps not found", rather than of a missing resource.
+func isUnknownRoute(body []byte) bool {
+	return strings.HasPrefix(errorMessage(body), "Requested URL ")
+}
+
 // Prefixed returns err with prefix before its message, keeping what is logged of a *Error.
 func Prefixed(err error, prefix string) error {
 	var e *Error
@@ -218,7 +249,8 @@ func ListResult[T any](items []T, h http.Header) (*mcp.CallToolResult, any, erro
 }
 
 // ResultWithNote returns out, the output of a tool, as JSON text followed by note, which tells the
-// model what to do next.
+// model what to do next. It returns no structured content: clients that have it show the model only
+// that, e.g. Claude Code, and would drop the note.
 func ResultWithNote(out any, note string) (*mcp.CallToolResult, any, error) {
 	text, err := json.Marshal(out)
 	if err != nil {
@@ -228,7 +260,7 @@ func ResultWithNote(out any, note string) (*mcp.CallToolResult, any, error) {
 		&mcp.TextContent{Text: string(text)},
 		&mcp.TextContent{Text: note},
 	}}
-	return res, out, nil
+	return res, nil, nil
 }
 
 // Truncate shortens s to n bytes, marking it with "..." if it was cut.

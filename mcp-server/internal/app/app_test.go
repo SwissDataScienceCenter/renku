@@ -296,6 +296,58 @@ func TestUnauthenticatedRequestIsRejectedWithChallenge(t *testing.T) {
 	}
 }
 
+func TestCORS(t *testing.T) {
+	env := newTestEnv(t)
+	base := strings.TrimSuffix(env.mcpURL, MCPPath)
+	const origin = "https://inspector.example.org"
+
+	for _, path := range []string{MCPPath, "/.well-known/oauth-protected-resource/mcp"} {
+		t.Run("preflight "+path, func(t *testing.T) {
+			req, err := http.NewRequest(http.MethodOptions, base+path, nil)
+			if err != nil {
+				t.Fatal(err)
+			}
+			req.Header.Set("Origin", origin)
+			req.Header.Set("Access-Control-Request-Method", http.MethodPost)
+			req.Header.Set("Access-Control-Request-Headers", "authorization,content-type,mcp-protocol-version")
+			res, err := http.DefaultClient.Do(req)
+			if err != nil {
+				t.Fatal(err)
+			}
+			_ = res.Body.Close()
+			if res.StatusCode != http.StatusNoContent {
+				t.Fatalf("status = %d, want %d", res.StatusCode, http.StatusNoContent)
+			}
+			if got := res.Header.Get("Access-Control-Allow-Origin"); got != "*" {
+				t.Errorf("Access-Control-Allow-Origin = %q", got)
+			}
+		})
+	}
+
+	t.Run("challenge is readable", func(t *testing.T) {
+		req, err := http.NewRequest(http.MethodPost, env.mcpURL, strings.NewReader(`{"jsonrpc":"2.0","id":1,"method":"tools/list"}`))
+		if err != nil {
+			t.Fatal(err)
+		}
+		req.Header.Set("Origin", origin)
+		req.Header.Set("Content-Type", "application/json")
+		res, err := http.DefaultClient.Do(req)
+		if err != nil {
+			t.Fatal(err)
+		}
+		_ = res.Body.Close()
+		if res.StatusCode != http.StatusUnauthorized {
+			t.Fatalf("status = %d, want %d", res.StatusCode, http.StatusUnauthorized)
+		}
+		if got := res.Header.Get("Access-Control-Allow-Origin"); got != "*" {
+			t.Errorf("Access-Control-Allow-Origin = %q", got)
+		}
+		if !strings.Contains(res.Header.Get("Access-Control-Expose-Headers"), "WWW-Authenticate") {
+			t.Errorf("Access-Control-Expose-Headers = %q", res.Header.Get("Access-Control-Expose-Headers"))
+		}
+	})
+}
+
 func TestHealthEndpoints(t *testing.T) {
 	env := newTestEnv(t)
 	base := strings.TrimSuffix(env.mcpURL, MCPPath)

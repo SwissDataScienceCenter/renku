@@ -44,9 +44,18 @@ pi will prompt you to log in the first time it connects.
 
 ### Claude.ai
 
-Remote MCP server support in Claude.ai is being rolled out gradually. When available
-on your plan, you can add `https://renkulab.io/mcp` as a remote MCP server in your
-Claude.ai settings and authentication will be handled automatically.
+Add Renku as a custom connector:
+
+1. In Claude.ai, open **Settings → Connectors** and click **Add custom connector**.
+2. Enter a name, e.g. `Renku`, and the URL `https://renkulab.io/mcp`.
+3. Open **Advanced settings** and set **OAuth Client ID** to `renku-mcp`. Leave the client
+   secret empty.
+4. Click **Add**, then **Connect**, and log in to Renku.
+
+The client ID is required: Renku does not let MCP clients register themselves, so without it
+the connection fails before you are asked to log in.
+
+On Team and Enterprise plans, an owner may have to add the connector for the organization first.
 
 ## What the agent can do
 
