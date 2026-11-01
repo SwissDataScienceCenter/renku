@@ -308,17 +308,20 @@ class OIDCClientsConfig:
     notebooks: OIDCClient
     swagger: OIDCClient
     data_service: OIDCClient
-    mcp: OIDCClient
+    # Only set when the MCP server is enabled, i.e. MCP_KC_CLIENT_ID is set.
+    mcp: Optional[OIDCClient] = None
 
     @classmethod
     def from_env(cls) -> "OIDCClientsConfig":
-        mcp = OIDCClient.from_env(prefix="MCP_KC_CLIENT_")
-        # Automatically add the deterministic Codex callback URI so users don't
-        # have to compute or hardcode the SHA-256 suffix themselves.
-        codex_uri = _codex_callback_uri(mcp.base_url)
-        if codex_uri not in mcp.client_extra_redirect_uris:
-            mcp.client_extra_redirect_uris.append(codex_uri)
-        mcp.consent_required = True
+        mcp = None
+        if os.environ.get("MCP_KC_CLIENT_ID"):
+            mcp = OIDCClient.from_env(prefix="MCP_KC_CLIENT_")
+            # Automatically add the deterministic Codex callback URI so users don't
+            # have to compute or hardcode the SHA-256 suffix themselves.
+            codex_uri = _codex_callback_uri(mcp.base_url)
+            if codex_uri not in mcp.client_extra_redirect_uris:
+                mcp.client_extra_redirect_uris.append(codex_uri)
+            mcp.consent_required = True
         return cls(
             renku=OIDCClient.from_env(prefix="RENKU_KC_CLIENT_"),
             cli=OIDCClient.from_env(prefix="CLI_KC_CLIENT_"),
@@ -330,12 +333,14 @@ class OIDCClientsConfig:
         )
 
     def to_list(self) -> List[OIDCClient]:
-        return [
+        clients = [
             self.renku,
             self.cli,
             self.ui,
             self.notebooks,
             self.swagger,
             self.data_service,
-            self.mcp,
         ]
+        if self.mcp is not None:
+            clients.append(self.mcp)
+        return clients
