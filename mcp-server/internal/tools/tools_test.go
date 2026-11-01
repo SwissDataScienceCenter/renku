@@ -121,7 +121,7 @@ func fakeGateway(t *testing.T) (string, *[]recordedRequest) {
 			_, _ = w.Write([]byte(`{"name": "app-1", "project_id": "` + ulid + `", "launcher_id": "` + ulid + `", "status": "pending"}`))
 		case "DELETE /api/data/sessions/session-1", "DELETE /api/data/data_connectors/" + ulid,
 			"DELETE /api/data/data_connectors/" + ulid + "/project_links/" + ulid, "DELETE /api/data/session_launchers/" + ulid,
-			"DELETE /api/data/apps/app-1":
+			"DELETE /api/data/apps/app-1", "DELETE /api/data/projects/" + ulid:
 			w.WriteHeader(http.StatusNoContent)
 		default:
 			_, _ = w.Write([]byte(`{}`))
@@ -205,6 +205,7 @@ func TestEveryToolSendsTheExpectedRequest(t *testing.T) {
 		{"stop_session", map[string]any{"session_id": "session-1"}, "DELETE", "/api/data/sessions/session-1", "", ""},
 		{"create_project", map[string]any{"name": "Climate", "namespace": "my-group", "repositories": []string{"https://github.com/org/repo.git"}}, "POST", "/api/data/projects", "", `{"name":"Climate","namespace":"my-group","repositories":["https://github.com/org/repo.git"]}`},
 		{"update_project", map[string]any{"project_id": ulid, "etag": "abc", "keywords": []string{}}, "PATCH", "/api/data/projects/" + ulid, "", `{"keywords":[]}`},
+		{"delete_project", map[string]any{"project_id": ulid}, "DELETE", "/api/data/projects/" + ulid, "", ""},
 		{"link_data_connector", map[string]any{"data_connector_id": ulid, "project_id": ulid}, "POST", "/api/data/data_connectors/" + ulid + "/project_links", "", `{"project_id":"` + ulid + `"}`},
 		{"unlink_data_connector", map[string]any{"data_connector_id": ulid, "link_id": ulid}, "DELETE", "/api/data/data_connectors/" + ulid + "/project_links/" + ulid, "", ""},
 		{"delete_data_connector", map[string]any{"data_connector_id": ulid}, "DELETE", "/api/data/data_connectors/" + ulid, "", ""},

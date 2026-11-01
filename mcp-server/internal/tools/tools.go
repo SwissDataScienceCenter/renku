@@ -12,6 +12,7 @@ import (
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/createsessionlauncher"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/deleteapp"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/deletedataconnector"
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/deleteproject"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/deletesessionlauncher"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/getapp"
 	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/getapplogs"
@@ -62,6 +63,7 @@ var all = []func(*mcp.Server, *renkuapi.Clients){
 	listnamespaces.Register,
 	createproject.Register,
 	updateproject.Register,
+	deleteproject.Register,
 	listgroups.Register,
 	getgroup.Register,
 	listgroupmembers.Register,
