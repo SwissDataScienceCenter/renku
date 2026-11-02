@@ -34,38 +34,47 @@ type Status struct {
 // error when ctx is done, which is how the client cancelling the call or disconnecting arrives.
 func Wait(ctx context.Context, req *mcp.CallToolRequest, tool string, poll func(context.Context) (Status, error)) (*mcp.CallToolResult, any, error) {
 	start := time.Now()
-	deadline, cancel := context.WithTimeout(ctx, MaxWait)
+	// waitCtx ends after MaxWait or when ctx ends. Polls use it, so MaxWait also cuts off a slow request.
+	waitCtx, cancel := context.WithTimeout(ctx, MaxWait)
 	defer cancel()
-	var last Status
+	var last *Status // the last successful poll, nil before the first
 	for {
-		s, err := poll(deadline)
+		s, err := poll(waitCtx)
 		switch {
-		case ctx.Err() != nil:
-			// The mcp client cancelled or went away.
-			return nil, nil, ctx.Err()
-		case deadline.Err() != nil && err != nil && last.Out != nil:
-			// MaxWait/deadline timed out, but the previous call succeeded - report the state of the previous poll.
-			return stillWaiting(tool, start, last)
+		case err != nil && waitCtx.Err() != nil:
+			// The request was cut off, by the client going away or by MaxWait.
+			return stop(ctx, tool, start, last, err)
 		case err != nil:
 			return nil, nil, err
 		case s.Done:
 			return nil, s.Out, nil
 		}
-		last = s
+		last = &s
 		notifyProgress(ctx, req, start, s.State)
 		select {
-		case <-deadline.Done():
-			if ctx.Err() != nil {
-				return nil, nil, ctx.Err()
-			}
-			return stillWaiting(tool, start, last)
+		case <-waitCtx.Done():
+			return stop(ctx, tool, start, last, nil)
 		case <-time.After(PollInterval):
 		}
 	}
 }
 
-func stillWaiting(tool string, start time.Time, last Status) (*mcp.CallToolResult, any, error) {
-	note := fmt.Sprintf("Still `%s` after %d s. Call %s again to keep waiting.", last.State, int(time.Since(start).Seconds()), tool)
+// stop ends a Wait whose waitCtx is done. If ctx is done too, the client went away and the call ends
+// with its error. Otherwise MaxWait passed: the model gets the last state and is told to call tool
+// again, or a tool error saying so if no poll has succeeded yet. err is the error of the cut off poll.
+func stop(ctx context.Context, tool string, start time.Time, last *Status, err error) (*mcp.CallToolResult, any, error) {
+	if ctx.Err() != nil {
+		return nil, nil, ctx.Err()
+	}
+	waited := int(time.Since(start).Seconds())
+	if last == nil {
+		return nil, nil, &Error{
+			Message: fmt.Sprintf("The Renku API did not answer within %d s. Call %s again to keep waiting.", waited, tool),
+			Outcome: OutcomeUnreachable,
+			Err:     err,
+		}
+	}
+	note := fmt.Sprintf("Still `%s` after %d s. Call %s again to keep waiting.", last.State, waited, tool)
 	return ResultWithNote(last.Out, note)
 }
 
