@@ -9,7 +9,8 @@ Please follow this convention when adding a new row
 
 Renku now deploys `valkey` instead of the bitnami `redis` chart.
 
-* DELETE `redis`, the whole section. The valkey settings differ differently.
+* DELETE `redis`, the whole section. The valkey chart settings differ too much to map
+  them one to one.
 * NEW `valkey`, replacing the section above. It keeps `install`, `createSecret` and
   `password` with the same meaning as before, and passes the rest on to the valkey
   chart. Valkey authenticates through ACL users rather than a single
@@ -19,16 +20,28 @@ Renku now deploys `valkey` instead of the bitnami `redis` chart.
   the existing password is kept. The secret *name* no longer needs to be repeated,
   `valkey.auth.usersExistingSecret` is templated from `global.redis.existingSecret`.
   The chart fails with an explanatory message if these disagree.
-* NEW `valkey.dataStorage`, on by default with 2Gi from the default storage class.
-  Set `enabled: false` to disable persistence, e.g. in minimal deployments.
-* NEW `valkey.valkeyConfig`, enables AOF and disables RDB snapshots by default (see [docs](https://valkey.io/topics/persistence/)).
-  Set back to `save ""` whenever `dataStorage` is disabled.
+* NEW `valkey.replica` and `valkey.sentinel`: three valkey pods with sentinel, as with
+  redis before. Sentinel needs a password of its own, which renku generates into
+  `global.redis.existingSecret` under `valkey.sentinel.passwordKey`
+  (`sentinel-password`), or takes from the new `valkey.sentinelPassword`. Set the
+  latter, like `valkey.password`, when helm cannot look up the existing secret.
+* NEW `valkey.haproxy`, on by default. The valkey sentinel only admits its own
+  `sentinel` user, which renku-gateway cannot authenticate as, so the gateway reaches
+  the master through HAProxy. The chart fails if sentinel is enabled without it.
+* NEW `valkey.persistence`, on by default with 2Gi per valkey pod from the default
+  storage class. Replication requires it. Minimal deployments that do not need
+  sentinel nor persistence disable `replica`, `sentinel`, `haproxy` and
+  `persistence` (with `size: ""`), see `minimal-deployment/minimal-deployment-values.yaml`.
+* NEW `valkey.extraConfig`, enables AOF and disables RDB snapshots by default (see [docs](https://valkey.io/topics/persistence/)).
+  Set back to `save ""` whenever `persistence` is disabled.
 * EDIT `global.redis.host`, now only read when `valkey.install` is `false`. The
   bundled valkey is named after the release, like every other subchart.
 * EDIT `global.redis.port`, from `26379` (the sentinel port) to `6379`.
-* EDIT `global.redis.sentinel.enabled`, from `true` to `false`. The valkey chart does
-  not support sentinel. Keep this set to `true` only when pointing `global.redis` at
-  an external sentinel backed instance, together with `valkey.install: false`.
+* EDIT `global.redis.sentinel.enabled`, from `true` to `false`. Keep this set to
+  `true` only when pointing `global.redis` at an external sentinel backed instance,
+  together with `valkey.install: false`.
+* DELETE `global.redis.dbIndex.coreService`, `global.redis.dbIndex.uiServer` and
+  `global.redis.dbIndex.events`. The gateway is the only renku service still using redis.
 * DELETE `global.redis.clientLabel`. It labelled the client pods for the network
   policy that the bitnami chart brought along.
 

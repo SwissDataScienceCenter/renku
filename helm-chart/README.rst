@@ -55,18 +55,20 @@ Most information related to upgrading from one chart version to another is cover
 in the `values changelog file <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/values.yaml.changelog.md>`_.
 For upgrades that require some steps other than modifying the values files to be executed, we add some instructions here.
 
-Upgrading to Renku 2.21.0
+Upgrading to Renku x.yy.0
 *************************
 This version replaces the ``redis`` bitnami helm chart dependency (version ``20.3.0``)
-with the official `valkey chart <https://valkey.io/valkey-helm/>`_ (version ``0.12.0``).
+with the official `valkey chart <https://valkey.io/valkey-helm/>`_ (version ``1.0.0-rc.1``).
 
-Redis ran 3 nodes with a Sentinel, this is not yet supported by the Valkey chart,
-this chart is therefore configured to run a single valkey pod. Sessions are kept on a
-persistent volume, so restarting that pod does not log users out.
+As with redis, three valkey pods replicate the data and three Sentinel pods promote a
+replica when the master goes down. The valkey Sentinel only admits its own ``sentinel``
+user, which the renku gateway cannot authenticate as, so the gateway no longer talks to
+Sentinel: three HAProxy pods forward it to the current master instead.
+Sessions are kept on persistent volumes, so restarting the valkey pods does not log users out.
 The migration from redis itself logs everyone out, as the redis data is not carried over.
 
-Deployments that need the old behaviour can point ``global.redis`` at an external
-sentinel backed redis instance and set ``valkey.install`` to ``false``.
+Deployments that keep their own redis can point ``global.redis`` at it, sentinel backed
+or not, and set ``valkey.install`` to ``false``.
 
 The values of the two charts vary significantly, hence the ``redis`` section is replaced
 by a ``valkey`` section rather than renamed. The client side settings stay under 
@@ -75,11 +77,12 @@ by a ``valkey`` section rather than renamed. The client side settings stay under
 
 The password is preserved: the ``redis-secret`` secret is annotated with
 ``helm.sh/resource-policy: keep`` and is now used as the password of the valkey
-``default`` ACL user, under the same ``redis-password`` key.
+``default`` ACL user, under the same ``redis-password`` key. Sentinel has a password of
+its own, generated into the same secret under ``sentinel-password``.
 
 If you scrape valkey with Prometheus: bitnami redis brought its own network policy to open
 the exporter port, and the valkey chart does not. The renku chart's ``ingress-to-valkey-from-services`` 
-policy only admits the renku services, so allow your Prometheus through
+policy only admits the renku gateway and the valkey chart pods, so allow your Prometheus through
 ``networkPolicies.allowAllIngressFromNamespaces`` or
 ``networkPolicies.allowAllIngressFromPods``, as you would for any other component.
 

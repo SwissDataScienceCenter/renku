@@ -9,7 +9,7 @@ dependencies:
     condition: keycloakx.enabled
   - name: valkey
     repository: "https://valkey.io/valkey-helm/"
-    version: "0.12.0"
+    version: "1.0.0-rc.1"
     condition: valkey.install
   - name: amalthea-sessions
     repository: "https://swissdatasciencecenter.github.io/helm-charts/"

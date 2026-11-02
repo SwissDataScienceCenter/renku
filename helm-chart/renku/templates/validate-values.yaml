@@ -11,6 +11,12 @@ Validation of the renku values with actionable messages on failure.
   {{- if ne $valkeyPasswordKey .Values.global.redis.existingSecretPasswordKey }}
     {{- fail (printf "the passwordKey of the default user in valkey.auth.aclUsers (%s) must match global.redis.existingSecretPasswordKey (%s) to let the renku services authenticate against valkey" $valkeyPasswordKey .Values.global.redis.existingSecretPasswordKey) }}
   {{- end }}
+  {{- if and .Values.valkey.sentinel.enabled (not .Values.valkey.haproxy.enabled) }}
+    {{- fail "valkey.sentinel.enabled needs valkey.haproxy.enabled: the valkey Sentinel only admits its own 'sentinel' user, which renku-gateway cannot authenticate as, so the gateway reaches the master through HAProxy." }}
+  {{- end }}
+  {{- if .Values.global.redis.sentinel.enabled }}
+    {{- fail "global.redis.sentinel.enabled only applies to an external instance (valkey.install: false). The renku services reach the bundled valkey through HAProxy, or directly without sentinel." }}
+  {{- end }}
 {{- end }}
 
 {{- if hasKey .Values "keycloak" }}

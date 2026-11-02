@@ -201,7 +201,14 @@ ui:
       requests:
         memory: 75Mi
 valkey:
-  dataStorage:
+  replica:
     enabled: false
-  valkeyConfig: |-
+  sentinel:
+    enabled: false
+  haproxy:
+    enabled: false
+  persistence:
+    enabled: false
+    size: ""
+  extraConfig: |-
     save ""

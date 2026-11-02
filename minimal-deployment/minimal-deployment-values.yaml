@@ -98,10 +98,19 @@ ui:
       requests:
         memory: 75Mi
 valkey:
-  # Sessions are not worth a volume in a throwaway deployment, they go away
-  # with the pod. Without a save point valkey writes nothing to disk, so this
-  # also turns off the snapshots that the renku defaults enable.
-  dataStorage:
+  # A single valkey pod without sentinel in a throwaway deployment. Sessions
+  # are not worth a volume, they go away with the pod. Without a save point
+  # valkey writes nothing to disk, so this also turns off the AOF that the
+  # renku defaults enable.
+  replica:
     enabled: false
-  valkeyConfig: |-
+  sentinel:
+    enabled: false
+  haproxy:
+    enabled: false
+  persistence:
+    enabled: false
+    # the valkey chart refuses a size without persistence
+    size: ""
+  extraConfig: |-
     save ""

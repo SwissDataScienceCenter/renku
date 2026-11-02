@@ -163,6 +163,11 @@ valkey:
     requests:
       cpu: 2
       memory: 3.0Gi
+  sentinel:
+    resources:
+      requests:
+        cpu: 1
+        memory: 64Mi
 solr:
   resources:
     limits:

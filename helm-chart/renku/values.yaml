@@ -104,9 +104,6 @@ global:
     # Specify which renku component should use which DB index
     dbIndex:
       gateway: "0"
-      coreService: "1"
-      uiServer: "2"
-      events: "3"
     # The valkey section derives its secret name from existingSecret, and the
     # renku chart checks that its password key agrees with the one below.
     existingSecret: redis-secret
@@ -119,9 +116,8 @@ global:
     ## the release, and the renku services derive that name themselves.
     host:
     sentinel:
-      ## Set to true if host/port point to a redis sentinel. The valkey chart
-      ## bundled here does not support sentinel, so this is only useful when
-      ## pointing renku at an external sentinel-backed instance.
+      ## Set to true if host/port point to a redis sentinel. Only for an external
+      ## instance: the renku services reach the bundled valkey through its HAProxy.
       enabled: false
       masterSet: mymaster
   ## Set to true if using https
@@ -438,10 +434,12 @@ valkey:
   ### by the renku chart.                                                 ###
   ###########################################################################
   # If set to true, we'll create a k8s secret to be used as usersExistingSecret
-  # for password auth.
+  # and sentinel.existingSecret for password auth.
   createSecret: true
-  # The actual password, ignored if createSecret is false.
+  # The actual passwords, ignored if createSecret is false. Generated and kept
+  # across upgrades when empty, which needs helm to look up the existing secret.
   password: # openssl rand -hex 32
+  sentinelPassword: # openssl rand -hex 32
   ###########################################################################
   ### Configuration that is passed on to the valkey chart, for            ###
   ### details and further config options check out                        ###
@@ -451,25 +449,40 @@ valkey:
   # the image version used is the default specified in the helm chart
   # image:
 
-  # A single valkey pod: the chart has no sentinel support, so there is no
-  # automatic failover and a restart drops all sessions. See the 2.21.0 upgrade
-  # note in the chart readme.
+  # Three valkey pods, a master and two replicas. Sentinel promotes a replica
+  # when the master goes down.
   replica:
-    enabled: false
-  # Recreate rather than RollingUpdate, so that two independent valkey
-  # instances never sit behind the same service handing out different sessions.
-  deploymentStrategy: Recreate
-  # Sessions and event streams are kept on a ReadWriteOnce volume to survive the pod.
-  dataStorage:
     enabled: true
-    # Required. With an empty requestedSize the chart falls back to an emptyDir
-    # and nothing is persisted.
-    requestedSize: 2Gi
+    replicas: 3
+  podDisruptionBudget:
+    enabled: true
+  sentinel:
+    enabled: true
+    # derived by subchart templating.
+    existingSecret: '{{ .Values.global.redis.existingSecret }}'
+    passwordKey: sentinel-password
+    resources:
+      requests:
+        cpu: 200m
+        memory: 64Mi
+    podDisruptionBudget:
+      enabled: true
+  # The Sentinel of the valkey chart only admits its own "sentinel" user, which
+  # renku-gateway cannot authenticate as. HAProxy forwards the gateway to
+  # whichever pod Sentinel promoted instead.
+  haproxy:
+    enabled: true
+    podDisruptionBudget:
+      enabled: true
+  # One ReadWriteOnce volume per valkey pod, replication refuses to run without.
+  persistence:
+    enabled: true
+    size: 2Gi
     # Empty means the default storage class of the cluster.
-    className: ""
+    storageClass: ""
   # Persistence enabled via append-only file (AOF). RDB snapshots disabled.
-    # Note: valkey periodically compacts AOF to an RDB base. See https://valkey.io/topics/persistence/
-  valkeyConfig: |-
+  # Note: valkey periodically compacts AOF to an RDB base. See https://valkey.io/topics/persistence/
+  extraConfig: |-
     appendonly yes
     save ""
   # Valkey authenticates through ACL users, the renku secret is the

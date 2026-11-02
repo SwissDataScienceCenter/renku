@@ -574,16 +574,26 @@ ui:
       requests:
         memory: 75Mi
 valkey:
-  # No session persistence + volume in throwaway deployments.
-  dataStorage:
+  # A single valkey pod, without sentinel nor session persistence + volume in
+  # throwaway deployments.
+  replica:
     enabled: false
-  valkeyConfig: |-
+  sentinel:
+    enabled: false
+  haproxy:
+    enabled: false
+  persistence:
+    enabled: false
+    size: ""
+  extraConfig: |-
     save ""
   # added
   # The valkey chart hardcodes UID/GID 1000, which restricted-v2 rejects. The
   # bitnami charts drop those themselves, through
   # global.compatibility.openshift.adaptSecurityContext=auto; the valkey chart has
   # no equivalent. The nulls have to be explicit, helm merges values maps.
+  # With sentinel, the sentinel pods share these, and the same applies to
+  # haproxy.podSecurityContext (UID/GID 99).
   podSecurityContext:
     fsGroup: null
     runAsGroup: null
