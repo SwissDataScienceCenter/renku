@@ -1,6 +1,6 @@
 # Resource Pools & Classes
 
-Compute resources available to Renku users are determined by the **resources pools** the user has access to. To specify the resources for a project’s launcher, you select a **resource class** from any of the resource pools available to you. The same resource pools and classes apply to interactive [Sessions](session) and background [Jobs](job).
+Compute resources available to Renku users are determined by the **resources pools** the user has access to. To specify the resources for a project’s launcher, you select a **resource class** from any of the resource pools available to you. The same resource pools and classes apply to interactive [Sessions](/docs/users/compute/session) and background [Jobs](/docs/users/compute/job).
 
 ## Resource Pools
 
@@ -8,7 +8,7 @@ A **resource pool** consists of a total resource quota assigned to a set of user
 
 - **Resource quota:** For example, a resource pool may be configured for a total of 160 CPUs, 1024 GB RAM, and 16 GPUs.
 - **Users:** There is no limit to how many users can be added to a resource pool. And conversely, a user may be granted access to any number of resource pools. All resource pools the user has access to show up when defining or modifying the default resource class for a launcher.
-- **Culling times:** The maximum idle time for a resource pool(s) can be configured by the administrator. For example, in the Public resource pool (the default resource pool available to all RenkuLab users), interactive sessions auto-pause after 2 hours of idle time, and shut down after 2 weeks. These thresholds may be customized to be longer or shorter. Jobs are not paused for idle time in the same way as sessions, instead completed and errored jobs are removed from the interface after a retention period (see [Job](job)).
+- **Culling times:** The maximum idle time for a resource pool(s) can be configured by the administrator. For example, in the Public resource pool (the default resource pool available to all RenkuLab users), interactive sessions auto-pause after 2 hours of idle time, and shut down after 2 weeks. These thresholds may be customized to be longer or shorter. Jobs are not paused for idle time in the same way as sessions, instead completed and errored jobs are removed from the interface after a retention period (see [Job](/docs/users/compute/job)).
 
 ## Resource Classes
 
@@ -35,4 +35,4 @@ On RenkuLab, the following resources classes are publicly available (in the “p
 
 ## Request a Custom Resource Pool {#request-custom-resource-pool}
 
-Do you need more resources than are available in RenkuLab’s public resource classes? [Contact](../community) us! We can configure a custom resource pool for your needs upon demand. We apply flat, transparent pricing, passing down infra rates.
+Do you need more resources than are available in RenkuLab’s public resource classes? [Contact](/docs/users/community) us! We can configure a custom resource pool for your needs upon demand. We apply flat, transparent pricing, passing down infra rates.

@@ -5,7 +5,7 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
-## Upgrading to Renku 2.21.0
+## Upgrading to Renku x.yy.0
 
 Renku now deploys `valkey` instead of the bitnami `redis` chart.
 
@@ -31,6 +31,12 @@ Renku now deploys `valkey` instead of the bitnami `redis` chart.
   an external sentinel backed instance, together with `valkey.install: false`.
 * DELETE `global.redis.clientLabel`. It labelled the client pods for the network
   policy that the bitnami chart brought along.
+
+## Upgrading to Renku 2.21.0
+
+* NEW `dataService.imageBuilders.insecureOutput.enabled`: it is now possible to configure registries that use e.g. self-signed certificates to push images to. **WARNING** do not use in production. This is a feature that helps for testing and development.
+
+* NEW `dataService.imageBuilders.insecureOutput.registries`: a comma separated list of insecure registries (e.g. behind a self-signed certificate).
 
 ## Upgrading to Renku 2.18.0
 

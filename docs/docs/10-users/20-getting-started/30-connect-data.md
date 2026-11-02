@@ -22,6 +22,6 @@ The data connector in the previous step is read only. If you would like to be ab
 
 :::info
 
-Check out our guides for creating different types of [data connectors](../data/guides/connect-data/)
+Check out our guides for creating different types of [data connectors](/docs/users/data/guides/connect-data/)
 
 :::
