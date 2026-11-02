@@ -41,9 +41,10 @@ func Wait(ctx context.Context, req *mcp.CallToolRequest, tool string, poll func(
 		s, err := poll(deadline)
 		switch {
 		case ctx.Err() != nil:
+			// The mcp client cancelled or went away.
 			return nil, nil, ctx.Err()
-		case err != nil && last.Out != nil && deadline.Err() != nil:
-			// MaxWait cut off the request, report the state of the previous poll.
+		case deadline.Err() != nil && err != nil && last.Out != nil:
+			// MaxWait/deadline timed out, but the previous call succeeded - report the state of the previous poll.
 			return stillWaiting(tool, start, last)
 		case err != nil:
 			return nil, nil, err

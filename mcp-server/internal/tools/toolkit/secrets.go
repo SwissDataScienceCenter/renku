@@ -104,34 +104,56 @@ func hasURLPassword(v any) bool {
 // a non-empty value under a secret key, or a URL with a password.
 func SecretKeys(v any) []string {
 	var found []string
-	walkSecrets(v, "", func(path string) { found = append(found, path) })
+	redact(v, "", &found)
 	slices.Sort(found)
 	return found
 }
 
-func walkSecrets(v any, path string, found func(string)) {
+// RedactSecrets returns a copy of v, decoded JSON, in which the values SecretKeys finds are replaced
+// with "[redacted]".
+func RedactSecrets(v any) any {
+	return redact(v, "", nil)
+}
+
+// redact is the single walk behind SecretKeys and RedactSecrets, so that what is refused and what is
+// redacted cannot drift apart. It returns a copy of v, at path, with the credentials replaced, and
+// appends their paths to found unless found is nil.
+func redact(v any, path string, found *[]string) any {
 	switch v := v.(type) {
 	case map[string]any:
+		out := make(map[string]any, len(v))
 		for key, child := range v {
 			here := key
 			if path != "" {
 				here = path + "." + key
 			}
 			if isSecretKey(key) && carriesValue(child) {
-				found(here)
-				continue
+				out[key] = redacted(here, found)
+			} else {
+				out[key] = redact(child, here, found)
 			}
-			walkSecrets(child, here, found)
 		}
+		return out
 	case []any:
+		out := make([]any, len(v))
 		for i, child := range v {
-			walkSecrets(child, fmt.Sprintf("%s[%d]", path, i), found)
+			out[i] = redact(child, fmt.Sprintf("%s[%d]", path, i), found)
 		}
+		return out
 	default:
 		if hasURLPassword(v) {
-			found(path)
+			return redacted(path, found)
 		}
+		return v
 	}
+}
+
+// redacted records the credential at path in found, unless found is nil, and returns its replacement.
+func redacted(path string, found *[]string) string {
+	if found != nil {
+		*found = append(*found, path)
+	}
+	return "[redacted]"
 }
 
 // RejectSecrets returns a tool error naming the credentials in v, decoded JSON, or nil if there are
@@ -144,32 +166,4 @@ func RejectSecrets(v any, what string) error {
 	return fmt.Errorf("refusing to send credentials to the Renku API: %s contains %s. Credentials must "+
 		"never be passed as tool arguments, as they end up in the conversation and in logs. Leave them "+
 		"out, then tell the user to add them to the data connector in the Renku UI", what, strings.Join(keys, ", "))
-}
-
-// RedactSecrets returns a copy of v, decoded JSON, in which the values SecretKeys finds are replaced
-// with "[redacted]".
-func RedactSecrets(v any) any {
-	switch v := v.(type) {
-	case map[string]any:
-		out := make(map[string]any, len(v))
-		for key, child := range v {
-			if isSecretKey(key) && carriesValue(child) {
-				out[key] = "[redacted]"
-			} else {
-				out[key] = RedactSecrets(child)
-			}
-		}
-		return out
-	case []any:
-		out := make([]any, len(v))
-		for i, child := range v {
-			out[i] = RedactSecrets(child)
-		}
-		return out
-	default:
-		if hasURLPassword(v) {
-			return "[redacted]"
-		}
-		return v
-	}
 }

@@ -100,7 +100,8 @@ type Authenticator struct {
 	keySet   *oidc.RemoteKeySet
 	verifier *oidc.IDTokenVerifier
 	logger   *slog.Logger
-	ready    atomic.Bool
+	// Indicates that we can reach the JWKS endpoint at least once.
+	ready atomic.Bool
 }
 
 // New creates an Authenticator. Signing keys are fetched lazily and cached.
@@ -164,6 +165,7 @@ func (a *Authenticator) verify(ctx context.Context, raw string) (*oidc.IDToken, 
 	if err != nil {
 		return nil, c, err
 	}
+	// We just verified a token, so it means the JWKS endpoint is reachable and we can verify tokens.
 	a.ready.Store(true)
 	if err := token.Claims(&c); err != nil {
 		return nil, c, fmt.Errorf("decoding claims: %w", err)
@@ -252,10 +254,14 @@ func rejectAdmins(next http.Handler, logger *slog.Logger) http.Handler {
 }
 
 // Ready reports whether the signing keys can be fetched, so the server can validate tokens.
+// Used by the K8s readiness probes.
 func (a *Authenticator) Ready(ctx context.Context) bool {
 	if a.ready.Load() {
 		return true
 	}
+	// The a.ready flag is not true, so we try to send a request to the JWKS endpoint.
+	// We cannot populate the cache at a.keySet, so the response is just dropped, the keySet
+	// will be populated with a token is verified.
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, a.cfg.JWKSURL, nil)
 	if err != nil {
 		return false

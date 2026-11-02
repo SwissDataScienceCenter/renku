@@ -18,7 +18,7 @@ import (
 )
 
 // MaxResponseBytes caps how much of an API response is read, to protect the server and the model's context.
-const MaxResponseBytes = 4 << 20
+const MaxResponseBytes = 4 * 1024 * 1024 // 4 MiB
 
 // ErrResponseTooLarge is returned by the clients for responses larger than MaxResponseBytes.
 var ErrResponseTooLarge = errors.New("response too large")

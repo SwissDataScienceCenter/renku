@@ -66,6 +66,10 @@ func (l *limiters) allow(subject string) bool {
 	defer l.mu.Unlock()
 	now := l.now()
 	if now.Sub(l.lastScan) > limiterScanInterval {
+		// Check and purge the limiters from users who are idle.
+		// If you have not made any requests your tokens are full and the user is "idle".
+		// This is to prevent the byUser map from growing too large.
+		// When a user comes back we create a new token bucket for them.
 		for s, limiter := range l.byUser {
 			if limiter.TokensAt(now) >= float64(l.burst) {
 				delete(l.byUser, s)
@@ -78,5 +82,6 @@ func (l *limiters) allow(subject string) bool {
 		limiter = rate.NewLimiter(l.limit, l.burst)
 		l.byUser[subject] = limiter
 	}
+	// You need one token to make a tool call, when the tokens run out you cannot make tool calls.
 	return limiter.AllowN(now, 1)
 }

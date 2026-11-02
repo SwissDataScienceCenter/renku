@@ -50,6 +50,26 @@ func TestRedactSecretsKeepsEverythingElse(t *testing.T) {
 	}
 }
 
+// TestRedactSecretsRedactsWhatSecretKeysFinds checks that the values refused by RejectSecrets are
+// exactly the ones redacted from the logs.
+func TestRedactSecretsRedactsWhatSecretKeysFinds(t *testing.T) {
+	in := map[string]any{
+		"type":         "webdav",
+		"url":          "https://user:hunter2@dav.example.org",
+		"ask_password": true,
+		"pass":         "",
+		"nested":       []any{map[string]any{"Password": "x", "host": "h"}},
+	}
+	out, _ := json.Marshal(RedactSecrets(in))
+	want := `{"ask_password":true,"nested":[{"Password":"[redacted]","host":"h"}],"pass":"","type":"webdav","url":"[redacted]"}`
+	if string(out) != want {
+		t.Errorf("RedactSecrets = %s, want %s", out, want)
+	}
+	if got, want := SecretKeys(in), []string{"nested[0].Password", "url"}; !slices.Equal(got, want) {
+		t.Errorf("SecretKeys = %q, want %q", got, want)
+	}
+}
+
 // notSecret are options rclone marks Sensitive that name a resource rather than carry a credential.
 // Renku itself unmarks some of them (account, host, user for some providers, see rclone_patches.py
 // in renku-data-services). Refusing them would refuse ordinary connectors, e.g. any WebDAV or SFTP one.

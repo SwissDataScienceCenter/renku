@@ -1,14 +1,23 @@
 package toolkit
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
+
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 )
 
 // OutcomeDeclined is the logged outcome of a call the user did not confirm.
 const OutcomeDeclined = "declined"
 
-// confirmID is the key of the confirmation in the input requests and responses of a call.
-const confirmID = "confirm"
+// confirmKey is the key of the confirmation of action in the input requests and responses of a call.
+// It is derived from action, which names what the call changes, so that an answer given for one
+// action is not taken for another: if the client retries the call with different arguments but the
+// old responses, the key does not match and the user is asked again.
+func confirmKey(action string) string {
+	sum := sha256.Sum256([]byte(action))
+	return "confirm-" + hex.EncodeToString(sum[:8])
+}
 
 var confirmSchema = map[string]any{
 	"type": "object",
@@ -35,17 +44,22 @@ var confirmSchema = map[string]any{
 // the description tells the model to. The confirmation is a usability feature, not a security check:
 // the client sends the answer.
 func Confirm(req *mcp.CallToolRequest, action string) (*mcp.CallToolResult, error) {
-	if answer, ok := req.Params.InputResponses[confirmID]; ok {
+	return confirm(req.Params.InputResponses, req.ClientCapabilities(), action)
+}
+
+func confirm(responses mcp.InputResponseMap, caps *mcp.ClientCapabilities, action string) (*mcp.CallToolResult, error) {
+	key := confirmKey(action)
+	if answer, ok := responses[key]; ok {
 		if r, ok := answer.(*mcp.ElicitResult); ok && r.Action == "accept" && r.Content["confirm"] == true {
 			return nil, nil
 		}
 		return nil, &Error{Message: "The user did not agree to this: " + action + ". Do not retry it.", Outcome: OutcomeDeclined}
 	}
-	if !canElicitForm(req.ClientCapabilities()) {
+	if !canElicitForm(caps) {
 		return nil, nil
 	}
 	return &mcp.CallToolResult{InputRequests: mcp.InputRequestMap{
-		confirmID: &mcp.ElicitParams{Mode: "form", Message: action + ". Go ahead?", RequestedSchema: confirmSchema},
+		key: &mcp.ElicitParams{Mode: "form", Message: action + ". Go ahead?", RequestedSchema: confirmSchema},
 	}}, nil
 }
 
