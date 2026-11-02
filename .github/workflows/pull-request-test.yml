@@ -60,7 +60,7 @@ jobs:
         run: npm run build
 
   test-buildpacks-consistency:
-    name: Buildpacks Consistency
+    name: Buildpacks consistency
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout repository
