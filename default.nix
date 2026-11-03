@@ -17,6 +17,7 @@ let
   # from PyPi assuming that the latest published version is anyway what is
   # usually needed.
 
+
   python-packages = mach-nix.mkPython {
     requirements = pkgs.lib.strings.concatStringsSep "\n" (
       pkgs.lib.lists.remove "./docs/renku-python" (
