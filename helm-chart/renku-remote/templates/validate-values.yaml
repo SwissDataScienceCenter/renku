@@ -1,0 +1,11 @@
+{{- $amalthea := index .Values "amalthea-sessions" | default dict }}
+{{- if (index .Values "csi-rclone").enabled }}
+{{- $csiStorageClass := (index .Values "csi-rclone").storageClassName | default "csi-rclone" }}
+{{- $expected := printf "%s-secret-annotation" $csiStorageClass }}
+{{- if ne ($amalthea.rcloneStorageClass | default "csi-rclone-secret-annotation") $expected }}
+{{- fail (printf "amalthea-sessions.rcloneStorageClass must be %q to match csi-rclone.storageClassName" $expected) }}
+{{- end }}
+{{- end }}
+{{- if (($amalthea.deploy | default dict).csiRclone) }}
+{{- fail "Do not set amalthea-sessions.deploy.csiRclone, use csi-rclone.enabled instead so the csi-rclone version matches the main Renku deployment" }}
+{{- end }}
