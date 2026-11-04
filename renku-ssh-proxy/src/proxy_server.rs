@@ -7,7 +7,8 @@ use std::time::Duration;
 
 use crate::Settings;
 use crate::activity::{Activity, REFRESH_WINDOW};
-use crate::data_services::Client;
+use crate::data_services::{AuthResult, Client, SessionAuthorizeResponse};
+use crate::ssh_key::SessionAuthKey;
 use color_eyre::eyre::{OptionExt, Result};
 use russh::keys::ssh_key::{HashAlg, PublicKey};
 use russh::keys::{PrivateKey, PrivateKeyWithHashAlg};
@@ -45,6 +46,7 @@ pub struct Target {
     pub port: u16,
     pub user: String,
     pub expected_host_key: Option<PublicKey>,
+    pub auth_key: Option<SessionAuthKey>,
 }
 
 struct TargetHandler {
@@ -194,6 +196,22 @@ impl ProxyHandler {
         }
     }
 
+    fn set_target_data(&mut self, data: &SessionAuthorizeResponse) -> Result<()> {
+        log::debug!("Setting target host from response: {:?}", data);
+        if let Some(t) = &mut self.target {
+            t.host = data.target_host.clone();
+            t.port = data.target_port;
+            t.user = data.target_user.clone();
+            if let Some(k) = &data.auth_key_priv {
+                t.auth_key = Some(k.load_as_secret_key()?);
+            }
+            if let Some(k) = &data.host_key_pub {
+                t.expected_host_key = Some(k.load_as_public_key()?);
+            }
+        }
+        Ok(())
+    }
+
     async fn connect_target(&mut self) -> Result<Arc<client::Handle<TargetHandler>>> {
         if let Some(h) = &self.upstream {
             return Ok(h.clone());
@@ -212,10 +230,17 @@ impl ProxyHandler {
             },
         )
         .await?;
-        let auth_key = self
-            .auth_key
-            .clone()
-            .ok_or_eyre("no session auth key configured")?;
+        log::debug!(
+            "Connected to target {}. Continue with authentication",
+            target.host
+        );
+        let auth_key = match target.auth_key {
+            Some(pk) => pk.0,
+            None => self
+                .auth_key
+                .clone()
+                .ok_or_eyre("no session auth key configured")?,
+        };
         let hash_alg = handle.best_supported_rsa_hash().await?.flatten();
         let auth = handle
             .authenticate_publickey(&target.user, PrivateKeyWithHashAlg::new(auth_key, hash_alg))
@@ -307,11 +332,17 @@ impl server::Handler for ProxyHandler {
         log::debug!("Setting target host to {user}");
         self.set_target_host(user);
         match self.client.authorize_session(public_key, user).await {
-            Ok(true) => {
+            Ok(AuthResult {
+                success: true,
+                target_data,
+            }) => {
                 log::info!("Auth successful");
+                if let Some(target) = &target_data {
+                    self.set_target_data(target)?;
+                }
                 Ok(server::Auth::Accept)
             }
-            Ok(false) => {
+            Ok(AuthResult { success: false, .. }) => {
                 log::warn!(
                     "Auth failed for {}",
                     public_key.fingerprint(HashAlg::Sha256)
@@ -560,6 +591,15 @@ impl server::Handler for ProxyHandler {
     }
 }
 
+/// IO errors that indicate the client went away without a clean shutdown and
+/// are not worth an error log. Add new such kinds here as they are found.
+fn is_benign_client_disconnect(err: &std::io::Error) -> bool {
+    matches!(
+        err.kind(),
+        std::io::ErrorKind::ConnectionReset | std::io::ErrorKind::UnexpectedEof
+    )
+}
+
 /// Forwards ssh messages received from the channel to the client handler.
 async fn proxy_channel(
     mut up: Channel<client::Msg>,
@@ -638,6 +678,7 @@ async fn proxy_channel(
 
 impl server::Server for ProxyHandler {
     type Handler = Self;
+
     fn new_client(&mut self, _: Option<std::net::SocketAddr>) -> Self {
         let mut client = self.clone();
         client.activity = Arc::new(Mutex::new(Activity::default()));
@@ -650,20 +691,25 @@ impl server::Server for ProxyHandler {
     fn handle_session_error(&mut self, error: <Self::Handler as russh::server::Handler>::Error) {
         let cause = error.downcast_ref::<russh::Error>();
         match cause {
-            Some(russh::Error::Disconnect) => log::debug!("Client disconnected: {error:#?}"),
-            Some(russh::Error::IO(err)) if err.kind() == std::io::ErrorKind::UnexpectedEof => {
-                log::debug!(
-                    "Connection closed without a disconnect message (probe or dropped client): {error:#?}"
-                );
+            Some(russh::Error::Disconnect) => log::trace!("Client disconnected: {error:#?}"),
+            Some(russh::Error::IO(io_err)) if is_benign_client_disconnect(io_err) => {
+                log::trace!("io error (connection reset): {error:#?}")
             }
-            _ => log::error!("Session error: {error:#?}"),
-        }
+            Some(c) => {
+                log::error!("Session error: {c:?}");
+                log::trace!("Session error structure: {error:#?}");
+            }
+            _ => {
+                log::error!("Session error: {error:?}");
+                log::trace!("Session error structure: {error:#?}");
+            }
+        };
     }
 }
 
 impl Drop for ProxyHandler {
     fn drop(&mut self) {
-        log::debug!("Closing client. Clear all channels");
+        log::trace!("Closing client. Clear all channels");
         self.alive.store(false, Ordering::Relaxed);
         self.activity_notify.notify_one();
         self.channels.clear();

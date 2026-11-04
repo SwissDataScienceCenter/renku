@@ -1,6 +1,8 @@
 //! Module for interacting with the secret service.
 
+use crate::key_source::KeySource;
 use crate::keycloak::TokenProvider;
+use crate::secret_name::SecretName;
 use color_eyre::Result;
 use color_eyre::eyre::eyre;
 use reqwest::Url;
@@ -10,8 +12,8 @@ use std::sync::Arc;
 use std::time::Duration;
 
 pub struct Client {
-    base_url: Url,
-    data_services_url: Url,
+    base_url: UrlType,
+    data_services_url: UrlType,
     client: reqwest::Client,
     token_provider: Arc<TokenProvider>,
 }
@@ -49,22 +51,37 @@ struct DeadlineResponse {
     alive: bool,
 }
 
+#[derive(Clone, Debug)]
+enum UrlType {
+    Base(Url),
+    Pattern(String),
+}
+
 #[derive(serde::Serialize, Clone, Debug)]
 #[serde(deny_unknown_fields)]
 struct SessionAuthorizeRequest {
     pub public_key: String,
 }
 
-fn make_url<I>(base: &Url, items: I) -> Result<Url>
+#[derive(serde::Serialize, serde::Deserialize, Clone, Debug)]
+pub struct SessionAuthorizeResponse {
+    pub target_host: String,
+    pub target_port: u16,
+    pub target_user: String,
+    pub host_key_pub: Option<KeySource>,
+    pub auth_key_priv: Option<SecretName>,
+}
+
+fn extend_url<I>(base_url: &Url, items: I) -> Result<Url>
 where
     I: IntoIterator,
     I::Item: AsRef<str>,
 {
-    let mut url = base.clone();
+    let mut url = base_url.clone();
     {
         let mut path = url
             .path_segments_mut()
-            .map_err(|_| eyre!("Cannot extends base url: {base}"))?;
+            .map_err(|_| eyre!("Cannot extend base url: {}", base_url))?;
         // A base ending in `/` would otherwise produce a double slash, which the route
         // does not serve.
         path.pop_if_empty();
@@ -73,15 +90,57 @@ where
     Ok(url)
 }
 
+#[derive(Clone, Debug)]
+pub struct AuthResult {
+    pub success: bool,
+    pub target_data: Option<SessionAuthorizeResponse>,
+}
+
+#[derive(Debug)]
+enum SessionUrlPath {
+    Authorize,
+    Interaction,
+}
+impl SessionUrlPath {
+    fn segment(&self) -> &str {
+        match self {
+            SessionUrlPath::Authorize => "authorize",
+            SessionUrlPath::Interaction => "interaction",
+        }
+    }
+}
+
+fn create_internal_session_uri(
+    base: &UrlType,
+    session_name: &str,
+    path: SessionUrlPath,
+) -> Result<Url> {
+    match base {
+        UrlType::Base(b) => extend_url(b, &["internal", "sessions", session_name, path.segment()]),
+        UrlType::Pattern(p) => {
+            let full_url = p.replace("{session_name}", session_name);
+            Ok(Url::parse(&full_url)?)
+        }
+    }
+}
+
 impl Client {
     pub fn new(
-        secret_service_url: &str,
+        base_url: &str,
         data_services_url: &str,
         token_provider: Arc<TokenProvider>,
         timeout: &Duration,
     ) -> Result<Client> {
-        let uri = Url::parse(secret_service_url)?;
-        let data_services_uri = Url::parse(data_services_url)?;
+        let uri = if base_url.contains("{session_name}") {
+            UrlType::Pattern(base_url.to_string())
+        } else {
+            UrlType::Base(Url::parse(base_url)?)
+        };
+        let data_services_uri = if data_services_url.contains("{session_name}") {
+            UrlType::Pattern(data_services_url.to_string())
+        } else {
+            UrlType::Base(Url::parse(data_services_url)?)
+        };
         let client = reqwest::Client::builder().timeout(*timeout).build()?;
         Ok(Client {
             base_url: uri,
@@ -91,15 +150,24 @@ impl Client {
         })
     }
 
+    fn make_authorize_url(&self, session_name: &str) -> Result<Url> {
+        create_internal_session_uri(&self.base_url, session_name, SessionUrlPath::Authorize)
+    }
+
+    fn make_interaction_url(&self, session_name: &str) -> Result<Url> {
+        create_internal_session_uri(
+            &self.data_services_url,
+            session_name,
+            SessionUrlPath::Interaction,
+        )
+    }
+
     pub async fn authorize_session(
         &self,
         public_key: &PublicKey,
         session_name: &str,
-    ) -> Result<bool> {
-        let url = make_url(
-            &self.base_url,
-            &["internal", "sessions", session_name, "authorize"],
-        )?;
+    ) -> Result<AuthResult> {
+        let url = self.make_authorize_url(session_name)?;
         log::debug!("Call to: {}", url);
         let openssh_key = public_key.to_openssh()?;
         let payload = SessionAuthorizeRequest {
@@ -107,26 +175,32 @@ impl Client {
         };
         let resp = self.client.post(url).json(&payload).send().await?;
         let success = resp.status().is_success();
+        let mut target_data: Option<SessionAuthorizeResponse> = None;
         if success {
             log::debug!("Authorized session {session_name} via public-key");
+            if resp.status() == 200 {
+                let session_resp: SessionAuthorizeResponse = resp.json().await?;
+                target_data = Some(session_resp);
+            }
         } else {
             log::debug!("Failed to authorize public key: {}", payload.public_key);
             log::info!(
-                "Call to {} denied access to session {session_name}: {}",
+                "Call to {:?} denied access to session {session_name}: {}",
                 self.base_url,
                 resp.status()
             );
         }
-        Ok(success)
+        Ok(AuthResult {
+            success,
+            target_data,
+        })
     }
 
     /// Records user input on the session. Only 2xx counts as a touch.
     pub async fn touch_session(&self, session: &str) -> SessionResult<()> {
-        let url = make_url(
-            &self.data_services_url,
-            ["internal", "sessions", session, "interaction"],
-        )
-        .map_err(SessionError::Failed)?;
+        let url = self
+            .make_interaction_url(session)
+            .map_err(SessionError::Failed)?;
         log::debug!("Touch session interaction: {}", url);
         let resp = self
             .with_token(|token| self.client.post(url.clone()).bearer_auth(token))
@@ -143,11 +217,9 @@ impl Client {
 
     /// Reads how long the session has until hibernation. A 404 means it is gone.
     pub async fn session_deadline(&self, session: &str) -> SessionResult<SessionDeadline> {
-        let url = make_url(
-            &self.data_services_url,
-            ["internal", "sessions", session, "interaction"],
-        )
-        .map_err(SessionError::Failed)?;
+        let url = self
+            .make_interaction_url(session)
+            .map_err(SessionError::Failed)?;
         log::debug!("Read session deadline: {}", url);
         let resp = self
             .with_token(|token| self.client.get(url.clone()).bearer_auth(token))
@@ -244,8 +316,9 @@ mod tests {
 
     #[test]
     fn test_make_url_ignores_a_trailing_slash() {
-        let base = Url::parse("http://ds/api/data/").unwrap();
-        let url = make_url(&base, ["internal", "sessions", "s1", "interaction"]).unwrap();
+        let base = UrlType::Base(Url::parse("http://ds/api/data/").unwrap());
+
+        let url = create_internal_session_uri(&base, "s1", SessionUrlPath::Interaction).unwrap();
         assert_eq!(
             url.as_str(),
             "http://ds/api/data/internal/sessions/s1/interaction"
