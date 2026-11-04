@@ -36,3 +36,6 @@ updates:
         patterns:
           - "react"
           - "react-*"
+      other:
+        patterns:
+          - "*"
