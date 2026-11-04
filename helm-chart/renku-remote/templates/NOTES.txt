@@ -36,6 +36,8 @@ Renku sessions from the main deployment will run in this namespace.
 2. Add the kubeconfig to the secret referenced by
    `dataService.remoteClustersKubeconfigSecretName` in the main Renku deployment,
    then register the cluster through the Renku `/clusters` API.
+   You will have to restart the data services, k8s watcher and secret service so
+   that they pick up the new cluster.
 {{- end }}
 {{- if .Values.priorityClasses }}
 

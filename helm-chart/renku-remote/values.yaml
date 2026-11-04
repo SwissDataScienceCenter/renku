@@ -18,6 +18,8 @@ fullnameOverride: ""
 crossClusterAccess:
   enabled: true
   ## Defaults to "<fullname>-cross-cluster" when empty.
+  ## The token for accessing the cluster outside via the Kubernetes API will be in the
+  ## secret named by the `serviceAccountName` +  `-token`
   serviceAccountName: ""
   ## Additional RBAC rules to add to the Role.
   extraRules: []
