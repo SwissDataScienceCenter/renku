@@ -181,11 +181,15 @@ impl server::Handler for ProxyHandler {
         log::debug!("Setting target host to {user}");
         self.set_target_host(user);
         match self.client.authorize_session(public_key, user).await {
-            Ok(true) => {
+            Ok((true, th)) => {
                 log::info!("Auth successful");
+                if let Some(target) = th {
+                    log::debug!("Setting target host from response: {target}");
+                    self.set_target_host(target);
+                }
                 Ok(server::Auth::Accept)
             }
-            Ok(false) => {
+            Ok((false, _)) => {
                 log::warn!(
                     "Auth failed for {}",
                     public_key.fingerprint(HashAlg::Sha256)

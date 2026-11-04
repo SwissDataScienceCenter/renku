@@ -17,6 +17,11 @@ struct SessionAuthorizeRequest {
     pub public_key: String,
 }
 
+#[derive(serde::Serialize, serde::Deserialize, Clone, Debug)]
+struct SessionAuthorizeResponse {
+    pub target_host: String,
+}
+
 impl Client {
     pub fn new(base_url: &str, timeout: &Duration) -> Result<Client> {
         let uri = Url::parse(base_url)?;
@@ -36,7 +41,7 @@ impl Client {
         {
             let mut path = url
                 .path_segments_mut()
-                .map_err(|_| eyre!("Cannot extends base url: {}", self.base_url))?;
+                .map_err(|_| eyre!("Cannot extend base url: {}", self.base_url))?;
             path.extend(items);
         }
         Ok(url)
@@ -46,7 +51,7 @@ impl Client {
         &self,
         public_key: &PublicKey,
         session_name: &str,
-    ) -> Result<bool> {
+    ) -> Result<(bool, Option<String>)> {
         let url = self.make_url(&["internal", "sessions", session_name, "authorize"])?;
         log::debug!("Call to: {}", url);
         let openssh_key = public_key.to_openssh()?;
@@ -55,8 +60,13 @@ impl Client {
         };
         let resp = self.client.post(url).json(&payload).send().await?;
         let success = resp.status().is_success();
+        let mut target_host: Option<String> = None;
         if success {
             log::debug!("Authorized session {session_name} via public-key");
+            if resp.status() == 200 {
+                let session_resp: SessionAuthorizeResponse = resp.json().await?;
+                target_host = Some(session_resp.target_host);
+            }
         } else {
             log::debug!("Failed to authorize public key: {}", payload.public_key);
             log::info!(
@@ -65,7 +75,7 @@ impl Client {
                 resp.status()
             );
         }
-        Ok(success)
+        Ok((success, target_host))
     }
 }
 
