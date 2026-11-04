@@ -155,15 +155,14 @@ keycloakx:
     requests:
       cpu: 1000m
       memory: 2Gi
-redis:
-  replica:
-    resources:
-      limits:
-        cpu: 2
-        memory: 3.0Gi
-      requests:
-        cpu: 2
-        memory: 3.0Gi
+valkey:
+  resources:
+    limits:
+      cpu: 2
+      memory: 3.0Gi
+    requests:
+      cpu: 2
+      memory: 3.0Gi
   sentinel:
     resources:
       requests:

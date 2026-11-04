@@ -1,6 +1,3 @@
-{{- if hasKey .Values "keycloak" -}}
-{{- fail "Values to configure Keycloak should be under `keycloakx`." -}}
-{{- end -}}
 {{- if .Values.keycloakx.enabled }}
 apiVersion: batch/v1
 kind: Job

@@ -61,6 +61,24 @@ Define subcharts full names
 {{- printf "%s-%s" .Release.Name "solr" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
+{{/*
+Deliberately not called "valkey.fullname": valkey subchart already defines that name.
+With sentinel, the clients go through the haproxy service, named like the valkey
+chart's "valkey.fullnameWithSuffix".
+*/}}
+{{- define "renku.valkeyHost" -}}
+{{- if .Values.valkey.install -}}
+{{- $valkeyFullname := printf "%s-%s" .Release.Name "valkey" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- if .Values.valkey.haproxy.enabled -}}
+{{- printf "%s-haproxy" ($valkeyFullname | trunc 55 | trimSuffix "-") -}}
+{{- else -}}
+{{- $valkeyFullname -}}
+{{- end -}}
+{{- else -}}
+{{- .Values.global.redis.host -}}
+{{- end -}}
+{{- end -}}
+
 {{- define "gitlab.fullname" -}}
 {{- printf "%s-%s" .Release.Name "gitlab" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
