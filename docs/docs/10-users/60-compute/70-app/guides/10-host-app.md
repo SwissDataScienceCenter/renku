@@ -20,6 +20,23 @@ To create an app launcher you need:
   (see the `Procfile` section [below](#1-listen-on-the-port-renku-assigns)), or
   you supply a container image you have already built and pushed.
 
+:::info
+
+If the data of your app is provided in a data connector, avoid using relative paths to the data in your code. Instead ensure to declare the path to your data in your code relative to the mounting point of your session. For example,
+
+```bash
+  RENKU_MOUNT_DIRECTORY = os.environ.get("RENKU_MOUNT_DIR")
+  DATA=os.path.join(RENKU_MOUNT_DIRECTORY, "data-connector-folder-name", "file-name")
+```
+
+:::
+
+:::warning
+
+Data stored in Renku [project storage](../../../data/projet-storage) is currently not accessible from Renku Apps.
+
+:::
+
 ## 1. Listen on the port Renku assigns
 
 A session built from code gets a Renku-provided frontend such as JupyterLab,
