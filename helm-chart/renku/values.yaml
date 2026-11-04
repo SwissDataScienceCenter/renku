@@ -1369,10 +1369,10 @@ dataService:
   ## expect that the PV will be automatically provisioned.
   ## When you use this feature you should also setup backups for the volumes that are used for project storage.
   projectStorage:
-    enabled: false
+    enabled: true
     ## If you leave the storage class as null, the default storage class will be used.
     ## NOTE: In many cases the default storage class does not support read-write-many access.
-    storageClass: null
+    storageClass: managed-csi
     ## The max storage that the API will accept when the storage is created.
     ## This is the upper limit of what the users can request. When they create the project storage
     ## user have the option to set a lower value. The value cannot be lower than 1 Gb.
