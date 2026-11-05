@@ -627,10 +627,17 @@ async fn test_connections_do_not_share_activity() {
     let mut template = test_handler();
     let first = template.new_client(None);
     let second = template.new_client(None);
+    let first_notify = first.activity_notify.clone();
     assert!(first.touch());
     assert!(
         second.touch(),
         "the second connection starts its own window"
+    );
+    assert!(!Arc::ptr_eq(&first_notify, &second.activity_notify));
+    drop(first);
+    assert!(
+        second.alive.load(Ordering::Relaxed),
+        "closing one connection must not mark another dead"
     );
 }
 
