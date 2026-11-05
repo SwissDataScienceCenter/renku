@@ -2,7 +2,7 @@ use std::collections::HashMap;
 use std::sync::Arc;
 
 use crate::Settings;
-use crate::data_services::Client;
+use crate::data_services::{AuthResult, Client};
 use color_eyre::eyre::{OptionExt, Result};
 use russh::keys::ssh_key::{HashAlg, PublicKey};
 use russh::keys::{PrivateKey, PrivateKeyWithHashAlg};
@@ -114,6 +114,12 @@ impl ProxyHandler {
         }
     }
 
+    fn set_target_port(&mut self, port: u16) {
+        if let Some(t) = &mut self.target {
+            t.port = port;
+        }
+    }
+
     async fn connect_target(&mut self) -> Result<Arc<client::Handle<TargetHandler>>> {
         if let Some(h) = &self.upstream {
             return Ok(h.clone());
@@ -181,15 +187,23 @@ impl server::Handler for ProxyHandler {
         log::debug!("Setting target host to {user}");
         self.set_target_host(user);
         match self.client.authorize_session(public_key, user).await {
-            Ok((true, th)) => {
+            Ok(AuthResult {
+                success: true,
+                target_host,
+                target_port,
+            }) => {
                 log::info!("Auth successful");
-                if let Some(target) = th {
+                if let Some(target) = target_host {
                     log::debug!("Setting target host from response: {target}");
                     self.set_target_host(target);
                 }
+                if let Some(port) = target_port {
+                    log::debug!("Setting target post from response: {port}");
+                    self.set_target_port(port);
+                }
                 Ok(server::Auth::Accept)
             }
-            Ok((false, _)) => {
+            Ok(AuthResult { success: false, .. }) => {
                 log::warn!(
                     "Auth failed for {}",
                     public_key.fingerprint(HashAlg::Sha256)

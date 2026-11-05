@@ -26,6 +26,7 @@ struct SessionAuthorizeRequest {
 #[derive(serde::Serialize, serde::Deserialize, Clone, Debug)]
 struct SessionAuthorizeResponse {
     pub target_host: String,
+    pub target_port: Option<u16>,
 }
 
 fn extend_url<I>(base_url: &Url, items: I) -> Result<Url>
@@ -41,6 +42,13 @@ where
         path.extend(items);
     }
     Ok(url)
+}
+
+#[derive(Clone, Debug)]
+pub struct AuthResult {
+    pub success: bool,
+    pub target_host: Option<String>,
+    pub target_port: Option<u16>,
 }
 
 impl Client {
@@ -73,7 +81,7 @@ impl Client {
         &self,
         public_key: &PublicKey,
         session_name: &str,
-    ) -> Result<(bool, Option<String>)> {
+    ) -> Result<AuthResult> {
         let url = self.make_authorize_url(session_name)?;
         log::debug!("Call to: {}", url);
         let openssh_key = public_key.to_openssh()?;
@@ -83,11 +91,13 @@ impl Client {
         let resp = self.client.post(url).json(&payload).send().await?;
         let success = resp.status().is_success();
         let mut target_host: Option<String> = None;
+        let mut target_port: Option<u16> = None;
         if success {
             log::debug!("Authorized session {session_name} via public-key");
             if resp.status() == 200 {
                 let session_resp: SessionAuthorizeResponse = resp.json().await?;
                 target_host = Some(session_resp.target_host);
+                target_port = session_resp.target_port;
             }
         } else {
             log::debug!("Failed to authorize public key: {}", payload.public_key);
@@ -97,7 +107,11 @@ impl Client {
                 resp.status()
             );
         }
-        Ok((success, target_host))
+        Ok(AuthResult {
+            success,
+            target_host,
+            target_port,
+        })
     }
 }
 
