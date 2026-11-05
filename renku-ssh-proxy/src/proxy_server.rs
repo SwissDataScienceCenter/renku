@@ -1,7 +1,12 @@
 use std::collections::HashMap;
 use std::sync::Arc;
+use std::sync::Mutex;
+use std::sync::atomic::{AtomicBool, Ordering};
+#[cfg(test)]
+use std::time::Duration;
 
 use crate::Settings;
+use crate::activity::{Activity, REFRESH_WINDOW};
 use crate::data_services::Client;
 use color_eyre::eyre::{OptionExt, Result};
 use russh::keys::ssh_key::{HashAlg, PublicKey};
@@ -10,6 +15,7 @@ use russh::server::Server as _;
 use russh::{Channel, ChannelId, ChannelMsg, Pty, Sig};
 use russh::{client, server};
 use tokio::net::TcpListener;
+use tokio::sync::Notify;
 use tokio::sync::mpsc;
 
 /// Creates and runs a proxy server
@@ -85,6 +91,9 @@ pub struct ProxyHandler {
     channels: HashMap<ChannelId, mpsc::Sender<SshMsg>>,
     client: Arc<Client>,
     auth_key: Option<Arc<PrivateKey>>,
+    activity: Arc<Mutex<Activity>>,
+    activity_notify: Arc<Notify>,
+    alive: Arc<AtomicBool>,
 }
 
 impl ProxyHandler {
@@ -95,6 +104,9 @@ impl ProxyHandler {
             channels: HashMap::new(),
             client: Arc::new(client),
             auth_key: None,
+            activity: Arc::new(Mutex::new(Activity::default())),
+            activity_notify: Arc::new(Notify::new()),
+            alive: Arc::new(AtomicBool::new(true)),
         }
     }
 
@@ -161,6 +173,19 @@ impl ProxyHandler {
         Ok(())
     }
 
+    /// Records client input and wakes the refresh task when the window reopens.
+    fn touch(&self) -> bool {
+        let reopened = self
+            .activity
+            .lock()
+            .expect("activity mutex poisoned")
+            .touch(REFRESH_WINDOW);
+        if reopened {
+            self.activity_notify.notify_one();
+        }
+        reopened
+    }
+
     fn is_allowed_forward_target(host: &str) -> bool {
         host.eq_ignore_ascii_case("localhost")
             || host
@@ -205,6 +230,7 @@ impl server::Handler for ProxyHandler {
         reply: server::ChannelOpenHandle,
         session: &mut server::Session,
     ) -> Result<()> {
+        self.touch();
         log::debug!("Entering channel_open_session");
         let client_id = channel.id();
         let upstream = self.connect_target().await?;
@@ -230,6 +256,7 @@ impl server::Handler for ProxyHandler {
         data: &[u8],
         _session: &mut server::Session,
     ) -> Result<()> {
+        self.touch();
         log::debug!("Sending data...");
         self.forward(&channel, SshMsg::Data(data.to_vec())).await
     }
@@ -239,6 +266,7 @@ impl server::Handler for ProxyHandler {
         channel: ChannelId,
         session: &mut server::Session,
     ) -> Result<(), Self::Error> {
+        self.touch();
         log::debug!("Requesting shell...");
         let _ = self.forward(&channel, SshMsg::Shell).await;
         session.channel_success(channel)?;
@@ -270,6 +298,7 @@ impl server::Handler for ProxyHandler {
         sig: Sig,
         _session: &mut server::Session,
     ) -> Result<(), Self::Error> {
+        self.touch();
         log::debug!("Sending signal {:?}...", sig);
         self.forward(&channel, SshMsg::Signal(sig)).await
     }
@@ -280,6 +309,7 @@ impl server::Handler for ProxyHandler {
         data: &[u8],
         session: &mut server::Session,
     ) -> Result<()> {
+        self.touch();
         log::debug!("Sending exec...");
         self.forward(&channel, SshMsg::Exec(data.to_vec())).await?;
         session.channel_success(channel)?;
@@ -297,6 +327,7 @@ impl server::Handler for ProxyHandler {
         modes: &[(russh::Pty, u32)],
         _session: &mut server::Session,
     ) -> Result<()> {
+        self.touch();
         log::debug!("Sending pty request...");
         self.forward(
             &channel,
@@ -321,6 +352,7 @@ impl server::Handler for ProxyHandler {
         pix_height: u32,
         session: &mut server::Session,
     ) -> Result<()> {
+        self.touch();
         log::debug!("Sending window_change request...");
         self.forward(
             &channel,
@@ -342,6 +374,7 @@ impl server::Handler for ProxyHandler {
         name: &str,
         session: &mut server::Session,
     ) -> Result<()> {
+        self.touch();
         log::debug!("Sending subsystem request...");
         self.forward(&channel, SshMsg::Subsystem(name.to_string()))
             .await?;
@@ -359,6 +392,7 @@ impl server::Handler for ProxyHandler {
         reply: server::ChannelOpenHandle,
         session: &mut server::Session,
     ) -> Result<()> {
+        self.touch();
         if ProxyHandler::is_allowed_forward_target(host_to_connect) {
             let client_id = channel.id();
             log::debug!(
@@ -495,7 +529,11 @@ async fn proxy_channel(
 impl server::Server for ProxyHandler {
     type Handler = Self;
     fn new_client(&mut self, _: Option<std::net::SocketAddr>) -> Self {
-        self.clone()
+        let mut client = self.clone();
+        client.activity = Arc::new(Mutex::new(Activity::default()));
+        client.activity_notify = Arc::new(Notify::new());
+        client.alive = Arc::new(AtomicBool::new(true));
+        client
     }
     fn handle_session_error(&mut self, error: <Self::Handler as russh::server::Handler>::Error) {
         let cause = error.downcast_ref::<russh::Error>();
@@ -510,6 +548,8 @@ impl server::Server for ProxyHandler {
 impl Drop for ProxyHandler {
     fn drop(&mut self) {
         log::debug!("Closing client. Clear all channels");
+        self.alive.store(false, Ordering::Relaxed);
+        self.activity_notify.notify_one();
         self.channels.clear();
     }
 }
@@ -561,4 +601,48 @@ async fn test_check_server_key_fails_closed_without_pin() {
         expected_host_key: None,
     };
     assert!(!handler.check_server_key(&key).await.unwrap());
+}
+
+#[cfg(test)]
+fn test_handler() -> ProxyHandler {
+    let client = Client::new("http://127.0.0.1:1", &Duration::from_secs(1)).unwrap();
+    ProxyHandler::new(client)
+}
+
+#[tokio::test(start_paused = true)]
+async fn test_touch_signals_only_after_the_window() {
+    let mut template = test_handler();
+    let handler = template.new_client(None);
+    assert!(handler.touch(), "first input opens the window");
+    assert!(!handler.touch(), "input inside the window does not signal");
+    tokio::time::advance(REFRESH_WINDOW).await;
+    assert!(
+        handler.touch(),
+        "first input after the window signals again"
+    );
+}
+
+#[tokio::test(start_paused = true)]
+async fn test_connections_do_not_share_activity() {
+    let mut template = test_handler();
+    let first = template.new_client(None);
+    let second = template.new_client(None);
+    assert!(first.touch());
+    assert!(
+        second.touch(),
+        "the second connection starts its own window"
+    );
+}
+
+#[tokio::test]
+async fn test_drop_marks_the_connection_dead() {
+    let mut template = test_handler();
+    let handler = template.new_client(None);
+    let alive = handler.alive.clone();
+    let notify = handler.activity_notify.clone();
+    drop(handler);
+    assert!(!alive.load(Ordering::Relaxed));
+    tokio::time::timeout(Duration::from_millis(100), notify.notified())
+        .await
+        .expect("drop wakes the refresh task");
 }
