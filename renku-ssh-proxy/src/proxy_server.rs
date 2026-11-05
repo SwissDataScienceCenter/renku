@@ -175,6 +175,10 @@ impl ProxyHandler {
 
     /// Records client input and wakes the refresh task when the window reopens.
     fn touch(&self) -> bool {
+        // A poison means a panic unwound through this per-connection lock. Nothing in the
+        // compare-and-store below can panic, so poisoning is a programming error: fail
+        // loudly here (one connection's task dies) rather than recover and hide the bug.
+        // The lock is per connection, so no other connection can observe the poison.
         let reopened = self
             .activity
             .lock()
