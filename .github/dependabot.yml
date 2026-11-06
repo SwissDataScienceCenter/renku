@@ -28,3 +28,14 @@ updates:
     directory: "docs/"
     schedule:
       interval: "weekly"
+    groups:
+      docusaurus:
+        patterns:
+          - "@docusaurus/*"
+      react:
+        patterns:
+          - "react"
+          - "react-*"
+      other:
+        patterns:
+          - "*"

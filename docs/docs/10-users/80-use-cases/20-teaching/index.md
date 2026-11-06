@@ -22,7 +22,7 @@ Ensure that you select a resource class within that resource pool as the default
 
 # Managing access rights to course project(s)
 
-We recommend you to create a group for your course following the instructions in [How to create a group](../../collaboration/guides/create-group).
+We recommend you to create a group for your course following the instructions in [How to create a group](/docs/users/collaboration/guides/create-group).
 
 Add the **course participants** as **viewers** of the course group. This will make it so the participants can see all of the projects in the group, but they will not be able to edit them.
 
@@ -61,7 +61,7 @@ We hereby share with you some sample projects that may inspire you for setting u
     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
     allowfullscreen>
   </iframe>
-  This webinar introduces instructors to Renku 2.0 and presents how to setup and create interactive, reproducible learning environments. After this webinar, you will be able to:
+  This webinar introduces instructors to Renku and presents how to setup and create interactive, reproducible learning environments. After this webinar, you will be able to:
 
 <p>✨ Understand Renku's core features for educational purposes </p>
 <p> 🧑🏼‍🏫 Create and manage teaching materials in Renku </p>

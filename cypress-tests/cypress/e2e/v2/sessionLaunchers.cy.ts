@@ -56,9 +56,13 @@ describe("Session Launchers", () => {
 
     // Add session environment
     cy.visitProjectByName(projectName);
-    cy.getDataCy("add-session-launcher").click();
+    cy.getDataCy("add-launcher").click();
+    cy.getDataCy("launcher-type-selector-modal").should("be.visible");
+    cy.getDataCy("launcher-option-session").click();
     cy.getDataCy("environment-kind-custom").click();
-    cy.getDataCy("custom-image-input").should("be.empty").type(sessionImage);
+    cy.get('.modal-body').scrollTo("top");
+    cy.getDataCy("custom-image-input").should("be.empty");
+    cy.getDataCy("custom-image-input").type(sessionImage);
 
     cy.getDataCy("session-launcher-field-args")
       .clear()
@@ -75,11 +79,11 @@ describe("Session Launchers", () => {
       .clear()
       .type(sessionWorkingDirectory);
 
-    cy.getDataCy("next-session-button").click();
+    cy.getDataCy("next-launcher-button").click();
     cy.getDataCy("launcher-name-input")
       .should("be.empty")
       .type(sessionLauncherName);
-    cy.getDataCy("add-session-button").click();
+    cy.getDataCy("add-launcher-button").click();
     cy.getDataCy("session-launcher-creation-success").should("be.visible");
     cy.getDataCy("close-cancel-button").click();
 
@@ -129,15 +133,17 @@ describe("Session Launchers", () => {
   it("And and delete a session launcher in properties view", () => {
     // Add session environment
     cy.visitProjectByName(projectName);
-    cy.getDataCy("add-session-launcher").click();
+    cy.getDataCy("add-launcher").click();
+    cy.getDataCy("launcher-type-selector-modal").should("be.visible");
+    cy.getDataCy("launcher-option-session").click();
     cy.getDataCy("environment-kind-custom").click();
     cy.getDataCy("custom-image-input").should("be.empty").type(sessionImage);
     cy.getDataCy("session-launcher-field-default_url").clear().type(sessionUrl);
-    cy.getDataCy("next-session-button").click();
+    cy.getDataCy("next-launcher-button").click();
     cy.getDataCy("launcher-name-input")
       .should("be.empty")
       .type(sessionLauncherName);
-    cy.getDataCy("add-session-button").click();
+    cy.getDataCy("add-launcher-button").click();
     cy.getDataCy("session-launcher-creation-success").should("be.visible");
     cy.getDataCy("close-cancel-button").click();
 

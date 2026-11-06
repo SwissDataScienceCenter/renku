@@ -61,7 +61,14 @@ const config: Config = {
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
   future: {
-    v4: true, // Improve compatibility with the upcoming Docusaurus v4
+    // Improve compatibility with the upcoming Docusaurus v4
+    v4: {
+      removeLegacyPostBuildHeadAttribute: true,
+      useCssCascadeLayers: true,
+      siteStorageNamespacing: true,
+      fasterByDefault: true,
+      mdx1CompatDisabledByDefault: false, // TODO: Migrate to Strict MDX v3, see https://docusaurus.io/blog/releases/3.10#strict-mdx
+    },
   },
 
   // Set the production url of your site here
@@ -74,6 +81,9 @@ const config: Config = {
   // If you aren't using GitHub pages, you don't need these.
   organizationName: "SwissDataScienceCenter", // Usually your GitHub org/user name.
   projectName: "renku", // Usually your repo name.
+
+  // GitHub pages deployment is broken when `trailingSlash` is left undefined
+  trailingSlash: true,
 
   onBrokenLinks: "throw",
 

@@ -48,7 +48,7 @@ builds and deploys when changes are made in the repo.
   ![image 10](./image-10.png)
   </p>
   ```
-  The available container sizes are `image-container-s` (55% width), `image-container-m` (70% width), and `image-container-l` (85% width).
+  The available container sizes are `image-container-s` (55% width), `image-container-m` (70% width), and `image-container-l` (85% width), and `image-container-xl` (100% width).
 - Image properties that are controllable by CSS can be modified in the documentation CSS file at `docs/src/css/custom.css`. Currently, we use it to add shadows to all images and to define the container sizes for images:
 
   ```css
@@ -59,7 +59,8 @@ builds and deploys when changes are made in the repo.
 
   .image-container-s,
   .image-container-m,
-  .image-container-l {
+  .image-container-l,
+  .image-container-xl {
     margin: auto;
     text-align: center; /* Center the image horizontally when its width is narrower than the max-width*/
   }
@@ -74,6 +75,10 @@ builds and deploys when changes are made in the repo.
 
   .image-container-l {
     max-width: 85%;
+  }
+
+  .image-container-l {
+    max-width: 100%;
   }
   ```
 

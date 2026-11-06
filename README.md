@@ -26,12 +26,6 @@ computational sessions. Projects are assembled by piecing together:
   image and share it easily with others to really make your code and data
   sing.
 
-> [!NOTE]
-> We are discontinuing Renku Legacy and the RenkuLab GitLab by January 2026
-> to focus all development efforts on the newly launched version of Renku,
-> [Renku 2.0](https://blog.renkulab.io/launch-renku-2/). To learn more, including how to maintain access to your Renku
-> Legacy projects, see our [transition guide](https://blog.renkulab.io/sunsetting-legacy/#how-to-migrate-projects-from-renku-legacy-to-renku-20).
-
 ## Getting Started
 
 A public instance of **RenkuLab** is available at
@@ -44,7 +38,7 @@ or visit our [documentation](https://docs.renkulab.io).
 
 - [Documentation for users](https://docs.renkulab.io/en/latest/docs/users/)
 - [Documentation for administrators](https://docs.renkulab.io/en/latest/docs/admins/architecture/services)
-- [Renku blog](https://blog.renkulab.io/): discover what is new in Renku, for example [How Renku 2.0 is different from Renku Legacy](https://blog.renkulab.io/deep-dive-2-0/)
+- [Renku blog](https://blog.renkulab.io/): discover what is new in Renku, for example [Renku Release June 2026](https://blog.renkulab.io/release-2026-06/)
 - [Community portal](https://renku.notion.site/Renku-Community-Portal-2a154d7d30b24ab8a5968c60c2592d87)
 - [\"Legacy\" documentation]([https://renku.readthedocs.org](https://docs.renkulab.io/en/0.70.1/)): the
   documentation pages for the previous version of the platform

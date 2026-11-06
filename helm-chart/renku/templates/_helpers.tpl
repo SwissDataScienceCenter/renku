@@ -181,6 +181,12 @@ renku-authz-tls-cert
 renku-ca
 {{- end -}}
 
+{{- define "notebooks.cullingThresholdsJson" -}}
+{{- $registered := dict "idle" .Values.notebooks.culling.idleSecondsThreshold.registered "hibernation" .Values.notebooks.culling.hibernatedSecondsThreshold.registered -}}
+{{- $anonymous := dict "idle" .Values.notebooks.culling.idleSecondsThreshold.anonymous "hibernation" 0 -}}
+{{- dict "registered" $registered "anonymous" $anonymous | toJson -}}
+{{- end -}}
+
 {{- define "renku.events.streamEnvVars" -}}
 - name: "RS_REDIS_QUEUE_PROJECT_CREATED"
   value: "project.created"

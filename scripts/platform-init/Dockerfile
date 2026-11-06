@@ -1,4 +1,5 @@
 FROM python:3.12-slim-bookworm
+# Forces a rebuild: (current Python version: 3.12.15)
 RUN apt-get update && apt-get install -y \
     tini && \
     rm -rf /var/lib/apt/lists/*

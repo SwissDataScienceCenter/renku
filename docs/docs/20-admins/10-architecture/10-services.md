@@ -34,6 +34,7 @@ in Kubernetes.
 - **Keycloak**: Stores user information and is used for Authentication.
 - **Harbor**: Image registry for images built from code by Renku.
 - **Shipwright**: Runs the builds for Docker images stored in Harbor.
+- **Knative**: Deploys and manages the lifecycle of Renku Apps.
 
 ## Networking
 
