@@ -46,3 +46,6 @@ updates:
     open-pull-requests-limit: 5
     groups:
       cargo:
+        patterns:
+          - "*"
+
