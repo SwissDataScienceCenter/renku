@@ -201,6 +201,11 @@ solr:
     requests:
       cpu: 50m
       memory: 400Mi
+sshProxy:
+  enabled: true
+  port: 2222
+  domain: <deployment-FQDN>
+  replicaCount: 1
 swagger:
   image:
     repository: harbor.dev.renku.ch/dockerhub_cache/swaggerapi/swagger-ui
