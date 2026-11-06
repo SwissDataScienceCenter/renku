@@ -2,6 +2,8 @@
 // options and environment variables
 
 use crate::proxy_server::Target;
+use crate::ssh_key;
+use crate::ssh_key::SessionAuthKey;
 use clap::CommandFactory;
 use clap::Parser;
 use clap_complete::CompleteEnv;
@@ -19,32 +21,6 @@ use std::time::Duration;
 /// Generates the cli completions and exits.
 pub fn generate_completions() {
     CompleteEnv::with_factory(Cli::command).complete();
-}
-
-fn load_private_key_from_file<P>(file: P) -> Result<russh::keys::PrivateKey>
-where
-    P: AsRef<Path>,
-{
-    russh::keys::load_secret_key(&file, None)
-        .with_context(|| format!("reading private key {}", file.as_ref().display()))
-}
-
-fn load_public_key_from_file<P>(file: P) -> Result<russh::keys::PublicKey>
-where
-    P: AsRef<Path>,
-{
-    russh::keys::load_public_key(&file)
-        .with_context(|| format!("reading public key {}", file.as_ref().display()))
-}
-
-/// The private key the proxy uses to authenticate to session hosts.
-/// Its `Debug` redacts the key material.
-pub struct SessionAuthKey(pub Arc<russh::keys::PrivateKey>);
-
-impl std::fmt::Debug for SessionAuthKey {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.write_str("SessionAuthKey(***)")
-    }
 }
 
 /// Renku SSH proxy service.
@@ -193,10 +169,8 @@ impl Settings {
             .or(file.session_auth_key)
             .ok_or_eyre("missing `session_auth_key`")
             .suggestion("pass --session-auth-key or set `session_auth_key` in the config file")?;
-        let session_host_key = load_public_key_from_file(&session_host_key_file)?;
-        let session_auth_key = SessionAuthKey(Arc::new(load_private_key_from_file(
-            &session_auth_key_file,
-        )?));
+        let session_host_key = ssh_key::load_public_key_from_file(&session_host_key_file)?;
+        let session_auth_key = SessionAuthKey::load_from_file(&session_auth_key_file)?;
 
         let inactivity_timeout = cli
             .inactivity_timeout
@@ -218,7 +192,7 @@ impl Settings {
             max_auth_attempts: MAX_AUTH_ATTEMPTS,
             keepalive_interval: Some(KEEPALIVE_INTERVAL),
             keepalive_max: KEEPALIVE_MAX,
-            keys: vec![load_private_key_from_file(&host_key_file)?],
+            keys: vec![ssh_key::load_private_key_from_file(&host_key_file)?],
             preferred: Preferred::default(),
             ..Default::default()
         };
@@ -231,6 +205,7 @@ impl Settings {
             port: target_port,
             user: target_user,
             expected_host_key: Some(session_host_key),
+            auth_key: None,
         };
         let secret_service_url = cli
             .secret_service_url
@@ -273,23 +248,4 @@ impl Settings {
 
 fn default_config_path() -> Option<PathBuf> {
     "/config/renku/ssh_proxy".parse().ok()
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_load_public_key_from_file() {
-        let path =
-            std::env::temp_dir().join(format!("session-host-pub-{}.pub", std::process::id()));
-        std::fs::write(
-            &path,
-            "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHSWqeaS0b8NVxqu8dzb3fXmQzH/Kd5ClsYNMrXA9E+I t1\n",
-        )
-        .unwrap();
-        let key = load_public_key_from_file(&path).unwrap();
-        std::fs::remove_file(&path).ok();
-        assert_eq!(key.algorithm(), russh::keys::Algorithm::Ed25519);
-    }
 }
