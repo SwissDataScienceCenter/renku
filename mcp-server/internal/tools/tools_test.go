@@ -1,0 +1,541 @@
+package tools
+
+import (
+	"context"
+	"encoding/json"
+	"io"
+	"net/http"
+	"net/http/httptest"
+	"slices"
+	"strings"
+	"sync"
+	"testing"
+	"time"
+
+	"github.com/modelcontextprotocol/go-sdk/mcp"
+
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/auth"
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/renkuapi"
+	"github.com/SwissDataScienceCenter/renku/mcp-server/internal/tools/toolkit"
+)
+
+const ulid = "01J0000000000000000000000C"
+
+const sessionJSON = `{"name": "session-1", "image": "renku/renkulab-py", "launcher_id": "` + ulid + `",
+	"project_id": "` + ulid + `", "resource_class_id": 1, "resources": {}, "session_type": "interactive",
+	"started": null, "status": {"state": "starting", "ready_containers": 0, "total_containers": 2},
+	"url": "https://renku.example.org/sessions/session-1"}`
+
+const projectJSON = `{"id": "` + ulid + `", "name": "climate", "namespace": "my-group", "slug": "climate",
+	"visibility": "private", "created_by": "user-1", "creation_date": "2023-11-01T17:32:28Z", "etag": "abc"}`
+
+const launcherJSON = `{"id": "` + ulid + `", "project_id": "` + ulid + `", "name": "python", "launcher_type": "interactive",
+	"creation_date": "2023-11-01T17:32:28Z", "resource_class_id": 1, "environment": {"id": "` + ulid + `",
+	"name": "python", "environment_kind": "GLOBAL", "environment_image_source": "image",
+	"container_image": "renku/renkulab-py", "default_url": "/lab", "uid": 1000, "gid": 1000, "port": 8080}}`
+
+const buildJSON = `{"id": "` + ulid + `", "environment_id": "` + ulid + `", "created_at": "2023-11-01T17:32:28Z",
+	"status": "failed", "error_reason": "StepOutOfMemory"}`
+
+const dataConnectorJSON = `{"id": "` + ulid + `", "name": "data", "slug": "data", "namespace": "my-group",
+	"visibility": "private", "created_by": "user-1", "creation_date": "2023-11-01T17:32:28Z", "etag": "abc",
+	"storage": {"configuration": {"type": "s3", "provider": "AWS"}, "readonly": true, "sensitive_fields": [],
+	"source_path": "bucket/data", "target_path": "data", "storage_type": "s3"}}`
+
+type recordedRequest struct {
+	method, path, query, authorization, contentType, ifMatch string
+	body                                                     []byte
+}
+
+// fakeGateway answers every request with the response of the route, or {} for routes not listed.
+func fakeGateway(t *testing.T) (string, *[]recordedRequest) {
+	t.Helper()
+	var requests []recordedRequest
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		body, _ := io.ReadAll(r.Body)
+		requests = append(requests, recordedRequest{
+			method: r.Method, path: r.URL.EscapedPath(), query: r.URL.RawQuery, body: body,
+			authorization: r.Header.Get("Authorization"), contentType: r.Header.Get("Content-Type"), ifMatch: r.Header.Get("If-Match"),
+		})
+		w.Header().Set("Content-Type", "application/json")
+		switch r.Method + " " + r.URL.Path {
+		case "GET /api/data/projects":
+			w.Header().Set("page", "1")
+			w.Header().Set("per-page", "20")
+			w.Header().Set("total", "45")
+			w.Header().Set("total-pages", "3")
+			_, _ = w.Write([]byte(`[{"id": "` + ulid + `", "name": "climate", "namespace": "my-group", "slug": "climate",
+				"visibility": "public", "created_by": "user-1", "creation_date": "2023-11-01T17:32:28Z"}]`))
+		case "GET /api/data/search/query":
+			_, _ = w.Write([]byte(`{"facets": {"entityType": {}, "keywords": {}}, "items": [
+				{"type": "Project", "id": "` + ulid + `", "name": "climate", "slug": "climate", "path": "my-group/climate",
+				 "visibility": "public", "creationDate": "2023-11-01T17:32:28Z"}],
+				"pagingInfo": {"page": {"limit": 10, "offset": 0}, "totalPages": 1, "totalResult": 1}}`))
+		case "GET /api/data/data_connectors/" + ulid, "PATCH /api/data/data_connectors/" + ulid:
+			_, _ = w.Write([]byte(dataConnectorJSON))
+		case "POST /api/data/data_connectors", "POST /api/data/data_connectors/global":
+			w.WriteHeader(http.StatusCreated)
+			_, _ = w.Write([]byte(dataConnectorJSON))
+		case "GET /api/data/groups", "GET /api/data/data_connectors", "GET /api/data/projects/" + ulid + "/data_connector_links",
+			"GET /api/data/projects/" + ulid + "/session_launchers", "GET /api/data/namespaces", "GET /api/data/groups/my-group/members",
+			"GET /api/data/environments", "GET /api/data/resource_pools", "GET /api/data/session_launchers",
+			"GET /api/data/data_connectors/" + ulid + "/project_links", "GET /api/data/environments/" + ulid + "/builds",
+			"GET /api/data/apps":
+			_, _ = w.Write([]byte(`[]`))
+		case "GET /api/data/builds/" + ulid:
+			_, _ = w.Write([]byte(buildJSON))
+		case "GET /api/data/apps/app-1":
+			_, _ = w.Write([]byte(`{"name": "app-1", "project_id": "` + ulid + `", "launcher_id": "` + ulid + `", "status": "ready"}`))
+		case "GET /api/data/sessions":
+			_, _ = w.Write([]byte(`[` + sessionJSON + `]`))
+		case "POST /api/data/sessions":
+			w.WriteHeader(http.StatusCreated)
+			_, _ = w.Write([]byte(sessionJSON))
+		case "GET /api/data/sessions/session-1":
+			_, _ = w.Write([]byte(sessionJSON))
+		case "GET /api/data/sessions/job-1":
+			_, _ = w.Write([]byte(strings.NewReplacer(`"starting"`, `"succeeded"`, `"interactive"`, `"non-interactive"`).Replace(sessionJSON)))
+		case "GET /api/data/sessions/session-1/logs":
+			_, _ = w.Write([]byte(`{"amalthea-session": "line 1\nline 2"}`))
+		case "POST /api/data/projects":
+			w.WriteHeader(http.StatusCreated)
+			_, _ = w.Write([]byte(projectJSON))
+		case "PATCH /api/data/projects/" + ulid:
+			_, _ = w.Write([]byte(projectJSON))
+		case "POST /api/data/data_connectors/" + ulid + "/project_links":
+			if strings.Contains(string(body), "unknown") {
+				w.WriteHeader(http.StatusNotFound)
+				_, _ = w.Write([]byte(`{"error": {"code": 1404, "message": "Project does not exist."}}`))
+				return
+			}
+			w.WriteHeader(http.StatusCreated)
+			_, _ = w.Write([]byte(`{"id": "` + ulid + `", "data_connector_id": "` + ulid + `", "project_id": "` + ulid + `",
+				"created_by": "user-1", "creation_date": "2023-11-01T17:32:28Z"}`))
+		case "POST /api/data/session_launchers":
+			w.WriteHeader(http.StatusCreated)
+			_, _ = w.Write([]byte(launcherJSON))
+		case "PATCH /api/data/session_launchers/" + ulid:
+			_, _ = w.Write([]byte(launcherJSON))
+		case "POST /api/data/apps":
+			w.WriteHeader(http.StatusCreated)
+			_, _ = w.Write([]byte(`{"name": "app-1", "project_id": "` + ulid + `", "launcher_id": "` + ulid + `", "status": "pending"}`))
+		case "DELETE /api/data/sessions/session-1", "DELETE /api/data/data_connectors/" + ulid,
+			"DELETE /api/data/data_connectors/" + ulid + "/project_links/" + ulid, "DELETE /api/data/session_launchers/" + ulid,
+			"DELETE /api/data/apps/app-1", "DELETE /api/data/projects/" + ulid:
+			w.WriteHeader(http.StatusNoContent)
+		default:
+			_, _ = w.Write([]byte(`{}`))
+		}
+	}))
+	t.Cleanup(srv.Close)
+	return srv.URL + "/api/data", &requests
+}
+
+// connect serves all tools to an MCP client, which calls them as the user user-1.
+func connect(t *testing.T, apiURL string) *mcp.ClientSession {
+	t.Helper()
+	return connectClient(t, apiURL, nil)
+}
+
+// connectClient is connect with a client created with opts.
+func connectClient(t *testing.T, apiURL string, opts *mcp.ClientOptions) *mcp.ClientSession {
+	t.Helper()
+	api, err := renkuapi.NewClients(apiURL, http.DefaultClient)
+	if err != nil {
+		t.Fatal(err)
+	}
+	server := mcp.NewServer(&mcp.Implementation{Name: "test", Version: "dev"}, nil)
+	Register(server, api)
+	ctx := auth.WithPrincipal(context.Background(), auth.Principal{Subject: "user-1", Token: "the-token"})
+	serverTransport, clientTransport := mcp.NewInMemoryTransports()
+	serverSession, err := server.Connect(ctx, serverTransport, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = serverSession.Close() })
+	client := mcp.NewClient(&mcp.Implementation{Name: "test-client", Version: "dev"}, opts)
+	session, err := client.Connect(ctx, clientTransport, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = session.Close() })
+	return session
+}
+
+func text(res *mcp.CallToolResult) string {
+	var parts []string
+	for _, c := range res.Content {
+		if tc, ok := c.(*mcp.TextContent); ok {
+			parts = append(parts, tc.Text)
+		}
+	}
+	return strings.Join(parts, "\n")
+}
+
+type requestCase struct {
+	tool                string
+	args                map[string]any
+	method, path, query string
+	body                string
+}
+
+// TestEveryToolSendsTheExpectedRequest calls every tool through an MCP client, which also checks
+// the input schemas the SDK infers.
+func TestEveryToolSendsTheExpectedRequest(t *testing.T) {
+	tests := []requestCase{
+		{"get_current_user", nil, "GET", "/api/data/user", "", ""},
+		{"search", map[string]any{"q": "type:project climate", "page": 2, "per_page": 50, "include_counts": true}, "GET", "/api/data/search/query", "include_counts=true&page=2&per_page=50&q=type%3Aproject+climate", ""},
+		{"list_projects", map[string]any{"namespace": "my-group", "direct_member": true}, "GET", "/api/data/projects", "direct_member=true&namespace=my-group", ""},
+		{"get_project", map[string]any{"project_id": ulid, "with_documentation": false}, "GET", "/api/data/projects/" + ulid, "with_documentation=false", ""},
+		{"get_project_by_slug", map[string]any{"namespace": "my group", "slug": "my-project"}, "GET", "/api/data/namespaces/my%20group/projects/my-project", "with_documentation=false", ""},
+		{"list_groups", map[string]any{"page": 1}, "GET", "/api/data/groups", "page=1", ""},
+		{"get_group", map[string]any{"group_slug": "my-group"}, "GET", "/api/data/groups/my-group", "", ""},
+		{"list_data_connectors", map[string]any{"namespace": "my-group"}, "GET", "/api/data/data_connectors", "namespace=my-group", ""},
+		{"get_data_connector", map[string]any{"data_connector_id": ulid}, "GET", "/api/data/data_connectors/" + ulid, "", ""},
+		{"create_data_connector", map[string]any{"name": "data", "namespace": "my-group", "storage": map[string]any{"configuration": map[string]any{"type": "s3", "provider": "AWS"}, "source_path": "bucket/data", "target_path": "data"}}, "POST", "/api/data/data_connectors", "", `{"name":"data","namespace":"my-group","storage":{"configuration":{"provider":"AWS","type":"s3"},"source_path":"bucket/data","target_path":"data"}}`},
+		{"create_global_data_connector", map[string]any{"doi": "10.5281/zenodo.123"}, "POST", "/api/data/data_connectors/global", "", `{"storage":{"configuration":{"doi":"10.5281/zenodo.123","type":"doi"},"readonly":true,"source_path":"","target_path":""}}`},
+		{"update_data_connector", map[string]any{"data_connector_id": ulid, "etag": "abc", "storage": map[string]any{"configuration": map[string]any{"region": nil}, "readonly": false}}, "PATCH", "/api/data/data_connectors/" + ulid, "", `{"storage":{"configuration":{"region":null},"readonly":false}}`},
+		{"list_project_data_connector_links", map[string]any{"project_id": ulid}, "GET", "/api/data/projects/" + ulid + "/data_connector_links", "", ""},
+		{"list_project_session_launchers", map[string]any{"project_id": ulid}, "GET", "/api/data/projects/" + ulid + "/session_launchers", "", ""},
+		{"get_session_launcher", map[string]any{"launcher_id": ulid}, "GET", "/api/data/session_launchers/" + ulid, "", ""},
+		{"list_sessions", map[string]any{"session_type": "interactive"}, "GET", "/api/data/sessions", "session_type=interactive", ""},
+		{"start_session", map[string]any{"launcher_id": ulid, "disk_storage": 10}, "POST", "/api/data/sessions", "", `{"disk_storage":10,"launcher_id":"` + ulid + `"}`},
+		{"get_session", map[string]any{"session_id": "session-1"}, "GET", "/api/data/sessions/session-1", "", ""},
+		{"get_session_logs", map[string]any{"session_id": "session-1", "max_lines": 1000000}, "GET", "/api/data/sessions/session-1/logs", "max_lines=1000000", ""},
+		{"stop_session", map[string]any{"session_id": "session-1"}, "DELETE", "/api/data/sessions/session-1", "", ""},
+		{"create_project", map[string]any{"name": "Climate", "namespace": "my-group", "repositories": []string{"https://github.com/org/repo.git"}}, "POST", "/api/data/projects", "", `{"name":"Climate","namespace":"my-group","repositories":["https://github.com/org/repo.git"]}`},
+		{"update_project", map[string]any{"project_id": ulid, "etag": "abc", "keywords": []string{}}, "PATCH", "/api/data/projects/" + ulid, "", `{"keywords":[]}`},
+		{"delete_project", map[string]any{"project_id": ulid}, "DELETE", "/api/data/projects/" + ulid, "", ""},
+		{"link_data_connector", map[string]any{"data_connector_id": ulid, "project_id": ulid}, "POST", "/api/data/data_connectors/" + ulid + "/project_links", "", `{"project_id":"` + ulid + `"}`},
+		{"unlink_data_connector", map[string]any{"data_connector_id": ulid, "link_id": ulid}, "DELETE", "/api/data/data_connectors/" + ulid + "/project_links/" + ulid, "", ""},
+		{"delete_data_connector", map[string]any{"data_connector_id": ulid}, "DELETE", "/api/data/data_connectors/" + ulid, "", ""},
+		{"create_session_launcher", map[string]any{"project_id": ulid, "name": "python", "resource_class_id": 2, "environment": map[string]any{"id": ulid}}, "POST", "/api/data/session_launchers", "", `{"environment":{"id":"` + ulid + `"},"launcher_type":"interactive","name":"python","project_id":"` + ulid + `","resource_class_id":2}`},
+		{"update_session_launcher", map[string]any{"launcher_id": ulid, "environment": map[string]any{"strip_path_prefix": true}}, "PATCH", "/api/data/session_launchers/" + ulid, "", `{"environment":{"strip_path_prefix":true}}`},
+		{"delete_session_launcher", map[string]any{"launcher_id": ulid}, "DELETE", "/api/data/session_launchers/" + ulid, "", ""},
+		{"launch_app", map[string]any{"launcher_id": ulid}, "POST", "/api/data/apps", "", `{"launcher_id":"` + ulid + `"}`},
+		{"delete_app", map[string]any{"app_name": "app-1"}, "DELETE", "/api/data/apps/app-1", "", ""},
+		{"list_namespaces", map[string]any{"minimum_role": "editor", "kinds": []string{"user", "group"}, "page": 1}, "GET", "/api/data/namespaces", "page=1&minimum_role=editor&kinds=user&kinds=group", ""},
+		{"list_group_members", map[string]any{"group_slug": "my-group"}, "GET", "/api/data/groups/my-group/members", "", ""},
+		{"list_environments", map[string]any{"include_archived": true}, "GET", "/api/data/environments", "include_archived=true", ""},
+		{"list_resource_pools", map[string]any{"cpu": 0.5, "memory": 4, "gpu": 1, "max_storage": 20}, "GET", "/api/data/resource_pools", "cpu=0.5&gpu=1&max_storage=20&memory=4", ""},
+		{"list_session_launchers", nil, "GET", "/api/data/session_launchers", "", ""},
+		{"list_data_connector_project_links", map[string]any{"data_connector_id": ulid}, "GET", "/api/data/data_connectors/" + ulid + "/project_links", "", ""},
+		{"list_environment_builds", map[string]any{"environment_id": ulid}, "GET", "/api/data/environments/" + ulid + "/builds", "", ""},
+		{"get_build", map[string]any{"build_id": ulid}, "GET", "/api/data/builds/" + ulid, "", ""},
+		{"get_build_logs", map[string]any{"build_id": ulid, "max_lines": 100}, "GET", "/api/data/builds/" + ulid + "/logs", "max_lines=100", ""},
+		{"list_apps", map[string]any{"project_id": ulid}, "GET", "/api/data/apps", "project_id=" + ulid, ""},
+		{"get_app", map[string]any{"app_name": "app-1"}, "GET", "/api/data/apps/app-1", "", ""},
+		{"wait_for_session", map[string]any{"session_id": "job-1"}, "GET", "/api/data/sessions/job-1", "", ""},
+		{"wait_for_build", map[string]any{"build_id": ulid}, "GET", "/api/data/builds/" + ulid, "", ""},
+		{"wait_for_app", map[string]any{"app_name": "app-1"}, "GET", "/api/data/apps/app-1", "", ""},
+		{"get_app_logs", map[string]any{"app_name": "app-1"}, "GET", "/api/data/apps/app-1/logs", "", ""},
+	}
+	apiURL, _ := fakeGateway(t)
+	listed, err := connect(t, apiURL).ListTools(context.Background(), nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, tool := range listed.Tools {
+		// The model reads the JSON text; a schema costs context and fails calls on any mismatch with the spec.
+		if tool.OutputSchema != nil {
+			t.Errorf("tool %s has an output schema", tool.Name)
+		}
+		if !slices.ContainsFunc(tests, func(tt requestCase) bool { return tt.tool == tool.Name }) {
+			t.Errorf("tool %s is not covered", tool.Name)
+		}
+	}
+	for _, tt := range tests {
+		t.Run(tt.tool, func(t *testing.T) {
+			apiURL, requests := fakeGateway(t)
+			res, err := connect(t, apiURL).CallTool(context.Background(), &mcp.CallToolParams{Name: tt.tool, Arguments: tt.args})
+			if err != nil {
+				t.Fatal(err)
+			}
+			if res.IsError {
+				t.Fatalf("tool error: %s", text(res))
+			}
+			if len(*requests) != 1 {
+				t.Fatalf("expected one request, got %d", len(*requests))
+			}
+			r := (*requests)[0]
+			if r.method != tt.method || r.path != tt.path || r.query != tt.query {
+				t.Errorf("request = %s %s?%s, want %s %s?%s", r.method, r.path, r.query, tt.method, tt.path, tt.query)
+			}
+			if string(r.body) != tt.body {
+				t.Errorf("body = %s, want %s", r.body, tt.body)
+			}
+			if wantJSON := tt.body != ""; wantJSON != (r.contentType == "application/json") {
+				t.Errorf("Content-Type = %q", r.contentType)
+			}
+			if r.authorization != "Bearer the-token" {
+				t.Errorf("Authorization = %q, the user's token must be forwarded", r.authorization)
+			}
+		})
+	}
+}
+
+func TestListToolReportsPagination(t *testing.T) {
+	apiURL, _ := fakeGateway(t)
+	res, err := connect(t, apiURL).CallTool(context.Background(), &mcp.CallToolParams{Name: "list_projects"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.HasSuffix(text(res), "Page 1 of 3 (45 total, 20 per page). Call again with page=2 for more.") {
+		t.Errorf("missing pagination summary in %q", text(res))
+	}
+	var out struct {
+		Items []struct {
+			ID string `json:"id"`
+		} `json:"items"`
+		Pagination struct {
+			TotalPages int `json:"total_pages"`
+		} `json:"pagination"`
+	}
+	// Clients that get structured content show the model only that, without the summary.
+	if res.StructuredContent != nil {
+		t.Errorf("unexpected structured content %v", res.StructuredContent)
+	}
+	raw := res.Content[0].(*mcp.TextContent).Text
+	if err := json.Unmarshal([]byte(raw), &out); err != nil {
+		t.Fatal(err)
+	}
+	if len(out.Items) != 1 || out.Items[0].ID != ulid || out.Pagination.TotalPages != 3 {
+		t.Errorf("content = %s", raw)
+	}
+}
+
+func TestStartSessionReportsWhetherItCreatedTheSession(t *testing.T) {
+	apiURL, _ := fakeGateway(t)
+	res, err := connect(t, apiURL).CallTool(context.Background(), &mcp.CallToolParams{Name: "start_session", Arguments: map[string]any{"launcher_id": ulid}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	out, _ := res.StructuredContent.(map[string]any)
+	if out["created"] != true {
+		t.Errorf("structured content = %v", res.StructuredContent)
+	}
+}
+
+// The build status is in a oneOf of the spec, which the generated type keeps in a private field.
+func TestGetBuildReturnsTheStatus(t *testing.T) {
+	apiURL, _ := fakeGateway(t)
+	res, err := connect(t, apiURL).CallTool(context.Background(), &mcp.CallToolParams{Name: "get_build", Arguments: map[string]any{"build_id": ulid}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	out, _ := res.StructuredContent.(map[string]any)
+	if out["status"] != "failed" || out["error_reason"] != "StepOutOfMemory" {
+		t.Errorf("structured content = %v", res.StructuredContent)
+	}
+}
+
+// TestWaitForSessionReportsProgress waits for session-1, which stays `starting`.
+func TestWaitForSessionReportsProgress(t *testing.T) {
+	oldMax, oldInterval := toolkit.MaxWait, toolkit.PollInterval
+	toolkit.MaxWait, toolkit.PollInterval = 100*time.Millisecond, 10*time.Millisecond
+	t.Cleanup(func() { toolkit.MaxWait, toolkit.PollInterval = oldMax, oldInterval })
+	var mu sync.Mutex
+	var messages []string
+	apiURL, _ := fakeGateway(t)
+	c := connectClient(t, apiURL, &mcp.ClientOptions{ProgressNotificationHandler: func(_ context.Context, req *mcp.ProgressNotificationClientRequest) {
+		mu.Lock()
+		defer mu.Unlock()
+		messages = append(messages, req.Params.Message)
+	}})
+	params := &mcp.CallToolParams{Name: "wait_for_session", Arguments: map[string]any{"session_id": "session-1"}}
+	params.SetProgressToken("wait-1")
+	res, err := c.CallTool(context.Background(), params)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if res.IsError || !strings.Contains(text(res), "Call wait_for_session again") {
+		t.Errorf("result = %q", text(res))
+	}
+	mu.Lock()
+	defer mu.Unlock()
+	if len(messages) == 0 || !strings.Contains(messages[0], "`starting`") {
+		t.Errorf("progress messages = %q", messages)
+	}
+}
+
+func TestMissingRequiredArgumentIsRejected(t *testing.T) {
+	apiURL, requests := fakeGateway(t)
+	res, err := connect(t, apiURL).CallTool(context.Background(), &mcp.CallToolParams{Name: "get_session", Arguments: map[string]any{}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !res.IsError || !strings.Contains(text(res), "session_id") {
+		t.Errorf("expected an error about session_id, got %q", text(res))
+	}
+	if len(*requests) != 0 {
+		t.Errorf("invalid calls must not reach the API, got %d requests", len(*requests))
+	}
+}
+
+func TestUpdateProjectSendsTheEtag(t *testing.T) {
+	apiURL, requests := fakeGateway(t)
+	_, err := connect(t, apiURL).CallTool(context.Background(), &mcp.CallToolParams{Name: "update_project", Arguments: map[string]any{"project_id": ulid, "etag": "abc", "name": "New"}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := (*requests)[0].ifMatch; got != "abc" {
+		t.Errorf("If-Match = %q", got)
+	}
+}
+
+// elicitingClient answers every elicitation with action and records the messages.
+func elicitingClient(action string, confirm bool, messages *[]string) *mcp.ClientOptions {
+	return &mcp.ClientOptions{ElicitationHandler: func(_ context.Context, req *mcp.ElicitRequest) (*mcp.ElicitResult, error) {
+		*messages = append(*messages, req.Params.Message)
+		return &mcp.ElicitResult{Action: action, Content: map[string]any{"confirm": confirm}}, nil
+	}}
+}
+
+func TestDeleteAsksTheUserToConfirm(t *testing.T) {
+	tests := []struct {
+		name          string
+		action        string
+		confirm       bool
+		wantRequested bool
+	}{
+		{"accepted", "accept", true, true},
+		{"accepted without confirming", "accept", false, false},
+		{"declined", "decline", false, false},
+		{"cancelled", "cancel", false, false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			apiURL, requests := fakeGateway(t)
+			var messages []string
+			session := connectClient(t, apiURL, elicitingClient(tt.action, tt.confirm, &messages))
+			res, err := session.CallTool(context.Background(), &mcp.CallToolParams{Name: "delete_session_launcher", Arguments: map[string]any{"launcher_id": ulid}})
+			if err != nil {
+				t.Fatal(err)
+			}
+			if len(messages) != 1 || !strings.Contains(messages[0], "Delete session launcher "+ulid) {
+				t.Errorf("elicitation messages = %q", messages)
+			}
+			if requested := len(*requests) == 1; requested != tt.wantRequested {
+				t.Errorf("%d API requests, want the delete sent: %v", len(*requests), tt.wantRequested)
+			}
+			if res.IsError == tt.wantRequested {
+				t.Errorf("result = %q", text(res))
+			}
+			if !tt.wantRequested && !strings.Contains(text(res), "did not agree") {
+				t.Errorf("result = %q", text(res))
+			}
+		})
+	}
+}
+
+func TestClientWithoutElicitationIsNotAsked(t *testing.T) {
+	apiURL, requests := fakeGateway(t)
+	res, err := connect(t, apiURL).CallTool(context.Background(), &mcp.CallToolParams{Name: "delete_app", Arguments: map[string]any{"app_name": "app-1"}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if res.IsError || len(*requests) != 1 {
+		t.Errorf("result = %q after %d requests", text(res), len(*requests))
+	}
+}
+
+func TestChangingVisibilityAsksTheUserToConfirm(t *testing.T) {
+	apiURL, requests := fakeGateway(t)
+	var messages []string
+	session := connectClient(t, apiURL, elicitingClient("decline", false, &messages))
+	// Other changes go ahead without asking.
+	if _, err := session.CallTool(context.Background(), &mcp.CallToolParams{Name: "update_project", Arguments: map[string]any{"project_id": ulid, "etag": "abc", "name": "New"}}); err != nil {
+		t.Fatal(err)
+	}
+	res, err := session.CallTool(context.Background(), &mcp.CallToolParams{Name: "update_project", Arguments: map[string]any{"project_id": ulid, "etag": "abc", "visibility": "public"}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(messages) != 1 || !strings.Contains(messages[0], "public") {
+		t.Errorf("elicitation messages = %q", messages)
+	}
+	if !res.IsError || len(*requests) != 1 {
+		t.Errorf("result = %q after %d requests, want only the first update sent", text(res), len(*requests))
+	}
+}
+
+func TestCreateDataConnectorLinksItToTheProject(t *testing.T) {
+	for _, name := range []string{"create_data_connector", "create_global_data_connector"} {
+		t.Run(name, func(t *testing.T) {
+			apiURL, requests := fakeGateway(t)
+			args := map[string]any{"project_id": ulid, "name": "data", "namespace": "my-group",
+				"storage": map[string]any{"storage_url": "s3://bucket/data", "target_path": "data"}}
+			if name == "create_global_data_connector" {
+				args = map[string]any{"project_id": ulid, "doi": "10.5281/zenodo.123"}
+			}
+			res, err := connect(t, apiURL).CallTool(context.Background(), &mcp.CallToolParams{Name: name, Arguments: args})
+			if err != nil {
+				t.Fatal(err)
+			}
+			if res.IsError || len(*requests) != 2 {
+				t.Fatalf("result = %q after %d requests", text(res), len(*requests))
+			}
+			if r := (*requests)[1]; r.method != "POST" || r.path != "/api/data/data_connectors/"+ulid+"/project_links" || string(r.body) != `{"project_id":"`+ulid+`"}` {
+				t.Errorf("second request = %s %s %s", r.method, r.path, r.body)
+			}
+			out, _ := res.StructuredContent.(map[string]any)
+			if dc, _ := out["data_connector"].(map[string]any); dc["id"] != ulid || out["link"] == nil {
+				t.Errorf("structured content = %v", res.StructuredContent)
+			}
+		})
+	}
+}
+
+func TestCreateDataConnectorReportsAFailedLink(t *testing.T) {
+	apiURL, requests := fakeGateway(t)
+	args := map[string]any{"project_id": "unknown", "name": "data", "namespace": "my-group",
+		"storage": map[string]any{"storage_url": "s3://bucket/data", "target_path": "data"}}
+	res, err := connect(t, apiURL).CallTool(context.Background(), &mcp.CallToolParams{Name: "create_data_connector", Arguments: args})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !res.IsError || !strings.Contains(text(res), "The data connector "+ulid+" was created") ||
+		!strings.Contains(text(res), "Project does not exist.") || len(*requests) != 2 {
+		t.Errorf("result = %q after %d requests", text(res), len(*requests))
+	}
+}
+
+func TestDataConnectorCredentialsAreRefused(t *testing.T) {
+	tests := []struct {
+		tool string
+		args map[string]any
+	}{
+		{"create_data_connector", map[string]any{"name": "data", "namespace": "my-group", "storage": map[string]any{
+			"configuration": map[string]any{"type": "s3", "access_key_id": "AKIA123", "secret_access_key": "s3cr3t"}, "source_path": "bucket", "target_path": "data"}}},
+		{"create_data_connector", map[string]any{"name": "data", "namespace": "my-group", "storage": map[string]any{
+			"storage_url": "https://user:s3cr3t@dav.example.org/remote.php", "target_path": "data"}}},
+		{"update_data_connector", map[string]any{"data_connector_id": ulid, "etag": "abc", "storage": map[string]any{
+			"configuration": map[string]any{"pass": "s3cr3t"}}}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.tool, func(t *testing.T) {
+			apiURL, requests := fakeGateway(t)
+			res, err := connect(t, apiURL).CallTool(context.Background(), &mcp.CallToolParams{Name: tt.tool, Arguments: tt.args})
+			if err != nil {
+				t.Fatal(err)
+			}
+			if !res.IsError || !strings.Contains(text(res), "refusing to send credentials") || strings.Contains(text(res), "s3cr3t") {
+				t.Errorf("result = %q", text(res))
+			}
+			if len(*requests) != 0 {
+				t.Errorf("credentials sent to the API in %d requests", len(*requests))
+			}
+		})
+	}
+}
+
+func TestUpdateDataConnectorSendsTheEtag(t *testing.T) {
+	apiURL, requests := fakeGateway(t)
+	_, err := connect(t, apiURL).CallTool(context.Background(), &mcp.CallToolParams{Name: "update_data_connector", Arguments: map[string]any{"data_connector_id": ulid, "etag": "abc", "namespace": "user-1"}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if r := (*requests)[0]; r.ifMatch != "abc" || string(r.body) != `{"namespace":"user-1"}` {
+		t.Errorf("If-Match = %q, body = %s", r.ifMatch, r.body)
+	}
+}
