@@ -222,6 +222,48 @@ Note: you can also consult the [rclone documentation about Google Drive](https:/
 https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/docs https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.metadata.readonly
 ```
 
+### Zenodo
+
+This integration can be used to publish data from a data connector to Zenodo (see [here](/docs/users/data/guides/export-data-connector-to-zenodo)).
+
+#### Create the client in Zenodo
+
+1. Go to [Zenodo](https://zenodo.org) and log in
+2. Go to `My account` -> `Applications`
+3. In the `Developer application` section, click on `New application`
+4. Give a descriptive name for the application
+5. For the `Website URL` use the URL of your Renku deployment.
+6. The `Redirect URI` is based on the URL of your Renku deployment like `https://<server-name>/api/data/oauth2/callback`. For example, if your Renku deployment is at `https://renkulab.io` then the `Redirect URI` will be `https://renkulab.io/api/data/oauth2/callback`.
+7. Save the client ID and secret that were generated once you created the application. These will be needed in the steps below.
+
+#### Create the integration in Renku
+
+1. Log into Renku and navigate to the admin panel.
+2. Come up with an identifier for the integration and fill that in the `Id` field (eg. `zenodo`).
+3. Select `Zenodo` in the `Kind` field dropdown menu.
+4. You can skip the `Application slug` field and leave it blank.
+5. Use `Zenodo` for the `Display Name` field.
+6. Set the `URL` to `https://zenodo.org`.
+7. Specify the client ID and secret that you received when you created the client in Zenodo.
+8. Specify the following scopes: `deposit:write deposit:actions`
+
+### SciCat
+
+This integration can be used to publish data from a data connector to SciCat. The client in SciCat is configured directly by the admin of the SciCat platform.
+
+#### Create the integration in Renku
+
+1. Log into Renku and navigate to the admin panel.
+2. Come up with an identifier for the integration and fill that in the `Id` field (eg. `scicat`).
+3. Select `SciCat` in the `Kind` field dropdown menu.
+4. You can skip the `Application slug` field and leave it blank.
+5. Use `SciCat` for the `Display Name` field.
+6. Set the `URL` to `https://discovery.psi.ch`.
+7. Check the `Use PKCE` checkbox.
+8. Specify the client ID and secret that you received from the SciCat admin.
+9. Specify the following scopes: `email profile openid`
+10. Set the `OpenID Connect Issuer URL` to `https://kc.psi.ch/realms/awi`
+
 ## Testing Integrations {#testing-integrations}
 
 After you have created an integration, you should test it to ensure that it is functioning properly.
