@@ -55,7 +55,14 @@ Most information related to upgrading from one chart version to another is cover
 in the `values changelog file <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/values.yaml.changelog.md>`_.
 For upgrades that require some steps other than modifying the values files to be executed, we add some instructions here.
 
-Upgrading to 2.22.0
+Upgrading to 2.23.1
+*******************
+Keycloak is deployed through the `Keycloak Operator
+<https://www.keycloak.org/operator/installation>`_ from this version on. The operator is cluster
+scoped and is **not** part of this chart, install it before upgrading.
+
+
+Upgrading to 2.23.0
 *************************
 This version deprecates bitnami ``postgresql`` (version ``14.2.4``).
 The proposed migration path is with `CloudNativePG <https://cloudnative-pg.io/>`_,

@@ -11,7 +11,11 @@ require admin access.
 
 ### CRDs
 
-Generate the CRDs out of the helm chart:
+The Keycloak CRDs are not part of the chart. They come with the
+[Keycloak Operator](../installation/requirements#operator-managed-keycloak), which is cluster scoped and
+also has to be installed by an administrator.
+
+Generate the remaining CRDs out of the helm chart:
 
 ```bash
 helm template --namespace renku renku renku/renku -f renku-values.yaml --set amalthea.deployCrd=true --set amalthea-sessions.deployCrd=true | yq e '. | select(.kind == "CustomResourceDefinition")' > renku-crds.yaml
@@ -353,7 +357,7 @@ start properly.
 Here follows a full configuration based on the minimal deployment values file.
 
 Beside Renku specific elements, customization of child charts are also required.
-Here we can see the changes to be applied to make KeycloakX, Redis and Solr start
+Here we can see the changes to be applied to make Redis and Solr start
 properly.
 
 PostgreSQL can be deployed by the CloudNativePG operator, you can deploy it yourself or use a managed PostgreSQL service. Note that If you decide to deploy PostgerSQL yourself we strongly recommend using the operator.
@@ -492,26 +496,6 @@ ingress:
     - hosts:
         - renku.apps.my-openshift.ch
       secretName: renku-renku-ch-tls
-keycloakx:
-  resources:
-    requests:
-      memory: 600Mi
-    limits:
-      memory: 600Mi
-  # added
-  podSecurityContext:
-    fsGroup: null
-
-  securityContext:
-    runAsUser: null
-    runAsGroup: null
-    runAsNonRoot: true
-    allowPrivilegeEscalation: false
-    capabilities:
-      drop: ["ALL"]
-    seccompProfile:
-      type: "RuntimeDefault"
-  # end added
 notebooks:
   oidc:
     allowUnverifiedEmail: true
