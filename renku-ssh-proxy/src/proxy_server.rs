@@ -150,10 +150,13 @@ impl ProxyHandler {
             },
         )
         .await?;
-        let auth_key = self
-            .auth_key
-            .clone()
-            .ok_or_eyre("no session auth key configured")?;
+        let auth_key = match target.auth_key {
+            Some(pk) => pk.0,
+            None => self
+                .auth_key
+                .clone()
+                .ok_or_eyre("no session auth key configured")?,
+        };
         let hash_alg = handle.best_supported_rsa_hash().await?.flatten();
         let auth = handle
             .authenticate_publickey(&target.user, PrivateKeyWithHashAlg::new(auth_key, hash_alg))
