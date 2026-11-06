@@ -2,7 +2,8 @@ use std::collections::HashMap;
 use std::sync::Arc;
 
 use crate::Settings;
-use crate::data_services::{AuthResult, Client};
+use crate::data_services::{AuthResult, Client, SessionAuthorizeResponse};
+use crate::ssh_key::SessionAuthKey;
 use color_eyre::eyre::{OptionExt, Result};
 use russh::keys::ssh_key::{HashAlg, PublicKey};
 use russh::keys::{PrivateKey, PrivateKeyWithHashAlg};
@@ -33,6 +34,7 @@ pub struct Target {
     pub port: u16,
     pub user: String,
     pub expected_host_key: Option<PublicKey>,
+    pub auth_key: Option<SessionAuthKey>,
 }
 
 struct TargetHandler {
@@ -114,10 +116,20 @@ impl ProxyHandler {
         }
     }
 
-    fn set_target_port(&mut self, port: u16) {
+    fn set_target_data(&mut self, data: &SessionAuthorizeResponse) -> Result<()> {
+        log::debug!("Setting target host from response: {:?}", data);
         if let Some(t) = &mut self.target {
-            t.port = port;
+            t.host = data.target_host.clone();
+            t.port = data.target_port;
+            t.user = data.target_user.clone();
+            if let Some(k) = &data.auth_key_priv {
+                t.auth_key = Some(k.load_as_secret_key()?);
+            }
+            if let Some(k) = &data.host_key_pub {
+                t.expected_host_key = Some(k.load_as_public_key()?);
+            }
         }
+        Ok(())
     }
 
     async fn connect_target(&mut self) -> Result<Arc<client::Handle<TargetHandler>>> {
@@ -189,17 +201,11 @@ impl server::Handler for ProxyHandler {
         match self.client.authorize_session(public_key, user).await {
             Ok(AuthResult {
                 success: true,
-                target_host,
-                target_port,
+                target_data,
             }) => {
                 log::info!("Auth successful");
-                if let Some(target) = target_host {
-                    log::debug!("Setting target host from response: {target}");
-                    self.set_target_host(target);
-                }
-                if let Some(port) = target_port {
-                    log::debug!("Setting target post from response: {port}");
-                    self.set_target_port(port);
+                if let Some(target) = &target_data {
+                    self.set_target_data(target)?;
                 }
                 Ok(server::Auth::Accept)
             }
