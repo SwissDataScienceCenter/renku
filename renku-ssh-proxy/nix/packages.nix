@@ -13,7 +13,6 @@
     copyToRoot = pkgs.buildEnv {
       name = "image-root";
       paths = [
-        pkgs.bash
         renku-ssh-proxy
       ];
       pathsToLink = ["/bin" "/sbin"];

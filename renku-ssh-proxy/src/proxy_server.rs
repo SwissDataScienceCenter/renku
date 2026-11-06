@@ -150,6 +150,7 @@ impl ProxyHandler {
             },
         )
         .await?;
+        log::debug!("Connected to target {}. Continue with authentication", &target.host);
         let auth_key = match target.auth_key {
             Some(pk) => pk.0,
             None => self
@@ -527,9 +528,9 @@ impl server::Server for ProxyHandler {
     fn handle_session_error(&mut self, error: <Self::Handler as russh::server::Handler>::Error) {
         let cause = error.downcast_ref::<russh::Error>();
         if let Some(russh::Error::Disconnect) = cause {
-            log::debug!("Client disconnected: {error:#?}");
+            log::trace!("Client disconnected: {error:#?}");
         } else {
-            log::error!("Session error: {error:#?}");
+            log::error!("Session error: {error:#?} ({cause:#?})");
         }
     }
 }
