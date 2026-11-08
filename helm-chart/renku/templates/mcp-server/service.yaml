@@ -1,0 +1,21 @@
+{{- if .Values.mcpServer.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "renku.fullname" . }}-mcp-server
+  labels:
+    app: renku-mcp-server
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.mcpServer.service.type }}
+  ports:
+    - port: {{ .Values.mcpServer.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: renku-mcp-server
+    release: {{ .Release.Name }}
+{{- end }}
