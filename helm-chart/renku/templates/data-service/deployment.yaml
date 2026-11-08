@@ -327,7 +327,7 @@ spec:
           resources:
             {{ toYaml .Values.dataService.resources | nindent 12 }}
         - name: rclone
-          image: rclone/rclone:1.76-alpine
+          image: rclone/rclone:1.76
           resources:
             requests:
               cpu: 200m
