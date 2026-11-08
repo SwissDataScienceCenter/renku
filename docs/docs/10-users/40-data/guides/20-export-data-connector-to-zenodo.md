@@ -12,6 +12,12 @@ Renku does not publish the deposit automatically. After Renku creates the draft 
 
 :::
 
+:::note
+
+If you want to publish your data to [SciCat](https://discovery.psi.ch) instead, the procedure is very similar to the one described below (just replace `Zenodo` by `SciCat` in the following procedure).
+
+:::
+
 ## Before you begin
 
 Make sure that:
