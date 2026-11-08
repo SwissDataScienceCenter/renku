@@ -284,6 +284,8 @@ spec:
               value: "{{ template "renku.fullname" . }}-ssh-session-host-key"
             - name: SSH_PROXY_AUTH_KEY_SECRET
               value: "{{ template "renku.fullname" . }}-ssh-proxy-session-auth-key"
+            - name: RCLONE_PORT
+              value: "9999"
           volumeMounts:
             - name: server-options
               mountPath: /etc/renku-notebooks/server_options
@@ -324,6 +326,37 @@ spec:
             failureThreshold: 60
           resources:
             {{ toYaml .Values.dataService.resources | nindent 12 }}
+        - name: rclone
+          image: rclone/rclone:1.76-alpine
+          resources:
+            requests:
+              cpu: 200m
+              memory: 200Mi
+            limits:
+              memory: 200Mi
+          command:
+            - rclone
+          args:
+            - "rcd"
+            - "--rc-no-auth"
+            # If we listen on localhost only the probes fail because they do not come from localhost
+            - "--rc-addr=:9999"
+            - "--rc-enable-metrics"
+          ports:
+            - name: rclone-rc
+              containerPort: 9999
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: rclone-rc
+            periodSeconds: 20
+            timeoutSeconds: 3
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: rclone-rc
+            periodSeconds: 10
     {{- with .Values.dataService.nodeSelector }}
       nodeSelector:
         {{ toYaml . | nindent 8 }}
