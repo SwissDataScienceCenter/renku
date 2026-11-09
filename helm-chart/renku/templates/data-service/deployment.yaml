@@ -339,24 +339,26 @@ spec:
           args:
             - "rcd"
             - "--rc-no-auth"
-            # If we listen on localhost only the probes fail because they do not come from localhost
-            - "--rc-addr=:9999"
-            - "--rc-enable-metrics"
-          ports:
-            - name: rclone-rc
-              containerPort: 9999
+            - "--rc-addr=127.0.0.1:9999"
+          env:
+            # No config file: credentials must be passed with each request and are never saved to disk
+            - name: RCLONE_CONFIG
+              value: ""
+          securityContext:
+            readOnlyRootFilesystem: true
           livenessProbe:
-            httpGet:
-              path: /metrics
-              port: rclone-rc
+            # Exec runs inside the container, so it can reach rclone on localhost.
+            # Http probes do not originate from localhost so they will fail because we want
+            # to listen only on localhost.
+            exec:
+              command:
+                - rclone
+                - rc
+                - --url=http://127.0.0.1:9999/
+                - core/version
             periodSeconds: 20
-            timeoutSeconds: 3
+            timeoutSeconds: 5
             failureThreshold: 3
-          readinessProbe:
-            httpGet:
-              path: /metrics
-              port: rclone-rc
-            periodSeconds: 10
     {{- with .Values.dataService.nodeSelector }}
       nodeSelector:
         {{ toYaml . | nindent 8 }}
