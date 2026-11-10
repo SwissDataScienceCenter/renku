@@ -9,7 +9,7 @@ To change which resource class your project’s launcher uses, you can edit the 
 
 :::tip
 
-Do you need more resources than are available in RenkuLab’s public resource classes? [Contact us](../../community)! We can configure a custom resource pool for your needs upon demand.
+Do you need more resources than are available in RenkuLab’s public resource classes? [Contact us](/docs/users/community)! We can configure a custom resource pool for your needs upon demand.
 
 :::
 
