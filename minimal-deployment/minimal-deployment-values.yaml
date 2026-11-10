@@ -40,11 +40,6 @@ global:
   renku:
     domain: <deployment-FQDN>
   useHTTPS: true
-  redis:
-    port: 6379
-    host: renku-redis-master
-    sentinel:
-      enabled: false
 ingress:
   enabled: true
   hosts:
@@ -70,29 +65,6 @@ postgresql:
   image:
     registry: harbor.renkulab.io
     repository: bitnami-mirror/postgresql
-redis:
-  architecture: standalone
-  master:
-    persistence:
-      enabled: false
-    pdb:
-      # CI deployments don't need a PodDisruptionBudget for redis, we don't care if it gets restarted
-      create: false
-  metrics:
-    # Use the bitnami metrics image from the Renkulab Harbor registry
-    image:
-      registry: harbor.renkulab.io
-      repository: bitnami-mirror/redis-exporter
-  sentinel:
-    enabled: false
-    # Use Bitnami's Redis Sentinel image from Renkulab Harbor registry
-    image:
-      registry: harbor.renkulab.io
-      repository: bitnami-mirror/redis-sentinel
-  # Use Bitnami's Redis image from Renkulab Harbor registry
-  image:
-    registry: harbor.renkulab.io
-    repository: bitnami-mirror/redis
 secretsStorage:
   resources:
     limits:
@@ -125,3 +97,20 @@ ui:
         memory: 75Mi
       requests:
         memory: 75Mi
+valkey:
+  # A single valkey pod without sentinel in a throwaway deployment. Sessions
+  # are not worth a volume, they go away with the pod. Without a save point
+  # valkey writes nothing to disk, so this also turns off the AOF that the
+  # renku defaults enable.
+  replica:
+    enabled: false
+  sentinel:
+    enabled: false
+  haproxy:
+    enabled: false
+  persistence:
+    enabled: false
+    # the valkey chart refuses a size without persistence
+    size: ""
+  extraConfig: |-
+    save ""
