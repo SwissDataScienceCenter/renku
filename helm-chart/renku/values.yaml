@@ -1036,14 +1036,14 @@ notebooks:
   gitHttpsProxy:
     image:
       name: renku/sidecars
-      tag: "0.31.0"
+      tag: "0.32.0"
     args: ["gitproxy", "proxy"]
     port: 65480
     healthPort: 65481
   gitClone:
     image:
       name: renku/cloner
-      tag: "0.31.0"
+      tag: "0.32.0"
   service:
     type: ClusterIP
     port: 80
