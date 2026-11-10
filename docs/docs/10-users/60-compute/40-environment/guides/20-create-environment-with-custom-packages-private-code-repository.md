@@ -7,7 +7,7 @@ file in a code repository, such as an `environment.yml`, `requirements.txt`, `py
 
 If your code repository is public, you can have Renku build this image directly as part of your
 project! See [How to create an environment with custom packages
-installed](create-environment-with-custom-packages-installed).
+installed](/docs/users/compute/environment/guides/create-environment-with-custom-packages-installed).
 
 The instructions below are for _private_ code repositories that cannot use the
 automatic builds in RenkuLab.
@@ -16,7 +16,7 @@ automatic builds in RenkuLab.
 
 1. First, make sure your code repository meets the requirements for Renku to build an image for you.
    See [What kinds of environment definitions are
-   supported?](create-environment-with-custom-packages-installed)
+   supported?](/docs/users/compute/environment/guides/create-environment-with-custom-packages-installed)
 2. In your GitHub code repository, in the upper menu, click on **Actions**.
 
 <p class="image-container-l">

@@ -193,7 +193,7 @@ for some time you can look at trends and modify things accordingly.
 
 ## Harbor and Shipwright
 
-As stated in the [Requirements section](requirements) both of these need to be installed
+As stated in the [Requirements section](../requirements) both of these need to be installed
 separately from Renku prior to installing Renku. You may also deploy Renku without Harbor and Shipwright
 but then your users will not have the ability to build images from a code repository automatically.
 
@@ -285,7 +285,7 @@ This is the default and no further steps are needed.
 ## Knative
 
 In order to use Renku Apps, Knative needs to be installed and configured prior to installing Renku
-(see [Requirements](requirements#knative)). Apps are served from a domain of their own, so this
+(see [Requirements](../requirements#knative)). Apps are served from a domain of their own, so this
 section also covers choosing that domain and giving it the DNS and TLS it needs.
 
 The examples below are the arrangement we run, with the cloud-specific parts replaced by
@@ -448,14 +448,14 @@ apps:
 
 :::warning
 Setting `apps.enabled` back to `false` does not remove apps that are already running. See
-[Apps](../operation/apps) for how to remove them.
+[Apps](/docs/admins/operation/apps) for how to remove them.
 :::
 
 ### 5. Tune the app lobby (optional)
 
 Every shared app link opens through the UI's lobby page, which polls a sleeping app until it
 wakes rather than handing a visitor a blank page (see
-[Apps sleep when nobody is using them](../../users/compute/app#apps-sleep-when-nobody-is-using-them)).
+[Apps sleep when nobody is using them](/docs/users/compute/app#apps-sleep-when-nobody-is-using-them)).
 Three values control how long it waits before giving up:
 
 ```yaml
