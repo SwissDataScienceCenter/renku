@@ -66,6 +66,7 @@ global:
   renku:
     ## Domain name for the deployed instance of renku
     domain: example.local
+
     ## Renku version to be used (currently for project creation in
     ## the UI) If not set explicitly the version will be picked up
     ## from the respective renku (sub)chart.
@@ -143,7 +144,7 @@ global:
   certificates:
     image:
       repository: renku/certificates
-      tag: "0.0.2"
+      tag: "0.0.3"
     customCAs: []
     # - secret: a-secret-name
     # - configMap: a-configmap-name
@@ -187,6 +188,23 @@ networkPolicies:
   allowAllIngressFromPods: []
   ## List of namespaces that should be allowed all ingress to all services
   allowAllIngressFromNamespaces: []
+  sshProxy:
+    ## Egress rules for the SSH proxy. The proxy additionally reaches data-services
+    ## and sessions (same namespace) via rules hardcoded in the chart.
+    egress:
+      - to:
+          # DNS resolution
+          - namespaceSelector:
+              matchLabels:
+                kubernetes.io/metadata.name: kube-system
+            podSelector:
+              matchLabels:
+                k8s-app: kube-dns
+        ports:
+          - port: 53
+            protocol: UDP
+          - port: 53
+            protocol: TCP
   sessions:
     egress:
       # NOTE: These prevent user sessions from accessing other services running in your cluster.
@@ -582,7 +600,7 @@ ui:
     replicaCount: 1
     image:
       repository: renku/renku-ui
-      tag: "4.32.0"
+      tag: "4.36.1"
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
       ## Secrets must be manually created in the namespace.
@@ -774,7 +792,7 @@ ui:
     keepCookies: []
     image:
       repository: renku/renku-ui-server
-      tag: "4.32.0"
+      tag: "4.36.1"
       pullPolicy: IfNotPresent
     imagePullSecrets: []
     nameOverride: ""
@@ -1018,14 +1036,14 @@ notebooks:
   gitHttpsProxy:
     image:
       name: renku/sidecars
-      tag: "0.31.0"
+      tag: "0.32.0"
     args: ["gitproxy", "proxy"]
     port: 65480
     healthPort: 65481
   gitClone:
     image:
       name: renku/cloner
-      tag: "0.31.0"
+      tag: "0.32.0"
   service:
     type: ClusterIP
     port: 80
@@ -1117,7 +1135,7 @@ gateway:
   secretKey:
   image:
     repository: renku/renku-gateway
-    tag: "1.10.4"
+    tag: "1.10.6"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
@@ -1209,12 +1227,12 @@ dataService:
     existingPriorityClass: ""
   image:
     repository: renku/renku-data-service
-    tag: "0.85.1"
+    tag: "0.89.1"
     pullPolicy: IfNotPresent
   k8sWatcher:
     image:
       repository: renku/data-service-k8s-watcher
-      tag: "0.85.1"
+      tag: "0.89.1"
       pullPolicy: IfNotPresent
     resources: {}
     sentry:
@@ -1225,7 +1243,7 @@ dataService:
   dataTasks:
     image:
       repository: renku/data-service-data-tasks
-      tag: "0.85.1"
+      tag: "0.89.1"
       pullPolicy: IfNotPresent
     resources: {}
     enableResourceRequestTracking: false
@@ -1282,16 +1300,16 @@ dataService:
       registries: ""
 
     ## The builder image (see https://buildpacks.io/docs/for-platform-operators/concepts/builder/)
-    builderImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/selector:0.9.1"
+    builderImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/selector:0.12.3"
     ## The run image (see https://buildpacks.io/docs/for-platform-operators/concepts/base-images/)
-    runImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/run-image:0.9.1"
+    runImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/run-image:0.12.3"
     ## The name of the BuildStrategy to use for image builds.
     strategyName: renku-buildpacks-v3
     ## Configuration overrides for specific target platforms
     platformOverrides: {}
       # linux/arm64:
-      #   builderImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/cuda-selector:0.9.1"
-      #   runImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/cuda-run-image:0.9.1"
+      #   builderImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/cuda-selector:0.12.3"
+      #   runImage: "ghcr.io/swissdatasciencecenter/renku-frontend-buildpacks/cuda-run-image:0.12.3"
       #   strategyName: renku-buildpacks-v3
       #   nodeSelector:
       #     kubernetes.io/arch: arm64
@@ -1340,6 +1358,11 @@ dataService:
         ## The secret name that stores the S3 ACCESS_KEY_ID, SECRET_ACCESS_KEY, ENDPOINT, BUCKET for uploading data to Envidat
         ## The keys in the Kubernetes secret should have the same names as the terms mentioned above.
         credentialsSecretName: renku-envidat-s3-credentials
+    scicat:
+      url: https://discovery.psi.ch
+      apiUrl: https://dacat.psi.ch/api/v3
+      image: ghcr.io/swissdatasciencecenter/scicat-cli:latest
+      testEnv: false
   # Configuration values for persisted logs
   persistedLogs:
     ## If set to true, enables logs to be pulled from Loki into the backend database.
@@ -1378,6 +1401,59 @@ dataService:
     ## user have the option to set a lower value. The value cannot be lower than 1 Gb.
     storageMaxSizeGb: 10
 
+## Enables SSH access to sessions in Renku.
+## Currently only sessions that use buildpacks and are built from code are supported.
+## The old ssh section of the values file is completely abandoned and unrelated to this and will be ignored.
+## The ssh proxy routes authenticates and then routes SSH connections to each renku session.
+sshProxy:
+  enabled: false
+  image:
+    repository: renku/ssh-proxy
+    tag:
+    pullPolicy: IfNotPresent
+  ## The port where the SSH proxy will be accessible to from the outside.
+  ## If not 22 then users connecting to their session will have to specify the port.
+  port: 22
+  service:
+    ## If true will create a LoadBalancer type service for ingress into the SSH proxy and access to sessions.
+    ## If disabled you have to create the ingress/service to get SSH connections from outside the cluster to the proxy.
+    enabled: true
+    ## Additional annotations that can be added to the service.
+    annotations: {}
+  ## The SSH host key presented to all users trying to use SSH to access a session.
+  ## If not provided we will automatically generate a host key.
+  ## Rotating or changing this will cause disruptions for users who have already accessed sessions using the old key.
+  ## The warning that users will see after the rotation of these keys is like this:
+  ## Therefore rotation of the host keys has to be done after all users have been warned that it will happen.
+  ##    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  ##    @    WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!     @
+  ##    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  ##    IT IS POSSIBLE THAT SOMEONE IS DOING SOMETHING NASTY!
+  ##    Someone could be eavesdropping on you right now (man-in-the-middle attack)!
+  ##    It is also possible that a host key has just been changed.
+  openSshHostKey:
+  ## The domain where the the SSH server will run.
+  domain: ssh.example.local
+  sentry:
+    enabled: false
+    dsn:
+    environment:
+    sampleRate: 0.1
+  replicaCount: 2
+  podAnnotations: {}
+  ## Proxy-specific hardening, merged over the global podSecurityContext.
+  podSecurityContext:
+    seccompProfile:
+      type: RuntimeDefault
+  ## Proxy-specific hardening, merged over the global securityContext.
+  securityContext:
+    readOnlyRootFilesystem: true
+  resources: {}
+  updateStrategy: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
 posthog:
   enabled: false
   # the posthog api key
@@ -1406,7 +1482,7 @@ authz:
 secretsStorage:
   image:
     repository: renku/secrets-storage
-    tag: "0.85.1"
+    tag: "0.89.1"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP

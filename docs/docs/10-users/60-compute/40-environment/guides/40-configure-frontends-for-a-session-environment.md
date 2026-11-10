@@ -4,7 +4,7 @@ In order to run a docker image in a session, Renku needs to know some informatio
 
 In this section, you can see example configurations for commonly used images. If you build an image with one of these images as the base, then you can use this provided configuration to make that image run in RenkuLab. The information below can be copied and pasted into the **Advanced Settings** form for creating a **custom environment**.
 
-This page provides reference configurations to use in the **Advanced Settings** step of [How to use your own docker image for a Renku session](./use-your-own-docker-image-for-renku-session), specifically for images not built by Renku.
+This page provides reference configurations to use in the **Advanced Settings** step of [How to use your own docker image for a Renku session](/docs/users/compute/environment/guides/use-your-own-docker-image-for-renku-session), specifically for images not built by Renku.
 
 <p class="image-container-l">
 ![image.png](./use-your-own-docker-image-for-renku-session-40.png)
@@ -21,7 +21,7 @@ This page provides reference configurations to use in the **Advanced Settings** 
 ["sh", "-c"]
 ```
 
-- Command Arguments CMD ([learn more](./use-your-own-docker-image-for-renku-session#about-renku-session-urls)):
+- Command Arguments CMD ([learn more](/docs/users/compute/environment/guides/use-your-own-docker-image-for-renku-session#about-renku-session-urls)):
 
 ```json
 [
@@ -42,7 +42,7 @@ This page provides reference configurations to use in the **Advanced Settings** 
 ["sh", "-c"]
 ```
 
-- Command Arguments CMD ([learn more](./use-your-own-docker-image-for-renku-session#about-renku-session-urls)):
+- Command Arguments CMD ([learn more](/docs/users/compute/environment/guides/use-your-own-docker-image-for-renku-session#about-renku-session-urls)):
 
 ```json
 [
@@ -66,7 +66,7 @@ This page provides reference configurations to use in the **Advanced Settings** 
 ["sh", "-c"]
 ```
 
-- Command Arguments CMD ([learn more](./use-your-own-docker-image-for-renku-session#about-renku-session-urls)):
+- Command Arguments CMD ([learn more](/docs/users/compute/environment/guides/use-your-own-docker-image-for-renku-session#about-renku-session-urls)):
 
 ```json
 [
@@ -84,7 +84,7 @@ This page provides reference configurations to use in the **Advanced Settings** 
 ["sh", "-c"]
 ```
 
-- Command Arguments CMD ([learn more](./use-your-own-docker-image-for-renku-session#about-renku-session-urls)):
+- Command Arguments CMD ([learn more](/docs/users/compute/environment/guides/use-your-own-docker-image-for-renku-session#about-renku-session-urls)):
 
 ```json
 [
@@ -96,8 +96,8 @@ This page provides reference configurations to use in the **Advanced Settings** 
 
 To serve a dashboard or interactive app built with Streamlit, Plotly Dash, Shiny, Gradio or a similar framework, publish it as an **app** rather than a session. An app gets a stable public URL that anyone can open, without a Renku account and without launching a session. Your image runs its own web server, listening on `$RENKU_SESSION_PORT` and `0.0.0.0`.
 
-See [Publish an App](../../app/guides/host-app) for how to set this up, with example start commands.
+See [Publish an App](/docs/users/compute/app/guides/host-app) for how to set this up, with example start commands.
 
 ## Next steps
 
-Once you've copied the configuration for your front end, return to [How to use your own docker image for a Renku session](./use-your-own-docker-image-for-renku-session) to finish creating your launcher.
+Once you've copied the configuration for your front end, return to [How to use your own docker image for a Renku session](/docs/users/compute/environment/guides/use-your-own-docker-image-for-renku-session) to finish creating your launcher.
