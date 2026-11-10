@@ -150,7 +150,10 @@ impl ProxyHandler {
             },
         )
         .await?;
-        log::debug!("Connected to target {}. Continue with authentication", &target.host);
+        log::debug!(
+            "Connected to target {}. Continue with authentication",
+            &target.host
+        );
         let auth_key = match target.auth_key {
             Some(pk) => pk.0,
             None => self
@@ -444,6 +447,15 @@ impl server::Handler for ProxyHandler {
     }
 }
 
+/// IO errors that indicate the client went away without a clean shutdown and
+/// are not worth an error log. Add new such kinds here as they are found.
+fn is_benign_client_disconnect(err: &std::io::Error) -> bool {
+    matches!(
+        err.kind(),
+        std::io::ErrorKind::ConnectionReset | std::io::ErrorKind::UnexpectedEof
+    )
+}
+
 /// Forwards ssh messages received from the channel to the client handler.
 async fn proxy_channel(
     mut up: Channel<client::Msg>,
@@ -522,22 +534,32 @@ async fn proxy_channel(
 
 impl server::Server for ProxyHandler {
     type Handler = Self;
+
     fn new_client(&mut self, _: Option<std::net::SocketAddr>) -> Self {
         self.clone()
     }
     fn handle_session_error(&mut self, error: <Self::Handler as russh::server::Handler>::Error) {
         let cause = error.downcast_ref::<russh::Error>();
-        if let Some(russh::Error::Disconnect) = cause {
-            log::trace!("Client disconnected: {error:#?}");
-        } else {
-            log::error!("Session error: {error:#?} ({cause:#?})");
-        }
+        match cause {
+            Some(russh::Error::Disconnect) => log::trace!("Client disconnected: {error:#?}"),
+            Some(russh::Error::IO(io_err)) if is_benign_client_disconnect(io_err) => {
+                log::trace!("io error (connection reset): {error:#?}")
+            }
+            Some(c) => {
+                log::error!("Session error: {c:?}");
+                log::trace!("Session error structure: {error:#?}");
+            },
+            _ => {
+                log::error!("Session error: {error:?}");
+                log::trace!("Session error structure: {error:#?}");
+            }
+        };
     }
 }
 
 impl Drop for ProxyHandler {
     fn drop(&mut self) {
-        log::debug!("Closing client. Clear all channels");
+        log::trace!("Closing client. Clear all channels");
         self.channels.clear();
     }
 }
