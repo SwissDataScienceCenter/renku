@@ -1,10 +1,10 @@
 # Add a job launcher to your project
 
-A job launcher defines the environment, default compute resources, and job command for background [Jobs](../../job) in your project.
+A job launcher defines the environment, default compute resources, and job command for background [Jobs](/docs/users/compute/job) in your project.
 
 :::info
 
-Job launchers do not support **global environments**. You must use **Create from code** or a **custom Docker image**. Global environments are only available for interactive [Sessions](../../session).
+Job launchers do not support **global environments**. You must use **Create from code** or a **custom Docker image**. Global environments are only available for interactive [Sessions](/docs/users/compute/session).
 
 :::
 
@@ -23,8 +23,8 @@ Job launchers do not support **global environments**. You must use **Create from
 </p>
 
 3. Choose and configure an **environment**:
-   - **Create from code** — Renku builds an environment from a code repository (for example, one with an `environment.yml` or `requirements.txt`). See [How to create an environment with custom packages installed](../../environment/guides/create-environment-with-custom-packages-installed).
-   - **External environment** — use your own Docker image. See [How to use your own docker image for a Renku session](../../environment/guides/use-your-own-docker-image-for-renku-session).
+   - **Create from code** — Renku builds an environment from a code repository (for example, one with an `environment.yml` or `requirements.txt`). See [How to create an environment with custom packages installed](../../../environment/guides/create-environment-with-custom-packages-installed).
+   - **External environment** — use your own Docker image. See [How to use your own docker image for a Renku session](/docs/users/compute/environment/guides/use-your-own-docker-image-for-renku-session).
 
 <p class="image-container-m">
 ![JobLauncher](./job-creation-30.png)
@@ -36,11 +36,11 @@ Job launchers do not support **global environments**. You must use **Create from
 
 5. Set a **name** and optional **description** for the launcher.
 
-6. Select the **resource class** that best fits your expected computational needs. (see [Resource Pool and Classes](../../resource-pools-and-classes))
+6. Select the **resource class** that best fits your expected computational needs. (see [Resource Pool and Classes](/docs/users/compute/resource-pools-and-classes))
 
    :::tip
 
-   Do you need more resources than are available in RenkuLab's public resource classes? [Contact us](../../../community)! We can configure a custom resource pool for your needs upon demand.
+   Do you need more resources than are available in RenkuLab's public resource classes? [Contact us](/docs/users/community)! We can configure a custom resource pool for your needs upon demand.
 
    :::
 
@@ -54,4 +54,4 @@ If your environment is built from code, wait for the environment **build** to su
 
 ## Next steps
 
-Once your job launcher is ready, see [How to submit a job](submit-a-job).
+Once your job launcher is ready, see [How to submit a job](/docs/users/compute/job/guides/submit-a-job).

@@ -1,4 +1,4 @@
-FROM python:3.10-alpine
+FROM python:3.12-slim-bookworm
 
 COPY requirements.txt init-realm.py utils.py /app/
 WORKDIR /app
