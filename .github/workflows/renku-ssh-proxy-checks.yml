@@ -1,0 +1,35 @@
+name: renku-ssh-proxy checks
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    paths:
+      - "renku-ssh-proxy/**"
+      - ".github/workflows/renku-ssh-proxy-checks.yml"
+  workflow_dispatch:
+
+jobs:
+  check-linux:
+    name: "Run checks on linux"
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install nix
+        uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: access-tokens = github.com=${{ github.token }}
+
+      - name: Check nix formatting
+        run: cd renku-ssh-proxy && nix fmt -- -c nix/ flake.nix
+
+      - name: Set up cachix
+        uses: cachix/cachix-action@v15
+        with:
+          name: nix-community
+
+      - name: Build with nix and run checks
+        run: |
+          cd renku-ssh-proxy && nix flake check --print-build-logs

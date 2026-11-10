@@ -6,14 +6,14 @@ To run your code and analyze data on RenkuLab, first decide what kind of session
 
 1. In the **Launchers** section of your project page, click on **+**.
 2. Select **Session Launcher** card.
-3. In the **Global environment** tab, scroll down and select **Python Data Science - Jupyter**. This will give you a pre-configured environment with python and data science packages pre-installed. If you need to install other packages, you can install any necessary packages using the terminal. For a detailed guide for how to install packages, see [How to install packages on-the-fly in your session](../compute/session/guides/install-packages-on-the-fly-in-your-session). However, the packages you install on-the-fly in the session will not be shared with other people working with your Renku project. To ensure the adequate dependencies are installed in your environment, follow step 4.3 to create a custom environment from code.
+3. In the **Global environment** tab, scroll down and select **Python Data Science - Jupyter**. This will give you a pre-configured environment with python and data science packages pre-installed. If you need to install other packages, you can install any necessary packages using the terminal. For a detailed guide for how to install packages, see [How to install packages on-the-fly in your session](/docs/users/compute/session/guides/install-packages-on-the-fly-in-your-session). However, the packages you install on-the-fly in the session will not be shared with other people working with your Renku project. To ensure the adequate dependencies are installed in your environment, follow step 4.3 to create a custom environment from code.
 4. Click **Next**.
 5. Choose the compute resources for your session based on your project’s needs in the drop-down menu, and select the amount of disk space.
 
 ![image.png](./add-session-launcher.png)
 
 :::info
-You can have multiple Session Launchers in your project that run different kinds of sessions. Check out [How to guides to add a session launcher to your project](../compute/session/guides/add-a-session-launcher-to-your-project)
+You can have multiple Session Launchers in your project that run different kinds of sessions. Check out [How to guides to add a session launcher to your project](/docs/users/compute/session/guides/add-a-session-launcher-to-your-project)
 :::
 
 :::info
@@ -43,7 +43,7 @@ See the [CLI reference](/docs/users/cli/cli-reference) for more commands.
 
 ## Add a second Session Launcher (optional)
 
-When you want to create a RenkuLab session with a set of packages that’s reproducible and shareable, we recommend defining your package dependencies in code. Then, use the ‘Create from Code’ session launcher option to have Renku create a reproducible session environment for you! See [How to create an environment with custom packages installed](../compute/environment/guides/create-environment-with-custom-packages-installed) for details.
+When you want to create a RenkuLab session with a set of packages that’s reproducible and shareable, we recommend defining your package dependencies in code. Then, use the ‘Create from Code’ session launcher option to have Renku create a reproducible session environment for you! See [How to create an environment with custom packages installed](/docs/users/compute/environment/guides/create-environment-with-custom-packages-installed) for details.
 
 ## Run the Code (optional)
 
@@ -65,10 +65,10 @@ plt.savefig(file_save_path+'Trend Analysis of ' + str(parameter) + ' in ' + str(
 plt.savefig(file_save_path+'Trend Analysis of ' + str(parameter) + ' in ' + str(location) +' by Date'+'.pdf')
 ```
 
-If you did [Connect a Storage Space to save your work](../data/guides/connect-data/), try creating the file in your attached storage space (modify the `file_save_path`), and see that it is synced back to the source system.
+If you did [Connect a Storage Space to save your work](/docs/users/data/guides/connect-data/), try creating the file in your attached storage space (modify the `file_save_path`), and see that it is synced back to the source system.
 
 :::info
 
-The git repository we connected with our project is read-only. However, when you connect your Renku project with a git repository that you have push (write) access to, you will be able to run git commands in the session to save your work back to the code repository! To make this work, first [connect Renku with your GitHub or GitLab account](../code/guides/connect-renku-account-to-github-or-gitlab-account).
+The git repository we connected with our project is read-only. However, when you connect your Renku project with a git repository that you have push (write) access to, you will be able to run git commands in the session to save your work back to the code repository! To make this work, first [connect Renku with your GitHub or GitLab account](/docs/users/code/guides/connect-renku-account-to-github-or-gitlab-account).
 
 :::
