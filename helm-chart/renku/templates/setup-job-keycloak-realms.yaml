@@ -43,6 +43,7 @@ spec:
             {{- include "certificates.volumeMounts.system" . | nindent 12 }}
 
           env:
+            {{- with include "renku.proxy.env" . }}{{ . | nindent 12 }}{{ end }}
             - name: KEYCLOAK_URL
               value: {{ include "renku.keycloakUrl" . | quote }}
             - name: RENKU_BASE_URL

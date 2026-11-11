@@ -39,6 +39,7 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           env:
+            {{- with include "renku.proxy.env" . }}{{ . | nindent 12 }}{{ end }}
             - name: "SPICEDB_DATASTORE_CONN_URI"
               valueFrom:
                 secretKeyRef:
@@ -56,6 +57,7 @@ spec:
           image: "{{ .Values.authz.image.repository }}:{{ .Values.authz.image.tag }}"
           imagePullPolicy: {{ .Values.authz.image.pullPolicy }}
           env:
+            {{- with include "renku.proxy.env" . }}{{ . | nindent 12 }}{{ end }}
             - name: "SPICEDB_GRPC_PRESHARED_KEY"
               valueFrom:
                 secretKeyRef:

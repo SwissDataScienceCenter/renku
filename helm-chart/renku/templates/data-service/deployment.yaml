@@ -49,6 +49,7 @@ spec:
             - secretRef:
                 name: {{ template "renku.notebooks.fullname" . }}
           env:
+            {{- with include "renku.proxy.env" . }}{{ . | nindent 12 }}{{ end }}
             - name: VERSION
               value: {{ .Values.dataService.image.tag | quote }}
             - name: DB_HOST

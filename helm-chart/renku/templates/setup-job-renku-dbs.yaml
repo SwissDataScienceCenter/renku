@@ -27,6 +27,7 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           env:
+            {{- with include "renku.proxy.env" . }}{{ . | nindent 12 }}{{ end }}
             - name: DB_HOST
               value: {{ template "postgresql.fullname" . }}
             - name: DB_ADMIN_USERNAME
