@@ -651,6 +651,15 @@ spec:
     {{- with .Values.networkPolicies.sessions.egress }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
+    {{- if and .Values.global.proxy.enabled .Values.global.proxy.networkPolicy.cidr }}
+    - to:
+      # Allow access to the outgoing HTTP proxy, see global.proxy
+      - ipBlock:
+          cidr: {{ .Values.global.proxy.networkPolicy.cidr | quote }}
+      ports:
+        - port: {{ .Values.global.proxy.networkPolicy.port | int }}
+          protocol: TCP
+    {{- end }}
     - to:
       # Allow access to data service, needed for secret mounting
       - podSelector:

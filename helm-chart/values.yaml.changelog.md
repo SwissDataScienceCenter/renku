@@ -5,6 +5,11 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
+## Upgrading to Renku 2.23.0
+
+* NEW `global.proxy` to route outgoing HTTP(S) traffic through an HTTP proxy, for clusters that can only reach the internet through one. When `global.proxy.enabled` is `true`, all Renku containers get `HTTP_PROXY`, `HTTPS_PROXY` and `NO_PROXY` (upper and lower case), and the proxy settings are passed to the data service for user sessions. `NO_PROXY` is computed from the chart's Services; add extra entries to `global.proxy.noProxy`. Set `global.proxy.networkPolicy.cidr` if the session egress network policy blocks the proxy. While the proxy is enabled, the UI server reaches the gateway through its in-cluster Service instead of the public URL.
+* EDIT `keycloakx.extraEnv` now includes `{{- include "renku.proxy.env.keycloak" . }}`. If you override `keycloakx.extraEnv` in your values, add this line so that the bundled Keycloak uses `global.proxy`.
+
 ## Upgrading to Renku 2.21.0
 
 * NEW `dataService.imageBuilders.insecureOutput.enabled`: it is now possible to configure registries that use e.g. self-signed certificates to push images to. **WARNING** do not use in production. This is a feature that helps for testing and development.

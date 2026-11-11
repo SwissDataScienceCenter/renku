@@ -161,6 +161,45 @@ global:
     # Set to true to install csi-rclone alongside renku
     # Make sure to configure the csi-rclone section below correctly in that case.
     install: false
+  ## Outgoing HTTP proxy, for clusters that can only reach the internet
+  ## (including an external Keycloak) through an HTTP proxy.
+  ## When enabled, every Renku container gets HTTP_PROXY, HTTPS_PROXY and NO_PROXY
+  ## (upper and lower case), the UI server additionally gets NODE_USE_ENV_PROXY=1,
+  ## and the bundled Keycloak gets the same variables through keycloakx.extraEnv.
+  ## NOTE: if you override keycloakx.extraEnv, re-add the line
+  ##   {{- include "renku.proxy.env.keycloak" . }}
+  ## to it, otherwise Keycloak will not use the proxy.
+  ## The proxy settings are also passed to the data service for user sessions
+  ## (NB_SESSIONS__PROXY__*).
+  proxy:
+    enabled: false
+    ## Proxy URL used for http:// requests, e.g. http://proxy.example.ch:3128
+    ## Authenticated proxies (user:password in the URL) are not supported.
+    httpProxy: ""
+    ## Proxy URL used for https:// requests. Defaults to httpProxy when empty.
+    httpsProxy: ""
+    ## Extra hosts that bypass the proxy, appended to the defaults computed by
+    ## the chart: localhost, 127.0.0.1, .svc, .cluster.local, the Kubernetes API,
+    ## the release and sessions namespaces and the short names of all Services in
+    ## this chart.
+    ## Use host names or domain suffixes (.example.ch); CIDR ranges are ignored by
+    ## some clients (Python httpx).
+    ## The Renku domain is NOT bypassed by default, so traffic to Renku's own
+    ## public URL (including the bundled Keycloak) goes through the proxy. If the
+    ## public URL is reachable directly from inside the cluster, add it here.
+    ## While the proxy is enabled, the UI server calls the gateway through its
+    ## in-cluster Service instead of the public URL.
+    noProxy: []
+    # - internal-registry.example.ch
+    # - .internal.example.ch
+    networkPolicy:
+      ## NetworkPolicies cannot target host names. If the session egress policy
+      ## (networkPolicies.sessions.egress) blocks the proxy, e.g. because the proxy
+      ## has a private IP, set its IP range and port here to allow sessions to
+      ## reach it.
+      cidr: ""
+      # cidr: 10.1.2.3/32
+      port: 3128
 ## Ingress configuration
 ## See: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
@@ -297,6 +336,8 @@ keycloakx:
         -Djgroups.dns.query={{ include "keycloak.fullname" . }}-headless
     - name: KC_DB_POOL_MAX_SIZE
       value: "10"
+    {{- /* Outgoing HTTP proxy, see global.proxy. Keep this line if you override extraEnv. */}}
+    {{- include "renku.proxy.env.keycloak" . }}
   command:
     - "/opt/keycloak/bin/kc.sh"
     - "start"

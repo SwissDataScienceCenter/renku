@@ -29,6 +29,7 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           env:
+            {{- with include "renku.proxy.env" . }}{{ . | nindent 12 }}{{ end }}
             - name: K8S_NAMESPACE
               value: {{ .Release.Namespace }}
             - name: RENKU_FULLNAME

@@ -21,6 +21,7 @@ spec:
         - name: swagger
           image: "{{ .Values.swagger.image.repository }}:{{ .Values.swagger.image.tag }}"
           env:
+            {{- with include "renku.proxy.env" . }}{{ . | nindent 12 }}{{ end }}
             - name: BASE_URL
               value: /swagger
             - name: URLS
