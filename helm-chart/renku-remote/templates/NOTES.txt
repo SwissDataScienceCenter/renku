@@ -1,0 +1,48 @@
+Renku remote cluster components have been installed in the namespace "{{ .Release.Namespace }}".
+Renku sessions from the main deployment will run in this namespace.
+
+{{- if .Values.crossClusterAccess.enabled }}
+{{- $saName := include "renku-remote.crossClusterServiceAccountName" . }}
+
+1. Build the kubeconfig the main Renku deployment uses to reach this cluster:
+
+  NS={{ .Release.Namespace }}
+  SECRET={{ $saName }}-token
+  SERVER=<public URL of this cluster's Kubernetes API, e.g. https://k8s.example.org:6443>
+  CA=$(kubectl -n $NS get secret $SECRET -o jsonpath='{.data.ca\.crt}')
+  TOKEN=$(kubectl -n $NS get secret $SECRET -o jsonpath='{.data.token}' | base64 -d)
+  cat > remote-cluster.yaml <<EOF
+  apiVersion: v1
+  kind: Config
+  clusters:
+    - name: remote
+      cluster:
+        certificate-authority-data: $CA
+        server: $SERVER
+  contexts:
+    - name: remote
+      context:
+        cluster: remote
+        namespace: $NS
+        user: remote
+  users:
+    - name: remote
+      user:
+        token: $TOKEN
+  current-context: remote
+  EOF
+  KUBECONFIG=remote-cluster.yaml kubectl get amaltheasessions
+
+2. Add the kubeconfig to the secret referenced by
+   `dataService.remoteClustersKubeconfigSecretName` in the main Renku deployment,
+   then register the cluster through the Renku `/clusters` API.
+   You will have to restart the data services, k8s watcher and secret service so
+   that they pick up the new cluster.
+{{- end }}
+{{- if .Values.priorityClasses }}
+
+Priority classes created (use these as `quota.id` in the resource pools):
+{{- range .Values.priorityClasses }}
+  - {{ .name }}
+{{- end }}
+{{- end }}
