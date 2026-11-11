@@ -1,0 +1,95 @@
+{{- if .Values.sshProxy.enabled }}
+{{- $fullname := include "renku-remote.fullname" . }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ $fullname }}-ssh-session-keys-rev{{ .Release.Revision }}-{{ randAlphaNum 5 | lower }}"
+  labels:
+    app: {{ template "renku-remote.name" $ }}
+    {{- include "renku-remote.labels" . | nindent 4 }}
+    app.kubernetes.io/component: ssh-proxy
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade,pre-rollback
+spec:
+  template:
+    metadata:
+      name: {{ .Release.Name }}-ssh-session-keys
+      labels:
+        app: {{ template "renku-remote.name" $ }}
+        {{- include "renku-remote.labels" . | nindent 8 }}
+        app.kubernetes.io/component: ssh-proxy
+    spec:
+      restartPolicy: Never
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: init-ssh-session-keys
+          image: "{{ .Values.sessionKeysInit.image.repository }}:{{ .Values.sessionKeysInit.image.tag }}"
+          args: [ "remote_session_keys.py" ]
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          env:
+            - name: K8S_NAMESPACE
+              value: {{ .Release.Namespace }}
+            - name: RENKU_FULLNAME
+              value: {{ $fullname }}
+            - name: SESSION_KEYS_SECRET_NAME
+              value: {{ .Values.sshProxy.sessionKeysSecretName }}
+      serviceAccountName: {{ $fullname }}-ssh-session-keys
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ $fullname }}-ssh-session-keys
+  labels:
+    app: {{ template "renku-remote.name" $ }}
+    {{- include "renku-remote.labels" . | nindent 4 }}
+    app.kubernetes.io/component: ssh-proxy
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade,pre-rollback
+    "helm.sh/hook-weight": "-5"
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - secrets
+    verbs:
+      - get
+      - list
+      - patch
+      - create
+      - delete
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ $fullname }}-ssh-session-keys
+  labels:
+    app: {{ template "renku-remote.name" $ }}
+    {{- include "renku-remote.labels" . | nindent 4 }}
+    app.kubernetes.io/component: ssh-proxy
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade,pre-rollback
+    "helm.sh/hook-weight": "-5"
+automountServiceAccountToken: true
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ $fullname }}-ssh-session-keys
+  labels:
+    app: {{ template "renku-remote.name" $ }}
+    {{- include "renku-remote.labels" . | nindent 4 }}
+    app.kubernetes.io/component: ssh-proxy
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade,pre-rollback
+    "helm.sh/hook-weight": "-5"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ $fullname }}-ssh-session-keys
+subjects:
+  - kind: ServiceAccount
+    name: {{ $fullname }}-ssh-session-keys
+    namespace: {{ .Release.Namespace }}
+{{- end }}

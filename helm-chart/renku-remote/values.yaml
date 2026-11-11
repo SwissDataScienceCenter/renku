@@ -38,6 +38,32 @@ networkPolicies:
   ## Create network policies for sessions.
   ## Requires a CNI that enforces network policies.
   enabled: true
+  sshProxy:
+    ## Egress rules for the SSH proxy. The default allows DNS and traffic leaving the
+    ## cluster (the proxy needs to reach the main deployment's public API over the
+    ## internet), while blocking access to private IP ranges. Egress to sessions in this
+    ## namespace is added by the chart automatically.
+    egress:
+      - to:
+          # DNS resolution
+          - namespaceSelector:
+              matchLabels:
+                kubernetes.io/metadata.name: kube-system
+            podSelector:
+              matchLabels:
+                k8s-app: kube-dns
+        ports:
+          - port: 53
+            protocol: UDP
+          - port: 53
+            protocol: TCP
+      - to:
+          - ipBlock:
+              cidr: 0.0.0.0/0
+              except:
+                - 10.0.0.0/8
+                - 172.16.0.0/12
+                - 192.168.0.0/16
   sessions:
     ## Egress rules for user sessions. The default allows DNS and traffic leaving the
     ## cluster, while blocking access to private IP ranges (i.e. other services in the cluster).
@@ -95,3 +121,99 @@ csi-rclone:
   #   nodeSelector: {}
   #   tolerations: []
   #   affinity: {}
+
+## Enables SSH access to sessions running on this remote cluster.
+## See docs/docs/20-admins/30-operation/50-remote.md and local/ssh-key-provisioning.notion.md
+## for the full key-exchange procedure between this cluster and the main Renku deployment.
+sshProxy:
+  enabled: false
+  image:
+    repository: renku/ssh-proxy
+    tag:
+    pullPolicy: IfNotPresent
+  ## The port where the SSH proxy will be accessible to from the outside.
+  ## If not 22 then users connecting to their session will have to specify the port.
+  port: 22
+  ## The domain where the the SSH server will run.
+  domain: ssh.example.local
+  service:
+    ## If true will create a LoadBalancer type service for ingress into the SSH proxy.
+    ## If disabled you have to create the ingress/service to get SSH connections from outside
+    ## the cluster to the proxy.
+    enabled: true
+    ## Additional annotations that can be added to the service.
+    annotations: {}
+  ## The SSH host key this proxy presents to the main proxy connecting to it (hostkey-R).
+  ## If not provided one is generated and kept stable across upgrades. The public part and its
+  ## fingerprint are printed in the post-install/upgrade notes; register it with the main Renku
+  ## deployment as `host_public_key` when adding this cluster.
+  openSshHostKey:
+  ## The public key (`auth_public_key`) that the main Renku deployment's SSH proxy uses to
+  ## authenticate itself to this remote proxy. Data-services generates and returns this value
+  ## when the main cluster administrator registers this cluster; leave empty until then and set
+  ## it via `helm upgrade` once you have it.
+  authorizedKey: ""
+  ## URL of the main Renku deployment's public secret-service endpoint (data-services), used to
+  ## authorize incoming connections from the main proxy and resolve session targets. This is the
+  ## public counterpart of the internal secrets-storage URL the main cluster's own SSH proxy uses.
+  ## Obtain this from the main cluster administrator.
+  secretServiceUrl: ""
+  ## Name of the Secret (created by this chart, in this namespace) holding the keys mounted into
+  ## every session so this proxy can reach it over SSH (`authorized_keys`, `ssh_host_ed25519_key`).
+  ## Must match `session_secret_name` used when registering this cluster with the main deployment.
+  sessionKeysSecretName: renku-ssh-session-keys
+  ## The ssh port/user of the session itself, once the proxy has connected to it.
+  target:
+    port: 8888
+    user: renku
+  sentry:
+    enabled: false
+    dsn:
+    environment:
+    sampleRate: 0.1
+  replicaCount: 1
+  podAnnotations: {}
+  ## Proxy-specific hardening, merged over the global podSecurityContext.
+  podSecurityContext:
+    seccompProfile:
+      type: RuntimeDefault
+  ## Proxy-specific hardening, merged over the global securityContext.
+  securityContext:
+    readOnlyRootFilesystem: true
+  resources: {}
+  updateStrategy: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+## Image used by the pre-install/pre-upgrade Job that generates the SSH keypairs used between
+## this cluster's proxy and its sessions (authkey-S, hostkey-S). Only used when sshProxy.enabled.
+sessionKeysInit:
+  image:
+    repository: renku/platform-init
+    tag: 1.set.by.chartpress
+    pullPolicy: IfNotPresent
+
+## CA trust for pods in this chart that make outbound HTTPS calls (currently just the
+## ssh-proxy, reaching the main Renku deployment's public secret-service endpoint over the
+## internet). The init container image always provides the standard public root CA bundle;
+## add customCAs only if that endpoint is served behind a self-signed or internal CA.
+certificates:
+  image:
+    repository: renku/certificates
+    tag: "0.0.3"
+  customCAs: []
+  # - secret: a-secret-name
+  # - configMap: a-configmap-name
+
+## Defaults for pods created directly by this chart (currently just the ssh-proxy Deployment
+## and its session-keys Job). Per-component values above are merged over these.
+podSecurityContext: {}
+securityContext:
+  runAsUser: 1000
+  runAsGroup: 1000
+  runAsNonRoot: true
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL

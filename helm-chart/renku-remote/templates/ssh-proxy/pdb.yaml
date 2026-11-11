@@ -1,0 +1,15 @@
+{{- if and .Values.sshProxy.enabled (gt (int .Values.sshProxy.replicaCount) 1) }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ template "renku-remote.fullname" . }}-ssh-proxy
+  labels:
+    app: {{ template "renku-remote.name" $ }}
+    {{- include "renku-remote.labels" . | nindent 4 }}
+    {{- include "renku-remote.sshProxySelectorLabels" . | nindent 4 }}
+spec:
+  maxUnavailable: 50%
+  selector:
+    matchLabels:
+      {{- include "renku-remote.sshProxySelectorLabels" . | nindent 6 }}
+{{- end }}
