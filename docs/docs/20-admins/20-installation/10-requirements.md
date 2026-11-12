@@ -116,10 +116,10 @@ in a cluster where the CRD does not exist.
 :::
 
 Knative also gates several pod spec fields behind feature flags that Renku's apps rely on. See
-[Configuration](configuration#knative) for the flags and how to set them.
+[Configuration](/docs/admins/installation/configuration#knative) for the flags and how to set them.
 
 Apps are served from a domain of their own, with a hostname per app, so that domain needs DNS and
 TLS that cover names created on the fly. How you arrange that is a Knative concern rather than a
 Renku one, so it is covered in
-[Configuration](configuration#3-configure-the-apps-domain). Read that section before you provision
+[Configuration](/docs/admins/installation/configuration#3-configure-the-apps-domain). Read that section before you provision
 anything, because the choice of domain has security consequences that are awkward to undo.
