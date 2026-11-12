@@ -43,16 +43,6 @@ rnk launcher list
 
 See the [CLI reference](/docs/users/cli/cli-reference) for more commands.
 
-### Listing launchers from the command line
-
-You can list available launchers from the terminal:
-
-```bash
-rnk launcher list
-```
-
-See the [CLI reference](/docs/users/cli/cli-reference) for more commands.
-
 ## Next steps
 
 - To create an interactive session launcher, see [Add a session launcher to your project](/docs/users/compute/session/guides/add-a-session-launcher-to-your-project).
