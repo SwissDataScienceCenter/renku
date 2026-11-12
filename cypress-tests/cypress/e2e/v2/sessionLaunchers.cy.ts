@@ -59,10 +59,15 @@ describe("Session Launchers", () => {
     cy.getDataCy("add-launcher").click();
     cy.getDataCy("launcher-type-selector-modal").should("be.visible");
     cy.getDataCy("launcher-option-session").click();
+    // Wait for the chooser modal to be fully closed: when it closes, reactstrap
+    // moves focus back to the "add-launcher" button, which would otherwise
+    // steal focus while we type into the image input.
+    cy.getDataCy("launcher-type-selector-modal").should("not.exist");
     cy.getDataCy("environment-kind-custom").click();
-    cy.get('.modal-body').scrollTo("top");
-    cy.getDataCy("custom-image-input").should("be.empty");
-    cy.getDataCy("custom-image-input").type(sessionImage);
+    cy.getDataCy("custom-image-input")
+      .should("be.empty")
+      .type(sessionImage)
+      .should("have.value", sessionImage);
 
     cy.getDataCy("session-launcher-field-args")
       .clear()
@@ -136,8 +141,13 @@ describe("Session Launchers", () => {
     cy.getDataCy("add-launcher").click();
     cy.getDataCy("launcher-type-selector-modal").should("be.visible");
     cy.getDataCy("launcher-option-session").click();
+    // See comment in the previous test
+    cy.getDataCy("launcher-type-selector-modal").should("not.exist");
     cy.getDataCy("environment-kind-custom").click();
-    cy.getDataCy("custom-image-input").should("be.empty").type(sessionImage);
+    cy.getDataCy("custom-image-input")
+      .should("be.empty")
+      .type(sessionImage)
+      .should("have.value", sessionImage);
     cy.getDataCy("session-launcher-field-default_url").clear().type(sessionUrl);
     cy.getDataCy("next-launcher-button").click();
     cy.getDataCy("launcher-name-input")
