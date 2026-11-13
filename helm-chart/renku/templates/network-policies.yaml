@@ -834,6 +834,19 @@ spec:
       ports:
         - protocol: TCP
           port: http
+    - to:
+        # Remote cluster SSH proxies (renku-remote chart) running in this same cluster.
+        # In-cluster traffic to a LoadBalancer IP is redirected straight to the pod, so
+        # the public-IP rule above never matches it; select the remote proxy pods instead.
+        # Any pod carrying this label can receive connections from the proxy, but the proxy
+        # only dials targets registered in data-services.
+        - namespaceSelector: {}
+          podSelector:
+            matchLabels:
+              renku.io/ssh-proxy: remote
+      ports:
+        - protocol: TCP
+          port: ssh
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -861,4 +874,3 @@ spec:
         - protocol: TCP
           port: http
 {{- end }}
-
