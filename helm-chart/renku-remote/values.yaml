@@ -1,0 +1,97 @@
+# Values for the renku-remote chart.
+#
+# This chart installs what a remote Kubernetes cluster needs so that an existing
+# Renku deployment (running on another, "local", cluster) can launch sessions on it.
+# Install it in the namespace where the remote sessions should run, e.g.:
+#
+#   helm dependency build helm-chart/renku-remote
+#   helm upgrade --install renku-remote helm-chart/renku-remote \
+#     --namespace renku-user-sessions --create-namespace -f my-values.yaml
+#
+# See docs/docs/20-admins/30-operation/50-remote.md for the full procedure.
+
+nameOverride: ""
+fullnameOverride: ""
+
+## Service account, token secret, Role and RoleBinding that the main Renku deployment
+## uses (through a kubeconfig) to manage sessions in this namespace.
+crossClusterAccess:
+  enabled: true
+  ## Defaults to "<fullname>-cross-cluster" when empty.
+  ## The token for accessing the cluster outside via the Kubernetes API will be in the
+  ## secret named by the `serviceAccountName` +  `-token`
+  serviceAccountName: ""
+  ## Additional RBAC rules to add to the Role.
+  extraRules: []
+
+## Renku enforces resource pool quotas with priority classes. Add one entry for every
+## resource pool that points to this cluster and has a quota. The name must match the
+## `quota.id` of the resource pool in the main Renku deployment.
+## Priority classes are cluster-scoped, so make sure names do not clash with other releases.
+priorityClasses: []
+  # - name: renku-resource-pool-1-priority-class
+  #   value: 100
+  #   preemptionPolicy: Never
+  #   description: Used to enforce resource quotas for Renku
+
+networkPolicies:
+  ## Create network policies for sessions.
+  ## Requires a CNI that enforces network policies.
+  enabled: true
+  sessions:
+    ## Egress rules for user sessions. The default allows DNS and traffic leaving the
+    ## cluster, while blocking access to private IP ranges (i.e. other services in the cluster).
+    egress:
+      - to:
+          # DNS resolution
+          - namespaceSelector:
+              matchLabels:
+                kubernetes.io/metadata.name: kube-system
+            podSelector:
+              matchLabels:
+                k8s-app: kube-dns
+        ports:
+          - port: 53
+            protocol: UDP
+          - port: 53
+            protocol: TCP
+      - to:
+          - ipBlock:
+              cidr: 0.0.0.0/0
+              except:
+                - 10.0.0.0/8
+                - 172.16.0.0/12
+                - 192.168.0.0/16
+
+## Values for the amalthea-sessions sub-chart (the session operator). Required.
+## The chart version (see Chart.yaml) must be identical to the one used by the main Renku deployment.
+## See https://github.com/SwissDataScienceCenter/amalthea/blob/main/helm-chart/amalthea-sessions/values.yaml
+amalthea-sessions:
+  ## Only watch the namespace of this release.
+  clusterScoped: false
+  deployCrd: true
+  ## Do not use the csi-rclone bundled with amalthea, use the `csi-rclone` section below.
+  deploy:
+    csiRclone: false
+  ## Must be "<csi-rclone.storageClassName>-secret-annotation".
+  rcloneStorageClass: csi-rclone-secret-annotation
+  ## Set to true only if remote sessions should be embedded in an iframe in the Renku UI.
+  ## This requires CORS and CSP annotations on the session ingress, see the remote cluster docs.
+  useNoneSameSiteSessionCookie: false
+  httpsSessionIngress: false
+  imageRewriteRules: []
+
+## Values for the csi-rclone sub-chart. Optional, needed to mount data connectors in sessions.
+## The chart version (see Chart.yaml) must be identical to the one used by the main Renku deployment.
+## csi-rclone is cluster-wide (CSI driver, storage classes, node plugin DaemonSet), so install it
+## only once per cluster.
+csi-rclone:
+  enabled: false
+  ## Name of the csi storage class. Should be unique per cluster.
+  storageClassName: csi-rclone
+  ## The node plugin has to run on every node where sessions may run, add
+  ## tolerations for any taints on the session nodes.
+  # csiNodepluginRclone:
+  #   nodeSelector: {}
+  #   tolerations: []
+  #   affinity: {}
