@@ -1,0 +1,86 @@
+name: MCP server checks
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    paths:
+      - "mcp-server/**"
+      - ".github/workflows/mcp-server-tests.yml"
+  push:
+    branches:
+      - master
+    paths:
+      - "mcp-server/**"
+      - ".github/workflows/mcp-server-tests.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: mcp-server
+
+jobs:
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: mcp-server/go.mod
+          cache-dependency-path: mcp-server/go.sum
+
+      - name: Set up just
+        uses: extractions/setup-just@v3
+
+      - name: Run tests
+        run: just test
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: mcp-server/go.mod
+          cache-dependency-path: |
+            mcp-server/go.sum
+            mcp-server/tools/go.sum
+
+      - name: Set up just
+        uses: extractions/setup-just@v3
+
+      - name: Run golangci-lint
+        run: just lint
+
+  vulncheck:
+    name: Vulnerability check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: mcp-server/go.mod
+          cache-dependency-path: |
+            mcp-server/go.sum
+            mcp-server/tools/go.sum
+
+      - name: Set up just
+        uses: extractions/setup-just@v3
+
+      - name: Run govulncheck
+        run: just vulncheck
