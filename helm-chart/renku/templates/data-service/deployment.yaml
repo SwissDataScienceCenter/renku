@@ -284,6 +284,8 @@ spec:
               value: "{{ template "renku.fullname" . }}-ssh-session-host-key"
             - name: SSH_PROXY_AUTH_KEY_SECRET
               value: "{{ template "renku.fullname" . }}-ssh-proxy-session-auth-key"
+            - name: RCLONE_PORT
+              value: "9999"
           volumeMounts:
             - name: server-options
               mountPath: /etc/renku-notebooks/server_options
@@ -324,6 +326,39 @@ spec:
             failureThreshold: 60
           resources:
             {{ toYaml .Values.dataService.resources | nindent 12 }}
+        - name: rclone
+          image: rclone/rclone:1.76
+          resources:
+            requests:
+              cpu: 200m
+              memory: 200Mi
+            limits:
+              memory: 200Mi
+          command:
+            - rclone
+          args:
+            - "rcd"
+            - "--rc-no-auth"
+            - "--rc-addr=127.0.0.1:9999"
+          env:
+            # No config file: credentials must be passed with each request and are never saved to disk
+            - name: RCLONE_CONFIG
+              value: ""
+          securityContext:
+            readOnlyRootFilesystem: true
+          livenessProbe:
+            # Exec runs inside the container, so it can reach rclone on localhost.
+            # Http probes do not originate from localhost so they will fail because we want
+            # to listen only on localhost.
+            exec:
+              command:
+                - rclone
+                - rc
+                - --url=http://127.0.0.1:9999/
+                - core/version
+            periodSeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 3
     {{- with .Values.dataService.nodeSelector }}
       nodeSelector:
         {{ toYaml . | nindent 8 }}
