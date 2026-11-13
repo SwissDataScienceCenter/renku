@@ -189,8 +189,8 @@ networkPolicies:
   ## List of namespaces that should be allowed all ingress to all services
   allowAllIngressFromNamespaces: []
   sshProxy:
-    ## Egress rules for the SSH proxy. The proxy additionally reaches data-services
-    ## and sessions (same namespace) via rules hardcoded in the chart.
+    ## Egress rules for the SSH proxy. The proxy additionally reaches Keycloak,
+    ## data-services and sessions (same namespace) via rules hardcoded in the chart.
     egress:
       - to:
           # DNS resolution

@@ -80,6 +80,25 @@ spec:
               value: {{ .Values.sshProxy.sentry.sampleRate | quote }}
             - name: RENKU_SSH_PROXY_SECRET_SERVICE_URL
               value: {{ printf "http://%s-secrets-storage/api/secrets" (include "renku.fullname" .) | quote }}
+            - name: RENKU_SSH_PROXY_DATA_SERVICES_URL
+              value: {{ printf "http://%s-data-service/api/data" (include "renku.fullname" .) | quote }}
+            - name: RENKU_SSH_PROXY_KEYCLOAK_URL
+              {{- if .Values.keycloakx.enabled }}
+              # The in-cluster service: the proxy's egress policy only reaches the
+              # keycloakx pods, and the public URL would hairpin through the ingress.
+              value: {{ printf "http://%s-keycloakx-http/auth/" (include "renku.fullname" .) | quote }}
+              {{- else }}
+              value: {{ include "renku.keycloakUrl" . | quote }}
+              {{- end }}
+            - name: RENKU_SSH_PROXY_KEYCLOAK_REALM
+              value: {{ include "renku.keycloak.realm" . | quote }}
+            - name: RENKU_SSH_PROXY_KEYCLOAK_CLIENT_ID
+              value: "ssh-proxy"
+            - name: RENKU_SSH_PROXY_KEYCLOAK_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ cat (include "renku.fullname" .) "-ssh-proxy-keycloak" | nospace }}
+                  key: sshProxyClientSecret
           volumeMounts:
             - mountPath: "/secrets/openSshHostKey"
               name: open-ssh-host-key
