@@ -189,8 +189,8 @@ networkPolicies:
   ## List of namespaces that should be allowed all ingress to all services
   allowAllIngressFromNamespaces: []
   sshProxy:
-    ## Egress rules for the SSH proxy. The proxy additionally reaches data-services
-    ## and sessions (same namespace) via rules hardcoded in the chart.
+    ## Egress rules for the SSH proxy. The proxy additionally reaches Keycloak,
+    ## data-services and sessions (same namespace) via rules hardcoded in the chart.
     egress:
       - to:
           # DNS resolution
@@ -1432,6 +1432,10 @@ sshProxy:
   ##    Someone could be eavesdropping on you right now (man-in-the-middle attack)!
   ##    It is also possible that a host key has just been changed.
   openSshHostKey:
+  keycloak:
+    ## Secret for the "ssh-proxy" Keycloak client. If empty, a random one is
+    ## generated on first install and reused on later upgrades.
+    clientSecret:
   ## The domain where the the SSH server will run.
   domain: ssh.example.local
   sentry:
