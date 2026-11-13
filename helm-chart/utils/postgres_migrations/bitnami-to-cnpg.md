@@ -179,6 +179,41 @@ This works with any PostgreSQL. You dump the old databases, point Renku at the n
 upgrade's setup jobs create the databases and roles there, empty), then restore the dumps into
 them. Plan for downtime, the platform is down from step 1 to step 4.
 
+```usr/bin/env bash
+# The new cnpg cluster must already exist and be empty.
+set -euo pipefail
+
+NS=renku
+REL=renku
+OLD_PG=$REL-postgresql-0
+NEW_CLUSTER=renku-pg  # Name of cnpg cluster
+VALUES=my-values.yaml
+
+# 1. Stop Renku and dump the whole old instance (users, owners, grants, data)
+kubectl -n $NS scale deploy --all --replicas=0
+kubectl -n $NS scale statefulset $REL-keycloakx --replicas=0
+kubectl -n $NS exec $OLD_PG -- \
+  bash -c 'PGPASSWORD=$POSTGRES_PASSWORD pg_dumpall --ifexists -U postgres' > dumpall.sql
+
+# 2. Leave the new instance's own superuser (and its password) untouched
+sed -E -i.bak '/^(CREATE|ALTER) ROLE postgres( |;)/d' dumpall.sql
+
+# 3. Restore into the new instance
+NEW_PG=$(kubectl -n $NS get pod -l cnpg.io/cluster=$NEW_CLUSTER,cnpg.io/instanceRole=primary -o name)
+kubectl -n $NS exec -i $NEW_PG -c postgres -- psql -v ON_ERROR_STOP=1 -U postgres < dumpall.sql
+
+# 4. Move the new server's transaction counter past the restored SpiceDB data
+AUTHZ_PW=$(kubectl -n $NS get secret $REL-authz -o jsonpath='{.data.SPICEDB_POSTGRES_PASSWORD}' | base64 -d)
+AUTHZ_IMG=$(kubectl -n $NS get deploy $REL-authz -o jsonpath='{.spec.template.spec.containers[0].image}')
+kubectl -n $NS run spicedb-repair --rm -i --restart=Never --labels=app=renku-authz --image="$AUTHZ_IMG" -- \
+  datastore repair transaction-ids --datastore-engine=postgres \
+  --datastore-conn-uri="postgres://authz:$AUTHZ_PW@$NEW_CLUSTER-rw:5432/authz"
+
+# 5. Switch Renku values (Don't forget to set `cnpg.install: false`) to the new instance and start it.
+# the setup jobs find the users and databases and only reapply grants
+helm -n $NS upgrade $REL renku/renku -f $VALUES
+
+
 ```bash
 export NS=renku
 export REL=renku
