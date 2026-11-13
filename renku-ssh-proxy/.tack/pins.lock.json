@@ -16,12 +16,12 @@
     "lastModified": 1792527408
   },
   "nixpkgs": {
-    "type": "github",
+    "lastModified": 1794495034,
+    "narHash": "sha256-E0hYoioqUtM2XmPPvYYpJgdADF5AW9oOoPSEiM9dTHQ=",
     "owner": "NixOS",
     "repo": "nixpkgs",
-    "rev": "5adc50831c259f87faeb09ddf930d43597197473",
-    "narHash": "sha256-Q/8KLB6jNfpaUN1HAedE/u/Et9feE/zYSsutBLKrCFk=",
-    "lastModified": 1792506237
+    "rev": "2074cc672349f14240fb7ea90d509e0b643e9dd4",
+    "type": "github"
   },
   "rust-overlay": {
     "type": "github",
