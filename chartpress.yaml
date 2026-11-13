@@ -38,3 +38,27 @@ charts:
         valuesPath: sshProxy.image
         paths:
           - renku-ssh-proxy
+
+  - name: helm-chart/renku-remote
+    resetTag: latest
+    imagePrefix: renku/
+    repo:
+      git: SwissDataScienceCenter/helm-charts
+      published: https://swissdatasciencecenter.github.io/helm-charts
+    paths:
+      - helm-chart/renku-remote
+      - scripts/platform-init
+      - renku-ssh-proxy
+    images:
+      platform-init:
+        contextPath: scripts/platform-init
+        dockerfilePath: scripts/platform-init/Dockerfile
+        valuesPath: sessionKeysInit.image
+        paths:
+          - scripts/platform-init
+      ssh-proxy:
+        contextPath: .
+        dockerfilePath: ./renku-ssh-proxy/Dockerfile
+        valuesPath: sshProxy.image
+        paths:
+          - renku-ssh-proxy

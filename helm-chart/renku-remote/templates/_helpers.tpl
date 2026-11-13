@@ -55,3 +55,12 @@ Selector labels that match all Amalthea session pods.
 app.kubernetes.io/created-by: controller-manager
 app.kubernetes.io/name: AmaltheaSession
 {{- end -}}
+
+{{/*
+Selector labels for the ssh-proxy Deployment/Service/PDB/NetworkPolicy.
+*/}}
+{{- define "renku-remote.sshProxySelectorLabels" -}}
+app.kubernetes.io/name: {{ include "renku-remote.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+app.kubernetes.io/component: ssh-proxy
+{{- end -}}

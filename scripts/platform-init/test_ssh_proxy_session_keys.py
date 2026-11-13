@@ -60,5 +60,46 @@ class TestDropbearKeypair(unittest.TestCase):
         self.assertTrue(public.startswith(b"ssh-ed25519 "), public)
 
 
+class FakeSecretsApi:
+    """Minimal stand-in for CoreV1Api, secrets keyed by name."""
+
+    def __init__(self):
+        self.secrets: dict[str, dict[str, bytes]] = {}
+
+    def read_namespaced_secret(self, name, namespace):
+        from kubernetes.client.exceptions import ApiException
+
+        if name not in self.secrets:
+            raise ApiException(status=404)
+        from base64 import b64encode
+        from types import SimpleNamespace
+
+        data = {k: b64encode(v).decode() for k, v in self.secrets[name].items()}
+        return SimpleNamespace(data=data)
+
+    def create_namespaced_secret(self, namespace, body):
+        from base64 import b64decode
+
+        name = body["metadata"]["name"]
+        self.secrets[name] = {k: b64decode(v) for k, v in body["data"].items()}
+
+
+@unittest.skipUnless(shutil.which("dropbearkey"), "dropbearkey not installed")
+class TestSessionMountSecret(unittest.TestCase):
+    def test_composes_mount_secret_from_hop2_keypairs(self):
+        api = FakeSecretsApi()
+        ssh_proxy_session_keys.ensure_ssh_proxy_session_keys(api, "ns", "renku-remote")
+        ssh_proxy_session_keys.ensure_session_mount_secret(
+            api, "ns", "renku-remote", "renku-ssh-session-keys"
+        )
+
+        mount_secret = api.secrets["renku-ssh-session-keys"]
+        host_key_secret = api.secrets["renku-remote-ssh-session-host-key"]
+        auth_key_secret = api.secrets["renku-remote-ssh-proxy-session-auth-key"]
+
+        self.assertEqual(mount_secret["ssh_host_ed25519_key"], host_key_secret["hostKey"])
+        self.assertEqual(mount_secret["authorized_keys"], auth_key_secret["authKeyPub"])
+
+
 if __name__ == "__main__":
     unittest.main()

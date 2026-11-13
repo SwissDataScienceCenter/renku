@@ -46,3 +46,40 @@ Priority classes created (use these as `quota.id` in the resource pools):
   - {{ .name }}
 {{- end }}
 {{- end }}
+{{- if .Values.sshProxy.enabled }}
+{{- $fullname := include "renku-remote.fullname" . }}
+
+SSH proxy enabled. To register this cluster with the main Renku deployment:
+
+1. Read the public part of this cluster's host key (hostkey-R) and its fingerprint:
+
+  NS={{ .Release.Namespace }}
+  kubectl -n $NS get secret {{ $fullname }}-ssh-proxy -o jsonpath='{.data.openSshHostKey}' \
+    | base64 -d | ssh-keygen -y -f /dev/stdin | tee /tmp/hostkey-R.pub
+
+2. Register this cluster at the main Renku deployment (`POST /api/data/clusters`), amending the
+   payload with an `ssh` section, e.g.:
+
+  {
+    "name": "<cluster name>",
+    "...": "existing fields",
+    "ssh": {
+      "host": "<public IP/hostname of the ssh-proxy Service>",
+      "port": {{ .Values.sshProxy.port }},
+      "username": "renku-proxy",
+      "host_public_key": "<public key from step 1>",
+      "session_secret_name": "{{ .Values.sshProxy.sessionKeysSecretName }}"
+    }
+  }
+
+   The response contains `ssh.auth_public_key` (authkey-R).
+
+3. Configure this proxy with that key and upgrade this release:
+
+  helm upgrade {{ .Release.Name }} helm-chart/renku-remote \
+    --namespace $NS \
+    --reuse-values \
+    --set sshProxy.authorizedKey="<auth_public_key from step 2>"
+
+   Until this step, the proxy rejects all connections from the main cluster.
+{{- end }}

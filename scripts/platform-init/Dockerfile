@@ -4,7 +4,7 @@ RUN apt-get update && apt-get install -y \
     dropbear-bin \
     tini && \
     rm -rf /var/lib/apt/lists/*
-COPY requirements.txt platform-init.py ssh_proxy_session_keys.py /app/
+COPY requirements.txt platform-init.py ssh_proxy_session_keys.py remote_session_keys.py /app/
 WORKDIR /app
 RUN pip3 install -r requirements.txt
 ENV HOME=/tmp
