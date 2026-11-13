@@ -81,6 +81,9 @@ spec:
             - name: RENKU_SSH_PROXY_SECRET_SERVICE_URL
               value: {{ printf "http://%s-secrets-storage/api/secrets" (include "renku.fullname" .) | quote }}
           volumeMounts:
+            - mountPath: "/secrets/renku-ssh-identities"
+              name: renku-ssh-identities
+              readOnly: true
             - mountPath: "/secrets/openSshHostKey"
               name: open-ssh-host-key
               readOnly: true
@@ -134,6 +137,9 @@ spec:
         {{ toYaml . | nindent 8 }}
     {{- end }}
       volumes:
+        - name: renku-ssh-identities
+          secret:
+            secretName: renku-ssh-identities
         - name: open-ssh-host-key
           secret:
             secretName: {{ template "renku.fullname" . }}-ssh-proxy
