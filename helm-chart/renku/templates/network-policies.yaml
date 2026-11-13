@@ -817,5 +817,20 @@ spec:
         - protocol: TCP
           # ssh sessions listen on Session.Port (data-services BUILD_PORT = 8888)
           port: 8888
+    - to:
+        # Remote cluster SSH proxies (renku-remote chart) running in this same cluster.
+        # In-cluster traffic to a LoadBalancer IP is redirected straight to the pod, so
+        # the public-IP rule above never matches it; select the remote proxy pods instead.
+        # Any pod carrying this label can receive connections from the proxy, but the proxy
+        # only dials targets registered in data-services.
+        - namespaceSelector: {}
+          podSelector:
+            matchLabels:
+              renku.io/ssh-proxy: remote
+      ports:
+        - protocol: TCP
+          # Named container port of the remote proxy pod, resolved on the destination,
+          # so it does not depend on the Service port (sshProxy.port).
+          port: ssh
 {{- end }}
 

@@ -84,6 +84,22 @@ class FakeSecretsApi:
         self.secrets[name] = {k: b64decode(v) for k, v in body["data"].items()}
 
 
+@unittest.skipUnless(importlib.util.find_spec("kubernetes"), "kubernetes not installed")
+class TestSshIdentitiesSecret(unittest.TestCase):
+    def test_creates_empty_secret_when_absent(self):
+        api = FakeSecretsApi()
+        ssh_proxy_session_keys.ensure_ssh_identities_secret(api, "ns")
+        self.assertEqual(api.secrets["renku-ssh-identities"], {})
+
+    def test_keeps_existing_identities(self):
+        api = FakeSecretsApi()
+        api.secrets["renku-ssh-identities"] = {"user-1": b"ssh-ed25519 AAAA"}
+        ssh_proxy_session_keys.ensure_ssh_identities_secret(api, "ns")
+        self.assertEqual(
+            api.secrets["renku-ssh-identities"], {"user-1": b"ssh-ed25519 AAAA"}
+        )
+
+
 @unittest.skipUnless(shutil.which("dropbearkey"), "dropbearkey not installed")
 class TestSessionMountSecret(unittest.TestCase):
     def test_composes_mount_secret_from_hop2_keypairs(self):

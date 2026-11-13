@@ -136,6 +136,19 @@ def ensure_ssh_proxy_session_keys(api, namespace: str, fullname: str) -> None:
             )
 
 
+SSH_IDENTITIES_SECRET_NAME = "renku-ssh-identities"
+
+
+def ensure_ssh_identities_secret(api, namespace: str) -> None:
+    """Create the empty `renku-ssh-identities` Secret if absent (idempotent).
+
+    Data-services adds an entry per registered SSH identity, and the main SSH proxy
+    mounts this Secret so new entries show up without a restart. It must exist
+    before the proxy starts, but must never be recreated: that would drop all entries.
+    """
+    ensure_secret(api, namespace, SSH_IDENTITIES_SECRET_NAME, {})
+
+
 def _read_secret_data(api, namespace: str, name: str, key: str) -> bytes:
     secret = api.read_namespaced_secret(name=name, namespace=namespace)
     return base64.b64decode(secret.data[key])
