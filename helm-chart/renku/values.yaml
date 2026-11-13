@@ -1432,6 +1432,10 @@ sshProxy:
   ##    Someone could be eavesdropping on you right now (man-in-the-middle attack)!
   ##    It is also possible that a host key has just been changed.
   openSshHostKey:
+  keycloak:
+    ## Secret for the "ssh-proxy" Keycloak client. If empty, a random one is
+    ## generated on first install and reused on later upgrades.
+    clientSecret:
   ## The domain where the the SSH server will run.
   domain: ssh.example.local
   sentry:
