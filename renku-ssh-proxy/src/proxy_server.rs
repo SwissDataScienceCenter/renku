@@ -20,8 +20,14 @@ use tokio::sync::mpsc;
 
 /// Creates and runs a proxy server
 pub async fn serve_proxy(settings: &Settings) -> Result<()> {
+    let token_provider = Arc::new(crate::keycloak::TokenProvider::new(
+        &settings.keycloak,
+        &settings.data_services_timeout,
+    )?);
     let client = Client::new(
         &settings.secret_service_url,
+        &settings.data_services_url,
+        token_provider,
         &settings.data_services_timeout,
     )?;
     let mut ph = ProxyHandler::new(client)
@@ -95,6 +101,7 @@ pub struct ProxyHandler {
     activity: Arc<Mutex<Activity>>,
     activity_notify: Arc<Notify>,
     alive: Arc<AtomicBool>,
+    clock_started: Arc<AtomicBool>,
 }
 
 impl ProxyHandler {
@@ -108,6 +115,7 @@ impl ProxyHandler {
             activity: Arc::new(Mutex::new(Activity::default())),
             activity_notify: Arc::new(Notify::new()),
             alive: Arc::new(AtomicBool::new(true)),
+            clock_started: Arc::new(AtomicBool::new(false)),
         }
     }
 
@@ -244,6 +252,18 @@ impl server::Handler for ProxyHandler {
         log::debug!("Entering channel_open_session");
         let client_id = channel.id();
         let upstream = self.connect_target().await?;
+        // One clock task per connection: the first channel starts it, later channels reuse it.
+        if !self.clock_started.swap(true, Ordering::Relaxed)
+            && let Some(target) = &self.target
+        {
+            crate::clock::spawn_clock_task(
+                self.client.clone(),
+                target.host.clone(),
+                self.activity.clone(),
+                self.activity_notify.clone(),
+                self.alive.clone(),
+            );
+        }
         let up_channel = upstream.channel_open_session().await?;
         let (tx, rx) = mpsc::channel::<SshMsg>(64);
         self.channels.insert(client_id, tx);
@@ -543,6 +563,7 @@ impl server::Server for ProxyHandler {
         client.activity = Arc::new(Mutex::new(Activity::default()));
         client.activity_notify = Arc::new(Notify::new());
         client.alive = Arc::new(AtomicBool::new(true));
+        client.clock_started = Arc::new(AtomicBool::new(false));
         client
     }
     fn handle_session_error(&mut self, error: <Self::Handler as russh::server::Handler>::Error) {
@@ -618,7 +639,25 @@ async fn test_check_server_key_fails_closed_without_pin() {
 
 #[cfg(test)]
 fn test_handler() -> ProxyHandler {
-    let client = Client::new("http://127.0.0.1:1", &Duration::from_secs(1)).unwrap();
+    let provider = Arc::new(
+        crate::keycloak::TokenProvider::new(
+            &crate::keycloak::KeycloakSettings {
+                url: "http://127.0.0.1:1/auth/".to_string(),
+                realm: "test".to_string(),
+                client_id: "ssh-proxy".to_string(),
+                client_secret: "s".to_string(),
+            },
+            &Duration::from_secs(1),
+        )
+        .unwrap(),
+    );
+    let client = Client::new(
+        "http://127.0.0.1:1",
+        "http://127.0.0.1:1",
+        provider,
+        &Duration::from_secs(1),
+    )
+    .unwrap();
     ProxyHandler::new(client)
 }
 
