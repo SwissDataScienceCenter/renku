@@ -1,5 +1,6 @@
 pub(crate) mod activity;
 pub mod buildinfo;
+pub(crate) mod clock;
 pub(crate) mod config;
 pub(crate) mod data_services;
 // Unused until the data-services client takes a bearer from it (scope 3).
