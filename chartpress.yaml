@@ -20,6 +20,7 @@ charts:
           - scripts/init-realm/Dockerfile
           - scripts/init-realm/requirements.txt
           - scripts/init-realm/init-realm.py
+          - scripts/init-realm/utils.py
       init-db:
         contextPath: scripts/init-db
         dockerfilePath: scripts/init-db/Dockerfile
