@@ -20,8 +20,14 @@ use tokio::sync::mpsc;
 
 /// Creates and runs a proxy server
 pub async fn serve_proxy(settings: &Settings) -> Result<()> {
+    let token_provider = Arc::new(crate::keycloak::TokenProvider::new(
+        &settings.keycloak,
+        &settings.data_services_timeout,
+    )?);
     let client = Client::new(
         &settings.secret_service_url,
+        &settings.data_services_url,
+        token_provider,
         &settings.data_services_timeout,
     )?;
     let mut ph = ProxyHandler::new(client)
@@ -618,7 +624,25 @@ async fn test_check_server_key_fails_closed_without_pin() {
 
 #[cfg(test)]
 fn test_handler() -> ProxyHandler {
-    let client = Client::new("http://127.0.0.1:1", &Duration::from_secs(1)).unwrap();
+    let provider = Arc::new(
+        crate::keycloak::TokenProvider::new(
+            &crate::keycloak::KeycloakSettings {
+                url: "http://127.0.0.1:1/auth/".to_string(),
+                realm: "test".to_string(),
+                client_id: "ssh-proxy".to_string(),
+                client_secret: "s".to_string(),
+            },
+            &Duration::from_secs(1),
+        )
+        .unwrap(),
+    );
+    let client = Client::new(
+        "http://127.0.0.1:1",
+        "http://127.0.0.1:1",
+        provider,
+        &Duration::from_secs(1),
+    )
+    .unwrap();
     ProxyHandler::new(client)
 }
 
