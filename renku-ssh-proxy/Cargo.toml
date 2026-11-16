@@ -44,6 +44,9 @@ tokio = { version = "1.53.1", features = ["full"] }
 tokio-rustls = "0.26.4"
 toml = "1.1.5"
 
+[dev-dependencies]
+tokio = { version = "1.53.1", features = ["test-util"] }
+
 [build-dependencies]
 vergen-gix = { version = "10.0.1", features = [
   "build",
