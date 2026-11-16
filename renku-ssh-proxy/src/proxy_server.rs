@@ -101,6 +101,7 @@ pub struct ProxyHandler {
     activity: Arc<Mutex<Activity>>,
     activity_notify: Arc<Notify>,
     alive: Arc<AtomicBool>,
+    timer_started: Arc<AtomicBool>,
 }
 
 impl ProxyHandler {
@@ -114,6 +115,7 @@ impl ProxyHandler {
             activity: Arc::new(Mutex::new(Activity::default())),
             activity_notify: Arc::new(Notify::new()),
             alive: Arc::new(AtomicBool::new(true)),
+            timer_started: Arc::new(AtomicBool::new(false)),
         }
     }
 
@@ -250,6 +252,18 @@ impl server::Handler for ProxyHandler {
         log::debug!("Entering channel_open_session");
         let client_id = channel.id();
         let upstream = self.connect_target().await?;
+        // One timer task per connection: the first channel starts it, later channels reuse it.
+        if !self.timer_started.swap(true, Ordering::Relaxed)
+            && let Some(target) = &self.target
+        {
+            crate::timer::spawn_timer(
+                self.client.clone(),
+                target.host.clone(),
+                self.activity.clone(),
+                self.activity_notify.clone(),
+                self.alive.clone(),
+            );
+        }
         let up_channel = upstream.channel_open_session().await?;
         let (tx, rx) = mpsc::channel::<SshMsg>(64);
         self.channels.insert(client_id, tx);
@@ -548,6 +562,7 @@ impl server::Server for ProxyHandler {
         client.activity = Arc::new(Mutex::new(Activity::default()));
         client.activity_notify = Arc::new(Notify::new());
         client.alive = Arc::new(AtomicBool::new(true));
+        client.timer_started = Arc::new(AtomicBool::new(false));
         client
     }
     fn handle_session_error(&mut self, error: <Self::Handler as russh::server::Handler>::Error) {

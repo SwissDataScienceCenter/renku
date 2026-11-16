@@ -5,6 +5,7 @@ use color_eyre::Result;
 use color_eyre::eyre::eyre;
 use reqwest::Url;
 use ssh_key::PublicKey;
+use std::future::Future;
 use std::sync::Arc;
 use std::time::Duration;
 
@@ -33,9 +34,14 @@ pub enum SessionError {
 pub type SessionResult<T> = std::result::Result<T, SessionError>;
 
 /// What the timer needs from the data-services client, so tests can fake it.
+/// Written with explicit `impl Future + Send` because `async fn` bounds cannot
+/// prove `Send` for `tokio::spawn`.
 pub(crate) trait SessionClient: Send + Sync {
-    async fn touch_session(&self, session: &str) -> SessionResult<()>;
-    async fn session_deadline(&self, session: &str) -> SessionResult<SessionDeadline>;
+    fn touch_session(&self, session: &str) -> impl Future<Output = SessionResult<()>> + Send;
+    fn session_deadline(
+        &self,
+        session: &str,
+    ) -> impl Future<Output = SessionResult<SessionDeadline>> + Send;
 }
 
 #[derive(serde::Deserialize)]
@@ -204,13 +210,20 @@ impl Client {
     }
 }
 
+#[expect(
+    clippy::manual_async_fn,
+    reason = "`async fn` in a trait cannot state the `Send` bound `tokio::spawn` needs"
+)]
 impl SessionClient for Client {
-    async fn touch_session(&self, session: &str) -> SessionResult<()> {
-        Client::touch_session(self, session).await
+    fn touch_session(&self, session: &str) -> impl Future<Output = SessionResult<()>> + Send {
+        async move { Client::touch_session(self, session).await }
     }
 
-    async fn session_deadline(&self, session: &str) -> SessionResult<SessionDeadline> {
-        Client::session_deadline(self, session).await
+    fn session_deadline(
+        &self,
+        session: &str,
+    ) -> impl Future<Output = SessionResult<SessionDeadline>> + Send {
+        async move { Client::session_deadline(self, session).await }
     }
 }
 

@@ -2,6 +2,7 @@ pub(crate) mod activity;
 pub mod buildinfo;
 pub(crate) mod config;
 pub(crate) mod data_services;
+pub(crate) mod timer;
 // Unused until the data-services client takes a bearer from it (scope 3).
 #[allow(dead_code)]
 pub(crate) mod keycloak;
