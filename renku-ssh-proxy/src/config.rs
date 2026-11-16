@@ -1,6 +1,7 @@
 // Reading the configuration from a file and allow override via CLI
 // options and environment variables
 
+use crate::keycloak::KeycloakSettings;
 use crate::proxy_server::Target;
 use clap::CommandFactory;
 use clap::Parser;
@@ -82,6 +83,26 @@ struct Cli {
     #[arg(long, env = "RENKU_SSH_PROXY_SECRET_SERVICE_URL")]
     secret_service_url: Option<String>,
 
+    /// Keycloak base URL, e.g. https://keycloak.example.com/auth/
+    #[arg(long, env = "RENKU_SSH_PROXY_KEYCLOAK_URL")]
+    keycloak_url: Option<String>,
+
+    /// Keycloak realm that holds the ssh-proxy client.
+    #[arg(long, env = "RENKU_SSH_PROXY_KEYCLOAK_REALM")]
+    keycloak_realm: Option<String>,
+
+    /// Keycloak client id for the client-credentials grant.
+    #[arg(long, env = "RENKU_SSH_PROXY_KEYCLOAK_CLIENT_ID")]
+    keycloak_client_id: Option<String>,
+
+    /// Keycloak client secret for the client-credentials grant.
+    #[arg(long, env = "RENKU_SSH_PROXY_KEYCLOAK_CLIENT_SECRET")]
+    keycloak_client_secret: Option<String>,
+
+    /// Base URL of the data-services API, ending in /api/data.
+    #[arg(long, env = "RENKU_SSH_PROXY_DATA_SERVICES_URL")]
+    data_services_url: Option<String>,
+
     #[arg(long)]
     data_services_timeout: Option<humantime::Duration>,
 
@@ -111,6 +132,11 @@ struct FileConfig {
     inactivity_timeout: Option<Duration>,
     secret_service_url: Option<String>,
     data_services_timeout: Option<Duration>,
+    keycloak_url: Option<String>,
+    keycloak_realm: Option<String>,
+    keycloak_client_id: Option<String>,
+    keycloak_client_secret: Option<String>,
+    data_services_url: Option<String>,
 }
 
 impl Default for FileConfig {
@@ -126,6 +152,11 @@ impl Default for FileConfig {
             inactivity_timeout: Some(Duration::from_mins(30)),
             secret_service_url: None,
             data_services_timeout: Some(Duration::from_mins(1)),
+            keycloak_url: None,
+            keycloak_realm: None,
+            keycloak_client_id: None,
+            keycloak_client_secret: None,
+            data_services_url: None,
         }
     }
 }
@@ -169,10 +200,59 @@ pub struct Settings {
     pub target: Target,
     pub secret_service_url: String,
     pub data_services_timeout: Duration,
+    pub keycloak: KeycloakSettings,
+    pub data_services_url: String,
+}
+
+/// Keycloak and data-services values for the session deadline, resolved together so
+/// tests do not need the SSH key files `Settings::resolve` loads.
+fn resolve_data_services(cli: &Cli, file: &FileConfig) -> Result<(KeycloakSettings, String)> {
+    let keycloak_url = cli
+        .keycloak_url
+        .clone()
+        .or_else(|| file.keycloak_url.clone())
+        .ok_or_eyre("missing `keycloak_url`")
+        .suggestion("pass --keycloak-url or set RENKU_SSH_PROXY_KEYCLOAK_URL")?;
+    let keycloak_realm = cli
+        .keycloak_realm
+        .clone()
+        .or_else(|| file.keycloak_realm.clone())
+        .ok_or_eyre("missing `keycloak_realm`")
+        .suggestion("pass --keycloak-realm or set RENKU_SSH_PROXY_KEYCLOAK_REALM")?;
+    let keycloak_client_id = cli
+        .keycloak_client_id
+        .clone()
+        .or_else(|| file.keycloak_client_id.clone())
+        .ok_or_eyre("missing `keycloak_client_id`")
+        .suggestion("pass --keycloak-client-id or set RENKU_SSH_PROXY_KEYCLOAK_CLIENT_ID")?;
+    let keycloak_client_secret = cli
+        .keycloak_client_secret
+        .clone()
+        .or_else(|| file.keycloak_client_secret.clone())
+        .ok_or_eyre("missing `keycloak_client_secret`")
+        .suggestion(
+            "pass --keycloak-client-secret or set RENKU_SSH_PROXY_KEYCLOAK_CLIENT_SECRET",
+        )?;
+    let data_services_url = cli
+        .data_services_url
+        .clone()
+        .or_else(|| file.data_services_url.clone())
+        .ok_or_eyre("missing `data_services_url`")
+        .suggestion("pass --data-services-url or set RENKU_SSH_PROXY_DATA_SERVICES_URL")?;
+
+    let keycloak = KeycloakSettings {
+        url: keycloak_url,
+        realm: keycloak_realm,
+        client_id: keycloak_client_id,
+        client_secret: keycloak_client_secret,
+    };
+    Ok((keycloak, data_services_url))
 }
 
 impl Settings {
     fn resolve(cli: Cli, file: FileConfig) -> Result<Self> {
+        let (keycloak, data_services_url) = resolve_data_services(&cli, &file)?;
+
         let listen = cli.listen.or(file.listen).unwrap();
 
         let log_level = cli.log_level.or(file.log_level).unwrap();
@@ -255,6 +335,8 @@ impl Settings {
             target,
             secret_service_url,
             data_services_timeout,
+            keycloak,
+            data_services_url,
         })
     }
 
@@ -278,6 +360,40 @@ fn default_config_path() -> Option<PathBuf> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_data_services_config_rejects_missing_values() {
+        let cli = Cli::try_parse_from([
+            "renku-ssh-proxy",
+            "--data-services-url",
+            "http://ds/api/data",
+        ])
+        .unwrap();
+        let err = resolve_data_services(&cli, &FileConfig::default()).unwrap_err();
+        assert!(format!("{err:#}").contains("keycloak_url"), "{err:#}");
+    }
+
+    #[test]
+    fn test_data_services_config_accepts_all_values() {
+        let cli = Cli::try_parse_from([
+            "renku-ssh-proxy",
+            "--keycloak-url",
+            "http://kc/auth/",
+            "--keycloak-realm",
+            "Renku",
+            "--keycloak-client-id",
+            "ssh-proxy",
+            "--keycloak-client-secret",
+            "s",
+            "--data-services-url",
+            "http://ds/api/data",
+        ])
+        .unwrap();
+        let (keycloak, data_services_url) =
+            resolve_data_services(&cli, &FileConfig::default()).unwrap();
+        assert_eq!(keycloak.client_id, "ssh-proxy");
+        assert_eq!(data_services_url, "http://ds/api/data");
+    }
 
     #[test]
     fn test_load_public_key_from_file() {
