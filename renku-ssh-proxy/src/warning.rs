@@ -11,23 +11,16 @@ pub(crate) enum TimerAction {
     RecheckAndClose,
 }
 
-/// The deadline state machine. Order is the rule: this connection's input cancels first,
-/// then a missing deadline, then session-wide silence, then the deadline, then the lead.
-pub(crate) fn decide(
-    remaining: Option<Duration>,
-    since_input: Option<Duration>,
-    active: bool,
-    warned: bool,
-) -> TimerAction {
+/// The deadline state machine. A fresh `remaining` is the only source of truth: any touch on
+/// the session moves the deadline, so it answers the "is someone active elsewhere" question
+/// without a second, separately rounded source.
+pub(crate) fn decide(remaining: Option<Duration>, active: bool, warned: bool) -> TimerAction {
     if active {
         return TimerAction::Cancel;
     }
     let Some(remaining) = remaining else {
         return TimerAction::Nothing;
     };
-    if since_input.is_some_and(|age| age < WARN_LEAD) {
-        return TimerAction::Nothing;
-    }
     if remaining.is_zero() {
         return TimerAction::RecheckAndClose;
     }
@@ -55,57 +48,37 @@ mod tests {
 
     #[test]
     fn test_active_input_cancels() {
-        assert_eq!(
-            decide(Some(MIN), Some(60 * MIN), true, true),
-            TimerAction::Cancel
-        );
+        assert_eq!(decide(Some(MIN), true, true), TimerAction::Cancel);
     }
 
     #[test]
     fn test_no_deadline_never_acts() {
-        assert_eq!(decide(None, None, false, false), TimerAction::Nothing);
+        assert_eq!(decide(None, false, false), TimerAction::Nothing);
     }
 
     #[test]
-    fn test_recent_touch_on_another_connection_suppresses() {
-        assert_eq!(
-            decide(Some(MIN), Some(2 * MIN), false, false),
-            TimerAction::Nothing
-        );
-    }
-
-    #[test]
-    fn test_never_touched_counts_as_silent() {
-        assert_eq!(
-            decide(Some(9 * MIN), None, false, false),
-            TimerAction::Warn(9 * MIN)
-        );
+    fn test_a_touch_elsewhere_moves_the_lead_out_of_reach() {
+        assert_eq!(decide(Some(19 * MIN), false, false), TimerAction::Nothing);
     }
 
     #[test]
     fn test_warns_only_inside_the_lead() {
+        assert_eq!(decide(Some(11 * MIN), false, false), TimerAction::Nothing);
         assert_eq!(
-            decide(Some(11 * MIN), Some(60 * MIN), false, false),
-            TimerAction::Nothing
-        );
-        assert_eq!(
-            decide(Some(10 * MIN), Some(60 * MIN), false, false),
+            decide(Some(10 * MIN), false, false),
             TimerAction::Warn(10 * MIN)
         );
     }
 
     #[test]
     fn test_warns_once() {
-        assert_eq!(
-            decide(Some(9 * MIN), Some(60 * MIN), false, true),
-            TimerAction::Nothing
-        );
+        assert_eq!(decide(Some(9 * MIN), false, true), TimerAction::Nothing);
     }
 
     #[test]
     fn test_zero_deadline_rechecks() {
         assert_eq!(
-            decide(Some(Duration::ZERO), Some(15 * MIN), false, true),
+            decide(Some(Duration::ZERO), false, true),
             TimerAction::RecheckAndClose
         );
     }
