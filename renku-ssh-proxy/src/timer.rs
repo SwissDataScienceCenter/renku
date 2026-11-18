@@ -106,7 +106,9 @@ pub(crate) async fn run_timer<C: SessionClient, A: SessionAlerts>(
         }
 
         let deadline = deadline(read.as_ref());
-        let warned = warned_deadline.is_some() && warned_deadline == deadline;
+        let warned = warned_deadline
+            .zip(deadline)
+            .is_some_and(|(warned, now)| same_deadline(warned, now));
         match decide(
             remaining(read.as_ref(), now),
             since_input(read.as_ref(), now),
@@ -176,6 +178,13 @@ fn since_input(read: Option<&(Instant, SessionDeadline)>, now: Instant) -> Optio
 fn deadline(read: Option<&(Instant, SessionDeadline)>) -> Option<Instant> {
     let (at, deadline) = read?;
     deadline.remaining.map(|left| *at + left)
+}
+
+/// Two reads of one deadline land a little apart: the read instant jitters and the server
+/// reports whole seconds. A whole window apart is a deadline that actually moved.
+fn same_deadline(a: Instant, b: Instant) -> bool {
+    let gap = if a > b { a - b } else { b - a };
+    gap < REFRESH_WINDOW
 }
 
 /// The next read or decision point: a window away at most, earlier for the warning and the
@@ -522,12 +531,29 @@ mod tests {
         assert_eq!(timer.fake.reads(), 0, "nothing is read after the drop");
     }
 
+    #[test]
+    fn test_deadline_identity_allows_jitter_but_not_a_move() {
+        let deadline = Instant::now();
+        assert!(
+            same_deadline(deadline, deadline + Duration::from_secs(1)),
+            "a second of jitter is the same deadline"
+        );
+        assert!(
+            !same_deadline(deadline, deadline + REFRESH_WINDOW),
+            "a window later is a new deadline"
+        );
+    }
+
     #[tokio::test(start_paused = true)]
     async fn test_warns_once_ten_minutes_before_the_deadline() {
         let timer = Timer::start().await;
         timer.fake.script_read(Some(20 * MIN), Some(20 * MIN));
         timer.fake.script_read(Some(10 * MIN), Some(30 * MIN));
-        timer.fake.script_read(Some(5 * MIN), Some(35 * MIN));
+        // One second short: two reads of one deadline never agree to the instant in
+        // production (read-time jitter plus the server's whole-second values).
+        timer
+            .fake
+            .script_read(Some(5 * MIN - Duration::from_secs(1)), Some(35 * MIN));
         timer.fake.script_read(Some(Duration::ZERO), Some(40 * MIN));
         timer.fake.script_read(Some(Duration::ZERO), Some(40 * MIN));
 
