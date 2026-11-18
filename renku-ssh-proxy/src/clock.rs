@@ -20,15 +20,6 @@ pub(crate) trait SessionAlerts: Send + Sync {
     fn disconnect(&self, reason: &str) -> impl Future<Output = ()> + Send;
 }
 
-/// Drops the warnings until the proxy wires the shell channels to them.
-pub(crate) struct NoAlerts;
-
-impl SessionAlerts for NoAlerts {
-    async fn warn(&self, _text: &str) {}
-
-    async fn disconnect(&self, _reason: &str) {}
-}
-
 /// Starts the clock loop for one connection.
 pub(crate) fn spawn_clock_task<C: ClockClient + 'static, A: SessionAlerts + 'static>(
     client: Arc<C>,
