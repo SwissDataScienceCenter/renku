@@ -60,3 +60,18 @@ spec:
     - Egress
   egress:
     {{- include "kubeapiEgress" . }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-cnpg-to-apiserver
+  labels:
+    {{- include "netpol.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      cnpg.io/cluster: {{ include "renku.pgCluster" . }}
+  policyTypes:
+    - Egress
+  egress:
+    {{- include "kubeapiEgress" . }}
