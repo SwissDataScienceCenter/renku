@@ -91,6 +91,37 @@ pub enum SshMsg {
     Subsystem(String),
 }
 
+/// Delivers the timer's warning and close to the client's interactive shells.
+struct ClientAlerts {
+    handle: server::Handle,
+    channels: Arc<Mutex<Vec<ChannelId>>>,
+}
+
+impl crate::timer::SessionAlerts for ClientAlerts {
+    async fn warn(&self, text: &str) {
+        let ids = self
+            .channels
+            .lock()
+            .expect("shell channels mutex poisoned")
+            .clone();
+        for id in ids {
+            // A channel that closed between the snapshot and the write is not worth failing over.
+            let _ = self.handle.data(id, format!("\r\n{text}\r\n")).await;
+        }
+    }
+
+    async fn disconnect(&self, reason: &str) {
+        let _ = self
+            .handle
+            .disconnect(
+                russh::Disconnect::ByApplication,
+                reason.to_string(),
+                String::new(),
+            )
+            .await;
+    }
+}
+
 #[derive(Clone)]
 pub struct ProxyHandler {
     pub target: Option<Target>,
@@ -102,6 +133,8 @@ pub struct ProxyHandler {
     activity_notify: Arc<Notify>,
     alive: Arc<AtomicBool>,
     timer_started: Arc<AtomicBool>,
+    /// Only `shell_request` and `pty_request` record here; a `ChannelId` cannot be built in a test, so this is review-checked.
+    shell_channels: Arc<Mutex<Vec<ChannelId>>>,
 }
 
 impl ProxyHandler {
@@ -116,6 +149,7 @@ impl ProxyHandler {
             activity_notify: Arc::new(Notify::new()),
             alive: Arc::new(AtomicBool::new(true)),
             timer_started: Arc::new(AtomicBool::new(false)),
+            shell_channels: Arc::new(Mutex::new(Vec::new())),
         }
     }
 
@@ -127,6 +161,27 @@ impl ProxyHandler {
     pub fn with_auth_key(mut self, key: Arc<PrivateKey>) -> Self {
         self.auth_key = Some(key);
         self
+    }
+
+    fn shell_channels(&self) -> Arc<Mutex<Vec<ChannelId>>> {
+        self.shell_channels.clone()
+    }
+
+    fn remember_shell(&self, channel: ChannelId) {
+        let mut channels = self
+            .shell_channels
+            .lock()
+            .expect("shell channels mutex poisoned");
+        if !channels.contains(&channel) {
+            channels.push(channel);
+        }
+    }
+
+    fn forget_shell(&self, channel: ChannelId) {
+        self.shell_channels
+            .lock()
+            .expect("shell channels mutex poisoned")
+            .retain(|id| *id != channel);
     }
 
     fn set_target_host<T: AsRef<str>>(&mut self, host: T) {
@@ -262,8 +317,10 @@ impl server::Handler for ProxyHandler {
                 self.activity.clone(),
                 self.activity_notify.clone(),
                 self.alive.clone(),
-                // Deliveries land on the shell channels in the next commit.
-                Arc::new(crate::timer::NoAlerts),
+                Arc::new(ClientAlerts {
+                    handle: session.handle(),
+                    channels: self.shell_channels(),
+                }),
             );
         }
         let up_channel = upstream.channel_open_session().await?;
@@ -300,6 +357,7 @@ impl server::Handler for ProxyHandler {
     ) -> Result<(), Self::Error> {
         self.touch();
         log::debug!("Requesting shell...");
+        self.remember_shell(channel);
         let _ = self.forward(&channel, SshMsg::Shell).await;
         session.channel_success(channel)?;
         Ok(())
@@ -311,6 +369,7 @@ impl server::Handler for ProxyHandler {
         _session: &mut server::Session,
     ) -> Result<()> {
         log::debug!("Sending eof...");
+        self.forget_shell(channel);
         self.forward(&channel, SshMsg::Eof).await
     }
 
@@ -321,6 +380,7 @@ impl server::Handler for ProxyHandler {
     ) -> Result<()> {
         log::debug!("Remove channel {} on channel_close...", channel);
         self.channels.remove(&channel);
+        self.forget_shell(channel);
         Ok(())
     }
 
@@ -361,6 +421,7 @@ impl server::Handler for ProxyHandler {
     ) -> Result<()> {
         self.touch();
         log::debug!("Sending pty request...");
+        self.remember_shell(channel);
         self.forward(
             &channel,
             SshMsg::Pty {
@@ -565,6 +626,7 @@ impl server::Server for ProxyHandler {
         client.activity_notify = Arc::new(Notify::new());
         client.alive = Arc::new(AtomicBool::new(true));
         client.timer_started = Arc::new(AtomicBool::new(false));
+        client.shell_channels = Arc::new(Mutex::new(Vec::new()));
         client
     }
     fn handle_session_error(&mut self, error: <Self::Handler as russh::server::Handler>::Error) {
