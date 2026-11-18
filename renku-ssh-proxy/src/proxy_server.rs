@@ -262,6 +262,8 @@ impl server::Handler for ProxyHandler {
                 self.activity.clone(),
                 self.activity_notify.clone(),
                 self.alive.clone(),
+                // Deliveries land on the shell channels in the next commit.
+                Arc::new(crate::clock::NoAlerts),
             );
         }
         let up_channel = upstream.channel_open_session().await?;

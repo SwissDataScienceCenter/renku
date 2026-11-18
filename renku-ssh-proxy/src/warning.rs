@@ -1,6 +1,3 @@
-// Temporary: the clock loop consumes these in the next commit.
-#![allow(dead_code)]
-
 use std::time::Duration;
 
 /// How long before the cull the warning appears.
