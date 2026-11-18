@@ -109,12 +109,7 @@ pub(crate) async fn run_timer<C: SessionClient, A: SessionAlerts>(
         let warned = warned_deadline
             .zip(deadline)
             .is_some_and(|(warned, now)| same_deadline(warned, now));
-        match decide(
-            remaining(read.as_ref(), now),
-            since_input(read.as_ref(), now),
-            active,
-            warned,
-        ) {
+        match decide(remaining(read.as_ref(), now), active, warned) {
             TimerAction::Cancel => {
                 warned_deadline = None;
                 read = None;
@@ -131,12 +126,11 @@ pub(crate) async fn run_timer<C: SessionClient, A: SessionAlerts>(
                             return;
                         }
                         let due = deadline.remaining == Some(Duration::ZERO);
-                        let silent = deadline.since_input.is_none_or(|age| age >= WARN_LEAD);
                         let inactive = !activity
                             .lock()
                             .expect("activity mutex poisoned")
                             .is_active(REFRESH_WINDOW);
-                        if due && silent && inactive {
+                        if due && inactive {
                             alerts.disconnect(DISCONNECT_REASON).await;
                             return;
                         }
@@ -166,13 +160,6 @@ fn remaining(read: Option<&(Instant, SessionDeadline)>, now: Instant) -> Option<
     deadline
         .remaining
         .map(|left| left.saturating_sub(now.duration_since(*at)))
-}
-
-fn since_input(read: Option<&(Instant, SessionDeadline)>, now: Instant) -> Option<Duration> {
-    let (at, deadline) = read?;
-    deadline
-        .since_input
-        .map(|age| age + now.duration_since(*at))
 }
 
 fn deadline(read: Option<&(Instant, SessionDeadline)>) -> Option<Instant> {
@@ -302,8 +289,9 @@ mod tests {
                     .unwrap_or(Scripted::Ok)
                 {
                     Scripted::Ok => Ok(SessionDeadline {
-                        remaining: Some(Duration::from_secs(600)),
-                        since_input: Some(Duration::from_secs(300)),
+                        // A session that was just touched: the default must not sit on the lead.
+                        remaining: Some(20 * MIN),
+                        since_input: Some(5 * MIN),
                         alive: true,
                     }),
                     Scripted::NotAlive => Ok(SessionDeadline {
@@ -545,6 +533,22 @@ mod tests {
     }
 
     #[tokio::test(start_paused = true)]
+    async fn test_warns_at_the_lead_when_silence_is_a_second_short() {
+        let timer = Timer::start().await;
+        // The server reports one deadline as two numbers that are rounded apart, so at the
+        // warning boundary the silence can read a second short.
+        timer.fake.script_read(Some(15 * MIN), Some(5 * MIN));
+        timer
+            .fake
+            .script_read(Some(WARN_LEAD), Some(WARN_LEAD - Duration::from_secs(1)));
+
+        timer.wait(10 * MIN).await;
+        let warns = timer.alerts.warns();
+        assert_eq!(warns.len(), 1, "{warns:?}");
+        assert!(warns[0].contains("10 minutes"), "{}", warns[0]);
+    }
+
+    #[tokio::test(start_paused = true)]
     async fn test_warns_once_ten_minutes_before_the_deadline() {
         let timer = Timer::start().await;
         timer.fake.script_read(Some(20 * MIN), Some(20 * MIN));
@@ -602,23 +606,28 @@ mod tests {
     }
 
     #[tokio::test(start_paused = true)]
-    async fn test_no_warning_while_another_connection_touched() {
+    async fn test_a_touch_elsewhere_pushes_the_warning_out() {
         let timer = Timer::start().await;
-        timer.fake.script_read(Some(5 * MIN), Some(2 * MIN));
-        timer.fake.script_read(Some(5 * MIN), Some(7 * MIN));
-        timer.fake.script_read(Some(5 * MIN), Some(12 * MIN));
+        // A peer is typing: every read sees the deadline pushed out again.
+        timer.fake.script_read(Some(19 * MIN), Some(1 * MIN));
+        timer.fake.script_read(Some(14 * MIN), Some(6 * MIN));
+        timer.fake.script_read(Some(10 * MIN), Some(10 * MIN));
 
         timer.wait(10 * MIN).await;
         assert!(
             timer.alerts.warns().is_empty(),
-            "a recent touch elsewhere suppresses the warning"
+            "a moving deadline never warns"
         );
         assert!(timer.alerts.disconnects().is_empty());
 
         timer.wait(5 * MIN).await;
         let warns = timer.alerts.warns();
-        assert_eq!(warns.len(), 1, "it warns once both gates hold: {warns:?}");
-        assert!(warns[0].contains("5 minutes"), "{}", warns[0]);
+        assert_eq!(
+            warns.len(),
+            1,
+            "it warns once the lead is reached: {warns:?}"
+        );
+        assert!(warns[0].contains("10 minutes"), "{}", warns[0]);
     }
 
     #[tokio::test(start_paused = true)]
@@ -643,18 +652,21 @@ mod tests {
     }
 
     #[tokio::test(start_paused = true)]
-    async fn test_recent_touch_at_the_deadline_prevents_the_disconnect() {
+    async fn test_a_touch_at_the_deadline_prevents_the_disconnect() {
         let timer = Timer::start().await;
         timer.fake.script_read(Some(Duration::ZERO), Some(40 * MIN));
         timer.fake.script_read(Some(10 * MIN), Some(2 * MIN));
-        timer.fake.script_read(Some(10 * MIN), Some(7 * MIN));
+        timer.fake.script_read(Some(15 * MIN), Some(3 * MIN));
 
         timer.wait(10 * MIN).await;
         assert!(
             timer.alerts.disconnects().is_empty(),
-            "a session-wide touch keeps every connection"
+            "a moved deadline keeps every connection"
         );
-        assert!(timer.alerts.warns().is_empty(), "and no warning repeats");
+        assert!(
+            timer.alerts.warns().is_empty(),
+            "and a deadline still above the lead does not warn"
+        );
         assert!(!timer.handle.is_finished());
     }
 
