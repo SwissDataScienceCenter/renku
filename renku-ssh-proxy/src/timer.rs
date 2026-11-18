@@ -1,4 +1,4 @@
-//! The per-connection session timer: refresh on input, read once input stops.
+//! The per-connection session timer: refresh on input, warn before the cull, close at it.
 
 use crate::activity::{Activity, REFRESH_WINDOW};
 use crate::data_services::{SessionClient, SessionError};

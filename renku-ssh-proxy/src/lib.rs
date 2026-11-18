@@ -5,6 +5,7 @@ pub(crate) mod data_services;
 pub(crate) mod keycloak;
 mod proxy_server;
 pub(crate) mod timer;
+pub(crate) mod warning;
 pub use config::Settings;
 pub use config::generate_completions;
 pub use proxy_server::serve_proxy;
