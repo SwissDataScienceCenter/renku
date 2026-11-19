@@ -19,6 +19,11 @@ spec:
       app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
+      annotations:
+        # The connection URI arrives as an environment variable. 
+        # A database move needs to restart the pod to update the host.
+        # Without this annotation Keycloak will not restart if the host chagnes.
+        renku.io/db-host: {{ include "renku.pgHost" . | quote }}
       labels:
         {{- include "authz.labels" . | nindent 8 }}
         renku.io/database-access: "true"

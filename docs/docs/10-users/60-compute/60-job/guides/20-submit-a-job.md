@@ -4,13 +4,13 @@ When a job launcher is configured and its environment image is ready, anyone who
 
 ## Before you submit
 
-Renku may ask you to resolve prerequisites before the job starts, which are the same kinds of checks that apply when launching a [Session](../../session):
+Renku may ask you to resolve prerequisites before the job starts, which are the same kinds of checks that apply when launching a [Session](/docs/users/compute/session):
 
 - **Code repositories** that Renku cannot access.
 - **Session secrets** that you have not provided for the project yet.
 - **Data connector** credentials.
 
-See [How to configure a session secret](../../guides/configure-session-secret) for setting up secrets that jobs can use.
+See [How to configure a session secret](/docs/users/compute/guides/configure-session-secret) for setting up secrets that jobs can use.
 
 ## Submit a job
 
@@ -44,11 +44,11 @@ See [How to configure a session secret](../../guides/configure-session-secret) f
 7. Click **Submit job**.
 
 <p class="image-container-l">
-![JobLauncher](job-submission-30.png)
+![JobLauncher](./job-submission-30.png)
 </p>
 
 You can submit multiple jobs from the same launcher at the same time. Each job must have its own submission ID.
 
 ## After you submit
 
-While the job is starting or running, see [How to monitor, cancel, and dismiss jobs](monitor-cancel-and-dismiss-jobs).
+While the job is starting or running, see [How to monitor, cancel, and dismiss jobs](/docs/users/compute/job/guides/monitor-cancel-and-dismiss-jobs).

@@ -27,7 +27,7 @@ different version of Renku than what you have or will install.
 
 ### RBAC
 
-The admin here needs to decide if the ["Resource Pool" feature](../operation/rps) will be used or not. If
+The admin here needs to decide if the ["Resource Pool" feature](/docs/admins/operation/rps) will be used or not. If
 it is to be used, then the RBAC for resource pool management must also be
 generated and applied by an admin that has access to ClusterRole and
 ClusterRoleBinding.
@@ -37,7 +37,7 @@ where Renku is installed should be sufficient).
 
 #### Enabling Resource Pools
 
-To have the ["Resource Pool" feature](../operation/rps) enabled, some ClusterRoles and ClusterRoleBindings are needed, to generate them
+To have the ["Resource Pool" feature](/docs/admins/operation/rps) enabled, some ClusterRoles and ClusterRoleBindings are needed, to generate them
 run:
 
 ```bash
@@ -353,8 +353,11 @@ start properly.
 Here follows a full configuration based on the minimal deployment values file.
 
 Beside Renku specific elements, customization of child charts are also required.
-Here we can see the changes to be applied to make KeycloakX, PostgreSQL, Redis
-and Solr start properly.
+Here we can see the changes to be applied to make KeycloakX, Redis and Solr start
+properly.
+
+PostgreSQL can be deployed by the CloudNativePG operator, you can deploy it yourself or use a managed PostgreSQL service. Note that If you decide to deploy PostgerSQL yourself we strongly recommend using the operator.
+For more information refer to [requirements section](/docs/admins/installation/requirements#postgresql). The example below assumes you will use the CloudNativePG operator.
 
 Note that these changes are not Renku specific, they need to be applied in any
 cases when deployed in OpenShift.
@@ -429,6 +432,13 @@ authz:
     requests:
       cpu: 50m
       memory: 75Mi
+cnpg:
+  extraSpec:
+    resources:
+      limits:
+        memory: 300Mi
+      requests:
+        memory: 300Mi
 dataService:
   # added
   rbac:
@@ -509,32 +519,6 @@ notebooks:
     host: renku.apps.my-openshift.ch
     tlsSecret: renku-renku-ch-tls
     ingressClassName: openshift-default
-postgresql:
-  primary:
-    # added
-    volumePermissions:
-      enabled: false
-      securityContext:
-        runAsUser: "auto"
-    podSecurityContext:
-      enabled: false
-
-    shmVolume:
-      chmod:
-        enabled: false
-
-    containerSecurityContext:
-      enabled: false
-    # end added
-    resources:
-      limits:
-        memory: 300Mi
-      requests:
-        memory: 300Mi
-  # Use Bitnami's PostgreSQL image from Renkulab Harbor registry
-  image:
-    registry: harbor.renkulab.io
-    repository: bitnami-mirror/postgresql
 redis:
   architecture: standalone
   master:
