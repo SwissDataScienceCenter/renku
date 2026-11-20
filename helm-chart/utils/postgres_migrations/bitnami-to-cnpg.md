@@ -6,10 +6,10 @@
 > [!IMPORTANT]
 >
 > The recommended route is to use the cloud-native PostgreSQL operator (CNPG). Either with the chart's built-in `cnpg.autoMigration: true`
-> or with an out-of-band CNPG cluster you manage (See [Ouf of Band CNPG cluster](#cnpg-cluster-creation)),
-> together with `postgresql.enabled: true`. The new Cluster can then import every database and role 
-> on creation and none of this is needed. The procedure below is the manual alternative, for a CNPG 
-> cluster or any external postgres instance.
+> or with an out-of-band CNPG cluster you manage (See [Out of Band CNPG cluster](#cnpg-cluster-creation)),
+> together with `postgresql.enabled: true`. The new Cluster can then import every database and role
+> on creation; only the [SpiceDB repair](#4-repair-spicedb) is still needed once the import is done.
+> The [manual migration](#manual-migration) is the alternative.
 
 > [!NOTE]
 >
@@ -20,8 +20,8 @@
 
 You may manage your own CNPG cluster outside of the chart, in this namespace or elsewhere. Set
 `cnpg.install: false` and point `global.externalServices.postgresql` at it. You may either
-restore the cluster as above, or let it import the data itself on creation (See the last
-part of this section).
+let it import the data itself on creation (see [Automatic data migration](#automatic-data-migration)),
+or restore it by hand (see [Manual migration](#manual-migration)).
 
 Order matters:
 1. Create policies
@@ -146,7 +146,12 @@ spec:
         - {protocol: TCP, port: 5432}
 ```
 
-### 2. Chart upgrade
+### 2. Repair SpiceDB
+
+The import goes through `pg_dump`/`pg_restore`, so once the Cluster is ready, run the
+[SpiceDB repair](#4-repair-spicedb) from the manual migration before starting Renku.
+
+### 3. Chart upgrade
 
 Edit your values to point Renku at the CNPG generated secret directly.
 CNPG keeps it in `<cluster>-superuser` under the key `password`. Keep the old instance until you
@@ -175,13 +180,12 @@ helm -n renku upgrade $HELM_RELEASE renku/renku -f my-values.yaml
 
 ## Manual migration
 
-This works with any PostgreSQL. You dump the old databases, restore into a new one.
-Only then, point Renku at the new instance. Plan for downtime, the platform is down from step 1 to step 5.
+You dump the old databases, restore into a new one. Only then, point Renku at the new instance.
+Plan for downtime, the platform is down from step 1 to step 5. The commands below target a CNPG
+cluster; for another PostgreSQL, run the restore and the SpiceDB repair against it instead.
 
 ```bash
 # The new cnpg cluster must already exist and be empty.
-set -euo pipefail
-
 NS=renku
 REL=renku
 OLD_PG=$REL-postgresql-0
