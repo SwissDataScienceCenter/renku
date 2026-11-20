@@ -55,11 +55,10 @@ spec:
         - podSelector: {matchLabels: {app: postgres-setup}}
         - podSelector: {matchLabels: {app.kubernetes.io/name: keycloakx}}
         - podSelector: {matchLabels: {cnpg.io/cluster: mypg}}
-        # only for the manual restore, which runs psql from the old bitnami pod
-        - podSelector: {matchLabels: {app.kubernetes.io/name: postgresql}}
       ports:
         - {protocol: TCP, port: 5432}
-    # the operator polls each instance on 8000 or the Cluster never reports ready
+    # the operator polls each instance on 8000 or the Cluster never reports ready,
+    # and with more than one instance, the primary's liveness probe pings its peers on 8000
     - from:
         - namespaceSelector:
             matchLabels:
@@ -67,6 +66,7 @@ spec:
           podSelector:
             matchLabels:
               app.kubernetes.io/name: cloudnative-pg
+        - podSelector: {matchLabels: {cnpg.io/cluster: mypg}}
       ports:
         - {protocol: TCP, port: 5432}
         - {protocol: TCP, port: 8000}
