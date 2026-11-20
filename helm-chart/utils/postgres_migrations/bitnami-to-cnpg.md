@@ -198,7 +198,7 @@ Renku Helm release as you have installed it on your cluster.
 
 ### 1. Dump
 
-. Stop Renku and dump the whole old instance (users, owners, grants, data)
+Stop Renku and dump the whole old instance (users, owners, grants, data)
 
 ```bash
 kubectl -n $NS scale deploy --all --replicas=0
@@ -243,7 +243,7 @@ kubectl -n $NS run spicedb-repair --rm -i --restart=Never --labels=app=renku-aut
 ### 5. Upgrade
 
 Update your values, keeping `postgresql.enabled: true`, and set `cnpg.install: false`.
-Point the renku chart values at the new instance:
+Point the renku chart values at the new instance, using the superuser secret CNPG generates:
 
 ```yaml
 cnpg:
@@ -254,15 +254,14 @@ global:
   externalServices:
     postgresql:
       enabled: true
-      host: postgres.example.org
+      host: renku-pg-rw # $NEW_CLUSTER-rw
       username: postgres
-      # either an inline password, or a secret holding it, not both
-      password: <superuser-password>
-      # existingSecret: <secret-name>
-      # existingSecretPasswordKey: <key-in-that-secret>
+      existingSecret: renku-pg-superuser # $NEW_CLUSTER-superuser
+      existingSecretPasswordKey: password
+      # for another PostgreSQL: its host, and either an inline `password` or a secret, not both
 ```
 
-Apply new values to the chart:
+Apply the new values. This also scales the services back up:
 
 ```bash
 helm -n $NS upgrade $REL renku/renku -f $VALUES
