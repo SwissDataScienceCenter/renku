@@ -1,5 +1,6 @@
 //! Module for interacting with the secret service.
 
+use crate::key_source::KeySource;
 use crate::secret_name::SecretName;
 use color_eyre::Result;
 use color_eyre::eyre::eyre;
@@ -29,7 +30,7 @@ pub struct SessionAuthorizeResponse {
     pub target_host: String,
     pub target_port: u16,
     pub target_user: String,
-    pub host_key_pub: Option<SecretName>,
+    pub host_key_pub: Option<KeySource>,
     pub auth_key_priv: Option<SecretName>,
 }
 

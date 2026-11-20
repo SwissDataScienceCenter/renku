@@ -1,6 +1,7 @@
 pub mod buildinfo;
 pub(crate) mod config;
 pub(crate) mod data_services;
+pub(crate) mod key_source;
 mod proxy_server;
 pub(crate) mod secret_name;
 pub(crate) mod ssh_key;

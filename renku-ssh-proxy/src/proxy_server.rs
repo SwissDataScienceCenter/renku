@@ -152,7 +152,7 @@ impl ProxyHandler {
         .await?;
         log::debug!(
             "Connected to target {}. Continue with authentication",
-            &target.host
+            target.host
         );
         let auth_key = match target.auth_key {
             Some(pk) => pk.0,
@@ -548,7 +548,7 @@ impl server::Server for ProxyHandler {
             Some(c) => {
                 log::error!("Session error: {c:?}");
                 log::trace!("Session error structure: {error:#?}");
-            },
+            }
             _ => {
                 log::error!("Session error: {error:?}");
                 log::trace!("Session error structure: {error:#?}");

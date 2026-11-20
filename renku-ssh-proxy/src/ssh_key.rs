@@ -19,6 +19,10 @@ where
         .with_context(|| format!("reading public key {}", file.as_ref().display()))
 }
 
+pub fn read_public_key_from_openssh(raw: &str) -> Result<russh::keys::PublicKey> {
+    russh::keys::PublicKey::from_openssh(raw).with_context(|| format!("reading public key {}", raw))
+}
+
 /// The private key the proxy uses to authenticate to session hosts.
 /// Its `Debug` redacts the key material.
 #[derive(Clone)]
