@@ -6,10 +6,10 @@
 > [!IMPORTANT]
 >
 > The recommended route is to use the cloud-native PostgreSQL operator (CNPG). Either with the chart's built-in `cnpg.autoMigration: true`
-> or with an out-of-band CNPG cluster you manage (See [Ouf of Band CNPG cluster](#cnpg-cluster-creation)),
-> together with `postgresql.enabled: true`. The new Cluster can then import every database and role 
-> on creation and none of this is needed. The procedure below is the manual alternative, for a CNPG 
-> cluster or any external postgres instance.
+> or with an out-of-band CNPG cluster you manage (See [Out of Band CNPG cluster](#cnpg-cluster-creation)),
+> together with `postgresql.enabled: true`. The new Cluster can then import every database and role
+> on creation; only the [SpiceDB repair](#4-repair-spicedb) is still needed once the import is done.
+> The [manual migration](#manual-migration) is the alternative.
 
 > [!NOTE]
 >
@@ -20,8 +20,8 @@
 
 You may manage your own CNPG cluster outside of the chart, in this namespace or elsewhere. Set
 `cnpg.install: false` and point `global.externalServices.postgresql` at it. You may either
-restore the cluster as above, or let it import the data itself on creation (See the last
-part of this section).
+let it import the data itself on creation (see [Automatic data migration](#automatic-data-migration)),
+or restore it by hand (see [Manual migration](#manual-migration)).
 
 Order matters:
 1. Create policies
@@ -55,11 +55,10 @@ spec:
         - podSelector: {matchLabels: {app: postgres-setup}}
         - podSelector: {matchLabels: {app.kubernetes.io/name: keycloakx}}
         - podSelector: {matchLabels: {cnpg.io/cluster: mypg}}
-        # only for the manual restore, which runs psql from the old bitnami pod
-        - podSelector: {matchLabels: {app.kubernetes.io/name: postgresql}}
       ports:
         - {protocol: TCP, port: 5432}
-    # the operator polls each instance on 8000 or the Cluster never reports ready
+    # the operator polls each instance on 8000 or the Cluster never reports ready,
+    # and with more than one instance, the primary's liveness probe pings its peers on 8000
     - from:
         - namespaceSelector:
             matchLabels:
@@ -67,6 +66,7 @@ spec:
           podSelector:
             matchLabels:
               app.kubernetes.io/name: cloudnative-pg
+        - podSelector: {matchLabels: {cnpg.io/cluster: mypg}}
       ports:
         - {protocol: TCP, port: 5432}
         - {protocol: TCP, port: 8000}
@@ -146,7 +146,12 @@ spec:
         - {protocol: TCP, port: 5432}
 ```
 
-### 2. Chart upgrade
+### 2. Repair SpiceDB
+
+The import goes through `pg_dump`/`pg_restore`, so once the Cluster is ready, run the
+[SpiceDB repair](#4-repair-spicedb) from the manual migration before starting Renku.
+
+### 3. Chart upgrade
 
 Edit your values to point Renku at the CNPG generated secret directly.
 CNPG keeps it in `<cluster>-superuser` under the key `password`. Keep the old instance until you
@@ -175,54 +180,70 @@ helm -n renku upgrade $HELM_RELEASE renku/renku -f my-values.yaml
 
 ## Manual migration
 
-This works with any PostgreSQL. You dump the old databases, point Renku at the new instance (the
-upgrade's setup jobs create the databases and roles there, empty), then restore the dumps into
-them. Plan for downtime, the platform is down from step 1 to step 4.
+You dump the old databases, restore into a new one. Only then, point Renku at the new instance.
+Plan for downtime, the platform is down from step 1 to step 5. The commands below target a CNPG
+cluster; for another PostgreSQL, run the restore and the SpiceDB repair against it instead.
 
 ```bash
-export NS=renku
-export REL=renku
-# the new instance and its superuser
-export PGHOST=postgres.example.org
-export PGUSER=postgres
-export PGPASSWORD=<superuser-password>
+# The new cnpg cluster must already exist and be empty.
+NS=renku
+REL=renku
+OLD_PG=$REL-postgresql-0
+NEW_CLUSTER=renku-pg  # Name of cnpg cluster
+VALUES=my-values.yaml
 ```
 
 `NS` refers to the Kubernetes namespace where Renku is installed. `REL` refers to the name of the
 Renku Helm release as you have installed it on your cluster.
 
-### 1. Scale down Renku and Keycloak and dump
+### 1. Dump
 
-The old instance has to still be running, so keep `postgresql.enabled: true`.
+Stop Renku and dump the whole old instance (users, owners, grants, data)
 
 ```bash
 kubectl -n $NS scale deploy --all --replicas=0
 kubectl -n $NS scale statefulset $REL-keycloakx --replicas=0
-
-for db in renku authz keycloak; do
-  kubectl -n $NS exec $REL-postgresql-0 -- \
-    bash -c "PGPASSWORD=\$POSTGRES_PASSWORD pg_dump -U postgres --clean --if-exists -d $db" \
-    > $db.sql
-done
+kubectl -n $NS exec $OLD_PG -- \
+  bash -c 'PGPASSWORD=$POSTGRES_PASSWORD pg_dumpall -c --if-exists -U postgres' > dumpall.sql
 ```
 
-Per database rather than `pg_dumpall`, the setup jobs create the roles on the new instance in step 3,
-with the same passwords. `--clean --if-exists` lets the restore overwrite the schema the services
-create.
+### 2. Fix dump
 
-**Check the dumps before going on.** If you changed `global.keycloak.postgresDatabase`, replace
-`keycloak` in the `for db in ...` loops (here and in step 4) with its value.
+Leave the new instance's own superuser (and its password) untouched
 
-### 2. Deploy postgres
+```bash
+sed -E -i.bak \
+  -e '/^(CREATE|ALTER) ROLE postgres( |;)/d' \
+  -e '/DROP ROLE IF EXISTS postgres/d'  dumpall.sql
+```
 
-Deploy the new instance using your preferred method. Renku needs a superuser on it, since the setup
-jobs create their own databases and roles, and it must be reachable from the Renku namespace on
-port 5432.
+### 3. Restore
 
-### 3. Upgrade
+Restore into the new instance
+
+`ON_ERROR_STOP=1` prevents `psql` from exiting 0 after skipping statements that failed.
+
+```bash
+NEW_PG=$(kubectl -n $NS get pod -l cnpg.io/cluster=$NEW_CLUSTER,cnpg.io/instanceRole=primary -o name)
+kubectl -n $NS exec -i $NEW_PG -c postgres -- psql -v ON_ERROR_STOP=1 -U postgres < dumpall.sql
+```
+
+### 4. Repair SpiceDB
+
+Move the new server's transaction counter past the restored SpiceDB data
+
+```bash
+AUTHZ_PW=$(kubectl -n $NS get secret $REL-authz -o jsonpath='{.data.SPICEDB_POSTGRES_PASSWORD}' | base64 -d)
+AUTHZ_IMG=$(kubectl -n $NS get deploy $REL-authz -o jsonpath='{.spec.template.spec.containers[0].image}')
+kubectl -n $NS run spicedb-repair --rm -i --restart=Never --labels=app=renku-authz --image="$AUTHZ_IMG" -- \
+  datastore repair transaction-ids --datastore-engine=postgres \
+  --datastore-conn-uri="postgres://authz:$AUTHZ_PW@$NEW_CLUSTER-rw:5432/authz"
+```
+
+### 5. Upgrade
 
 Update your values, keeping `postgresql.enabled: true`, and set `cnpg.install: false`.
-Point the renku chart values at the new instance:
+Point the renku chart values at the new instance, using the superuser secret CNPG generates:
 
 ```yaml
 cnpg:
@@ -233,39 +254,19 @@ global:
   externalServices:
     postgresql:
       enabled: true
-      host: postgres.example.org
+      host: renku-pg-rw # $NEW_CLUSTER-rw
       username: postgres
-      # either an inline password, or a secret holding it, not both
-      password: <superuser-password>
-      # existingSecret: <secret-name>
-      # existingSecretPasswordKey: <key-in-that-secret>
+      existingSecret: renku-pg-superuser # $NEW_CLUSTER-superuser
+      existingSecretPasswordKey: password
+      # for another PostgreSQL: its host, and either an inline `password` or a secret, not both
 ```
-Apply new values to the chart:
+
+Apply the new values. This also scales the services back up:
 
 ```bash
-helm -n $NS upgrade $REL renku/renku -f my-values.yaml
+helm -n $NS upgrade $REL renku/renku -f $VALUES
 ```
 
-The setup jobs create the databases and roles on the new instance, and the services start on empty
-schemas.
-
-### 4. Restore data and restart services
-
-The upgrade restarted the services, so stop them again first. The old pod still runs and has a
-`psql` matching the dumps, so it serves as the client. The new instance must accept connections
-from it, otherwise run the same `psql` from any client that can reach it.
-
-```bash
-kubectl -n $NS scale deploy --all --replicas=0
-kubectl -n $NS scale statefulset $REL-keycloakx --replicas=0
-
-for db in renku authz keycloak; do
-  kubectl -n $NS exec -i $REL-postgresql-0 -- \
-    env PGPASSWORD="$PGPASSWORD" psql -v ON_ERROR_STOP=1 -h "$PGHOST" -U "$PGUSER" -d $db < $db.sql
-done
-```
-
-`ON_ERROR_STOP=1` prevents `psql` from exiting 0 after skipping statements that failed.
 
 Then scale back up:
 
@@ -273,14 +274,14 @@ Then scale back up:
 helm -n $NS upgrade $REL renku/renku -f my-values.yaml
 ```
 
-### 5. Verify
+### 6. Verify
 
 In order, check that:
 * authz connects (i.e. the preserved spicedb password matches the restored role)
 * keycloak starts and its realm is there
 * you can log in and see the projects.
 
-### 6. Clean up
+### 7. Clean up
 
 Only once verified. Set `postgresql.enabled: false` and upgrade. This removes the bitnami
 StatefulSet and the `$REL-postgresql` secret holding its password.
@@ -298,5 +299,4 @@ kubectl -n $NS delete pvc data-$REL-postgresql-0
 
 A run that dies partway leaves a half-restored database, which blocks later deploys. Restart
 from a wiped cluster.
-
 
