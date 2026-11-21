@@ -35,6 +35,11 @@ data:
         - issuer: {{ printf "%s/realms/%s" (include "renku.keycloakUrl" . | trimSuffix "/") (include "renku.keycloak.realm" .) }}
           audience: renku
           authorizedParty: renku-cli
+        {{- if .Values.mcpServer.enabled }}
+        - issuer: {{ printf "%s/realms/%s" (include "renku.keycloakUrl" . | trimSuffix "/") (include "renku.keycloak.realm" .) }}
+          audience: renku
+          authorizedParty: renku-mcp
+        {{- end }}
     revproxy:
       enableInternalGitlab: "false"
       renkuBaseUrl: {{ include "renku.baseUrl" . | quote }}

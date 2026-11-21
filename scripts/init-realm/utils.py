@@ -93,8 +93,10 @@ class OIDCClient:
     service_account_roles: List[str] = field(default_factory=list)
     service_account_realm_roles: List[str] = field(default_factory=list)
     public_client: bool = False
+    consent_required: bool = False
     client_extra_web_origins: List[str] = field(default_factory=list)
     client_extra_redirect_uris: List[str] = field(default_factory=list)
+    client_extra_audiences: List[str] = field(default_factory=list)
 
     def __post_init__(self):
         self.base_url = self.base_url.rstrip("/")
@@ -164,6 +166,7 @@ class OIDCClient:
             "clientId": self.id,
             "baseUrl": self.base_url,
             "publicClient": self.public_client,
+            "consentRequired": self.consent_required,
             "attributes": self.attributes,
             "redirectUris": [self.base_url + "/*"] + self.client_extra_redirect_uris,
             "webOrigins": [self.base_url + "/*"] + self.client_extra_web_origins,
@@ -181,6 +184,24 @@ class OIDCClient:
                         "userinfo.token.claim": False,
                     },
                 }
+            ]
+            + [
+                # Lets a resource server check that a token was issued for it, instead of
+                # accepting any Renku token. Additive: the "renku" audience above stays, so
+                # the token still passes the data API's own audience check when forwarded.
+                {
+                    "name": f"{audience} audience",
+                    "protocol": "openid-connect",
+                    "protocolMapper": "oidc-audience-mapper",
+                    "consentRequired": False,
+                    "config": {
+                        "included.client.audience": audience,
+                        "id.token.claim": False,
+                        "access.token.claim": True,
+                        "userinfo.token.claim": False,
+                    },
+                }
+                for audience in self.client_extra_audiences
             ],
         }
         if self.secret is not None:
@@ -214,7 +235,10 @@ class OIDCClient:
             ),
             client_extra_web_origins=json.loads(
                 os.environ.get(f"{prefix}EXTRA_WEB_ORIGINS", "[]")
-            )
+            ),
+            client_extra_audiences=json.loads(
+                os.environ.get(f"{prefix}EXTRA_AUDIENCES", "[]")
+            ),
         )
 
 
@@ -269,9 +293,15 @@ class OIDCClientsConfig:
     notebooks: OIDCClient
     swagger: OIDCClient
     data_service: OIDCClient
+    # Only set when the MCP server is enabled, i.e. MCP_KC_CLIENT_ID is set.
+    mcp: Optional[OIDCClient] = None
 
     @classmethod
     def from_env(cls) -> "OIDCClientsConfig":
+        mcp = None
+        if os.environ.get("MCP_KC_CLIENT_ID"):
+            mcp = OIDCClient.from_env(prefix="MCP_KC_CLIENT_")
+            mcp.consent_required = True
         return cls(
             renku=OIDCClient.from_env(prefix="RENKU_KC_CLIENT_"),
             cli=OIDCClient.from_env(prefix="CLI_KC_CLIENT_"),
@@ -279,10 +309,11 @@ class OIDCClientsConfig:
             notebooks=OIDCClient.from_env(prefix="NOTEBOOKS_KC_CLIENT_"),
             swagger=OIDCClient.from_env(prefix="SWAGGER_KC_CLIENT_"),
             data_service=OIDCClient.from_env(prefix="DATASERVICE_KC_CLIENT_"),
+            mcp=mcp,
         )
 
     def to_list(self) -> List[OIDCClient]:
-        return [
+        clients = [
             self.renku,
             self.cli,
             self.ui,
@@ -290,3 +321,6 @@ class OIDCClientsConfig:
             self.swagger,
             self.data_service,
         ]
+        if self.mcp is not None:
+            clients.append(self.mcp)
+        return clients

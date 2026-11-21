@@ -1,0 +1,1307 @@
+openapi: 3.0.2
+info:
+  title: Renku Data Services API
+  description: |
+    This service is the main backend for Renku. It provides information about users, projects,
+    cloud storage, access to compute resources and many other things.
+  version: v1
+servers:
+  - url: /api/data
+paths:
+  /data_connectors:
+    get:
+      summary: Get all data connectors
+      parameters:
+        - in: query
+          description: query parameters
+          name: params
+          style: form
+          explode: true
+          schema:
+            $ref: "#/components/schemas/DataConnectorsGetQuery"
+      responses:
+        "200":
+          description: List of data connectors
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/DataConnectorsList"
+          headers:
+            page:
+              description: The index of the current page (starting at 1).
+              required: true
+              schema:
+                type: integer
+            per-page:
+              description: The number of items per page.
+              required: true
+              schema:
+                type: integer
+            total:
+              description: The total number of items.
+              required: true
+              schema:
+                type: integer
+            total-pages:
+              description: The total number of pages.
+              required: true
+              schema:
+                type: integer
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - data_connectors
+    post:
+      summary: Create a new data connector
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DataConnectorPost"
+      responses:
+        "201":
+          description: The data connector was created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DataConnector"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - data_connectors
+  /data_connectors/global:
+    post:
+      summary: Create a new data connector
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GlobalDataConnectorPost"
+      responses:
+        "200":
+          description: The data connector already exists
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DataConnector"
+        "201":
+          description: The data connector was created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DataConnector"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - data_connectors
+  /data_connector_links:
+    get:
+      summary: Get all data connector links
+      parameters:
+        - in: query
+          description: query parameters
+          name: params
+          style: form
+          explode: true
+          schema:
+            $ref: "#/components/schemas/DataConnectorLinksGetQuery"
+      responses:
+        "200":
+          description: The list of data connector links
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DataConnectorToProjectLinksList"
+          headers:
+            page:
+              description: The index of the current page (starting at 1).
+              required: true
+              schema:
+                type: integer
+            per-page:
+              description: The number of items per page.
+              required: true
+              schema:
+                type: integer
+            total:
+              description: The total number of items.
+              required: true
+              schema:
+                type: integer
+            total-pages:
+              description: The total number of pages.
+              required: true
+              schema:
+                type: integer
+        "404":
+          description: The data connector with the given DOI does not exist or user does not have access to it
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - data_connectors
+  /data_connectors/{data_connector_id}:
+    parameters:
+      - in: path
+        name: data_connector_id
+        required: true
+        schema:
+          $ref: "#/components/schemas/Ulid"
+        description: the ID of the data connector
+    get:
+      summary: Get data connector details
+      responses:
+        "200":
+          description: The data connector
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DataConnector"
+        "404":
+          description: The data connector does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - data_connectors
+    patch:
+      summary: Update specific fields of an existing data connector
+      parameters:
+        - $ref: "#/components/parameters/If-Match"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DataConnectorPatch"
+      responses:
+        "200":
+          description: The patched data connector
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DataConnector"
+        "404":
+          description: The data connector does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - data_connectors
+    delete:
+      summary: Remove a data connector
+      responses:
+        "204":
+          description: The data connector was removed or did not exist in the first place
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - data_connectors
+  /data_connectors/global/{slug}:
+    parameters:
+      - in: path
+        name: slug
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Get a global data connector by slug
+      responses:
+        "200":
+          description: The data connector
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DataConnector"
+        "404":
+          description: The data connector does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - data_connectors
+  /namespaces/{namespace}/data_connectors/{slug}:
+    parameters:
+      - in: path
+        name: namespace
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: slug
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Get a data connector by namespace and project slug
+      responses:
+        "200":
+          description: The data connector
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DataConnector"
+        "404":
+          description: The data connector does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - data_connectors
+  /namespaces/{namespace}/projects/{project}/data_connectors/{slug}:
+    parameters:
+      - in: path
+        name: namespace
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: project
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: slug
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Get a data connector that is owned by a namespace by its slug
+      responses:
+        "200":
+          description: The data connector
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DataConnector"
+        "404":
+          description: The data connector does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - data_connectors
+  /data_connectors/{data_connector_id}/permissions:
+    parameters:
+      - in: path
+        name: data_connector_id
+        required: true
+        schema:
+          $ref: "#/components/schemas/Ulid"
+        description: the ID of the data connector
+    get:
+      summary: Get the permissions of the current user on the data connector
+      responses:
+        "200":
+          description: The set of permissions.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DataConnectorPermissions"
+        "404":
+          description: The data connector does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - data_connectors
+  /data_connectors/{data_connector_id}/project_links:
+    parameters:
+      - in: path
+        name: data_connector_id
+        required: true
+        schema:
+          $ref: "#/components/schemas/Ulid"
+        description: the ID of the data connector
+    get:
+      summary: Get all links from a given data connector to projects
+      responses:
+        "200":
+          description: List of data connector to project links
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DataConnectorToProjectLinksList"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - data_connectors
+    post:
+      summary: Create a new link from a data connector to a project
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DataConnectorToProjectLinkPost"
+      responses:
+        "201":
+          description: The data connector was connected to a project
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DataConnectorToProjectLink"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - data_connectors
+  /data_connectors/{data_connector_id}/project_links/{link_id}:
+    parameters:
+      - in: path
+        name: data_connector_id
+        required: true
+        schema:
+          $ref: "#/components/schemas/Ulid"
+        description: the ID of the data connector
+      - in: path
+        name: link_id
+        required: true
+        schema:
+          $ref: "#/components/schemas/Ulid"
+        description: the ID of the link between a data connector and a project
+    delete:
+      summary: Remove a link from a data connector to a project
+      responses:
+        "204":
+          description: The data connector was removed or did not exist in the first place
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - data_connectors
+  /data_connectors/{data_connector_id}/secrets:
+    parameters:
+      - in: path
+        name: data_connector_id
+        required: true
+        schema:
+          $ref: "#/components/schemas/Ulid"
+        description: the ID of the data connector
+    get:
+      summary: Get all saved secrets for a data connector
+      responses:
+        "200":
+          description: The saved storage secrets
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/DataConnectorSecretsList"
+        "404":
+          description: Storage was not found
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - data_connectors
+    patch:
+      summary: Save secrets for a data connector
+      description: New secrets will be added and existing secrets will have their value updated. Using `null` as a value will remove the corresponding secret.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DataConnectorSecretPatchList"
+      responses:
+        "201":
+          description: The secrets for cloud storage were saved
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/DataConnectorSecretsList"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - data_connectors
+    delete:
+      summary: Remove all saved secrets for a data connector
+      responses:
+        "204":
+          description: The secrets were removed or did not exist in the first place or the storage doesn't exist
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - data_connectors
+  /data_connectors/{data_connector_id}/deposits:
+    parameters:
+      - in: path
+        name: data_connector_id
+        required: true
+        schema:
+          $ref: "#/components/schemas/Ulid"
+        description: the ID of the data connector
+    get:
+      summary: Get all deposits for a specific data connector
+      parameters:
+        - in: query
+          description: Query parameters
+          name: params
+          style: form
+          explode: true
+          schema:
+            $ref: "#/components/schemas/PaginationRequest"
+      responses:
+        "200":
+          description: The list of deposits
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/DepositList"
+        "404":
+          description: The data connector does not exist or you dont have access to it
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - data_connectors
+  /projects/{project_id}/data_connector_links:
+    parameters:
+      - in: path
+        name: project_id
+        required: true
+        schema:
+          $ref: "#/components/schemas/Ulid"
+        description: the ID of the project
+    get:
+      summary: Get all links from data connectors to a given project
+      responses:
+        "200":
+          description: List of data connector to project links
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DataConnectorToProjectLinksList"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - projects
+  /projects/{project_id}/inaccessible_data_connector_links:
+    parameters:
+      - in: path
+        name: project_id
+        required: true
+        schema:
+          $ref: "#/components/schemas/Ulid"
+        description: the ID of the project
+    get:
+      summary: Get the number of links that the user does not have access to in a project
+      responses:
+        "200":
+          description: List of data connector to project links
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InaccessibleDataConnectorLinks"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - projects
+  /deposits:
+    post:
+      summary: Create a new data deposit
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DepositPost"
+      responses:
+        "201":
+          description: The newly created deposit
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Deposit"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - deposit
+    get:
+      summary: List all data deposits
+      parameters:
+        - in: query
+          description: Query parameters
+          name: params
+          style: form
+          explode: true
+          schema:
+            $ref: "#/components/schemas/PaginationRequest"
+      responses:
+        "200":
+          description: The list of data deposits
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DepositList"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - deposit
+  /deposits/{deposit_id}:
+    parameters:
+      - in: path
+        name: deposit_id
+        required: true
+        schema:
+          $ref: "#/components/schemas/Ulid"
+        description: the ID of the data deposit
+    get:
+      summary: Get information about a data deposit
+      responses:
+        "200":
+          description: The data deposit
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Deposit"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - deposit
+    patch:
+      summary: Modify an existing data deposit
+      parameters:
+        - $ref: "#/components/parameters/If-Match"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DepositPatch"
+      responses:
+        "200":
+          description: The data deposit
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Deposit"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - deposit
+    delete:
+      summary: Delete an existing data deposit
+      responses:
+        "204":
+          description: The data deposit was deleted
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - deposit
+  /deposits/{deposit_id}/logs:
+    parameters:
+      - in: path
+        name: deposit_id
+        required: true
+        schema:
+          $ref: "#/components/schemas/Ulid"
+        description: the ID of the data deposit
+    get:
+      summary: Get the logs of a data deposit
+      responses:
+        "200":
+          description: The data deposit logs
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DepositLogs"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - deposit
+  /deposits/{deposit_id}/job:
+    parameters:
+      - in: path
+        name: deposit_id
+        required: true
+        schema:
+          $ref: "#/components/schemas/Ulid"
+        description: the ID of the data deposit
+    post:
+      summary: Rerun a deposit job
+      responses:
+        "201":
+          description: The data deposit job has been recreated
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - deposit
+components:
+  schemas:
+    ProjectSlug:
+      type: string
+      description: The slug used to identify a project
+      minLength: 3
+      example: "user/my-project"
+      # limitations based on allowed characters in project slugs from Gitlab from here:
+      # https://docs.gitlab.com/ee/user/reserved_names.html
+      pattern: "^[a-zA-Z0-9]+([_.\\-/][a-zA-Z0-9]+)*[_.\\-/]?[a-zA-Z0-9]$"
+    DataConnectorsList:
+      description: A list of data connectors
+      type: array
+      items:
+        $ref: "#/components/schemas/DataConnector"
+    DataConnector:
+      description: |
+        A data connector for Renku 2.0 for mounting remote data storage
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          $ref: "#/components/schemas/Ulid"
+        name:
+          $ref: "#/components/schemas/DataConnectorName"
+        namespace:
+          $ref: "#/components/schemas/SlugResponse"
+        slug:
+          $ref: "#/components/schemas/SlugResponse"
+        storage:
+          $ref: "#/components/schemas/CloudStorageCore"
+        creation_date:
+          $ref: "#/components/schemas/CreationDate"
+        created_by:
+          $ref: "#/components/schemas/UserId"
+        visibility:
+          $ref: "#/components/schemas/Visibility"
+        description:
+          $ref: "#/components/schemas/Description"
+        etag:
+          $ref: "#/components/schemas/ETag"
+        keywords:
+          $ref: "#/components/schemas/KeywordsList"
+        doi:
+          $ref: "#/components/schemas/DOI"
+        publisher_name:
+          type: string
+          description: The publisher of the dataset.
+        publisher_url:
+          type: string
+          description: The URL for the publisher of the dataset.
+        expires_at:
+          $ref: "#/components/schemas/CreationDate"
+          description: |
+            If set to a value, it indicates the date until the data is available.
+            When the data connector expires, users have to take action and trigger a workflow
+            on the external data connector provider in order to get the data back.
+            If it is unset, it indicates that the data never expires.
+      required:
+        - id
+        - name
+        - slug
+        - storage
+        - creation_date
+        - created_by
+        - visibility
+        - etag
+    DataConnectorPost:
+      description: |
+        A data connector to be created in Renku 2.0
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          $ref: "#/components/schemas/DataConnectorName"
+        namespace:
+          $ref: "#/components/schemas/OneOrTwoSlugs"
+        slug:
+          $ref: "#/components/schemas/Slug"
+        storage:
+          oneOf:
+            - $ref: "#/components/schemas/CloudStorageCorePost"
+            - $ref: "#/components/schemas/CloudStorageUrlV2"
+        visibility:
+          $ref: "#/components/schemas/Visibility" # Visibility is ``private`` if not passed at this point
+          default: "private"
+        description:
+          $ref: "#/components/schemas/Description"
+        keywords:
+          $ref: "#/components/schemas/KeywordsList"
+      required:
+        - name
+        - storage
+    GlobalDataConnectorPost:
+      description: |
+        A global data connector to be created in Renku 2.0
+      type: object
+      additionalProperties: false
+      properties:
+        storage:
+          oneOf:
+            - $ref: "#/components/schemas/CloudStorageCorePost"
+            - $ref: "#/components/schemas/CloudStorageUrlV2"
+      required:
+        - storage
+    DataConnectorPatch:
+      description: |
+        Patch of a data connector
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          $ref: "#/components/schemas/DataConnectorName"
+        namespace:
+          $ref: "#/components/schemas/OneOrTwoSlugs"
+        slug:
+          $ref: "#/components/schemas/Slug"
+        storage:
+          $ref: "#/components/schemas/CloudStorageCorePatch"
+        visibility:
+          $ref: "#/components/schemas/Visibility"
+        description:
+          $ref: "#/components/schemas/Description"
+        keywords:
+          $ref: "#/components/schemas/KeywordsList"
+    CloudStorageCore:
+      description: Represents the configuration used to mount remote data storage
+      type: object
+      additionalProperties: false
+      properties:
+        storage_type:
+          $ref: "#/components/schemas/StorageType"
+        configuration:
+          $ref: "#/components/schemas/RCloneConfig"
+        source_path:
+          $ref: "#/components/schemas/SourcePath"
+        target_path:
+          $ref: "#/components/schemas/TargetPath"
+        readonly:
+          $ref: "#/components/schemas/StorageReadOnly"
+        sensitive_fields:
+          type: array
+          items:
+            $ref: "#/components/schemas/RCloneOption"
+      required:
+        - storage_type
+        - configuration
+        - source_path
+        - target_path
+        - readonly
+        - sensitive_fields
+    CloudStorageCorePost:
+      type: object
+      additionalProperties: false
+      properties:
+        storage_type:
+          $ref: "#/components/schemas/StorageType"
+        configuration:
+          $ref: "#/components/schemas/RCloneConfig"
+        source_path:
+          $ref: "#/components/schemas/SourcePath"
+        target_path:
+          $ref: "#/components/schemas/TargetPath"
+        readonly:
+          $ref: "#/components/schemas/StorageReadOnly"
+          default: true
+      required:
+        - configuration
+        - source_path
+        - target_path
+    CloudStorageCorePatch:
+      type: object
+      additionalProperties: false
+      properties:
+        storage_type:
+          $ref: "#/components/schemas/StorageType"
+        configuration:
+          $ref: "#/components/schemas/RCloneConfig"
+        source_path:
+          $ref: "#/components/schemas/SourcePath"
+        target_path:
+          $ref: "#/components/schemas/TargetPath"
+        readonly:
+          $ref: "#/components/schemas/StorageReadOnly"
+    RCloneConfig:
+      type: object
+      description: Dictionary of rclone key:value pairs (based on schema from '/storage_schema')
+      additionalProperties:
+        oneOf:
+          - type: integer
+          - type: string
+            nullable: true
+          - type: boolean
+          - type: object
+    CloudStorageUrlV2:
+      type: object
+      properties:
+        storage_url:
+          type: string
+        target_path:
+          $ref: "#/components/schemas/TargetPath"
+        readonly:
+          $ref: "#/components/schemas/StorageReadOnly"
+          default: true
+      required:
+        - storage_url
+        - target_path
+      example:
+        storage_url: s3://giab
+    DataConnectorToProjectLinksList:
+      description: A list of links from a data connector to a project
+      type: array
+      items:
+        $ref: "#/components/schemas/DataConnectorToProjectLink"
+    DataConnectorToProjectLink:
+      description: A link from a data connector to a project in Renku 2.0
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          $ref: "#/components/schemas/Ulid"
+        data_connector_id:
+          $ref: "#/components/schemas/Ulid"
+        project_id:
+          $ref: "#/components/schemas/Ulid"
+        creation_date:
+          $ref: "#/components/schemas/CreationDate"
+        created_by:
+          $ref: "#/components/schemas/UserId"
+      required:
+        - id
+        - data_connector_id
+        - project_id
+        - creation_date
+        - created_by
+    DataConnectorToProjectLinkPost:
+      description: A link to be created from a data connector to a project in Renku 2.0
+      type: object
+      additionalProperties: false
+      properties:
+        project_id:
+          $ref: "#/components/schemas/Ulid"
+      required:
+        - project_id
+    DataConnectorSecretsList:
+      description: A list of data connectors
+      type: array
+      items:
+        $ref: "#/components/schemas/DataConnectorSecret"
+    DataConnectorSecret:
+      description: Information about a credential saved for a data connector
+      type: object
+      properties:
+        name:
+          $ref: "#/components/schemas/DataConnectorSecretFieldName"
+        secret_id:
+          $ref: "#/components/schemas/Ulid"
+      required:
+        - name
+        - secret_id
+    DataConnectorSecretPatchList:
+      description: List of secrets to be saved for a data connector
+      type: array
+      items:
+        $ref: "#/components/schemas/DataConnectorSecretPatch"
+    DataConnectorSecretPatch:
+      description: Information about a credential to save for a data connector
+      properties:
+        name:
+          $ref: "#/components/schemas/DataConnectorSecretFieldName"
+        value:
+          $ref: "#/components/schemas/SecretValueNullable"
+      required:
+        - name
+        - value
+    DataConnectorSecretFieldName:
+      description: Name of the credential field
+      type: string
+      minLength: 1
+      maxLength: 99
+      example: "secret_key"
+    SecretValueNullable:
+      description: Secret value that can be any text
+      type: string
+      minLength: 1
+      maxLength: 5000
+      nullable: true
+      example: My secret value
+    RCloneOption:
+      type: object
+      description: Single field on an RClone storage, like "remote" or "access_key_id"
+      properties:
+        name:
+          type: string
+          description: name of the option
+        help:
+          type: string
+          description: help text for the option
+        provider:
+          type: string
+          description: The cloud provider the option is for (See 'provider' RCloneOption in the schema for potential values)
+          example: AWS
+        default:
+          oneOf:
+            - type: number
+            - type: string
+            - type: boolean
+            - type: object
+            - type: array
+          description: default value for the option
+        default_str:
+          type: string
+          description: string representation of the default value
+        examples:
+          description: "These list potential values for this option, like an enum. With `exclusive: true`, only a value from the list is allowed."
+          type: array
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+                description: a potential value for the option (think enum)
+              help:
+                type: string
+                description: help text for the value
+              provider:
+                type: string
+                description: The provider this value is applicable for. Empty if valid for all providers.
+            required:
+              - value
+              - help
+        required:
+          type: boolean
+          description: whether the option is required or not
+        ispassword:
+          type: boolean
+          description: whether the field is a password (use **** for display)
+        sensitive:
+          type: boolean
+          description: whether the value is sensitive (not stored in the service). Do not send this in requests to the service.
+        advanced:
+          type: boolean
+          description: whether this is an advanced config option (probably don't show these to users)
+        exclusive:
+          type: boolean
+          description: if true, only values from 'examples' can be used
+        type:
+          type: string
+          description: data type of option value. RClone has more options but they map to the ones listed here.
+          enum:
+            [
+              "int",
+              "bool",
+              "string",
+              "stringArray",
+              "Time",
+              "Duration",
+              "MultiEncoder",
+              "SizeSuffix",
+              "SpaceSepList",
+              "CommaSepList",
+              "Tristate",
+              "Encoding",
+              "Bits",
+            ]
+      required:
+        - name
+        - help
+        - default
+        - default_str
+        - required
+        - ispassword
+        - sensitive
+        - advanced
+        - exclusive
+        - type
+    Ulid:
+      description: ULID identifier
+      type: string
+      minLength: 26
+      maxLength: 26
+      pattern: "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" # This is case-insensitive
+    Slug:
+      description: A command-line/url friendly name for a namespace
+      type: string
+      minLength: 1
+      maxLength: 99
+      # Slug regex rules
+      # from https://docs.gitlab.com/ee/user/reserved_names.html#limitations-on-usernames-project-and-group-names
+      # - cannot end in .git
+      # - cannot end in .atom
+      # - cannot contain any combination of two or more consecutive -._
+      # - has to start with letter or number
+      # - cannot contain uppercase characters
+      pattern: '^(?!.*\.git$|.*\.atom$|.*[\-._][\-._].*)[a-z0-9][a-z0-9\-_.]*$'
+      example: "a-slug-example"
+    SlugResponse:
+      description: A command-line/url friendly name for a namespace
+      type: string
+      minLength: 1
+      example: "a-slug-example"
+    OneOrTwoSlugs:
+      description: A command-line/url friendly name for a single slug or two slugs separated by /
+      type: string
+      minLength: 1
+      maxLength: 200
+      pattern: '^(?!.*\.git$|.*\.atom$|.*[\-._][\-._].*)[a-z0-9][a-z0-9\-_.]*(?<!\.git)(?<!\.atom)(?:/[a-z0-9][a-z0-9\-_.]*){0,1}$'
+      example: "user1/project-1"
+    CreationDate:
+      description: The date and time the resource was created (in UTC and ISO-8601 format)
+      type: string
+      format: date-time
+      example: "2023-11-01T17:32:28Z"
+    UpdatedAt:
+      description: The date and time the resource was updated (in UTC and ISO-8601 format)
+      type: string
+      format: date-time
+      example: "2023-11-01T17:32:28Z"
+    UserId:
+      type: string
+      description: Keycloak user ID
+      example: f74a228b-1790-4276-af5f-25c2424e9b0c
+      pattern: "^[A-Za-z0-9]{1}[A-Za-z0-9-]+$"
+    Visibility:
+      description: Project's visibility levels
+      type: string
+      enum:
+        - private
+        - public
+    Description:
+      description: A description for the resource
+      type: string
+      maxLength: 500
+    KeywordsList:
+      description: Project keywords
+      type: array
+      items:
+        $ref: "#/components/schemas/Keyword"
+      minItems: 0
+      example:
+        - "project"
+        - "keywords"
+    Keyword:
+      description: A single keyword
+      type: string
+      minLength: 1
+      maxLength: 99
+    DataConnectorName:
+      description: Renku data connector name
+      type: string
+      minLength: 1
+      maxLength: 99
+      example: "My Remote Data :)"
+    SourcePath:
+      description: the source path to mount, usually starts with bucket/container name
+      type: string
+      example: bucket/my/storage/folder/
+    TargetPath:
+      description: the target path relative to the working directory where the storage should be mounted
+      type: string
+      example: my/project/folder
+    StorageType:
+      description: same as rclone prefix/ rclone config type. Ignored in requests, but returned in responses for convenience.
+      type: string
+      readOnly: true
+    StorageReadOnly:
+      description: Whether this storage should be mounted readonly or not
+      type: boolean
+      default: true
+    ETag:
+      type: string
+      description: Entity Tag
+      example: "9EE498F9D565D0C41E511377425F32F3"
+    DOI:
+      type: string
+      description: "A DOI."
+      example: "10.16904/envidat.33"
+    DataConnectorLinksGetQuery:
+      description: Query params for data connectors get request
+      allOf:
+        - $ref: "#/components/schemas/PaginationRequest"
+        - properties:
+            doi:
+              $ref: "#/components/schemas/DOI"
+    DataConnectorsGetQuery:
+      description: Query params for data connectors get request
+      allOf:
+        - $ref: "#/components/schemas/PaginationRequest"
+        - properties:
+            namespace:
+              description: A namespace, used as a filter.
+              type: string
+              default: ""
+    DataConnectorPermissions:
+      description: The set of permissions on a data connector
+      type: object
+      properties:
+        write:
+          description: The user can edit the data connector
+          type: boolean
+        delete:
+          description: The user can delete the data connector
+          type: boolean
+        change_membership:
+          description: The user can manage data connector members
+          type: boolean
+    PaginationRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        page:
+          description: Result's page number starting from 1
+          type: integer
+          minimum: 1
+          default: 1
+        per_page:
+          description: The number of results per page
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+              minimum: 0
+              exclusiveMinimum: true
+              example: 1404
+            detail:
+              type: string
+              example: "A more detailed optional message showing what the problem was"
+            message:
+              type: string
+              example: "Something went wrong - please try again later"
+            trace_id:
+              type: string
+              example: "ac93950e9e114a55c67fb8e5ef519bbe"
+              description: Sentry trace ID for linking to corresponding log entries
+          required: ["code", "message"]
+      required: ["error"]
+    InaccessibleDataConnectorLinks:
+      description: Information about inaccessible data connector links
+      type: object
+      properties:
+        count:
+          type: integer
+          minimum: 0
+          description: The number of data links the user does not have access to
+    DepositProvider:
+      type: string
+      enum:
+        - zenodo
+        - envidat
+        - scicat
+    DepositStatus:
+      type: string
+      enum:
+        - complete
+        - in_progress
+        - failed
+        - upload_complete
+    DepositSourcePath:
+      type: string
+      example: /some/path
+      description: The path from the data connector that should be uploaded in the deposit
+    DepositPost:
+      type: object
+      properties:
+        name:
+          $ref: "#/components/schemas/DataConnectorName"
+        provider:
+          $ref: "#/components/schemas/DepositProvider"
+        data_connector_id:
+          $ref: "#/components/schemas/Ulid"
+        path:
+          $ref: "#/components/schemas/DepositSourcePath"
+      required:
+        - name
+        - provider
+        - data_connector_id
+    Deposit:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/DepositPost"
+        - type: object
+          properties:
+            id:
+              $ref: "#/components/schemas/Ulid"
+            status:
+              $ref: "#/components/schemas/DepositStatus"
+            external_url:
+              type: string
+              description: The URL from the provider where the deposit can be accessed
+            creation_date:
+              $ref: "#/components/schemas/CreationDate"
+            updated_at:
+              $ref: "#/components/schemas/CreationDate"
+            etag:
+              $ref: "#/components/schemas/ETag"
+      required:
+        - id
+        - name
+        - provider
+        - data_connector_id
+        - path
+        - status
+        - external_url
+        - creation_date
+        - updated_at
+        - etag
+    DepositPatch:
+      type: object
+      properties:
+        name:
+          $ref: "#/components/schemas/DataConnectorName"
+        status:
+          $ref: "#/components/schemas/DepositStatus"
+        path:
+          $ref: "#/components/schemas/DepositSourcePath"
+    DepositList:
+      type: array
+      items:
+        $ref: "#/components/schemas/Deposit"
+    DepositLogs:
+      type: object
+      additionalProperties:
+        type: string
+      example:
+        "container-A": "Log line 1\nLog line 2"
+        "container-B": "Log line 1\nLog line 2"
+
+  responses:
+    Error:
+      description: The schema for all 4xx and 5xx responses
+      content:
+        "application/json":
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+
+  parameters:
+    If-Match:
+      in: header
+      name: If-Match
+      description: If-Match header, for avoiding mid-air collisions
+      required: true
+      schema:
+        $ref: "#/components/schemas/ETag"

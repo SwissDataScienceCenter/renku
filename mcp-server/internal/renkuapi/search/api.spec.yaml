@@ -1,0 +1,610 @@
+openapi: 3.0.2
+info:
+  title: Renku Data Services API
+  description: |
+    This service is the main backend for Renku. It provides information about users, projects,
+    cloud storage, access to compute resources and many other things.
+  version: v1
+servers:
+  - url: /api/data
+paths:
+  /search/query:
+    get:
+      summary: Run a search query.
+      tags:
+        - search
+      description: |
+        Please note: this description is replaced at runtime with the
+        contents of the query manual markdown file. Everything added
+        in this file will be replaced.
+      parameters:
+        - in: query
+          description: query parameters
+          name: params
+          style: form
+          explode: true
+          schema:
+            $ref: "#/components/schemas/SearchQuery"
+      responses:
+        "422":
+          description: Failed to validate the query parameters
+        "500":
+          description: Internal server error.
+        "503":
+          description: Temporary internal error.
+        "200":
+          description: Search results according to the query.
+          #NOTE: This is not the standard way we do pagination, but to
+          #be compatible witht the current search API we make an
+          #exception for the search here
+          headers:
+            x-page:
+              required: true
+              schema:
+                type: integer
+                format: int32
+            x-per-page:
+              required: true
+              schema:
+                type: integer
+                format: int32
+            x-total:
+              required: true
+              schema:
+                type: integer
+                format: int64
+            x-total-pages:
+              required: true
+              schema:
+                type: integer
+                format: int32
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SearchResult"
+  /search/reprovision:
+    post:
+      summary: Start a new reprovisioning
+      description: Only a single reprovisioning is active at any time
+      responses:
+        "201":
+          description: The reprovisioning is/will be started
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Reprovisioning"
+        "409":
+          description: A reprovisioning is already started
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - search
+    get:
+      summary: Return status of reprovisioning
+      responses:
+        "200":
+          description: Status of reprovisioning if there's one in progress
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReprovisioningStatus"
+        "404":
+          description: There's no active reprovisioning
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - search
+    delete:
+      summary: Stop an active reprovisioning
+      responses:
+        "204":
+          description: The reprovisioning was stopped or there was no one in progress
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - search
+
+components:
+  schemas:
+    SearchQuery:
+      description: Query params for the search request
+      allOf:
+      - $ref: "#/components/schemas/PaginationRequest"
+      - properties:
+          q:
+            description: The search query.
+            type: string
+            default: ""
+          include_counts:
+            description: Include counts (project_count, data_connector_count) in the results.
+            type: boolean
+            default: false
+    PaginationRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        page:
+          description: Result's page number starting from 1
+          type: integer
+          minimum: 1
+          default: 1
+        per_page:
+          description: The number of results per page
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+    FacetData:
+      title: FacetData
+      examples:
+        - entityType:
+            Project: 15
+            User: 3
+      type: object
+      required:
+        - entityType
+        - keywords
+      properties:
+        entityType:
+          $ref: '#/components/schemas/Map_EntityType_Int'
+        keywords:
+          $ref: '#/components/schemas/Map_EntityType_Int'
+    Group:
+      title: Group
+      examples:
+        - type: Group
+          id: 2CAF4C73F50D4514A041C9EDDB025A36
+          name: SDSC
+          namespace: SDSC
+          path: sdsc
+          slug: sdsc
+          description: SDSC group
+          score: 1.1
+      type: object
+      required:
+        - id
+        - name
+        - path
+        - slug
+        - type
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        path:
+          type: string
+        slug:
+          type: string
+        description:
+          type: string
+        score:
+          type: number
+          format: double
+        type:
+          type: string
+          const: Group
+    Map_EntityType_Int:
+      title: Map_EntityType_Int
+      type: object
+      additionalProperties:
+        type: integer
+        format: int32
+    PageDef:
+      title: PageDef
+      type: object
+      required:
+        - limit
+        - offset
+      properties:
+        limit:
+          type: integer
+          format: int32
+        offset:
+          type: integer
+          format: int32
+    PageWithTotals:
+      title: PageWithTotals
+      type: object
+      required:
+        - page
+        - totalResult
+        - totalPages
+      properties:
+        page:
+          $ref: '#/components/schemas/PageDef'
+        totalResult:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
+        prevPage:
+          type: integer
+          format: int32
+        nextPage:
+          type: integer
+          format: int32
+    SearchProject:
+      title: SearchProject
+      examples:
+        - type: Project
+          id: 01HRA7AZ2Q234CDQWGA052F8MK
+          name: renku
+          slug: renku
+          path: user/renku
+          namespace:
+            type: Group
+            id: 2CAF4C73F50D4514A041C9EDDB025A36
+            name: SDSC
+            path: sdsc
+            slug: sdsc
+            description: SDSC group
+            score: 1.1
+          repositories:
+            - https://github.com/renku
+          visibility: public
+          description: Renku project
+          createdBy:
+            type: User
+            id: 1CAF4C73F50D4514A041C9EDDB025A36
+            slug: albein
+            path: albein
+            firstName: Albert
+            lastName: Einstein
+            score: 2.1
+          creationDate: '2025-03-06T15:05:42.058323392Z'
+          keywords:
+            - data
+            - science
+          score: 1
+      type: object
+      required:
+        - id
+        - name
+        - slug
+        - path
+        - visibility
+        - creationDate
+        - type
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        slug:
+          type: string
+        path:
+          type: string
+        namespace:
+          $ref: '#/components/schemas/UserOrGroup'
+        repositories:
+          type: array
+          items:
+            type: string
+        visibility:
+          $ref: '#/components/schemas/Visibility'
+        description:
+          type: string
+        createdBy:
+          $ref: '#/components/schemas/User'
+        creationDate:
+          type: string
+          format: date-time
+        keywords:
+          type: array
+          items:
+            type: string
+        score:
+          type: number
+          format: double
+        type:
+          type: string
+          const: Project
+    SearchDataConnector:
+      title: SearchDataConnector
+      examples:
+        - type: DataConnector
+          id: 01HRA7AZ2Q234CDQWGA052F8MK
+          name: renku
+          slug: renku
+          namespace:
+            type: Group
+            id: 2CAF4C73F50D4514A041C9EDDB025A36
+            name: SDSC
+            path: sdsc
+            slug: sdsc
+            description: SDSC group
+            score: 1.1
+          visibility: public
+          description: Renku project
+          createdBy:
+            type: User
+            id: 1CAF4C73F50D4514A041C9EDDB025A36
+            path: albein
+            slug: albein
+            firstName: Albert
+            lastName: Einstein
+            score: 2.1
+          creationDate: '2025-03-06T15:05:42.058323392Z'
+          keywords:
+            - data
+            - science
+          score: 1
+      type: object
+      required:
+        - id
+        - name
+        - slug
+        - path
+        - visibility
+        - creationDate
+        - type
+        - storageType
+        - readonly
+      properties:
+        id:
+          type: string
+        storageType:
+          type: string
+        readonly:
+          type: boolean
+        name:
+          type: string
+        slug:
+          type: string
+        path:
+          type: string
+        namespace:
+          $ref: '#/components/schemas/UserOrGroupOrProject'
+        visibility:
+          $ref: '#/components/schemas/Visibility'
+        description:
+          type: string
+        createdBy:
+          $ref: '#/components/schemas/User'
+        creationDate:
+          type: string
+          format: date-time
+        keywords:
+          type: array
+          items:
+            type: string
+        score:
+          type: number
+          format: double
+        type:
+          type: string
+          const: DataConnector
+    SearchEntity:
+      title: SearchEntity
+      oneOf:
+        - $ref: '#/components/schemas/SearchGroup'
+        - $ref: '#/components/schemas/SearchProject'
+        - $ref: '#/components/schemas/SearchUser'
+        - $ref: '#/components/schemas/SearchDataConnector'
+      discriminator:
+        propertyName: type
+        mapping:
+          Group: '#/components/schemas/SearchGroup'
+          Project: '#/components/schemas/SearchProject'
+          User: '#/components/schemas/SearchUser'
+          DataConnector: '#/components/schemas/SearchDataConnector'
+    SearchResult:
+      title: SearchResult
+      type: object
+      required:
+        - facets
+        - pagingInfo
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/SearchEntity'
+        facets:
+          $ref: '#/components/schemas/FacetData'
+        pagingInfo:
+          $ref: '#/components/schemas/PageWithTotals'
+    User:
+      title: User
+      examples:
+        - type: User
+          id: 1CAF4C73F50D4514A041C9EDDB025A36
+          path: albein
+          slug: albein
+          firstName: Albert
+          lastName: Einstein
+          score: 2.1
+      type: object
+      required:
+        - id
+        - type
+        - path
+        - slug
+      properties:
+        id:
+          type: string
+        path:
+          type: string
+        slug:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        score:
+          type: number
+          format: double
+        type:
+          type: string
+          const: User
+    SearchUser:
+      title: SearchUser
+      type: object
+      required:
+        - id
+        - type
+        - path
+        - slug
+      properties:
+        id:
+          type: string
+        path:
+          type: string
+        slug:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        score:
+          type: number
+          format: double
+        project_count:
+          description: Number of projects with this user namespace.
+          type: integer
+          format: int32
+        data_connector_count:
+          description: Number of data connectors with this user namespace.
+          type: integer
+          format: int32
+        type:
+          type: string
+          const: User
+    SearchGroup:
+      title: SearchGroup
+      type: object
+      required:
+        - id
+        - name
+        - path
+        - slug
+        - type
+      properties:
+        id:
+          type: string
+        path:
+          type: string
+        slug:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        score:
+          type: number
+          format: double
+        type:
+          type: string
+          const: Group
+        project_count:
+          description: Number of projects with this group namespace.
+          type: integer
+          format: int32
+        data_connector_count:
+          description: Number of data connectors with this group namespace.
+          type: integer
+          format: int32
+    UserOrGroup:
+      title: UserOrGroup
+      examples:
+        - type: Group
+          id: 2CAF4C73F50D4514A041C9EDDB025A36
+          name: SDSC
+          namespace: SDSC
+          description: SDSC group
+          score: 1.1
+      oneOf:
+        - $ref: '#/components/schemas/Group'
+        - $ref: '#/components/schemas/User'
+      discriminator:
+        propertyName: type
+        mapping:
+          Group: '#/components/schemas/Group'
+          User: '#/components/schemas/User'
+    UserOrGroupOrProject:
+      title: UserOrGroupOrProject
+      examples:
+        - type: Group
+          id: 2CAF4C73F50D4514A041C9EDDB025A36
+          name: SDSC
+          namespace: SDSC
+          description: SDSC group
+          score: 1.1
+      oneOf:
+        - $ref: '#/components/schemas/Group'
+        - $ref: '#/components/schemas/User'
+        - $ref: '#/components/schemas/SearchProject'
+      discriminator:
+        propertyName: type
+        mapping:
+          Group: '#/components/schemas/Group'
+          User: '#/components/schemas/User'
+          Project: '#/components/schemas/SearchProject'
+    Visibility:
+      description: Project's visibility levels
+      type: string
+      enum:
+        - private
+        - public
+    Reprovisioning:
+      description: A reprovisioning
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/Ulid"
+        start_date:
+          description: The date and time the reprovisioning was started (in UTC and ISO-8601 format)
+          type: string
+          format: date-time
+          example: "2023-11-01T17:32:28Z"
+      required:
+        - id
+        - start_date
+    ReprovisioningStatus:
+      description: Status of a reprovisioning
+      allOf:
+      - $ref: "#/components/schemas/Reprovisioning"
+    Ulid:
+      description: ULID identifier
+      type: string
+      minLength: 26
+      maxLength: 26
+      pattern: "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" # This is case-insensitive
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+              minimum: 0
+              exclusiveMinimum: true
+              example: 1404
+            detail:
+              type: string
+              example: A more detailed optional message showing what the problem was
+            message:
+              type: string
+              example: Something went wrong - please try again later
+            trace_id:
+              type: string
+              example: "ac93950e9e114a55c67fb8e5ef519bbe"
+              description: Sentry trace ID for linking to corresponding log entries
+          required:
+            - code
+            - message
+      required:
+        - error
+  responses:
+    Error:
+      description: The schema for all 4xx and 5xx responses
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
