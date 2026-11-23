@@ -101,10 +101,6 @@ external instance they come from whatever the admin configured.
 {{/*
 Define subcharts full names
 */}}
-{{- define "keycloak.fullname" -}}
-{{- printf "%s-%s" .Release.Name "keycloak" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
 {{- define "solr.fullname" -}}
 {{- printf "%s-%s" .Release.Name "solr" | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
