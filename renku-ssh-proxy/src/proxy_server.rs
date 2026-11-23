@@ -649,10 +649,14 @@ impl server::Server for ProxyHandler {
     }
     fn handle_session_error(&mut self, error: <Self::Handler as russh::server::Handler>::Error) {
         let cause = error.downcast_ref::<russh::Error>();
-        if let Some(russh::Error::Disconnect) = cause {
-            log::debug!("Client disconnected: {error:#?}");
-        } else {
-            log::error!("Session error: {error:#?}");
+        match cause {
+            Some(russh::Error::Disconnect) => log::debug!("Client disconnected: {error:#?}"),
+            Some(russh::Error::IO(err)) if err.kind() == std::io::ErrorKind::UnexpectedEof => {
+                log::debug!(
+                    "Connection closed without a disconnect message (probe or dropped client): {error:#?}"
+                );
+            }
+            _ => log::error!("Session error: {error:#?}"),
         }
     }
 }
