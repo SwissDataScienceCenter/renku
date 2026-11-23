@@ -115,6 +115,7 @@ pub(crate) async fn run_timer<C: SessionClient, A: SessionAlerts>(
             }
             TimerAction::Nothing => {}
             TimerAction::Warn(left) => {
+                log::debug!("Sending the idle warning for {session}: {left:?} left");
                 alerts.warn(&warning_line(left)).await;
                 warned_deadline = deadline;
             }
