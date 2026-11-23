@@ -61,6 +61,14 @@ Keycloak is deployed through the `Keycloak Operator
 <https://www.keycloak.org/operator/installation>`_ from this version on. The operator is cluster
 scoped and is **not** part of this chart, install it before upgrading.
 
+Removed legacy bitnami ``postgresql`` subchart. The chart refuses to render with the
+``postgresql`` section in the values.
+
+**Migrate the data before upgrading to this version.** Follow the
+`2.23.0 instructions <#upgrading-to-2-23-0>`_, verify the new database, and only then upgrade.
+
+Upgrading removes the old StatefulSet, Service and the ``<release>-postgresql`` secret.
+
 Upgrading to 2.23.0
 *************************
 This version deprecates bitnami ``postgresql`` (version ``14.2.4``).
@@ -81,7 +89,7 @@ connect to its read-write service, ``<release>-pg-rw``, instead of ``<release>-p
 
 The ``postgresql`` section stays, but only as a migration source: renku never connects to it again.
 Keep ``postgresql.enabled: true`` for as long as you need the old data reachable, so that nothing is
-deleted while you move it.
+deleted while you move it. It is removed entirely in the next version, so do not stay here.
 
 Data migration
 +++++++++++++++
@@ -98,7 +106,8 @@ service can connect.
 restores them into the new one. Use this when the Cluster already exists, or for non-cnpg databases.
 
 Either way, keep the old volume until you have verified the new database. Once you are satisfied, set
-``postgresql.enabled: false`` and delete the section.
+``postgresql.enabled: false`` and delete the section. This has to be done before upgrading any
+further: later versions do not deploy the old instance at all.
 
 Upgrading to 0.27.0
 *******************
