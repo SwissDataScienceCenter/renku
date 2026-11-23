@@ -20,7 +20,6 @@ pub struct Client {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SessionDeadline {
     pub remaining: Option<Duration>,
-    pub since_input: Option<Duration>,
     pub alive: bool,
 }
 
@@ -47,7 +46,6 @@ pub(crate) trait SessionClient: Send + Sync {
 #[derive(serde::Deserialize)]
 struct DeadlineResponse {
     seconds_until_hibernate: Option<u64>,
-    seconds_since_last_interaction: Option<u64>,
     alive: bool,
 }
 
@@ -170,7 +168,6 @@ impl Client {
         })?;
         Ok(SessionDeadline {
             remaining: body.seconds_until_hibernate.map(Duration::from_secs),
-            since_input: body.seconds_since_last_interaction.map(Duration::from_secs),
             alive: body.alive,
         })
     }
@@ -328,7 +325,6 @@ mod tests {
 
         let deadline = client_for(&kc, &ds).session_deadline("s1").await.unwrap();
         assert_eq!(deadline.remaining, Some(Duration::from_secs(300)));
-        assert_eq!(deadline.since_input, None);
         assert!(deadline.alive);
     }
 

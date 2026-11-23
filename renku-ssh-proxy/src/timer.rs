@@ -85,9 +85,8 @@ pub(crate) async fn run_timer<C: SessionClient, A: SessionAlerts>(
             match client.session_deadline(&session).await {
                 Ok(deadline) => {
                     log::info!(
-                        "Session {session} idle: {:?} until hibernation, {:?} since input",
-                        deadline.remaining,
-                        deadline.since_input
+                        "Session {session} idle: {:?} until hibernation",
+                        deadline.remaining
                     );
                     let alive_now = deadline.alive;
                     read = Some((Instant::now(), deadline));
@@ -238,13 +237,12 @@ mod tests {
             self.reads.load(Ordering::Relaxed)
         }
 
-        fn script_read(&self, remaining: Option<Duration>, since_input: Option<Duration>) {
+        fn script_read(&self, remaining: Option<Duration>) {
             self.read_deadlines
                 .lock()
                 .unwrap()
                 .push_back(SessionDeadline {
                     remaining,
-                    since_input,
                     alive: true,
                 });
         }
@@ -291,12 +289,10 @@ mod tests {
                     Scripted::Ok => Ok(SessionDeadline {
                         // A session that was just touched: the default must not sit on the lead.
                         remaining: Some(20 * MIN),
-                        since_input: Some(5 * MIN),
                         alive: true,
                     }),
                     Scripted::NotAlive => Ok(SessionDeadline {
                         remaining: Some(Duration::ZERO),
-                        since_input: None,
                         alive: false,
                     }),
                     Scripted::Gone => Err(SessionError::SessionGone),
@@ -537,10 +533,8 @@ mod tests {
         let timer = Timer::start().await;
         // The server reports one deadline as two numbers that are rounded apart, so at the
         // warning boundary the silence can read a second short.
-        timer.fake.script_read(Some(15 * MIN), Some(5 * MIN));
-        timer
-            .fake
-            .script_read(Some(WARN_LEAD), Some(WARN_LEAD - Duration::from_secs(1)));
+        timer.fake.script_read(Some(15 * MIN));
+        timer.fake.script_read(Some(WARN_LEAD));
 
         timer.wait(10 * MIN).await;
         let warns = timer.alerts.warns();
@@ -551,15 +545,15 @@ mod tests {
     #[tokio::test(start_paused = true)]
     async fn test_warns_once_ten_minutes_before_the_deadline() {
         let timer = Timer::start().await;
-        timer.fake.script_read(Some(20 * MIN), Some(20 * MIN));
-        timer.fake.script_read(Some(10 * MIN), Some(30 * MIN));
+        timer.fake.script_read(Some(20 * MIN));
+        timer.fake.script_read(Some(10 * MIN));
         // One second short: two reads of one deadline never agree to the instant in
         // production (read-time jitter plus the server's whole-second values).
         timer
             .fake
-            .script_read(Some(5 * MIN - Duration::from_secs(1)), Some(35 * MIN));
-        timer.fake.script_read(Some(Duration::ZERO), Some(40 * MIN));
-        timer.fake.script_read(Some(Duration::ZERO), Some(40 * MIN));
+            .script_read(Some(5 * MIN - Duration::from_secs(1)));
+        timer.fake.script_read(Some(Duration::ZERO));
+        timer.fake.script_read(Some(Duration::ZERO));
 
         timer.wait(10 * MIN).await;
         let warns = timer.alerts.warns();
@@ -588,10 +582,10 @@ mod tests {
     #[tokio::test(start_paused = true)]
     async fn test_warning_waits_for_the_lead_not_the_window() {
         let timer = Timer::start().await;
-        timer.fake.script_read(Some(22 * MIN), Some(20 * MIN));
-        timer.fake.script_read(Some(17 * MIN), Some(25 * MIN));
-        timer.fake.script_read(Some(12 * MIN), Some(30 * MIN));
-        timer.fake.script_read(Some(WARN_LEAD), Some(32 * MIN));
+        timer.fake.script_read(Some(22 * MIN));
+        timer.fake.script_read(Some(17 * MIN));
+        timer.fake.script_read(Some(12 * MIN));
+        timer.fake.script_read(Some(WARN_LEAD));
 
         timer.wait(16 * MIN).await;
         assert!(
@@ -609,9 +603,9 @@ mod tests {
     async fn test_a_touch_elsewhere_pushes_the_warning_out() {
         let timer = Timer::start().await;
         // A peer is typing: every read sees the deadline pushed out again.
-        timer.fake.script_read(Some(19 * MIN), Some(1 * MIN));
-        timer.fake.script_read(Some(14 * MIN), Some(6 * MIN));
-        timer.fake.script_read(Some(10 * MIN), Some(10 * MIN));
+        timer.fake.script_read(Some(19 * MIN));
+        timer.fake.script_read(Some(14 * MIN));
+        timer.fake.script_read(Some(10 * MIN));
 
         timer.wait(10 * MIN).await;
         assert!(
@@ -633,9 +627,9 @@ mod tests {
     #[tokio::test(start_paused = true)]
     async fn test_recheck_moves_the_deadline_and_keeps_the_connection() {
         let timer = Timer::start().await;
-        timer.fake.script_read(Some(Duration::ZERO), Some(40 * MIN));
-        timer.fake.script_read(Some(5 * MIN), Some(40 * MIN));
-        timer.fake.script_read(Some(5 * MIN), Some(40 * MIN));
+        timer.fake.script_read(Some(Duration::ZERO));
+        timer.fake.script_read(Some(5 * MIN));
+        timer.fake.script_read(Some(5 * MIN));
 
         timer.wait_window().await;
         assert!(
@@ -654,9 +648,9 @@ mod tests {
     #[tokio::test(start_paused = true)]
     async fn test_a_touch_at_the_deadline_prevents_the_disconnect() {
         let timer = Timer::start().await;
-        timer.fake.script_read(Some(Duration::ZERO), Some(40 * MIN));
-        timer.fake.script_read(Some(10 * MIN), Some(2 * MIN));
-        timer.fake.script_read(Some(15 * MIN), Some(3 * MIN));
+        timer.fake.script_read(Some(Duration::ZERO));
+        timer.fake.script_read(Some(10 * MIN));
+        timer.fake.script_read(Some(15 * MIN));
 
         timer.wait(10 * MIN).await;
         assert!(
@@ -673,7 +667,7 @@ mod tests {
     #[tokio::test(start_paused = true)]
     async fn test_failed_recheck_keeps_the_connection() {
         let timer = Timer::start().await;
-        timer.fake.script_read(Some(Duration::ZERO), Some(40 * MIN));
+        timer.fake.script_read(Some(Duration::ZERO));
         timer
             .fake
             .read_script
@@ -696,8 +690,8 @@ mod tests {
     #[tokio::test(start_paused = true)]
     async fn test_input_cancels_the_warning_and_the_close() {
         let timer = Timer::start().await;
-        timer.fake.script_read(Some(10 * MIN), Some(10 * MIN));
-        timer.fake.script_read(Some(20 * MIN), Some(5 * MIN));
+        timer.fake.script_read(Some(10 * MIN));
+        timer.fake.script_read(Some(20 * MIN));
 
         timer.wait_window().await;
         assert_eq!(timer.alerts.warns().len(), 1, "the warning fires at T-10");
@@ -723,7 +717,7 @@ mod tests {
     async fn test_no_deadline_never_warns_or_closes() {
         let timer = Timer::start().await;
         for _ in 0..3 {
-            timer.fake.script_read(None, None);
+            timer.fake.script_read(None);
         }
         for _ in 0..3 {
             timer.wait_window().await;
@@ -737,8 +731,8 @@ mod tests {
     #[tokio::test(start_paused = true)]
     async fn test_disconnect_happens_once() {
         let timer = Timer::start().await;
-        timer.fake.script_read(Some(Duration::ZERO), Some(40 * MIN));
-        timer.fake.script_read(Some(Duration::ZERO), Some(40 * MIN));
+        timer.fake.script_read(Some(Duration::ZERO));
+        timer.fake.script_read(Some(Duration::ZERO));
 
         timer.wait_window().await;
         assert_eq!(
