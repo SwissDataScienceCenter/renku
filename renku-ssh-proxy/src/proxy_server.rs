@@ -104,10 +104,14 @@ impl crate::timer::SessionAlerts for ClientAlerts {
             .lock()
             .expect("shell channels mutex poisoned")
             .clone();
+        let count = ids.len();
         for id in ids {
             // A channel that closed between the snapshot and the write is not worth failing over.
-            let _ = self.handle.data(id, format!("\r\n{text}\r\n")).await;
+            if let Err(err) = self.handle.data(id, format!("\r\n{text}\r\n")).await {
+                log::warn!("Could not write the idle warning to {id}: {err:?}");
+            }
         }
+        log::debug!("Idle warning handed to {count} shell channel(s)");
     }
 
     async fn disconnect(&self, reason: &str) {
@@ -355,7 +359,11 @@ impl server::Handler for ProxyHandler {
         _session: &mut server::Session,
     ) -> Result<()> {
         self.touch();
-        log::debug!("Sending data...");
+        log::debug!(
+            "Sending data... {} bytes, escape={}",
+            data.len(),
+            data.first().copied() == Some(0x1b)
+        );
         self.forward(&channel, SshMsg::Data(data.to_vec())).await
     }
 
