@@ -254,6 +254,30 @@ impl ProxyHandler {
         reopened
     }
 
+    /// Starts the per-connection timer exactly once.
+    ///
+    /// A tunnel-only connection (`ssh -N -L`) never opens a session channel, so a start tied to
+    /// `channel_open_session` left it without keepalive, warning or close.
+    fn start_timer(&mut self, session: &mut server::Session) {
+        if self.timer_started.swap(true, Ordering::Relaxed) {
+            return;
+        }
+        let Some(target) = &self.target else {
+            return;
+        };
+        crate::timer::spawn_timer(
+            self.client.clone(),
+            target.host.clone(),
+            self.activity.clone(),
+            self.activity_notify.clone(),
+            self.alive.clone(),
+            Arc::new(ClientAlerts {
+                handle: session.handle(),
+                channels: self.shell_channels(),
+            }),
+        );
+    }
+
     fn is_allowed_forward_target(host: &str) -> bool {
         host.eq_ignore_ascii_case("localhost")
             || host
@@ -304,25 +328,10 @@ impl server::Handler for ProxyHandler {
         session: &mut server::Session,
     ) -> Result<()> {
         self.touch();
+        self.start_timer(session);
         log::debug!("Entering channel_open_session");
         let client_id = channel.id();
         let upstream = self.connect_target().await?;
-        // One timer task per connection: the first channel starts it, later channels reuse it.
-        if !self.timer_started.swap(true, Ordering::Relaxed)
-            && let Some(target) = &self.target
-        {
-            crate::timer::spawn_timer(
-                self.client.clone(),
-                target.host.clone(),
-                self.activity.clone(),
-                self.activity_notify.clone(),
-                self.alive.clone(),
-                Arc::new(ClientAlerts {
-                    handle: session.handle(),
-                    channels: self.shell_channels(),
-                }),
-            );
-        }
         let up_channel = upstream.channel_open_session().await?;
         let (tx, rx) = mpsc::channel::<SshMsg>(64);
         self.channels.insert(client_id, tx);
@@ -485,6 +494,7 @@ impl server::Handler for ProxyHandler {
         session: &mut server::Session,
     ) -> Result<()> {
         self.touch();
+        self.start_timer(session);
         if ProxyHandler::is_allowed_forward_target(host_to_connect) {
             let client_id = channel.id();
             log::debug!(
