@@ -73,7 +73,7 @@ spec:
             - name: SENTRY_SAMPLE_RATE
               value: {{ .Values.sshProxy.sentry.sampleRate | quote }}
             - name: RENKU_SSH_PROXY_SECRET_SERVICE_URL
-              value: {{ .Values.sshProxy.secretServiceUrl | quote }}
+              value: {{ .Values.sshProxy.authorizeConnectionUrl | quote }}
           volumeMounts:
             - mountPath: "/secrets/openSshHostKey"
               name: open-ssh-host-key

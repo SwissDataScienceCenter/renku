@@ -156,7 +156,7 @@ sshProxy:
   ## URL of the main Renku deployment's  endpoint (data-services), used to authorize incoming
   ## connections from the main proxy and resolve session targets.
   ## Obtain this from the main cluster administrator.
-  secretServiceUrl: ""
+  authorizeConnectionUrl: ""
   ## Name of the Secret (created by this chart, in this namespace) holding the keys mounted into
   ## every session so this remote proxy can reach it over SSH (`authorized_keys`, `ssh_host_ed25519_key`).
   ## Must match `session_secret_name` used when registering this remote cluster with the main deployment.
