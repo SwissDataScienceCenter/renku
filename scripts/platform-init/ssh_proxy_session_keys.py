@@ -134,3 +134,35 @@ def ensure_ssh_proxy_session_keys(api, namespace: str, fullname: str) -> None:
                 name,
                 {keypair["private_key"]: private, keypair["public_key"]: public},
             )
+
+
+def _read_secret_data(api, namespace: str, name: str, key: str) -> bytes:
+    secret = api.read_namespaced_secret(name=name, namespace=namespace)
+    return base64.b64decode(secret.data[key])
+
+
+def ensure_session_mount_secret(
+    api, namespace: str, fullname: str, mount_secret_name: str
+) -> None:
+    """Compose the Secret mounted into every session from the hop-2 keypairs.
+
+    Must run after `ensure_ssh_proxy_session_keys` has created
+    `{fullname}-ssh-session-host-key` and `{fullname}-ssh-proxy-session-auth-key`.
+    """
+    host_key_secret = secret_name(fullname, KEYPAIRS[0]["suffix"])
+    auth_key_secret = secret_name(fullname, KEYPAIRS[1]["suffix"])
+    host_key = _read_secret_data(
+        api, namespace, host_key_secret, KEYPAIRS[0]["private_key"]
+    )
+    auth_key_pub = _read_secret_data(
+        api, namespace, auth_key_secret, KEYPAIRS[1]["public_key"]
+    )
+    ensure_secret(
+        api,
+        namespace,
+        mount_secret_name,
+        {
+            "ssh_host_ed25519_key": host_key,
+            "authorized_keys": auth_key_pub,
+        },
+    )

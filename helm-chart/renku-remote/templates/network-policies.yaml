@@ -15,3 +15,80 @@ spec:
   egress:
     {{- toYaml .Values.networkPolicies.sessions.egress | nindent 4 }}
 {{- end }}
+{{- if and .Values.networkPolicies.enabled .Values.sshProxy.enabled }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ template "renku-remote.fullname" . }}-ingress-to-ssh-proxy-from-external
+  labels:
+    app: {{ template "renku-remote.name" $ }}
+    {{- include "renku-remote.labels" . | nindent 4 }}
+    app.kubernetes.io/component: ssh-proxy
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "renku-remote.sshProxySelectorLabels" . | nindent 6 }}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+      ports:
+        - protocol: TCP
+          # The proxy container port, not the Service port.
+          port: ssh
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ template "renku-remote.fullname" . }}-egress-from-ssh-proxy
+  labels:
+    app: {{ template "renku-remote.name" $ }}
+    {{- include "renku-remote.labels" . | nindent 4 }}
+    app.kubernetes.io/component: ssh-proxy
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "renku-remote.sshProxySelectorLabels" . | nindent 6 }}
+  policyTypes:
+    - Egress
+  egress:
+    {{- with .Values.networkPolicies.sshProxy.egress }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    - to:
+        # Access to the SSH port of sessions in this namespace.
+        - podSelector:
+            matchLabels:
+              {{- include "renku-remote.sessionPodSelector" . | nindent 14 }}
+              renku.io/frontend-variant: ssh
+      ports:
+        - protocol: TCP
+          port: {{ .Values.sshProxy.target.port }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ template "renku-remote.fullname" . }}-ingress-to-sessions-from-ssh-proxy
+  labels:
+    app: {{ template "renku-remote.name" $ }}
+    {{- include "renku-remote.labels" . | nindent 4 }}
+    app.kubernetes.io/component: ssh-proxy
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "renku-remote.sessionPodSelector" . | nindent 6 }}
+      renku.io/frontend-variant: ssh
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              {{- include "renku-remote.sshProxySelectorLabels" . | nindent 14 }}
+      ports:
+        - protocol: TCP
+          port: {{ .Values.sshProxy.target.port }}
+{{- end }}
