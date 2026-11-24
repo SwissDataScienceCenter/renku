@@ -32,7 +32,9 @@
     __structuredAttrs = true;
     strictDeps = true;
     cargoLock.lockFile = ../Cargo.lock;
-
+    # nixpkgs >= 26.11: cargoSetupHook forces AWS_LC_SYS_USE_SYSTEM=1 etc.
+    # We want aws-lc built from source and statically linked (musl).
+    dontCargoUseSystemLibs = true;
     nativeBuildInputs =
       [
         pkgsStatic.cmake

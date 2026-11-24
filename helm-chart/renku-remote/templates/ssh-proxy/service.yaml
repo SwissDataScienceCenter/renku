@@ -1,0 +1,27 @@
+{{- if .Values.sshProxy.enabled }}
+{{- if .Values.sshProxy.service.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "renku-remote.fullname" . }}-ssh-proxy
+  annotations:
+    "external-dns.kubernetes.io/hostname": {{ .Values.sshProxy.domain | quote }}
+    {{- with .Values.sshProxy.service.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  labels:
+    app: {{ template "renku-remote.name" $ }}
+    {{- include "renku-remote.labels" . | nindent 4 }}
+    {{- include "renku-remote.sshProxySelectorLabels" . | nindent 4 }}
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: Local
+  ports:
+    - port: {{ .Values.sshProxy.port }}
+      targetPort: ssh
+      protocol: TCP
+      name: ssh
+  selector:
+    {{- include "renku-remote.sshProxySelectorLabels" . | nindent 4 }}
+{{- end }}
+{{- end }}
