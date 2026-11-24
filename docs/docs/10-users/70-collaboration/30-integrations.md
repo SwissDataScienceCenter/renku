@@ -17,12 +17,15 @@ Integrations are personal. Connecting your account does not give anyone else acc
 person who works on a project connects their own accounts, and each person gets the access they
 have on the external service.
 
-The integrations available to you depend on your Renku deployment. If a service you need is
-missing, for example your institution's GitLab instance, reach out to the administrators of your
-Renku deployment. They can add it by following
+Some services are not supported by Renku yet. If a service you need is missing,
+for example your institution's GitLab instance, [contact us](/docs/users/community) 
+to request it, and you could even contribute the integration yourself.
+
+:::note
+If you are using Renku in a different deployment from https://renkulab.io,
+reach out to the administrators of that deployment. They can add it by following
 [Integrations and Connected Services](/docs/admins/operation/integrations).
-Some services are not supported by Renku at all yet. In that case, you or your administrators can
-[contact us](/docs/users/community) to request it, or even contribute the integration yourselves.
+:::
 
 ## What integrations are used for
 
@@ -34,9 +37,10 @@ GitLab instance. They let Renku:
 - clone **private** repositories into your sessions, and
 - **push** changes from your sessions back to repositories you can write to.
 
-Public repositories can be cloned without any integration. You only need one to push changes or to
+Public repositories can be cloned without any integration.
+You only need an active integration if you wish to push changes to a repo or to
 use private repositories. See [Code repository](/docs/users/code/code-repository) and
-[How to connect your Renku account to your GitHub or GitLab account](/docs/users/code/guides/connect-renku-account-to-github-or-gitlab-account).
+[How to connect your Renku account to your GitHub or GitLab account](/docs/users/code/guides/connect-renku-account-to-github-or-gitlab-account) for more information.
 
 ### Accessing compute at CSCS
 
