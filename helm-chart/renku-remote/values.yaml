@@ -147,20 +147,19 @@ sshProxy:
   ## If not provided one is generated and kept stable across upgrades. The public part and its
   ## fingerprint are printed in the post-install/upgrade notes; register it with the main Renku
   ## deployment as `host_public_key` when adding this cluster.
-  openSshHostKey:
+  openSshHostKey: ""
   ## The public key (`auth_public_key`) that the main Renku deployment's SSH proxy uses to
   ## authenticate itself to this remote proxy. Data-services generates and returns this value
   ## when the main cluster administrator registers this cluster; leave empty until then and set
   ## it via `helm upgrade` once you have it.
   authorizedKey: ""
-  ## URL of the main Renku deployment's public secret-service endpoint (data-services), used to
-  ## authorize incoming connections from the main proxy and resolve session targets. This is the
-  ## public counterpart of the internal secrets-storage URL the main cluster's own SSH proxy uses.
+  ## URL of the main Renku deployment's  endpoint (data-services), used to authorize incoming
+  ## connections from the main proxy and resolve session targets.
   ## Obtain this from the main cluster administrator.
   secretServiceUrl: ""
   ## Name of the Secret (created by this chart, in this namespace) holding the keys mounted into
-  ## every session so this proxy can reach it over SSH (`authorized_keys`, `ssh_host_ed25519_key`).
-  ## Must match `session_secret_name` used when registering this cluster with the main deployment.
+  ## every session so this remote proxy can reach it over SSH (`authorized_keys`, `ssh_host_ed25519_key`).
+  ## Must match `session_secret_name` used when registering this remote cluster with the main deployment.
   sessionKeysSecretName: renku-ssh-session-keys
   ## The ssh port/user of the session itself, once the proxy has connected to it.
   target:

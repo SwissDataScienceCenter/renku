@@ -77,12 +77,4 @@ subjects:
   - kind: ServiceAccount
     name: {{ $saName }}
     namespace: {{ .Release.Namespace }}
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: {{ $saName }}-secret
-  annotations:
-    kubernetes.io/service-account.name: {{ $saName }}
-type: kubernetes.io/service-account-token
 {{- end }}
