@@ -303,6 +303,7 @@ keycloakx:
     renku.io/database-access: "true"
     renku.io/ingress-access: "true"
     renku.io/keycloak-access: "true"
+    renku.io/gateway-access: "true"
   postgresql:
     # Disable PostgreSQL dependency
     enabled: false
