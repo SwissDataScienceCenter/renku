@@ -731,7 +731,8 @@ ui:
         - url: https://github.com/SwissDataScienceCenter/renku-project-template
           ref: 0.9.0
           name: Renku
-        - url: https://github.com/SwissDataScienceCenter/contributed-project-templates
+        - url:
+            https://github.com/SwissDataScienceCenter/contributed-project-templates
           ref: 0.10.0
           name: Community
     # This defines the threshold for automatically showing a preview when browsing projects' files.
@@ -785,7 +786,8 @@ ui:
             url: ""
       # The default is to show the tutorial from the docs, but can also link to an
       # internal project
-      tutorialLink: https://renku.readthedocs.io/en/stable/tutorials/01_firststeps.html
+      tutorialLink:
+        https://renku.readthedocs.io/en/stable/tutorials/01_firststeps.html
       # project path with namespace to show in landing page (get started section)
       projectPath: ""
       # dataset slug to show in landing page (what is renku section)
@@ -797,7 +799,10 @@ ui:
         enabled: false
         title: "Renku real-world use cases: Conducted by SDSC and ETH Domain"
         # Markdown is allowed in the description
-        description: The case studies presented here **bridge the gap** from domain to data science and provide experts from both sides with the means to examine, confirm, and extend the datasets and their analyses, without extensive investments of time and infrastructure.
+        description: The case studies presented here **bridge the gap** from
+          domain to data science and provide experts from both sides with the
+          means to examine, confirm, and extend the datasets and their analyses,
+          without extensive investments of time and infrastructure.
         # Projects to highlight on the homepage -- default to none
         # projects: []
         # To showcase projects, provide the identifier following the structure below
@@ -806,8 +811,10 @@ ui:
           - identifier: hdbi/data-management/cccooci
           - identifier: renku-ui-tests/stable-project
             overrideTitle: "Stable Project: A project for testing"
-            overrideDescription: "This is a project for **testing**. You may find it useful to look at."
-            overrideImageUrl: https://gitlab.renkulab.io/uploads/-/system/project/avatar/36159/graphical_abstract.png
+            overrideDescription: "This is a project for **testing**. You may find
+              it useful to look at."
+            overrideImageUrl:
+              https://gitlab.renkulab.io/uploads/-/system/project/avatar/36159/graphical_abstract.png
     coreApiVersionConfig:
       ## Configuration to specify which version of the core-service API should be used
       # "/" indicates that the latest version should be used
@@ -1166,7 +1173,7 @@ notebooks:
     ## This is useful to make sure that the host can be properly recognized
     ## when connecting to a session. If left unset then the host keys are
     ## likely to change causing ssh connections to fail and require removing the
-    ## old keys from ~/.ssh/known_hosts. Therefore, it is reccomended that this is
+    ## old keys from ~/.ssh/known_hosts. Therefore, it is recommended that this is
     ## set for production. The required keys are:
     ## - ssh_host_dsa_key
     ## - ssh_host_dsa_key.pub
@@ -1472,7 +1479,7 @@ dataService:
     enabled: false
     ## If you leave the storage class as null, the default storage class will be used.
     ## NOTE: In many cases the default storage class does not support read-write-many access.
-    storageClass: null
+    storageClass:
     ## The max storage that the API will accept when the storage is created.
     ## This is the upper limit of what the users can request. When they create the project storage
     ## user have the option to set a lower value. The value cannot be lower than 1 Gb.
