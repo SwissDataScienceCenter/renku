@@ -209,6 +209,11 @@ networkPolicies:
             protocol: UDP
           - port: 53
             protocol: TCP
+    ingress: []
+      ## Additional ingress from rules for external access
+      ##
+      ## - ipBlock:
+      ##     cidr: <loadbalancer-ip-block>
   sessions:
     egress:
       # NOTE: These prevent user sessions from accessing other services running in your cluster.
