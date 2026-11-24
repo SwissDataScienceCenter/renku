@@ -18,7 +18,7 @@ person who works on a project connects their own accounts, and each person gets 
 have on the external service.
 
 Some services are not supported by Renku yet. If a service you need is missing,
-for example your institution's GitLab instance, [contact us](/docs/users/community) 
+for example your institution's GitLab instance, [contact us](/docs/users/community)
 to request it, and you could even contribute the integration yourself.
 
 :::note
@@ -87,14 +87,16 @@ There are two steps:
 2. **Install the Renku GitHub App** on each GitHub user account or organization whose repositories
    you want to use, and choose which repositories it can access.
 
-Renku can only reach a repository if **both** of these are true:
+Renku can get access to a repository through the integration if **both** of these are true:
 
 - the Renku GitHub App is installed on the repository's owner and allowed to access that
   repository, and
 - you yourself have access to the repository on GitHub.
 
 So if a repository shows that Renku cannot access it even though you can see it on GitHub, the
-app is most likely not installed for that repository.
+app is most likely not installed for that repository. In addition, as mentioned previously,
+if the repository is public you do not need the integration to clone it or pull but you will not be
+able to push to it.
 
 ### Changing which repositories the app can access
 
