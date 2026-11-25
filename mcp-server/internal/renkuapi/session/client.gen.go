@@ -87,6 +87,27 @@ func (e BuildPlatform) Valid() bool {
 	}
 }
 
+// Defines values for DataConnectorAccessPolicyName.
+const (
+	DataConnectorAccessPolicyNameExcluded  DataConnectorAccessPolicyName = "excluded"
+	DataConnectorAccessPolicyNameReadOnly  DataConnectorAccessPolicyName = "read_only"
+	DataConnectorAccessPolicyNameReadWrite DataConnectorAccessPolicyName = "read_write"
+)
+
+// Valid indicates whether the value is a known member of the DataConnectorAccessPolicyName enum.
+func (e DataConnectorAccessPolicyName) Valid() bool {
+	switch e {
+	case DataConnectorAccessPolicyNameExcluded:
+		return true
+	case DataConnectorAccessPolicyNameReadOnly:
+		return true
+	case DataConnectorAccessPolicyNameReadWrite:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for EnvironmentImageSourceBuild.
 const (
 	EnvironmentImageSourceBuildBuild EnvironmentImageSourceBuild = "build"
@@ -150,6 +171,24 @@ func (e LauncherType) Valid() bool {
 	case Interactive:
 		return true
 	case NonInteractive:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for SecretAccessPolicyName.
+const (
+	SecretAccessPolicyNameExcluded SecretAccessPolicyName = "excluded"
+	SecretAccessPolicyNameIncluded SecretAccessPolicyName = "included"
+)
+
+// Valid indicates whether the value is a known member of the SecretAccessPolicyName enum.
+func (e SecretAccessPolicyName) Valid() bool {
+	switch e {
+	case SecretAccessPolicyNameExcluded:
+		return true
+	case SecretAccessPolicyNameIncluded:
 		return true
 	default:
 		return false
@@ -350,6 +389,21 @@ type ContainerImage = string
 //
 // Example: 2023-11-01T17:32:28Z
 type CreationDate = time.Time
+
+// DataConnectorAccessPolicy Data connector access policy config
+type DataConnectorAccessPolicy struct {
+	// Policy Data connector access policy name
+	Policy DataConnectorAccessPolicyName `json:"policy"`
+}
+
+// DataConnectorAccessPolicyName Data connector access policy name
+type DataConnectorAccessPolicyName string
+
+// DataConnectorKey Key identifying a data connector to a project relationship
+type DataConnectorKey struct {
+	// DataConnectorLinkId ULID identifier
+	DataConnectorLinkId Ulid `json:"data_connector_link_id"`
+}
 
 // DefaultUrl The default path to open in a session
 //
@@ -931,6 +985,9 @@ type IsArchived = bool
 // IsArchivedPatch Whether this environment is archived and not for use in new projects or not
 type IsArchivedPatch = bool
 
+// IsRestricted Whether this session launcher access to its project resources are restricted or not.
+type IsRestricted = bool
+
 // LauncherType defines model for LauncherType.
 type LauncherType string
 
@@ -945,6 +1002,21 @@ type RepositoryRevisionPatch = string
 
 // ResourceClassId The identifier of a resource class
 type ResourceClassId = int
+
+// SecretAccessPolicy Secret access policy config
+type SecretAccessPolicy struct {
+	// Policy Secret access policy name
+	Policy SecretAccessPolicyName `json:"policy"`
+}
+
+// SecretAccessPolicyName Secret access policy name
+type SecretAccessPolicyName string
+
+// SecretSlotKey Key identifying a secret slot within the project
+type SecretSlotKey struct {
+	// SecretSlotId ULID identifier
+	SecretSlotId Ulid `json:"secret_slot_id"`
+}
 
 // SessionLauncher A Renku 2.0 session definition and metadata
 type SessionLauncher struct {
@@ -966,8 +1038,11 @@ type SessionLauncher struct {
 	Environment  EnvironmentGetInLauncher `json:"environment"`
 
 	// Id ULID identifier
-	Id           Ulid         `json:"id"`
-	LauncherType LauncherType `json:"launcher_type"`
+	Id Ulid `json:"id"`
+
+	// IsRestricted Whether this session launcher access to its project resources are restricted or not.
+	IsRestricted *IsRestricted `json:"is_restricted,omitempty"`
+	LauncherType LauncherType  `json:"launcher_type"`
 
 	// Name Renku session name
 	//
@@ -980,6 +1055,21 @@ type SessionLauncher struct {
 	// ResourceClassId The identifier of a resource class
 	ResourceClassId *ResourceClassId `json:"resource_class_id"`
 }
+
+// SessionLauncherDataConnector Data connector properties of a Renku 2.0 session
+type SessionLauncherDataConnector struct {
+	// DataConnectorLinkId ULID identifier
+	DataConnectorLinkId Ulid `json:"data_connector_link_id"`
+
+	// Policy Data connector access policy name
+	Policy DataConnectorAccessPolicyName `json:"policy"`
+}
+
+// SessionLauncherDataConnectorList A list of data connector properties
+type SessionLauncherDataConnectorList = []SessionLauncherDataConnector
+
+// SessionLauncherDataConnectorPatchList A list of data connector property patches
+type SessionLauncherDataConnectorPatchList = []SessionLauncherDataConnector
 
 // SessionLauncherPatch Update a session launcher. For non-interactive launchers, a `command` is required.
 type SessionLauncherPatch struct {
@@ -1038,6 +1128,21 @@ type SessionLauncherPost struct {
 type SessionLauncherPost_Environment struct {
 	union json.RawMessage
 }
+
+// SessionLauncherSecret A secret in a session launcher
+type SessionLauncherSecret struct {
+	// Policy Secret access policy name
+	Policy SecretAccessPolicyName `json:"policy"`
+
+	// SecretSlotId ULID identifier
+	SecretSlotId Ulid `json:"secret_slot_id"`
+}
+
+// SessionLauncherSecretList A list of session launcher secrets
+type SessionLauncherSecretList = []SessionLauncherSecret
+
+// SessionLauncherSecretPatchList A list of session launcher secret patches
+type SessionLauncherSecretPatchList = []SessionLauncherSecret
 
 // SessionLaunchersList A list of Renku session launchers
 type SessionLaunchersList = []SessionLauncher
@@ -1109,6 +1214,12 @@ type PostSessionLaunchersJSONRequestBody = SessionLauncherPost
 
 // PatchSessionLaunchersLauncherIdJSONRequestBody defines body for PatchSessionLaunchersLauncherId for application/json ContentType.
 type PatchSessionLaunchersLauncherIdJSONRequestBody = SessionLauncherPatch
+
+// PatchSessionLaunchersLauncherIdDataConnectorsJSONRequestBody defines body for PatchSessionLaunchersLauncherIdDataConnectors for application/json ContentType.
+type PatchSessionLaunchersLauncherIdDataConnectorsJSONRequestBody = SessionLauncherDataConnectorPatchList
+
+// PatchSessionLaunchersLauncherIdSecretsJSONRequestBody defines body for PatchSessionLaunchersLauncherIdSecrets for application/json ContentType.
+type PatchSessionLaunchersLauncherIdSecretsJSONRequestBody = SessionLauncherSecretPatchList
 
 // AsBuildNotCompletedPart returns the union data inside the Build as a BuildNotCompletedPart
 func (t Build) AsBuildNotCompletedPart() (BuildNotCompletedPart, error) {
@@ -1798,6 +1909,44 @@ type ClientInterface interface {
 	//
 	// Corresponds with PATCH /session_launchers/{launcher_id} (the `PatchSessionLaunchersLauncherId` operationId).
 	PatchSessionLaunchersLauncherId(ctx context.Context, launcherId Ulid, body PatchSessionLaunchersLauncherIdJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetSessionLaunchersLauncherIdDataConnectors Get a session launchers' list of data connectors
+	//
+	// Corresponds with GET /session_launchers/{launcher_id}/data_connectors (the `GetSessionLaunchersLauncherIdDataConnectors` operationId).
+	GetSessionLaunchersLauncherIdDataConnectors(ctx context.Context, launcherId Ulid, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PatchSessionLaunchersLauncherIdDataConnectorsWithBody Update a list of session launchers' data connector parameters
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with PATCH /session_launchers/{launcher_id}/data_connectors (the `PatchSessionLaunchersLauncherIdDataConnectors` operationId).
+	PatchSessionLaunchersLauncherIdDataConnectorsWithBody(ctx context.Context, launcherId Ulid, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PatchSessionLaunchersLauncherIdDataConnectors Update a list of session launchers' data connector parameters
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with PATCH /session_launchers/{launcher_id}/data_connectors (the `PatchSessionLaunchersLauncherIdDataConnectors` operationId).
+	PatchSessionLaunchersLauncherIdDataConnectors(ctx context.Context, launcherId Ulid, body PatchSessionLaunchersLauncherIdDataConnectorsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetSessionLaunchersLauncherIdSecrets Get a session launchers' list of secrets
+	//
+	// Corresponds with GET /session_launchers/{launcher_id}/secrets (the `GetSessionLaunchersLauncherIdSecrets` operationId).
+	GetSessionLaunchersLauncherIdSecrets(ctx context.Context, launcherId Ulid, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PatchSessionLaunchersLauncherIdSecretsWithBody Update a list of session launchers' secret parameters
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with PATCH /session_launchers/{launcher_id}/secrets (the `PatchSessionLaunchersLauncherIdSecrets` operationId).
+	PatchSessionLaunchersLauncherIdSecretsWithBody(ctx context.Context, launcherId Ulid, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PatchSessionLaunchersLauncherIdSecrets Update a list of session launchers' secret parameters
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with PATCH /session_launchers/{launcher_id}/secrets (the `PatchSessionLaunchersLauncherIdSecrets` operationId).
+	PatchSessionLaunchersLauncherIdSecrets(ctx context.Context, launcherId Ulid, body PatchSessionLaunchersLauncherIdSecretsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 }
 
 // GetBuildsBuildId Get the details of a container image build
@@ -2133,6 +2282,104 @@ func (c *Client) PatchSessionLaunchersLauncherIdWithBody(ctx context.Context, la
 // Corresponds with PATCH /session_launchers/{launcher_id} (the `PatchSessionLaunchersLauncherId` operationId).
 func (c *Client) PatchSessionLaunchersLauncherId(ctx context.Context, launcherId Ulid, body PatchSessionLaunchersLauncherIdJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewPatchSessionLaunchersLauncherIdRequest(c.Server, launcherId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// GetSessionLaunchersLauncherIdDataConnectors Get a session launchers' list of data connectors
+//
+// Corresponds with GET /session_launchers/{launcher_id}/data_connectors (the `GetSessionLaunchersLauncherIdDataConnectors` operationId).
+func (c *Client) GetSessionLaunchersLauncherIdDataConnectors(ctx context.Context, launcherId Ulid, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetSessionLaunchersLauncherIdDataConnectorsRequest(c.Server, launcherId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// PatchSessionLaunchersLauncherIdDataConnectorsWithBody Update a list of session launchers' data connector parameters
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with PATCH /session_launchers/{launcher_id}/data_connectors (the `PatchSessionLaunchersLauncherIdDataConnectors` operationId).
+func (c *Client) PatchSessionLaunchersLauncherIdDataConnectorsWithBody(ctx context.Context, launcherId Ulid, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPatchSessionLaunchersLauncherIdDataConnectorsRequestWithBody(c.Server, launcherId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// PatchSessionLaunchersLauncherIdDataConnectors Update a list of session launchers' data connector parameters
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with PATCH /session_launchers/{launcher_id}/data_connectors (the `PatchSessionLaunchersLauncherIdDataConnectors` operationId).
+func (c *Client) PatchSessionLaunchersLauncherIdDataConnectors(ctx context.Context, launcherId Ulid, body PatchSessionLaunchersLauncherIdDataConnectorsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPatchSessionLaunchersLauncherIdDataConnectorsRequest(c.Server, launcherId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// GetSessionLaunchersLauncherIdSecrets Get a session launchers' list of secrets
+//
+// Corresponds with GET /session_launchers/{launcher_id}/secrets (the `GetSessionLaunchersLauncherIdSecrets` operationId).
+func (c *Client) GetSessionLaunchersLauncherIdSecrets(ctx context.Context, launcherId Ulid, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetSessionLaunchersLauncherIdSecretsRequest(c.Server, launcherId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// PatchSessionLaunchersLauncherIdSecretsWithBody Update a list of session launchers' secret parameters
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with PATCH /session_launchers/{launcher_id}/secrets (the `PatchSessionLaunchersLauncherIdSecrets` operationId).
+func (c *Client) PatchSessionLaunchersLauncherIdSecretsWithBody(ctx context.Context, launcherId Ulid, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPatchSessionLaunchersLauncherIdSecretsRequestWithBody(c.Server, launcherId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// PatchSessionLaunchersLauncherIdSecrets Update a list of session launchers' secret parameters
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with PATCH /session_launchers/{launcher_id}/secrets (the `PatchSessionLaunchersLauncherIdSecrets` operationId).
+func (c *Client) PatchSessionLaunchersLauncherIdSecrets(ctx context.Context, launcherId Ulid, body PatchSessionLaunchersLauncherIdSecretsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPatchSessionLaunchersLauncherIdSecretsRequest(c.Server, launcherId, body)
 	if err != nil {
 		return nil, err
 	}
@@ -2778,6 +3025,168 @@ func NewPatchSessionLaunchersLauncherIdRequestWithBody(server string, launcherId
 	return req, nil
 }
 
+// NewGetSessionLaunchersLauncherIdDataConnectorsRequest constructs an http.Request for the GetSessionLaunchersLauncherIdDataConnectors method
+func NewGetSessionLaunchersLauncherIdDataConnectorsRequest(server string, launcherId Ulid) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "launcher_id", launcherId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/session_launchers/%s/data_connectors", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewPatchSessionLaunchersLauncherIdDataConnectorsRequest calls the generic PatchSessionLaunchersLauncherIdDataConnectors builder with application/json body
+func NewPatchSessionLaunchersLauncherIdDataConnectorsRequest(server string, launcherId Ulid, body PatchSessionLaunchersLauncherIdDataConnectorsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPatchSessionLaunchersLauncherIdDataConnectorsRequestWithBody(server, launcherId, "application/json", bodyReader)
+}
+
+// NewPatchSessionLaunchersLauncherIdDataConnectorsRequestWithBody constructs an http.Request for the PatchSessionLaunchersLauncherIdDataConnectors method, with any body, and a specified content type
+func NewPatchSessionLaunchersLauncherIdDataConnectorsRequestWithBody(server string, launcherId Ulid, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "launcher_id", launcherId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/session_launchers/%s/data_connectors", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPatch, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewGetSessionLaunchersLauncherIdSecretsRequest constructs an http.Request for the GetSessionLaunchersLauncherIdSecrets method
+func NewGetSessionLaunchersLauncherIdSecretsRequest(server string, launcherId Ulid) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "launcher_id", launcherId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/session_launchers/%s/secrets", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewPatchSessionLaunchersLauncherIdSecretsRequest calls the generic PatchSessionLaunchersLauncherIdSecrets builder with application/json body
+func NewPatchSessionLaunchersLauncherIdSecretsRequest(server string, launcherId Ulid, body PatchSessionLaunchersLauncherIdSecretsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPatchSessionLaunchersLauncherIdSecretsRequestWithBody(server, launcherId, "application/json", bodyReader)
+}
+
+// NewPatchSessionLaunchersLauncherIdSecretsRequestWithBody constructs an http.Request for the PatchSessionLaunchersLauncherIdSecrets method, with any body, and a specified content type
+func NewPatchSessionLaunchersLauncherIdSecretsRequestWithBody(server string, launcherId Ulid, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "launcher_id", launcherId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/session_launchers/%s/secrets", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPatch, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 func (c *Client) applyEditors(ctx context.Context, req *http.Request, additionalEditors []RequestEditorFn) error {
 	for _, r := range c.RequestEditors {
 		if err := r(ctx, req); err != nil {
@@ -2976,6 +3385,48 @@ type ClientWithResponsesInterface interface {
 	//
 	// Corresponds with PATCH /session_launchers/{launcher_id} (the `PatchSessionLaunchersLauncherId` operationId).
 	PatchSessionLaunchersLauncherIdWithResponse(ctx context.Context, launcherId Ulid, body PatchSessionLaunchersLauncherIdJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchSessionLaunchersLauncherIdResponse, error)
+
+	// GetSessionLaunchersLauncherIdDataConnectorsWithResponse Get a session launchers' list of data connectors
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /session_launchers/{launcher_id}/data_connectors (the `GetSessionLaunchersLauncherIdDataConnectors` operationId).
+	GetSessionLaunchersLauncherIdDataConnectorsWithResponse(ctx context.Context, launcherId Ulid, reqEditors ...RequestEditorFn) (*GetSessionLaunchersLauncherIdDataConnectorsResponse, error)
+
+	// PatchSessionLaunchersLauncherIdDataConnectorsWithBodyWithResponse Update a list of session launchers' data connector parameters
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with PATCH /session_launchers/{launcher_id}/data_connectors (the `PatchSessionLaunchersLauncherIdDataConnectors` operationId).
+	PatchSessionLaunchersLauncherIdDataConnectorsWithBodyWithResponse(ctx context.Context, launcherId Ulid, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchSessionLaunchersLauncherIdDataConnectorsResponse, error)
+
+	// PatchSessionLaunchersLauncherIdDataConnectorsWithResponse Update a list of session launchers' data connector parameters
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with PATCH /session_launchers/{launcher_id}/data_connectors (the `PatchSessionLaunchersLauncherIdDataConnectors` operationId).
+	PatchSessionLaunchersLauncherIdDataConnectorsWithResponse(ctx context.Context, launcherId Ulid, body PatchSessionLaunchersLauncherIdDataConnectorsJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchSessionLaunchersLauncherIdDataConnectorsResponse, error)
+
+	// GetSessionLaunchersLauncherIdSecretsWithResponse Get a session launchers' list of secrets
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /session_launchers/{launcher_id}/secrets (the `GetSessionLaunchersLauncherIdSecrets` operationId).
+	GetSessionLaunchersLauncherIdSecretsWithResponse(ctx context.Context, launcherId Ulid, reqEditors ...RequestEditorFn) (*GetSessionLaunchersLauncherIdSecretsResponse, error)
+
+	// PatchSessionLaunchersLauncherIdSecretsWithBodyWithResponse Update a list of session launchers' secret parameters
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with PATCH /session_launchers/{launcher_id}/secrets (the `PatchSessionLaunchersLauncherIdSecrets` operationId).
+	PatchSessionLaunchersLauncherIdSecretsWithBodyWithResponse(ctx context.Context, launcherId Ulid, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchSessionLaunchersLauncherIdSecretsResponse, error)
+
+	// PatchSessionLaunchersLauncherIdSecretsWithResponse Update a list of session launchers' secret parameters
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with PATCH /session_launchers/{launcher_id}/secrets (the `PatchSessionLaunchersLauncherIdSecrets` operationId).
+	PatchSessionLaunchersLauncherIdSecretsWithResponse(ctx context.Context, launcherId Ulid, body PatchSessionLaunchersLauncherIdSecretsJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchSessionLaunchersLauncherIdSecretsResponse, error)
 }
 
 type GetBuildsBuildIdResponse struct {
@@ -3760,6 +4211,226 @@ func (r PatchSessionLaunchersLauncherIdResponse) ContentType() string {
 	return ""
 }
 
+type GetSessionLaunchersLauncherIdDataConnectorsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *SessionLauncherDataConnectorList
+	// JSON404 the response for an HTTP 404 `application/json` response
+	JSON404 *ErrorResponse
+	// JSONDefault the response for an HTTP default `application/json` response
+	JSONDefault *Error
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r GetSessionLaunchersLauncherIdDataConnectorsResponse) GetJSON200() *SessionLauncherDataConnectorList {
+	return r.JSON200
+}
+
+// GetJSON404 returns the response for an HTTP 404 `application/json` response
+func (r GetSessionLaunchersLauncherIdDataConnectorsResponse) GetJSON404() *ErrorResponse {
+	return r.JSON404
+}
+
+// GetJSONDefault returns the response for an HTTP default `application/json` response
+func (r GetSessionLaunchersLauncherIdDataConnectorsResponse) GetJSONDefault() *Error {
+	return r.JSONDefault
+}
+
+// GetBody returns the raw response body bytes
+func (r GetSessionLaunchersLauncherIdDataConnectorsResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r GetSessionLaunchersLauncherIdDataConnectorsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetSessionLaunchersLauncherIdDataConnectorsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetSessionLaunchersLauncherIdDataConnectorsResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type PatchSessionLaunchersLauncherIdDataConnectorsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *SessionLauncherDataConnectorList
+	// JSON404 the response for an HTTP 404 `application/json` response
+	JSON404 *ErrorResponse
+	// JSONDefault the response for an HTTP default `application/json` response
+	JSONDefault *Error
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r PatchSessionLaunchersLauncherIdDataConnectorsResponse) GetJSON200() *SessionLauncherDataConnectorList {
+	return r.JSON200
+}
+
+// GetJSON404 returns the response for an HTTP 404 `application/json` response
+func (r PatchSessionLaunchersLauncherIdDataConnectorsResponse) GetJSON404() *ErrorResponse {
+	return r.JSON404
+}
+
+// GetJSONDefault returns the response for an HTTP default `application/json` response
+func (r PatchSessionLaunchersLauncherIdDataConnectorsResponse) GetJSONDefault() *Error {
+	return r.JSONDefault
+}
+
+// GetBody returns the raw response body bytes
+func (r PatchSessionLaunchersLauncherIdDataConnectorsResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r PatchSessionLaunchersLauncherIdDataConnectorsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PatchSessionLaunchersLauncherIdDataConnectorsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r PatchSessionLaunchersLauncherIdDataConnectorsResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetSessionLaunchersLauncherIdSecretsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *SessionLauncherSecretList
+	// JSON404 the response for an HTTP 404 `application/json` response
+	JSON404 *ErrorResponse
+	// JSONDefault the response for an HTTP default `application/json` response
+	JSONDefault *Error
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r GetSessionLaunchersLauncherIdSecretsResponse) GetJSON200() *SessionLauncherSecretList {
+	return r.JSON200
+}
+
+// GetJSON404 returns the response for an HTTP 404 `application/json` response
+func (r GetSessionLaunchersLauncherIdSecretsResponse) GetJSON404() *ErrorResponse {
+	return r.JSON404
+}
+
+// GetJSONDefault returns the response for an HTTP default `application/json` response
+func (r GetSessionLaunchersLauncherIdSecretsResponse) GetJSONDefault() *Error {
+	return r.JSONDefault
+}
+
+// GetBody returns the raw response body bytes
+func (r GetSessionLaunchersLauncherIdSecretsResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r GetSessionLaunchersLauncherIdSecretsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetSessionLaunchersLauncherIdSecretsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetSessionLaunchersLauncherIdSecretsResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type PatchSessionLaunchersLauncherIdSecretsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *SessionLauncherSecretList
+	// JSON404 the response for an HTTP 404 `application/json` response
+	JSON404 *ErrorResponse
+	// JSONDefault the response for an HTTP default `application/json` response
+	JSONDefault *Error
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r PatchSessionLaunchersLauncherIdSecretsResponse) GetJSON200() *SessionLauncherSecretList {
+	return r.JSON200
+}
+
+// GetJSON404 returns the response for an HTTP 404 `application/json` response
+func (r PatchSessionLaunchersLauncherIdSecretsResponse) GetJSON404() *ErrorResponse {
+	return r.JSON404
+}
+
+// GetJSONDefault returns the response for an HTTP default `application/json` response
+func (r PatchSessionLaunchersLauncherIdSecretsResponse) GetJSONDefault() *Error {
+	return r.JSONDefault
+}
+
+// GetBody returns the raw response body bytes
+func (r PatchSessionLaunchersLauncherIdSecretsResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r PatchSessionLaunchersLauncherIdSecretsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PatchSessionLaunchersLauncherIdSecretsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r PatchSessionLaunchersLauncherIdSecretsResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 // GetBuildsBuildIdWithResponse Get the details of a container image build
 //
 // Returns a wrapper object for the known response body format(s).
@@ -4039,6 +4710,84 @@ func (c *ClientWithResponses) PatchSessionLaunchersLauncherIdWithResponse(ctx co
 		return nil, err
 	}
 	return ParsePatchSessionLaunchersLauncherIdResponse(rsp)
+}
+
+// GetSessionLaunchersLauncherIdDataConnectorsWithResponse Get a session launchers' list of data connectors
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /session_launchers/{launcher_id}/data_connectors (the `GetSessionLaunchersLauncherIdDataConnectors` operationId).
+func (c *ClientWithResponses) GetSessionLaunchersLauncherIdDataConnectorsWithResponse(ctx context.Context, launcherId Ulid, reqEditors ...RequestEditorFn) (*GetSessionLaunchersLauncherIdDataConnectorsResponse, error) {
+	rsp, err := c.GetSessionLaunchersLauncherIdDataConnectors(ctx, launcherId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetSessionLaunchersLauncherIdDataConnectorsResponse(rsp)
+}
+
+// PatchSessionLaunchersLauncherIdDataConnectorsWithBodyWithResponse Update a list of session launchers' data connector parameters
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with PATCH /session_launchers/{launcher_id}/data_connectors (the `PatchSessionLaunchersLauncherIdDataConnectors` operationId).
+func (c *ClientWithResponses) PatchSessionLaunchersLauncherIdDataConnectorsWithBodyWithResponse(ctx context.Context, launcherId Ulid, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchSessionLaunchersLauncherIdDataConnectorsResponse, error) {
+	rsp, err := c.PatchSessionLaunchersLauncherIdDataConnectorsWithBody(ctx, launcherId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePatchSessionLaunchersLauncherIdDataConnectorsResponse(rsp)
+}
+
+// PatchSessionLaunchersLauncherIdDataConnectorsWithResponse Update a list of session launchers' data connector parameters
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with PATCH /session_launchers/{launcher_id}/data_connectors (the `PatchSessionLaunchersLauncherIdDataConnectors` operationId).
+func (c *ClientWithResponses) PatchSessionLaunchersLauncherIdDataConnectorsWithResponse(ctx context.Context, launcherId Ulid, body PatchSessionLaunchersLauncherIdDataConnectorsJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchSessionLaunchersLauncherIdDataConnectorsResponse, error) {
+	rsp, err := c.PatchSessionLaunchersLauncherIdDataConnectors(ctx, launcherId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePatchSessionLaunchersLauncherIdDataConnectorsResponse(rsp)
+}
+
+// GetSessionLaunchersLauncherIdSecretsWithResponse Get a session launchers' list of secrets
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /session_launchers/{launcher_id}/secrets (the `GetSessionLaunchersLauncherIdSecrets` operationId).
+func (c *ClientWithResponses) GetSessionLaunchersLauncherIdSecretsWithResponse(ctx context.Context, launcherId Ulid, reqEditors ...RequestEditorFn) (*GetSessionLaunchersLauncherIdSecretsResponse, error) {
+	rsp, err := c.GetSessionLaunchersLauncherIdSecrets(ctx, launcherId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetSessionLaunchersLauncherIdSecretsResponse(rsp)
+}
+
+// PatchSessionLaunchersLauncherIdSecretsWithBodyWithResponse Update a list of session launchers' secret parameters
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with PATCH /session_launchers/{launcher_id}/secrets (the `PatchSessionLaunchersLauncherIdSecrets` operationId).
+func (c *ClientWithResponses) PatchSessionLaunchersLauncherIdSecretsWithBodyWithResponse(ctx context.Context, launcherId Ulid, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PatchSessionLaunchersLauncherIdSecretsResponse, error) {
+	rsp, err := c.PatchSessionLaunchersLauncherIdSecretsWithBody(ctx, launcherId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePatchSessionLaunchersLauncherIdSecretsResponse(rsp)
+}
+
+// PatchSessionLaunchersLauncherIdSecretsWithResponse Update a list of session launchers' secret parameters
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with PATCH /session_launchers/{launcher_id}/secrets (the `PatchSessionLaunchersLauncherIdSecrets` operationId).
+func (c *ClientWithResponses) PatchSessionLaunchersLauncherIdSecretsWithResponse(ctx context.Context, launcherId Ulid, body PatchSessionLaunchersLauncherIdSecretsJSONRequestBody, reqEditors ...RequestEditorFn) (*PatchSessionLaunchersLauncherIdSecretsResponse, error) {
+	rsp, err := c.PatchSessionLaunchersLauncherIdSecrets(ctx, launcherId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePatchSessionLaunchersLauncherIdSecretsResponse(rsp)
 }
 
 // ParseGetBuildsBuildIdResponse parses an HTTP response from a GetBuildsBuildIdWithResponse call
@@ -4565,6 +5314,166 @@ func ParsePatchSessionLaunchersLauncherIdResponse(rsp *http.Response) (*PatchSes
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest SessionLauncher
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetSessionLaunchersLauncherIdDataConnectorsResponse parses an HTTP response from a GetSessionLaunchersLauncherIdDataConnectorsWithResponse call
+func ParseGetSessionLaunchersLauncherIdDataConnectorsResponse(rsp *http.Response) (*GetSessionLaunchersLauncherIdDataConnectorsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetSessionLaunchersLauncherIdDataConnectorsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest SessionLauncherDataConnectorList
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePatchSessionLaunchersLauncherIdDataConnectorsResponse parses an HTTP response from a PatchSessionLaunchersLauncherIdDataConnectorsWithResponse call
+func ParsePatchSessionLaunchersLauncherIdDataConnectorsResponse(rsp *http.Response) (*PatchSessionLaunchersLauncherIdDataConnectorsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PatchSessionLaunchersLauncherIdDataConnectorsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest SessionLauncherDataConnectorList
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetSessionLaunchersLauncherIdSecretsResponse parses an HTTP response from a GetSessionLaunchersLauncherIdSecretsWithResponse call
+func ParseGetSessionLaunchersLauncherIdSecretsResponse(rsp *http.Response) (*GetSessionLaunchersLauncherIdSecretsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetSessionLaunchersLauncherIdSecretsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest SessionLauncherSecretList
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest Error
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParsePatchSessionLaunchersLauncherIdSecretsResponse parses an HTTP response from a PatchSessionLaunchersLauncherIdSecretsWithResponse call
+func ParsePatchSessionLaunchersLauncherIdSecretsResponse(rsp *http.Response) (*PatchSessionLaunchersLauncherIdSecretsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PatchSessionLaunchersLauncherIdSecretsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest SessionLauncherSecretList
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
