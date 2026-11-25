@@ -40,6 +40,7 @@ spec:
           env:
             - name: ENABLE_RESOURCE_REQUEST_TRACKING
               value: {{ .Values.dataService.dataTasks.enableResourceRequestTracking | quote }}
+            {{- include "renku.dataService.openmeter.env" . | nindent 12 }}
             - name: TCP_PORT
               value: "8001"
             - name: TCP_HOST
