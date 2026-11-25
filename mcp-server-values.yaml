@@ -1,4 +1,5 @@
 ingress:
+  className: "webapprouting.kubernetes.azure.com"
   enabled: true
   tls:
     secretName: mcp-server-tls-secret

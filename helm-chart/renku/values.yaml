@@ -28,7 +28,7 @@ mcpServer:
     keycloakIssuer: ""
   image:
     repository: renku/mcp-server
-    tag: "latest"
+    tag: "2.21.6-3.f780f23.git.2668.h3edf36d78"
     pullPolicy: IfNotPresent
   service:
     type: ClusterIP
