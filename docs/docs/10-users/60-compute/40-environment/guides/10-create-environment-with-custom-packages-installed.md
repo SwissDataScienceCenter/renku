@@ -18,6 +18,19 @@ This guide has 2 parts:
 
 RenkuLab’s code-based environments currently support creating **Python** and **R** environments.
 
+:::info
+
+Renku looks for the environment definition file at the **root of the code repository**, or in the
+**context directory** if you set one in the
+[advanced repository settings](#advanced-repository-settings-optional).
+
+Keep only **one** environment definition file in that folder (for example, `environment.yml` *or*
+`renv.lock`, not both). If several are present, Renku may pick the wrong one or the build may fail.
+Files in *other* folders are ignored, so one repository can hold several environments in separate
+folders, each used by its own launcher.
+
+:::
+
 ### Defining a Python Environment
 
 There are multiple ways you can define a python environment for your Renku session:
@@ -36,7 +49,7 @@ out [Paketo Buildpacks](https://paketo.io/docs/howto/python/#use-a-package-manag
 
 #### Miniconda (`environment.yml`) (recommended)
 
-Include an `environment.yml` file located at the root (top level) of the code repository.
+Include an `environment.yml` file located at the root of the code repository (or in the [context directory](#advanced-repository-settings-optional), if set).
 
 <details>
 <summary>Here’s an example `environment.yml`:</summary>
@@ -79,12 +92,12 @@ Important usage notes:
   - `nodefaults` must be included. See example above.
   - We recommend using the `conda-forge` channel or other non-anaconda channels.
   - The `defaults` channel is not recommended and often results in failed builds (due to rate limits imposed by Anaconda).
-- Please note that miniconda can only be used at this time to create Python environments, not R environments.
+- `environment.yml` can also be used to build R environments. See [Defining an R environment with conda](#conda-environmentyml-recommended-for-bioconductor).
 - Environments defined with one of these files will be created via miniconda. Configuring a version of miniconda is not supported.
 
 #### Pip (`requirements.txt`)
 
-Include a valid `requirements.txt` file at the root (top level) of your code repository. Renku will create an environment from this file using `pip`.
+Include a valid `requirements.txt` file at the root of the code repository (or in the [context directory](#advanced-repository-settings-optional), if set). Renku will create an environment from this file using `pip`.
 
 :::info
 
@@ -106,7 +119,7 @@ python version `3.10`. It is not currently possible to specify a different pytho
 
 #### Poetry (`pyproject.toml`)
 
-Including a `pyproject.toml` file at the root of your code repository triggers the poetry installation process. The buildpack will invoke `poetry` to install the application dependencies defined in `pyproject.toml` and set up a virtual environment.
+Including a `pyproject.toml` file at the root of the code repository (or in the [context directory](#advanced-repository-settings-optional), if set) triggers the poetry installation process. The buildpack will invoke `poetry` to install the application dependencies defined in `pyproject.toml` and set up a virtual environment.
 
 Note that poetry version `1.8.3` will be used.
 
@@ -142,7 +155,7 @@ Note that poetry version `1.8.3` will be used.
 
 #### uv (`pyproject.toml` and `uv.lock`)
 
-Include a `pyproject.toml` file and a `uv.lock` file at the root (top level) of your code repository. The buildpack will invoke `uv` to install the dependencies recorded in `uv.lock`.
+Include a `pyproject.toml` file and a `uv.lock` file at the root of the code repository (or in the [context directory](#advanced-repository-settings-optional), if set). The buildpack will invoke `uv` to install the dependencies recorded in `uv.lock`.
 
 If you do not have a `uv.lock` file yet, you can generate one by running `uv lock` in your local project.
 
@@ -172,7 +185,64 @@ Renku sets the environment variable `UV_PROJECT_ENVIRONMENT` to `$RENKU_WORKING_
 
 </details>
 
-### Defining an R Environment with renv
+
+### Defining an R Environment
+
+There are two ways to define an R environment for your Renku session:
+
+- [Conda (`environment.yml`) (recommended for Bioconductor)](#conda-environmentyml-recommended-for-bioconductor)
+- [renv (`renv.lock`)](#renv-renvlock)
+
+#### Conda (`environment.yml`) (recommended for Bioconductor)
+
+Include an `environment.yml` file at the context directory of the code repository that lists R and
+your R packages. CRAN packages are available on `conda-forge` as `r-<name>`, and Bioconductor
+packages on `bioconda` as `bioconductor-<name>` (all lowercase).
+
+This is the recommended option for Bioconductor projects, because:
+
+- **System libraries are included.** `conda-forge` ships system libraries such as libcurl, libxml2
+  and HDF5 as regular packages, so they are installed together with R. No `apt` step is needed.
+- **The Bioconductor release matches the R version.** `bioconda` builds each Bioconductor release
+  for a single R minor version, so a mismatched combination fails early with a clear error.
+
+<details>
+<summary>Here’s an example `environment.yml` for a Bioconductor project:</summary>
+
+    ```yaml
+    name: "my-r-project"
+    channels:
+      # important: do not use 'defaults', but always include 'nodefaults'
+      - conda-forge
+      - bioconda
+      - nodefaults
+    dependencies:
+      - r-base=4.5                       # set your R version here
+      - bioconductor-biocversion=3.22    # Bioconductor release matching R 4.5
+      - bioconductor-phyloseq
+      - r-dplyr
+      - r-ggplot2
+    ```
+
+</details>
+
+Important usage notes:
+
+- Pin `r-base` and `bioconductor-biocversion` together. To upgrade, bump both (and your
+  Bioconductor packages) at the same time.
+- `bioconda` may lag a few weeks or months behind new Bioconductor releases. Check that the
+  version you need is available on [bioconda](https://bioconda.github.io/) before upgrading.
+- Add new packages to `environment.yml` and rebuild, rather than running `install.packages()` or
+  `BiocManager::install()` inside the session. Packages installed in the session are compiled from
+  source and can fail because of missing system libraries.
+
+#### renv (`renv.lock`)
+
+Renku can build an R environment from an [`renv`](https://rstudio.github.io/renv/) lockfile.
+`renv` records the R packages used by your project in `renv.lock`; Renku uses this lockfile to
+restore those packages when building the session image.
+
+#### renv (`renv.lock`)
 
 Renku can build an R environment from an [`renv`](https://rstudio.github.io/renv/) lockfile.
 `renv` records the R packages used by your project in `renv.lock`; Renku uses this lockfile to
@@ -209,13 +279,15 @@ To use `renv` with a code-based environment:
 
    :::
 
-5. Commit `renv.lock` at the root (top level) of the code repository. You should also commit the
+5. Commit `renv.lock` at the root of the code repository (or in the [context directory](#advanced-repository-settings-optional), if set). You should also commit, in the same folder, the
    files created by `renv` that are meant to be shared with the project, such as `.Rprofile` and
    `renv/activate.R`.
 
-When Renku builds the image, it restores the packages recorded in `renv.lock`. If a package requires
-system libraries that are not available in the build image, the build can fail. In that case,
-consider using a custom Docker image instead; see [How to use your own docker image for a Renku
+When Renku builds the image, it restores the packages recorded in `renv.lock`. Note that `renv.lock`
+records R package versions but **not system libraries** (e.g. libcurl, libxml2, HDF5). If a package
+requires system libraries that are not available in the build image, the build can fail. In that
+case, consider [using conda instead](#conda-environmentyml-recommended-for-bioconductor), or a
+custom Docker image; see [How to use your own docker image for a Renku
 session](/docs/users/compute/environment/guides/use-your-own-docker-image-for-renku-session).
 
 ## How to create a code-based environment for your Renku session
@@ -251,8 +323,16 @@ repository](/docs/users/compute/environment/guides/create-environment-with-custo
 
    :::
 
+   :::tip
+
+   If your environment definition file is not at the root of the repository, or you want to build
+   from a specific branch, tag or commit, open
+   [Advanced repository settings](#advanced-repository-settings-optional).
+
+   :::
+
 5. Select the **Environment type**. Choose **Python** for Python environment definition files,
-   or **R** for repositories that use `renv.lock`.
+   or **R** for R projects (defined with `environment.yml` or `renv.lock`).
 6. Select the **User interface** you’d like your session to have, such as VSCodium/JupyterLab
    for Python environments or RStudio for R environments.
 7. Click **Next**
@@ -266,11 +346,31 @@ The environment is now being built by RenkuLab. You can see the status on the se
 
 When the environment is built, you can launch your session.
 
+### Advanced repository settings (optional)
+
+When selecting the code repository, you can open **Advanced repository settings** to set:
+
+- **Git revision**: the branch, tag or commit to build from. If left empty, the default branch is
+  used. Pinning a tag or commit makes the environment reproducible, because later pushes to the
+  repository will not change it.
+- **Context directory**: the folder (relative to the repository root) where Renku looks for the
+  environment definition file, instead of the repository root. Use it when your repository
+  contains several environments, or when the environment file lives in a subfolder.
+
+For example, a repository can hold an R analysis environment at the root and a Python dashboard
+in a subfolder:
+
+    ```
+    ├── environment.yml        # R + Bioconductor → launcher 1 (context directory: empty)
+    └── python/
+        └── requirements.txt   # Streamlit app → launcher 2 (context directory: python)
+    ```
+
 ## Updating a code-based environment
 
 1. When you want to make changes to your environment (add new packages), first
    update the environment definition file in the code repository where the
-   environment is defined.
+   environment is defined. If your launcher uses a fixed **Git revision** (a tag or commit), update it in the launcher's repository settings to point to the new revision before rebuilding.
 2. Then, rebuild the environment in RenkuLab:
    1. Click on the launcher to open the launcher side panel.
    2. Navigate to the **Environment** section.
