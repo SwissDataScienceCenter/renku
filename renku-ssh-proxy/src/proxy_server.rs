@@ -46,12 +46,14 @@ impl client::Handler for TargetHandler {
 
     async fn check_server_key(
         &mut self,
-        server_public_key: &PublicKey,
+        server_public_key: &russh::keys::PublicKeyOrCertificate,
     ) -> Result<bool, Self::Error> {
-        match &self.expected_host_key {
+        use russh::keys::PublicKeyOrCertificate as K;
+        match (&self.expected_host_key, server_public_key) {
             // compare key data only: the wire key carries no comment and the pinned key may
-            Some(pk) => Ok(server_public_key.key_data() == pk.key_data()),
-            None => Ok(false),
+            (Some(pk), K::PublicKey { key, .. }) => Ok(key.key_data() == pk.key_data()),
+            // host certificates are not expected; only a pinned plain key is accepted
+            _ => Ok(false),
         }
     }
 }
@@ -197,7 +199,12 @@ impl ProxyHandler {
 impl server::Handler for ProxyHandler {
     type Error = color_eyre::eyre::Error;
 
-    async fn auth_publickey(&mut self, user: &str, public_key: &PublicKey) -> Result<server::Auth> {
+    async fn auth_publickey(
+        &mut self,
+        user: &str,
+        verified: server::VerifiedPublicKey<'_>,
+    ) -> Result<server::Auth> {
+        let public_key = verified.public_key;
         if self.target.is_none() || user.trim().is_empty() {
             log::warn!("No target host set!");
             return Ok(server::Auth::reject());
@@ -595,8 +602,8 @@ async fn test_check_server_key_pins_expected_and_rejects_other() {
     let mut handler = TargetHandler {
         expected_host_key: Some(pinned),
     };
-    assert!(handler.check_server_key(&presented).await.unwrap());
-    assert!(!handler.check_server_key(&other).await.unwrap());
+    assert!(handler.check_server_key(&presented.into()).await.unwrap());
+    assert!(!handler.check_server_key(&other.into()).await.unwrap());
 }
 
 #[tokio::test]
@@ -610,5 +617,5 @@ async fn test_check_server_key_fails_closed_without_pin() {
     let mut handler = TargetHandler {
         expected_host_key: None,
     };
-    assert!(!handler.check_server_key(&key).await.unwrap());
+    assert!(!handler.check_server_key(&key.into()).await.unwrap());
 }
