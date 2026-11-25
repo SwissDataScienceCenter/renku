@@ -1,5 +1,4 @@
-{{- if and .Values.mcpServer.enabled .Values.ingress.enabled }}
----
+{{- if .Values.ingress.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -17,19 +16,14 @@ spec:
 {{- if .Values.ingress.className }}
   ingressClassName: {{ .Values.ingress.className }}
 {{- end }}
-{{- if .Values.ingress.tls }}
+{{- if .Values.ingress.tls.secretName }}
   tls:
-  {{- range .Values.ingress.tls }}
   - hosts:
-    {{- range .hosts }}
-    - {{ . }}
-    {{- end }}
-    secretName: {{ .secretName }}
-  {{- end }}
+    - {{ .Values.mcpServer.domain }}
+    secretName: {{ .Values.ingress.tls.secretName }}
 {{- end }}
   rules:
-  {{- range .Values.ingress.hosts }}
-  - host: {{ . }}
+  - host: {{ .Values.mcpServer.domain }}
     http:
       paths:
       - path: /mcp
@@ -48,5 +42,4 @@ spec:
             name: {{ template "renku.fullname" $ }}-mcp-server
             port:
               number: {{ $.Values.mcpServer.service.port }}
-  {{- end }}
 {{- end }}

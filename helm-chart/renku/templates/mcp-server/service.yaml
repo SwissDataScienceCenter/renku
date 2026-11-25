@@ -1,4 +1,3 @@
-{{- if .Values.mcpServer.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -18,4 +17,3 @@ spec:
   selector:
     app: renku-mcp-server
     release: {{ .Release.Name }}
-{{- end }}

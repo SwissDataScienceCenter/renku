@@ -1,28 +1,3 @@
-The RENKU platform has been deployed to your cluster.
-
-If all things were set up correctly, you will soon be able to access it at:
-{{ template "renku.http" . }}://{{ .Values.global.renku.domain }}/
-
-{{ if .Values.keycloakx.createDemoUser -}}
-You have configured a demo user for the platform. The details (password) of this user
-can be accessed using the following one-liner (you need to have jq installed).
-kubectl get secrets -n {{ .Release.Namespace }} {{ template "renku.fullname" . }} -o json | jq -r .data.users | base64 --decode
-{{- end -}}
-
-{{ if or .Values.ui.client.privacy.banner.enabled .Values.ui.client.privacy.page.enabled -}}
-You may need to customize privacy values for your RenkuLab deployment (E.G. the Privacy page).
-Please refer to the following documentation: https://renku.readthedocs.io/en/latest/admin/index.html#additional-configurations
-{{ end }}
-
-{{ if .Values.global.externalServices.postgresql.enabled -}}
-You have configured RenkuLab to connect to an external PostgreSQL instance.
-The databases and users RenkuLab requires have automatically been created on the external PostgreSQL instance.
-
-CAUTION WHEN CHANGING POSTGRESQL PASSWORDS:
-
-RenkuLab will not modify the user passwords on your PostgreSQL instance if you edit the PostgreSQL password Helm value for a RenkuLab service
-(e.g. global.graph.tokenRepository.postgresPassword.value), and will overwrite the Kubernetes secret value which stored the previous password.
-
-If you change the PostgreSQL password Helm value for a RenkuLab service WITHOUT also updating the password on the PostgreSQL instance, 
-RenkuLab will not be able to connect to the database, and will fail to run.
-{{ end }}
+The Renku MCP server is served at {{ include "mcpServer.baseUrl" . }}/mcp
+It talks to the Renku deployment at {{ include "mcpServer.renkuUrl" . }}
+and accepts tokens issued by {{ include "mcpServer.keycloakIssuerUrl" . }}

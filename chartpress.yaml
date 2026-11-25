@@ -7,39 +7,8 @@ charts:
       published: https://swissdatasciencecenter.github.io/helm-charts
     paths:
       - helm-chart
-      - scripts/init-realm
-      - scripts/init-db
-      - scripts/platform-init
-      - renku-ssh-proxy
       - mcp-server
     images:
-      init-realm:
-        contextPath: scripts/init-realm
-        dockerfilePath: scripts/init-realm/Dockerfile
-        valuesPath: keycloakx.initRealm.image
-        paths:
-          - scripts/init-realm/Dockerfile
-          - scripts/init-realm/requirements.txt
-          - scripts/init-realm/init-realm.py
-          - scripts/init-realm/utils.py
-      init-db:
-        contextPath: scripts/init-db
-        dockerfilePath: scripts/init-db/Dockerfile
-        valuesPath: initDb.image
-        paths:
-          - scripts/init-db
-      platform-init:
-        contextPath: scripts/platform-init
-        dockerfilePath: scripts/platform-init/Dockerfile
-        valuesPath: platformInit.image
-        paths:
-          - scripts/platform-init
-      ssh-proxy:
-        contextPath: .
-        dockerfilePath: ./renku-ssh-proxy/Dockerfile
-        valuesPath: sshProxy.image
-        paths:
-          - renku-ssh-proxy
       mcp-server:
         contextPath: .
         dockerfilePath: ./mcp-server/Dockerfile

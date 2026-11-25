@@ -1,4 +1,3 @@
-{{- if .Values.mcpServer.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -28,8 +27,6 @@ spec:
       automountServiceAccountToken: false
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-      initContainers:
-        {{- include "certificates.initContainer" . | nindent 8 }}
       containers:
         - name: mcp-server
           image: "{{ .Values.mcpServer.image.repository }}:{{ .Values.mcpServer.image.tag }}"
@@ -43,23 +40,25 @@ spec:
           env:
             - name: MCP_LISTEN_ADDR
               value: ":8080"
-            # Through the gateway in the cluster, which forwards the user's bearer token to the data service.
+            # Through the public gateway of the remote Renku deployment, which forwards the
+            # user's bearer token to the data service.
             - name: RENKU_API_URL
-              value: {{ printf "http://%s-gateway/api/data" (include "renku.fullname" .) | quote }}
+              value: {{ printf "%s/api/data" (include "mcpServer.renkuUrl" .) | quote }}
             # Must match the iss claim of the tokens, so this is the public Keycloak URL.
             - name: KEYCLOAK_ISSUER
-              value: {{ include "renku.keycloakIssuerUrl" . | quote }}
+              value: {{ include "mcpServer.keycloakIssuerUrl" . | quote }}
             {{- with .Values.mcpServer.oauth.jwksUrl }}
             - name: KEYCLOAK_JWKS_URL
               value: {{ . | quote }}
             {{- end }}
-            # The renku-mcp Keycloak client adds this audience, see setup-job-keycloak-realms.yaml.
+            # Audience and azp the tokens must carry. They must come from a Keycloak client of the
+            # remote deployment whose tokens its gateway accepts.
             - name: MCP_AUDIENCE
-              value: renku-mcp
+              value: {{ .Values.mcpServer.oauth.audience | quote }}
             - name: MCP_AUTHORIZED_PARTY
-              value: renku-mcp
+              value: {{ .Values.mcpServer.oauth.authorizedParty | quote }}
             - name: MCP_RESOURCE_URL
-              value: {{ printf "%s/mcp" (include "renku.baseUrl" .) | quote }}
+              value: {{ printf "%s/mcp" (include "mcpServer.baseUrl" .) | quote }}
             - name: MCP_TOOL_CALL_RATE_LIMIT_ENABLED
               value: {{ .Values.mcpServer.rateLimit.enabled | quote }}
             - name: MCP_TOOL_CALLS_PER_MINUTE
@@ -70,8 +69,6 @@ spec:
               value: {{ .Values.mcpServer.logToolArguments | quote }}
             - name: LOG_LEVEL
               value: {{ .Values.mcpServer.logLevel | quote }}
-            - name: SSL_CERT_FILE
-              value: /etc/ssl/certs/ca-certificates.crt
             {{- with .Values.mcpServer.extraEnv }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
@@ -97,10 +94,6 @@ spec:
             failureThreshold: 30
           resources:
             {{- toYaml .Values.mcpServer.resources | nindent 12 }}
-          volumeMounts:
-            {{- include "certificates.volumeMounts.system" . | nindent 12 }}
-      volumes:
-        {{- include "certificates.volumes" . | nindent 8 }}
     {{- with .Values.mcpServer.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -113,4 +106,3 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-{{- end }}
