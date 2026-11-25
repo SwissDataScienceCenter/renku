@@ -818,7 +818,7 @@ spec:
           # ssh sessions listen on Session.Port (data-services BUILD_PORT = 8888)
           port: 8888
     - to:
-        # Service-account tokens for the internal session deadline route.
+        # Service-account tokens for the session deadline routes.
         - podSelector:
             matchLabels:
               app.kubernetes.io/name: keycloakx
@@ -826,7 +826,7 @@ spec:
         - protocol: TCP
           port: http
     - to:
-        # The internal session deadline route.
+        # The session deadline routes.
         - podSelector:
             matchLabels:
               app: renku-data-service
