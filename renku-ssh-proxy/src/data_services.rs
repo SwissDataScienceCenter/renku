@@ -124,14 +124,15 @@ impl Client {
 
     /// Records user input on the session. Only 2xx counts as a touch.
     pub async fn touch_session(&self, session: &str) -> SessionResult<()> {
-        let url = make_url(
-            &self.data_services_url,
-            ["internal", "sessions", session, "interaction"],
-        )
-        .map_err(SessionError::Failed)?;
+        let url = make_url(&self.data_services_url, ["sessions", session]).map_err(SessionError::Failed)?;
         log::debug!("Touch session interaction: {}", url);
         let resp = self
-            .with_token(|token| self.client.post(url.clone()).bearer_auth(token))
+            .with_token(|token| {
+                self.client
+                    .patch(url.clone())
+                    .bearer_auth(token)
+                    .json(&serde_json::json!({"lastInteraction": "now"}))
+            })
             .await?;
         if resp.status().is_success() {
             Ok(())
@@ -257,6 +258,7 @@ mod tests {
 
     const TOKEN_PATH: &str = "/auth/realms/test/protocol/openid-connect/token";
     const INTERACTION_PATH: &str = "/api/data/internal/sessions/s1/interaction";
+    const SESSION_PATH: &str = "/api/data/sessions/s1";
 
     async fn token_server(requests: u64, status: u16) -> MockServer {
         let server = MockServer::start().await;
@@ -297,14 +299,14 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_touch_sends_bearer_and_no_body() {
+    async fn test_touch_patches_last_interaction_now() {
         let kc = token_server(1, 200).await;
         let ds = MockServer::start().await;
-        Mock::given(method("POST"))
-            .and(path(INTERACTION_PATH))
+        Mock::given(method("PATCH"))
+            .and(path(SESSION_PATH))
             .and(header("authorization", "Bearer abc"))
-            .and(body_string(""))
-            .respond_with(ResponseTemplate::new(204))
+            .and(body_string(r#"{"lastInteraction":"now"}"#))
+            .respond_with(ResponseTemplate::new(200))
             .expect(1)
             .mount(&ds)
             .await;
@@ -353,14 +355,14 @@ mod tests {
     async fn test_touch_refreshes_token_once_on_401() {
         let kc = token_server(2, 200).await;
         let ds = MockServer::start().await;
-        Mock::given(method("POST"))
-            .and(path(INTERACTION_PATH))
+        Mock::given(method("PATCH"))
+            .and(path(SESSION_PATH))
             .respond_with(ResponseTemplate::new(401))
             .up_to_n_times(1)
             .mount(&ds)
             .await;
-        Mock::given(method("POST"))
-            .and(path(INTERACTION_PATH))
+        Mock::given(method("PATCH"))
+            .and(path(SESSION_PATH))
             .respond_with(ResponseTemplate::new(204))
             .expect(1)
             .mount(&ds)
@@ -373,8 +375,8 @@ mod tests {
     async fn test_second_401_is_a_failure() {
         let kc = token_server(2, 200).await;
         let ds = MockServer::start().await;
-        Mock::given(method("POST"))
-            .and(path(INTERACTION_PATH))
+        Mock::given(method("PATCH"))
+            .and(path(SESSION_PATH))
             .respond_with(ResponseTemplate::new(401))
             .expect(2)
             .mount(&ds)
@@ -390,8 +392,8 @@ mod tests {
     async fn test_server_error_is_a_failure_and_not_retried() {
         let kc = token_server(1, 200).await;
         let ds = MockServer::start().await;
-        Mock::given(method("POST"))
-            .and(path(INTERACTION_PATH))
+        Mock::given(method("PATCH"))
+            .and(path(SESSION_PATH))
             .respond_with(ResponseTemplate::new(500))
             .expect(1)
             .mount(&ds)
