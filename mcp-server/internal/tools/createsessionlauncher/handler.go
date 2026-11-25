@@ -30,6 +30,12 @@ var tool = mcp.Tool{
 		"2. Build from code: `environment_image_source` `build` with `repository`, `builder_variant` " +
 		"and `frontend_variant`. After creating the launcher, find the build with " +
 		"list_environment_builds and wait for it with wait_for_build before starting a session.\n" +
+		"For building images from code Renku uses cloud native buildpacks. You can find all the available" +
+		"buildpacks at https://github.com/SwissDataScienceCenter/renku-frontend-buildpacks.\n" +
+		"The buildpack repository also includes the definition of the build and run images.\n" +
+		"The images are built using Shipwright and hosted in Renku's internal Harbor instance.\n" +
+		"After a launcher like this has been created you can get the build and its logs with the\n" +
+		"get_build and get_build_logs tools in this MCP server.\n" +
 		"3. Custom image: `environment_image_source` `image` with `container_image`, and the `port`, " +
 		"`uid`, `gid` and directories the image needs.\n\n" +
 		"Apps (`launcher_type` `app`), with option 2 or 3:\n" +
