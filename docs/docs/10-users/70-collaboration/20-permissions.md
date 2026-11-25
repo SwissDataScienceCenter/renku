@@ -148,16 +148,14 @@ There may be multiple people in each of these roles (for example, a data connect
 
 ## Data Connector Abilities by Roles {#data-connector-abilities-by-roles}
 
-| Action | Owner | Editor | Viewer |
-| ------ | ----- | ------ | ------ |
-
-| Use the data connector (i.e. the data connector will be mounted in a launched session).
-\*Note: any required credentials must be provided by the user launching the session | ✅ | ✅ | ✅ |
-| Link the data connector to another project | ✅ | ✅ | ✅ |
-| See the data connector in search | ✅ | ✅ | ✅ |
-| Edit the data connector configuration (see this [note](#note-access-to-data-connector)). | ✅ | ✅ | ❌ |
-| Change the data connector visibility | ✅ | ❌ | ❌ |
-| Delete the data connector (which removes the data connector from all linked projects) | ✅ | ❌ | ❌ |
+| Action                                                                                                                                                                          | Owner | Editor | Viewer |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- | ------ | ------ |
+| Use the data connector (i.e. the data connector will be mounted in a launched session).<br/>\*Note: any required credentials must be provided by the user launching the session | ✅    | ✅     | ✅     |
+| Link the data connector to another project                                                                                                                                      | ✅    | ✅     | ✅     |
+| See the data connector in search                                                                                                                                                | ✅    | ✅     | ✅     |
+| Edit the data connector configuration (see this [note](#note-access-to-data-connector)).                                                                                        | ✅    | ✅     | ❌     |
+| Change the data connector visibility                                                                                                                                            | ✅    | ❌     | ❌     |
+| Delete the data connector (which removes the data connector from all linked projects)                                                                                           | ✅    | ❌     | ❌     |
 
 ## Data Connectors & Credentials {#data-connectors-and-credentials}
 

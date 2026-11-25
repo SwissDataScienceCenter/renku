@@ -18,7 +18,8 @@ hesitate to [Contact](/docs/users/community) us, and we will be happy to add it 
 3. Approve the steps. After that, the service status will turn into connected.
 
 4. (GitHub only) Follow the prompts to install the Renku app in the namespace(s) where you want to
-   use repositories in Renku.
+   use repositories in Renku. Whether you can install it in a GitHub organization yourself depends
+   on your role there. See [GitHub integration](/docs/users/collaboration/integrations#github-integration).
 
 Now you can [add code repositories to your
 projects](/docs/users/code/guides/add-code-repository-to-project) and read & write them in sessions!
