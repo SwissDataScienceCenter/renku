@@ -1,0 +1,21 @@
+ingress:
+  enabled: true
+  tls:
+    secretName: mcp-server-tls-secret
+
+mcpServer:
+  ## Public domain of this MCP server, which is served at https://<domain>/mcp
+  domain: mcp-renkulab.dev.renku.ch
+  renku:
+    ## Public URL of the Renku deployment the MCP server talks to (required),
+    ## its API is reached at <url>/api/data
+    url: "https://renkulab.io" # https://renku.example.org
+    ## Issuer of the user tokens, defaults to <url>/auth/realms/Renku
+    keycloakIssuer: "https://renkulab.io/auth/realms/Renku"
+  resources:
+    requests:
+      cpu: 200m
+      memory: 300Mi
+    limits:
+      memory: 300Mi
+  replicaCount: 2
