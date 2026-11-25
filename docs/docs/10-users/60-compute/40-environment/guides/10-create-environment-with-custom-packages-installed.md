@@ -254,7 +254,9 @@ repository](/docs/users/compute/environment/guides/create-environment-with-custo
 5. Select the **Environment type**. Choose **Python** for Python environment definition files,
    or **R** for repositories that use `renv.lock`.
 6. Select the **User interface** you’d like your session to have, such as VSCodium/JupyterLab
-   for Python environments or RStudio for R environments.
+   for Python environments or RStudio for R environments. Optionally, select **Coding
+   agents**. See [Configure coding agents for a session
+   environment](/docs/users/compute/environment/guides/configure-ai-agents-for-a-session-environment).
 7. Click **Next**
 8. Define the **name** of the Session Launcher
 9. Select the default **compute resources**

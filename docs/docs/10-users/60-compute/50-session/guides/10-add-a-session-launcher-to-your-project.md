@@ -58,6 +58,10 @@ With Renku code based environments, you can point Renku to a code repository tha
 environment definition file, such as `environment.yml`, `requirements.txt`, `pyproject.toml`, or
 `renv.lock`, and Renku will build a custom environment for your session for you!
 
+You can optionally select coding agents when creating an environment from code. See
+[Configure coding agents for a session
+environment](/docs/users/compute/environment/guides/configure-ai-agents-for-a-session-environment).
+
 → If your code repository is **public**, see [How to create an environment with custom packages
 installed](../../../environment/guides/create-environment-with-custom-packages-installed).
 
