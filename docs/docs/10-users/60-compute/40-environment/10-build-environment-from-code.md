@@ -1,12 +1,11 @@
 # Building environments from code
 
 RenkuLab can build a session environment for you directly from the files in a code repository.
-You describe *what* you need (packages, tools, editor extensions, startup steps), and RenkuLab turns them into a ready-to-use Docker image.
+You describe _what_ you need (packages, tools, editor extensions, startup steps), and RenkuLab turns them into a ready-to-use Docker image.
 
 This page is a reference for everything you can configure this way. For the step-by-step
 instructions to create a launcher, see [Create an environment with custom packages
 installed](/docs/users/compute/environment/guides/create-environment-with-custom-packages-installed).
-
 
 ## How RenkuLab reads your repository
 
@@ -33,7 +32,7 @@ Everything else is optional and can be combined with any language and any [front
 :::warning
 
 Keep only **one** language definition file in the build folder (for example `environment.yml`
-*or* `renv.lock`, not both). If several are present, RenkuLab may pick the wrong one or the build
+_or_ `renv.lock`, not both). If several are present, RenkuLab may pick the wrong one or the build
 may fail. To have several environments in one repository, put each one in its own folder and point
 a separate launcher at each folder with the context directory.
 
@@ -41,17 +40,16 @@ a separate launcher at each folder with the context directory.
 
 ## Python
 
-| Tool | Files in the build folder | Python version set by | 
-|------|---------------------------|-----------------------|
-| [Conda](#python-conda) (recommended) | `environment.yml` | `python=` in `environment.yml` | 
-| [pip](#python-pip) | `requirements.txt` | `BP_CPYTHON_VERSION` in `project.toml` |
-| [Poetry](#python-poetry) | `pyproject.toml` (with `[tool.poetry]`), `poetry.lock` | `python` in `pyproject.toml` |
-| [uv](#python-uv) | `pyproject.toml`, `uv.lock` | `.python-version` / `requires-python` |
+| Tool                                 | Files in the build folder                              | Python version set by                  |
+| ------------------------------------ | ------------------------------------------------------ | -------------------------------------- |
+| [Conda](#python-conda) (recommended) | `environment.yml`                                      | `python=` in `environment.yml`         |
+| [pip](#python-pip)                   | `requirements.txt`                                     | `BP_CPYTHON_VERSION` in `project.toml` |
+| [Poetry](#python-poetry)             | `pyproject.toml` (with `[tool.poetry]`), `poetry.lock` | `python` in `pyproject.toml`           |
+| [uv](#python-uv)                     | `pyproject.toml`, `uv.lock`                            | `.python-version` / `requires-python`  |
 
 If you use the **JupyterLab** frontend, you don't need to add `jupyterlab` to your dependencies.
 
 ### Conda (`environment.yml`) {#python-conda}
-
 
 <details>
 <summary>Here’s an example `environment.yml`:</summary>
@@ -181,10 +179,10 @@ In the session, `UV_PROJECT_ENVIRONMENT` points to `$RENKU_WORKING_DIR/.venv`, s
 
 Select **RStudio** as the frontend for R environments.
 
-| Tool | Files in the build folder | R version set by |
-|------|---------------------------|------------------|
-| [renv](#r-renv) | `renv.lock` (+ `.Rprofile`, `renv/activate.R`) | `R.Version` in `renv.lock` |
-| [Conda](#r-conda) | `environment.yml` | `r-base=` in `environment.yml` |
+| Tool              | Files in the build folder                      | R version set by               |
+| ----------------- | ---------------------------------------------- | ------------------------------ |
+| [renv](#r-renv)   | `renv.lock` (+ `.Rprofile`, `renv/activate.R`) | `R.Version` in `renv.lock`     |
+| [Conda](#r-conda) | `environment.yml`                              | `r-base=` in `environment.yml` |
 
 **Which one?** Use renv if your project already uses it, or if you install packages from CRAN and
 Bioconductor the usual way. Use Conda if your packages need system libraries that are hard to
@@ -194,7 +192,6 @@ install, or if you already manage your tools with Conda. Both support
 ### renv (`renv.lock`) {#r-renv}
 
 1. In your R project, initialize renv and install your packages:
-
 
    ```r
    install.packages("renv")
@@ -210,7 +207,7 @@ install, or if you already manage your tools with Conda. Both support
 
    :::warning
 
-   `renv::snapshot()` only records packages that are installed *and* used in your code.
+   `renv::snapshot()` only records packages that are installed _and_ used in your code.
 
    :::
 
@@ -236,7 +233,7 @@ channels:
   - conda-forge
   - nodefaults
 dependencies:
-  - r-base=4.5   # set your R version here
+  - r-base=4.5 # set your R version here
   - r-shiny
   - r-ggplot2
 ```
@@ -285,7 +282,7 @@ channels:
   - nodefaults
 dependencies:
   - r-base=4.5
-  - bioconductor-biocversion=3.22   # Bioconductor release matching R 4.5
+  - bioconductor-biocversion=3.22 # Bioconductor release matching R 4.5
   - bioconductor-deseq2
 ```
 
@@ -315,12 +312,12 @@ name = "BP_RENKU_AI_AGENTS"
 value = "claude"
 ```
 
-| Variable | Effect |
-|----------|--------|
-| `BP_CPYTHON_VERSION` | Python version for pip environments |
-| `BP_RENKU_AI_AGENTS` | Coding agents to install, see [Coding agents](#coding-agents) |
-| `BP_VSCODIUM_VERSION` | VSCodium version |
-| `BP_HOMEBREW_VERSION` | Homebrew version (default: latest release) |
+| Variable              | Effect                                                        |
+| --------------------- | ------------------------------------------------------------- |
+| `BP_CPYTHON_VERSION`  | Python version for pip environments                           |
+| `BP_RENKU_AI_AGENTS`  | Coding agents to install, see [Coding agents](#coding-agents) |
+| `BP_VSCODIUM_VERSION` | VSCodium version                                              |
+| `BP_HOMEBREW_VERSION` | Homebrew version (default: latest release)                    |
 
 ### System packages (apt)
 
@@ -400,11 +397,11 @@ name = "BP_RENKU_AI_AGENTS"
 value = "pi claude codex"
 ```
 
-| Value | Agent |
-|-------|-------|
-| `pi` | [pi](https://www.npmjs.com/package/@earendil-works/pi-coding-agent) |
+| Value    | Agent                                                                  |
+| -------- | ---------------------------------------------------------------------- |
+| `pi`     | [pi](https://www.npmjs.com/package/@earendil-works/pi-coding-agent)    |
 | `claude` | [Claude Code](https://www.npmjs.com/package/@anthropic-ai/claude-code) |
-| `codex` | [Codex](https://www.npmjs.com/package/@openai/codex) |
+| `codex`  | [Codex](https://www.npmjs.com/package/@openai/codex)                   |
 
 - Pin a version with `@`, for example `claude@2`.
 - To ship shared agent settings, commit a `.pi/`, `.claude/` or `.codex/` folder in the build
@@ -421,13 +418,13 @@ Never commit API keys or credentials in these folders: they are copied into the 
 
 The frontend is the user interface of a session. You choose it when you create a session launcher.
 
-| Frontend | Description |
-|----------|-------------|
-| VSCodium | Open-source build of VS Code, in the browser |
-| JupyterLab | Notebooks, code and data in the browser (Python) |
-| RStudio | RStudio |
-| ttyd | Terminal in the browser |
-| SSH | Connect to the session from your own terminal or editor |
+| Frontend   | Description                                             |
+| ---------- | ------------------------------------------------------- |
+| VSCodium   | Open-source build of VS Code, in the browser            |
+| JupyterLab | Notebooks, code and data in the browser (Python)        |
+| RStudio    | RStudio                                                 |
+| ttyd       | Terminal in the browser                                 |
+| SSH        | Connect to the session from your own terminal or editor |
 
 ## Building images outside RenkuLab
 

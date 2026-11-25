@@ -11,7 +11,6 @@ This guide will show you how to create a code-based environment for your project
 VSCodium extensions, coding agents), see [Building environments from
 code](/docs/users/compute/environment/build-environment-from-code).
 
-
 ## How to create a code-based environment for your Renku session
 
 :::info

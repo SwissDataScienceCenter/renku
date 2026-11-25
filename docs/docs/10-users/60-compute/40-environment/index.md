@@ -11,7 +11,6 @@ Renku provides several _global environments_ that come pre-configured and ready 
 
 Environments are connected to a Renku project via a [Launcher](/docs/users/compute/launcher).
 
-
 ## Building environments from code
 
 RenkuLab can build an environment for you from the files in a code repository: no Dockerfile
