@@ -106,6 +106,7 @@ in {
         pkgs.cargo-flamegraph
         pkgs.cargo-deny
         pkgs.cargo-audit
+        pkgs.cargo-edit
         pkgs.rust-analyzer
 
         # Test dependencies
