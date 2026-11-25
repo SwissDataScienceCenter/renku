@@ -1412,6 +1412,25 @@ dataService:
     lokiReadUrl: "http://loki-read.monitoring.svc.cluster.local:3100/"
     ## The TTL for persisted logs
     ttlSeconds: 86400 # 24 hours
+  ## Configuration for the OpenMeter integration used for resource usage metering and quotas.
+  ## Every resource pool is expected to be an OpenMeter customer whose key is
+  ## `<customerKeyPrefix><resource pool ID>`, with a single subject (the resource pool itself).
+  ## NOTE: OpenMeter itself is not deployed by this chart.
+  openmeter:
+    enabled: false
+    ## The base URL of the OpenMeter API, e.g. "http://openmeter.openmeter.svc.cluster.local"
+    endpointUrl: ""
+    ## The key of the meter that tracks compute usage
+    meterKey: compute_units
+    ## The key of the feature used for the resource pool entitlements
+    featureKey: compute_units
+    ## The prefix used to derive the OpenMeter customer key from a resource pool ID
+    customerKeyPrefix: renku-pool-
+    ## Optional bearer token for the OpenMeter API, read from an existing secret.
+    ## If secretName is empty then no Authorization header is sent.
+    apiToken:
+      secretName: ""
+      secretKey: token
   ## The service account used in the Amalthea session pods for the resource pool(s) that use the local cluster.
   ## The only use for this is if you want to use a different SCC than the default in OpenShift.
   ## The service account is not mounted in the session. Leaving the default value of "" means that
