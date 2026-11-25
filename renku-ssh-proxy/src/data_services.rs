@@ -45,10 +45,25 @@ pub(crate) trait SessionClient: Send + Sync {
 }
 
 #[derive(serde::Deserialize)]
-struct DeadlineResponse {
-    seconds_until_hibernate: Option<u64>,
-    seconds_since_last_interaction: Option<u64>,
-    alive: bool,
+struct SessionResponse {
+    #[serde(rename = "lastInteraction")]
+    last_interaction: Option<String>,
+    status: SessionStatus,
+}
+
+#[derive(serde::Deserialize)]
+struct SessionStatus {
+    state: String,
+    will_hibernate_at: Option<String>,
+}
+
+/// A timestamp data-services could not use is a `None`, never an error.
+fn parse_timestamp(value: Option<String>) -> Option<jiff::Timestamp> {
+    value.and_then(|s| s.parse::<jiff::Timestamp>().ok())
+}
+
+fn non_negative_seconds(seconds: i64) -> Duration {
+    Duration::from_secs(seconds.max(0) as u64)
 }
 
 #[derive(serde::Serialize, Clone, Debug)]
@@ -146,11 +161,7 @@ impl Client {
 
     /// Reads how long the session has until hibernation. A 404 means it is gone.
     pub async fn session_deadline(&self, session: &str) -> SessionResult<SessionDeadline> {
-        let url = make_url(
-            &self.data_services_url,
-            ["internal", "sessions", session, "interaction"],
-        )
-        .map_err(SessionError::Failed)?;
+        let url = make_url(&self.data_services_url, ["sessions", session]).map_err(SessionError::Failed)?;
         log::debug!("Read session deadline: {}", url);
         let resp = self
             .with_token(|token| self.client.get(url.clone()).bearer_auth(token))
@@ -164,15 +175,20 @@ impl Client {
                 "deadline read for session {session} failed: {status}"
             )));
         }
-        let body: DeadlineResponse = resp.json().await.map_err(|e| {
+        let body: SessionResponse = resp.json().await.map_err(|e| {
             SessionError::Failed(
                 color_eyre::Report::new(e).wrap_err("parsing the session deadline"),
             )
         })?;
+        let now = jiff::Timestamp::now();
+        let deadline = parse_timestamp(body.status.will_hibernate_at);
+        let interaction = parse_timestamp(body.last_interaction);
         Ok(SessionDeadline {
-            remaining: body.seconds_until_hibernate.map(Duration::from_secs),
-            since_input: body.seconds_since_last_interaction.map(Duration::from_secs),
-            alive: body.alive,
+            remaining: deadline.map(|t| non_negative_seconds(t.as_second() - now.as_second())),
+            since_input: interaction.map(|t| non_negative_seconds(now.as_second() - t.as_second())),
+            // Only a terminal session is not alive: a readiness blip or a future
+            // Amalthea state must not stop the proxy's per-connection timer.
+            alive: !matches!(body.status.state.as_str(), "hibernated" | "failed" | "succeeded"),
         })
     }
 
@@ -249,15 +265,11 @@ mod tests {
     #[test]
     fn test_make_url_ignores_a_trailing_slash() {
         let base = Url::parse("http://ds/api/data/").unwrap();
-        let url = make_url(&base, ["internal", "sessions", "s1", "interaction"]).unwrap();
-        assert_eq!(
-            url.as_str(),
-            "http://ds/api/data/internal/sessions/s1/interaction"
-        );
+        let url = make_url(&base, ["sessions", "s1"]).unwrap();
+        assert_eq!(url.as_str(), "http://ds/api/data/sessions/s1");
     }
 
     const TOKEN_PATH: &str = "/auth/realms/test/protocol/openid-connect/token";
-    const INTERACTION_PATH: &str = "/api/data/internal/sessions/s1/interaction";
     const SESSION_PATH: &str = "/api/data/sessions/s1";
 
     async fn token_server(requests: u64, status: u16) -> MockServer {
@@ -314,40 +326,86 @@ mod tests {
         assert!(client_for(&kc, &ds).touch_session("s1").await.is_ok());
     }
 
-    #[tokio::test]
-    async fn test_deadline_parses_values_and_nulls() {
+    async fn deadline_response(body: String, status: u16) -> SessionResult<SessionDeadline> {
         let kc = token_server(1, 200).await;
         let ds = MockServer::start().await;
         Mock::given(method("GET"))
-            .and(path(INTERACTION_PATH))
-            .respond_with(ResponseTemplate::new(200).set_body_raw(
-                r#"{"seconds_until_hibernate":300,"seconds_since_last_interaction":null,"alive":true}"#,
-                "application/json",
-            ))
+            .and(path(SESSION_PATH))
+            .respond_with(ResponseTemplate::new(status).set_body_raw(body, "application/json"))
             .expect(1)
             .mount(&ds)
             .await;
+        client_for(&kc, &ds).session_deadline("s1").await
+    }
 
-        let deadline = client_for(&kc, &ds).session_deadline("s1").await.unwrap();
-        assert_eq!(deadline.remaining, Some(Duration::from_secs(300)));
+    #[tokio::test]
+    async fn test_deadline_computes_remaining_and_since_input() {
+        let now = jiff::Timestamp::now();
+        let interaction = now - jiff::SignedDuration::from_secs(300);
+        let hibernate = now + jiff::SignedDuration::from_secs(600);
+        let body = format!(
+            r#"{{"lastInteraction":"{interaction}","status":{{"state":"running","will_hibernate_at":"{hibernate}"}}}}"#
+        );
+
+        let deadline = deadline_response(body, 200).await.unwrap();
+        let remaining = deadline.remaining.unwrap().as_secs();
+        assert!((595..=605).contains(&remaining), "remaining={remaining}");
+        let since_input = deadline.since_input.unwrap().as_secs();
+        assert!((295..=305).contains(&since_input), "since_input={since_input}");
+        assert!(deadline.alive);
+    }
+
+    #[tokio::test]
+    async fn test_deadline_null_timestamps_are_none() {
+        let body = r#"{"lastInteraction":null,"status":{"state":"running","will_hibernate_at":null}}"#.to_string();
+        let deadline = deadline_response(body, 200).await.unwrap();
+        assert_eq!(deadline.remaining, None);
         assert_eq!(deadline.since_input, None);
         assert!(deadline.alive);
     }
 
     #[tokio::test]
-    async fn test_deadline_reports_gone_on_404() {
-        let kc = token_server(1, 200).await;
-        let ds = MockServer::start().await;
-        Mock::given(method("GET"))
-            .and(path(INTERACTION_PATH))
-            .respond_with(ResponseTemplate::new(404))
-            .expect(1)
-            .mount(&ds)
-            .await;
+    async fn test_deadline_unparseable_timestamps_are_none() {
+        let body = r#"{"lastInteraction":"not-a-date","status":{"state":"running","will_hibernate_at":"13 o'clock"}}"#
+            .to_string();
+        let deadline = deadline_response(body, 200).await.unwrap();
+        assert_eq!(deadline.remaining, None);
+        assert_eq!(deadline.since_input, None);
+        assert!(deadline.alive);
+    }
 
+    #[tokio::test]
+    async fn test_deadline_alive_unless_terminal() {
+        for (state, expected) in [
+            ("hibernated", false),
+            ("failed", false),
+            ("succeeded", false),
+            ("running", true),
+            ("starting", true),
+            ("stopping", true),
+            ("not-ready", true),
+            ("some-future-state", true),
+        ] {
+            let body =
+                format!(r#"{{"lastInteraction":null,"status":{{"state":"{state}","will_hibernate_at":null}}}}"#);
+            let deadline = deadline_response(body, 200).await.unwrap();
+            assert_eq!(deadline.alive, expected, "state={state}");
+        }
+    }
+
+    #[tokio::test]
+    async fn test_deadline_reports_gone_on_404() {
         assert!(matches!(
-            client_for(&kc, &ds).session_deadline("s1").await,
+            deadline_response(String::new(), 404).await,
             Err(SessionError::SessionGone)
+        ));
+    }
+
+    #[tokio::test]
+    async fn test_deadline_server_error_is_failed_not_gone() {
+        assert!(matches!(
+            deadline_response(String::new(), 500).await,
+            Err(SessionError::Failed(_))
         ));
     }
 
