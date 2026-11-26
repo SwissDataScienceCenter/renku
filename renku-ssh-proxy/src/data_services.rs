@@ -139,7 +139,8 @@ impl Client {
 
     /// Records user input on the session. Only 2xx counts as a touch.
     pub async fn touch_session(&self, session: &str) -> SessionResult<()> {
-        let url = make_url(&self.data_services_url, ["sessions", session]).map_err(SessionError::Failed)?;
+        let url = make_url(&self.data_services_url, ["sessions", session])
+            .map_err(SessionError::Failed)?;
         log::debug!("Touch session interaction: {}", url);
         let resp = self
             .with_token(|token| {
@@ -161,7 +162,8 @@ impl Client {
 
     /// Reads how long the session has until hibernation. A 404 means it is gone.
     pub async fn session_deadline(&self, session: &str) -> SessionResult<SessionDeadline> {
-        let url = make_url(&self.data_services_url, ["sessions", session]).map_err(SessionError::Failed)?;
+        let url = make_url(&self.data_services_url, ["sessions", session])
+            .map_err(SessionError::Failed)?;
         log::debug!("Read session deadline: {}", url);
         let resp = self
             .with_token(|token| self.client.get(url.clone()).bearer_auth(token))
@@ -188,7 +190,10 @@ impl Client {
             since_input: interaction.map(|t| non_negative_seconds(now.as_second() - t.as_second())),
             // Only a terminal session is not alive: a readiness blip or a future
             // Amalthea state must not stop the proxy's per-connection timer.
-            alive: !matches!(body.status.state.as_str(), "hibernated" | "failed" | "succeeded"),
+            alive: !matches!(
+                body.status.state.as_str(),
+                "hibernated" | "failed" | "succeeded"
+            ),
         })
     }
 
@@ -351,13 +356,18 @@ mod tests {
         let remaining = deadline.remaining.unwrap().as_secs();
         assert!((595..=605).contains(&remaining), "remaining={remaining}");
         let since_input = deadline.since_input.unwrap().as_secs();
-        assert!((295..=305).contains(&since_input), "since_input={since_input}");
+        assert!(
+            (295..=305).contains(&since_input),
+            "since_input={since_input}"
+        );
         assert!(deadline.alive);
     }
 
     #[tokio::test]
     async fn test_deadline_null_timestamps_are_none() {
-        let body = r#"{"lastInteraction":null,"status":{"state":"running","will_hibernate_at":null}}"#.to_string();
+        let body =
+            r#"{"lastInteraction":null,"status":{"state":"running","will_hibernate_at":null}}"#
+                .to_string();
         let deadline = deadline_response(body, 200).await.unwrap();
         assert_eq!(deadline.remaining, None);
         assert_eq!(deadline.since_input, None);
@@ -386,8 +396,9 @@ mod tests {
             ("not-ready", true),
             ("some-future-state", true),
         ] {
-            let body =
-                format!(r#"{{"lastInteraction":null,"status":{{"state":"{state}","will_hibernate_at":null}}}}"#);
+            let body = format!(
+                r#"{{"lastInteraction":null,"status":{{"state":"{state}","will_hibernate_at":null}}}}"#
+            );
             let deadline = deadline_response(body, 200).await.unwrap();
             assert_eq!(deadline.alive, expected, "state={state}");
         }
