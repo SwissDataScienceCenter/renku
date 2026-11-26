@@ -1,4 +1,4 @@
-FROM python:3.11-slim-trixie
+FROM python:3.12-slim-bookworm
 
 RUN apt-get update && apt-get install -y \
     postgresql-client \

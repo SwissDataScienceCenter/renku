@@ -1,0 +1,2 @@
+watch_file .tack/pins.lock.json .tack/default.nix
+use flake

@@ -25,7 +25,7 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      app.kubernetes.io/name: postgresql
+      cnpg.io/cluster: {{ include "renku.pgCluster" . }}
   policyTypes:
     - Ingress
   ingress:
@@ -76,6 +76,12 @@ spec:
               kubernetes.io/metadata.name: {{ .Release.Namespace }}
         - podSelector:
             matchLabels:
+              app: renku-secrets-storage
+          namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+        - podSelector:
+            matchLabels:
               app: postgres-setup
           namespaceSelector:
             matchLabels:
@@ -85,6 +91,56 @@ spec:
           port: 5432
         - protocol: TCP
           port: 9187
+    # Operator, and peer instances when cnpg.instances > 1, must reach the pods.
+    # https://cloudnative-pg.io/documentation/current/networking/
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Values.cnpg.operatorNamespace }}
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: cloudnative-pg
+        - podSelector:
+            matchLabels:
+              cnpg.io/cluster: {{ include "renku.pgCluster" . }}
+          namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+      ports:
+        - protocol: TCP
+          port: 5432
+        - protocol: TCP
+          port: 8000
+{{- end }}
+{{- if .Values.postgresql.enabled }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: legacy-postgres-ingress
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: postgresql
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  policyTypes:
+    - Ingress
+  ingress:
+    # No renku service talks to the legacy instance any more. The one thing that
+    # still has to reach it is the cnpg cluster, which reads it over the network
+    # when cnpg.autoMigration imports the data.
+    - from:
+        - podSelector:
+            matchLabels:
+              cnpg.io/cluster: {{ include "renku.pgCluster" . }}
+      ports:
+        - protocol: TCP
+          port: 5432
 {{- end }}
 ---
 apiVersion: networking.k8s.io/v1
@@ -199,7 +255,7 @@ spec:
     - Ingress
   ingress:
     - from:
-        # Only allow ingress to secrets storage from notebooks and data services
+        # Only allow ingress to secrets storage from notebooks, data services and the ssh-proxy
         - podSelector:
             matchLabels:
               app: {{ template "renku.notebooks.name" . }}
@@ -207,6 +263,10 @@ spec:
         - podSelector:
             matchLabels:
               app: renku-data-service
+              release: {{ .Release.Name }}
+        - podSelector:
+            matchLabels:
+              app: renku-ssh-proxy
               release: {{ .Release.Name }}
       ports:
         - protocol: TCP
@@ -659,3 +719,103 @@ spec:
       app.kubernetes.io/name: AmaltheaSession
   policyTypes:
   - Egress
+{{- if .Values.sshProxy.enabled }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ingress-to-any-session-from-ssh-proxy
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/created-by: controller-manager
+      app.kubernetes.io/name: AmaltheaSession
+      renku.io/frontend-variant: ssh
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: renku-ssh-proxy
+              release: {{ .Release.Name }}
+      ports:
+        - protocol: TCP
+          # ssh sessions listen on Session.Port (data-services BUILD_PORT = 8888)
+          port: 8888
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-external-to-ssh-proxy
+  labels:
+    app: {{ template "renku.name" . }}
+    chart: {{ template "renku.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app: renku-ssh-proxy
+      release: {{ .Release.Name }}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+      ports:
+        - protocol: TCP
+          # The proxy container port, not the Service port.
+          port: ssh
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: egress-from-ssh-proxy
+  labels:
+    app.kubernetes.io/name: {{ template "renku.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/component: ssh-proxy
+    app.kubernetes.io/part-of: renku
+    chart: {{ template "renku.chart" . }}
+    heritage: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: renku-ssh-proxy
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  policyTypes:
+    - Egress
+  egress:
+    {{- with .Values.networkPolicies.sshProxy.egress }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    - to:
+        # Access needed to authorize sessions (internal secret service).
+        - podSelector:
+            matchLabels:
+              app: renku-secrets-storage
+              release: {{ .Release.Name }}
+      ports:
+        - protocol: TCP
+          port: http
+    - to:
+        # Access to the SSH port of user sessions.
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/created-by: controller-manager
+              app.kubernetes.io/name: AmaltheaSession
+              renku.io/frontend-variant: ssh
+      ports:
+        - protocol: TCP
+          # ssh sessions listen on Session.Port (data-services BUILD_PORT = 8888)
+          port: 8888
+{{- end }}
+
