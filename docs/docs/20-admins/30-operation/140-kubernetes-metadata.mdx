@@ -1,0 +1,67 @@
+---
+title: Kubernetes Metadata
+---
+
+Renku uses labels and annotations in Kubernetes with the `renku.io` prefix.
+
+Here is a list of labels and annotations commonly used in Renku:
+
+## renku.io/safe-username
+
+User ID: either the Keycloak ID ("sub" claim) or the random ID assigned to anonymous users.
+
+This is used as a label to indicate the owner of a session (`amaltheasessions.amalthea.dev`) and is propagated
+to related resources.
+
+## renku.io/anonymous-session
+
+Boolean, set to `"true"` for anonymous sessions.
+
+## renku.io/session-type
+
+Type of Renku session.
+
+This is used as a label to indicate the type of a session; possible values: `interactive`, `non_interactive`.
+
+## renku.io/project_id
+
+Project ID in Renku.
+
+## renku.io/launcher_id
+
+Session launcher ID in Renku.
+
+## renku.io/resource_pool_id
+
+Resource pool ID in Renku.
+
+## renku.io/resource_class_id
+
+Resource class ID in Renku.
+
+## renku.io/submission_id
+
+Submission ID for Renku jobs (non-interactive sessions).
+
+## renku.io/frontend-variant
+
+Frontend variant used when building a session image from code.
+
+## renku.io/remote-tunnel
+
+Indicates that a WebSocket tunnel is used to connect a remote session container to the local Amalthea pod.
+
+Possible values: `allow`.
+
+## renku.io/session_uid
+
+Unique ID for a session (`amaltheasessions.amalthea.dev`).
+
+This annotation shows the unique ID given by Kubernetes to the `amaltheasessions.amalthea.dev` resource;
+this ID is preserved when the session is paused and resumed, but not when the session is deleted and later started anew.
+
+## renku.io/run_id
+
+ID for a continuous runtime of a session (`amaltheasessions.amalthea.dev`).
+
+This annotation gives a unique ID per continuous run of a session; this ID will change when the session gets resumed from a paused state.
