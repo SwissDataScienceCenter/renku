@@ -177,6 +177,16 @@ KC_DB_PASSWORD: {{ $password | quote }}
 {{- end -}}
 {{- end -}}
 
+{{/* If using the Helm-chart bundled Keycloak this will return the cluster-internal service url, otherwise it will return the proper URL for an external Keycloak, running outside the cluster. */}}
+{{- define "renku.internalKeycloakUrl" -}}
+{{- if .Values.keycloakx.enabled -}}
+{{/* NOTE: If the url for keycloak does not end with '/' then the python keycloak client library will fail to connect */}}
+{{- printf "http://%s-http/auth/" (include "keycloak.fullname" .) -}}
+{{- else -}}
+{{- .Values.global.keycloak.url -}}
+{{- end -}}
+{{- end -}}
+
 {{- define "renku.keycloakIssuerUrl" -}}
 {{- printf "%s/realms/%s" (include "renku.keycloakUrl" . | trimSuffix "/") (include "renku.keycloak.realm" .) -}}
 {{- end -}}
@@ -191,6 +201,9 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
+app.kubernetes.io/part-of: renku
+chart: {{ template "renku.chart" . }}
+heritage: {{ .Release.Service }}
 {{- end -}}
 
 {{- define "renku.keycloak.realm" -}}

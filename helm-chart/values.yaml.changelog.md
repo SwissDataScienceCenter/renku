@@ -5,6 +5,11 @@ For changes that require manual steps other than changing values, please check o
 Please follow this convention when adding a new row
 * `<type: NEW|EDIT|DELETE> - *<resource name>*: <details>`
 
+## Upgrading to Renku 2.24.0
+
+* NEW `networkPolicies.hardened`: it is now possible to configure whether Renku's network policy uses the hardened mode (default since this version) meaning that the deployment uses a default deny all ingress and egress policy or the non-hardened mode (which matches current behavior) that is a deny all ingress only.
+* New `networkPolicies.build.egress`: extra egress rules that will be added to the ones allowing external communication. They will be useful for example to access a harbor instance hosted in the same cluster through an ingress controller.
+
 ## Upgrading to Renku 2.22.0
 
 > [!WARNING]
@@ -31,6 +36,7 @@ upgrading, see [the chart readme](https://github.com/SwissDataScienceCenter/renk
 If you have services that are completely unrelated to Renku which are using the Postgres database that came with Renku, and you set `cnpg.enabled` to `true`, and  you want those external services to keep using the same database, then you should know that
 the hostname of the deployed database changes from `<release>-postgresql` to
 `<release>-pg-rw`, the read-write service of the cnpg Cluster. The renku chart templates it.
+
 ## Upgrading to Renku 2.21.0
 
 * NEW `dataService.imageBuilders.insecureOutput.enabled`: it is now possible to configure registries that use e.g. self-signed certificates to push images to. **WARNING** do not use in production. This is a feature that helps for testing and development.

@@ -18,3 +18,11 @@ If release name contains chart name it will be used as a full name.
 {{- printf "%s-notebooks" .Release.Name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Common labels
+*/}}
+{{- define "dataservice.labels" -}}
+app.kubernetes.io/component: data-services
+{{ template "renku.labels" . }}
+{{- end }}

@@ -55,8 +55,24 @@ Most information related to upgrading from one chart version to another is cover
 in the `values changelog file <https://github.com/SwissDataScienceCenter/renku/blob/master/helm-chart/values.yaml.changelog.md>`_.
 For upgrades that require some steps other than modifying the values files to be executed, we add some instructions here.
 
+Upgrading to 2.24.0
+*******************
+
+This version contains an update that changes the labels of multiple objects as
+part of the hardening of the NetworkPolicies. More specifically, these changes
+involve multiple spec selectors in deployments which is in an immutable field.
+
+The following deployments must be deleted prior to applying this update:
+
+- renku-authz
+- renku-data-service
+- renku-data-tasks
+- renku-k8s-watcher
+- renku-gateway
+- renku-secrets-storage
+
 Upgrading to 2.22.0
-*************************
+*******************
 This version deprecates bitnami ``postgresql`` (version ``14.2.4``).
 The proposed migration path is with `CloudNativePG <https://cloudnative-pg.io/>`_,
 but any external postgres can be used.
@@ -78,7 +94,7 @@ Keep ``postgresql.enabled: true`` for as long as you need the old data reachable
 deleted while you move it.
 
 Data migration
-+++++++++++++++
+++++++++++++++
 
 There are two ways of migrating the data from the old bitnami instance+volume to the new CNPG Cluster.
 Both need the old instance still running.

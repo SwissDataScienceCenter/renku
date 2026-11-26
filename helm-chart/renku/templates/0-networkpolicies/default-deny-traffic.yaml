@@ -1,0 +1,23 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+{{- if .Values.networkPolicies.hardened }}
+metadata:
+  name: default-deny-all
+  labels:
+    {{- include "netpol.labels" . | nindent 4 }}
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+{{- else }}
+metadata:
+  name: default-deny-ingress
+  labels:
+    {{- include "netpol.labels" . | nindent 4 }}
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+{{- end }}

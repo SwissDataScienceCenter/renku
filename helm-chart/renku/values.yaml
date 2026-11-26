@@ -91,7 +91,7 @@ global:
       # password:
       ## Use an existing secret instead of setting the password above.
       # existingSecret:
-      ## Key in the secret holding the admin password. If you are using a cloud-native Postgres (CNPG), a CloudNativePG cluster 
+      ## Key in the secret holding the admin password. If you are using a cloud-native Postgres (CNPG), a CloudNativePG cluster
       ## keeps the same value in the <cluster>-superuser Kubernetes secret under the "password" key.
       existingSecretPasswordKey: postgres-password
 
@@ -185,6 +185,9 @@ ingress:
   #    hosts:
   #      - example.local
 networkPolicies:
+  ## Enable hardened mode
+  ## Hardened mode means that by default a deny-all policy is applied in place of the deny ingress
+  hardened: true
   ## List of podSelector terms for pods in the release namespace that should be allowed all ingress to all services
   allowAllIngressFromPods: []
   ## List of namespaces that should be allowed all ingress to all services
@@ -206,6 +209,11 @@ networkPolicies:
             protocol: UDP
           - port: 53
             protocol: TCP
+    ingress: []
+      ## Additional ingress from rules for external access
+      ##
+      ## - ipBlock:
+      ##     cidr: <loadbalancer-ip-block>
   sessions:
     egress:
       # NOTE: These prevent user sessions from accessing other services running in your cluster.
@@ -237,6 +245,8 @@ networkPolicies:
                 - 10.0.0.0/8
                 - 172.16.0.0/12
                 - 192.168.0.0/16
+                # Cloud instance metadata API
+                - 169.254.169.254/32
       ## Depending on the ingress controller in your cluster you will need an
       ## additional network policy like the one below. The example below is for ingress nginx.
       ## This resolves issues with hairpinning where a session pod is accessing
@@ -252,6 +262,21 @@ networkPolicies:
       #   ports:
       #     - port: 443
       #       protocol: TCP
+  builds:
+    # Extra egress entries in case for example the harbor instance is provided
+    # in the same cluster in which case, access to the ingress controller is
+    # required.
+    egress: []
+  # The name of the pod and the namespace may vary based on which ingress controller
+  # is used in production.
+  ingressController:
+    selector:
+      - podSelector:
+          matchLabels:
+            app.kubernetes.io/name: ingress-nginx
+        namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: ingress-nginx
 ## Alerts configuration
 alerts:
   ## Alertmanager webhook authentication
@@ -283,6 +308,12 @@ logging:
 keycloakx:
   ## Spawn a keycloak instance
   enabled: true
+  podLabels:
+    app.kubernetes.io/part-of: renku
+    renku.io/database-access: "true"
+    renku.io/ingress-access: "true"
+    renku.io/keycloak-access: "true"
+    renku.io/gateway-access: "true"
   postgresql:
     # Disable PostgreSQL dependency
     enabled: false
@@ -407,6 +438,7 @@ keycloakx:
     {{- end -}}
   ingress:
     enabled: false
+
 # Legacy bitnami postgres.
 # This postgres database is not used by any Renku services.
 # This section exists only to allow migrating the legacy database.
@@ -422,7 +454,6 @@ keycloakx:
 # flag to `true` below. In all other cases administrators have to do the DB migration manually.
 # Please refer to the instructions in helm-chart/utils/postgres_migrations/bitnami-to-cnpg.md
 # on how to manually perform the migration.
-
 postgresql:
   enabled: true
   auth:
@@ -447,6 +478,9 @@ postgresql:
     repository: bitnami-mirror/postgresql
 
   primary:
+    podLabels:
+      app.kubernetes.io/part-of: renku
+
     persistence:
       ## We use the defaults here, but they will probably be modified for most deployments.
       enabled: true
@@ -474,7 +508,7 @@ cnpg:
   # Renku will never install the Postgres operator for you.
   # Set to false if you provision the database yourself fully outside of Renku. In this case you need to set `global.externalServices.postgresql`.
   install: true
-  # The namespace where the cloud-native Postgres operator is installed. 
+  # The namespace where the cloud-native Postgres operator is installed.
   # The chart opens a network policy for it, so a wrong
   # value here leaves the Cluster hanging and never ready.
   operatorNamespace: cnpg-system
@@ -494,6 +528,9 @@ cnpg:
         memory: 300Mi
 
 redis:
+  master:
+    podLabels:
+      app.kubernetes.io/part-of: renku
   # If set to true, a HA redis will be included in the Renku release.
   install: true
   ###########################################################################
@@ -541,6 +578,8 @@ redis:
   # when using sentinel the master block is completely ignored
   # master:
   replica:
+    podLabels:
+      app.kubernetes.io/part-of: renku
     # this controls the amount of redis+sentinel pods which get created
     # it does relate to sentinel.quorum - if the latter is larger than this,
     # then clearly things are misconfigured
@@ -606,6 +645,8 @@ redis:
     registry: harbor.renkulab.io
     repository: bitnami-mirror/redis
 solr:
+  podLabels:
+    app.kubernetes.io/part-of: renku
   enabled: true
   cloudEnabled: false
   collectionReplicas: 0
@@ -695,7 +736,8 @@ ui:
         - url: https://github.com/SwissDataScienceCenter/renku-project-template
           ref: 0.9.0
           name: Renku
-        - url: https://github.com/SwissDataScienceCenter/contributed-project-templates
+        - url:
+            https://github.com/SwissDataScienceCenter/contributed-project-templates
           ref: 0.10.0
           name: Community
     # This defines the threshold for automatically showing a preview when browsing projects' files.
@@ -749,7 +791,8 @@ ui:
             url: ""
       # The default is to show the tutorial from the docs, but can also link to an
       # internal project
-      tutorialLink: https://renku.readthedocs.io/en/stable/tutorials/01_firststeps.html
+      tutorialLink:
+        https://renku.readthedocs.io/en/stable/tutorials/01_firststeps.html
       # project path with namespace to show in landing page (get started section)
       projectPath: ""
       # dataset slug to show in landing page (what is renku section)
@@ -761,7 +804,10 @@ ui:
         enabled: false
         title: "Renku real-world use cases: Conducted by SDSC and ETH Domain"
         # Markdown is allowed in the description
-        description: The case studies presented here **bridge the gap** from domain to data science and provide experts from both sides with the means to examine, confirm, and extend the datasets and their analyses, without extensive investments of time and infrastructure.
+        description: The case studies presented here **bridge the gap** from
+          domain to data science and provide experts from both sides with the
+          means to examine, confirm, and extend the datasets and their analyses,
+          without extensive investments of time and infrastructure.
         # Projects to highlight on the homepage -- default to none
         # projects: []
         # To showcase projects, provide the identifier following the structure below
@@ -770,8 +816,10 @@ ui:
           - identifier: hdbi/data-management/cccooci
           - identifier: renku-ui-tests/stable-project
             overrideTitle: "Stable Project: A project for testing"
-            overrideDescription: "This is a project for **testing**. You may find it useful to look at."
-            overrideImageUrl: https://gitlab.renkulab.io/uploads/-/system/project/avatar/36159/graphical_abstract.png
+            overrideDescription: "This is a project for **testing**. You may find
+              it useful to look at."
+            overrideImageUrl:
+              https://gitlab.renkulab.io/uploads/-/system/project/avatar/36159/graphical_abstract.png
     coreApiVersionConfig:
       ## Configuration to specify which version of the core-service API should be used
       # "/" indicates that the latest version should be used
@@ -1130,7 +1178,7 @@ notebooks:
     ## This is useful to make sure that the host can be properly recognized
     ## when connecting to a session. If left unset then the host keys are
     ## likely to change causing ssh connections to fail and require removing the
-    ## old keys from ~/.ssh/known_hosts. Therefore, it is reccomended that this is
+    ## old keys from ~/.ssh/known_hosts. Therefore, it is recommended that this is
     ## set for production. The required keys are:
     ## - ssh_host_dsa_key
     ## - ssh_host_dsa_key.pub
@@ -1436,7 +1484,7 @@ dataService:
     enabled: false
     ## If you leave the storage class as null, the default storage class will be used.
     ## NOTE: In many cases the default storage class does not support read-write-many access.
-    storageClass: null
+    storageClass:
     ## The max storage that the API will accept when the storage is created.
     ## This is the upper limit of what the users can request. When they create the project storage
     ## user have the option to set a lower value. The value cannot be lower than 1 Gb.

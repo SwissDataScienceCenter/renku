@@ -4,10 +4,8 @@ kind: Service
 metadata:
   name: {{ template "renku.fullname" . }}-gateway
   labels:
-    app: {{ template "renku.name" . }}-gateway
-    chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ template "renku.name" . }}-gateway
+    {{- include "gateway.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.gateway.service.type }}
   ports:
@@ -16,6 +14,5 @@ spec:
       protocol: TCP
       name: http
   selector:
-    app: {{ template "gateway.name" . }}
-    release: {{ .Release.Name }}
-
+    app.kubernetes.io/name: {{ template "gateway.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}

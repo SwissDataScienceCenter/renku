@@ -4,10 +4,8 @@ kind: Role
 metadata:
   name: {{ template "renku.fullname" . }}-data-tasks
   labels:
-    app: {{ template "renku.name" . }}
-    chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ template "renku.name" . }}
+    {{- include "dataservice.labels" . | nindent 4 }}
 rules:
 {{- if .Values.dataService.dataTasks.enableResourceRequestTracking }}
   - apiGroups:
@@ -48,10 +46,8 @@ kind: RoleBinding
 metadata:
   name: {{ template "renku.fullname" . }}-data-tasks
   labels:
-    app: {{ template "renku.name" . }}
-    chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ template "renku.name" . }}
+    {{- include "dataservice.labels" . | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -67,10 +63,8 @@ kind: RoleBinding
 metadata:
   name: {{ template "renku.fullname" . }}-data-tasks-cluster-role
   labels:
-    app: {{ template "renku.name" . }}
-    chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ template "renku.name" . }}
+    {{- include "dataservice.labels" . | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -85,10 +79,8 @@ kind: ClusterRole
 metadata:
   name: {{ template "renku.fullname" . }}-data-tasks
   labels:
-    app: {{ template "renku.name" . }}
-    chart: {{ template "renku.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ template "renku.name" . }}
+    {{- include "dataservice.labels" . | nindent 4 }}
 rules:
 - apiGroups:
   - ""
