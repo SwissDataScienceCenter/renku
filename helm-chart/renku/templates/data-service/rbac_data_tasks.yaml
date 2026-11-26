@@ -14,11 +14,18 @@ rules:
       - ""
     resources:
       - pods
-      - persistentvolumeclaims
     verbs:
       - get
       - list
 {{- end }}
+  - apiGroups:
+      - ""
+    resources:
+      - persistentvolumeclaims
+    verbs:
+      - get
+      - list
+      - patch
   - apiGroups:
       - apps
     resources:
