@@ -139,9 +139,9 @@ networkPolicies:
               matchLabels:
                 kubernetes.io/metadata.name: app-routing-system
         ports:
-          - port: HTTP
+          - port: http
             protocol: TCP
-          - port: HTTPS
+          - port: https
             protocol: TCP
   ingressController:
     selector:
