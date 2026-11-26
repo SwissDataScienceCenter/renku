@@ -8,6 +8,7 @@ Please follow this convention when adding a new row
 ## Upgrading to Renku 2.24.0
 
 * NEW `networkPolicies.hardened`: it is now possible to configure whether Renku's network policy uses the hardened mode (default since this version) meaning that the deployment uses a default deny all ingress and egress policy or the non-hardened mode (which matches current behavior) that is a deny all ingress only.
+* New `networkPolicies.build.egress`: extra egress rules that will be added to the ones allowing external communication. They will be useful for example to access a harbor instance hosted in the same cluster through an ingress controller.
 
 ## Upgrading to Renku 2.22.0
 

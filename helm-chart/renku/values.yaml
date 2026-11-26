@@ -262,6 +262,11 @@ networkPolicies:
       #   ports:
       #     - port: 443
       #       protocol: TCP
+  builds:
+    # Extra egress entries in case for example the harbor instance is provided
+    # in the same cluster in which case, access to the ingress controller is
+    # required.
+    egress: []
   # The name of the pod and the namespace may vary based on which ingress controller
   # is used in production.
   ingressController:

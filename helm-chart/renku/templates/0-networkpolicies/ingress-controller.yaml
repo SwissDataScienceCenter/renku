@@ -34,5 +34,4 @@ spec:
           port: http
         - protocol: TCP
           port: https
-
 {{- end }}

@@ -22,4 +22,7 @@ spec:
               - 192.168.0.0/16
               # Cloud instance metadata API
               - 169.254.169.254/32
+    {{- with .Values.networkPolicies.builds.egress }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 {{- end }}
