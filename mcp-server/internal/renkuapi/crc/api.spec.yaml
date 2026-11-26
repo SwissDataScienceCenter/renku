@@ -1,0 +1,2795 @@
+---
+openapi: 3.0.2
+info:
+  title: Renku Data Services API
+  description: |
+    This service is the main backend for Renku. It provides information about users, projects,
+    cloud storage, access to compute resources and many other things.
+  version: v1
+servers:
+  - url: /api/data
+paths:
+  /classes/{class_id}:
+    get:
+      summary: Get a specific resource class
+      parameters:
+        - in: path
+          name: class_id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: The resource class that was requested
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ResourceClassWithId"
+        "404":
+          description: The resource class does not exist
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - classes
+  /clusters:
+    get:
+      summary: Get all the cluster configurations
+      responses:
+        "200":
+          description: The cluster configurations
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ClustersWithId"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - clusters
+    post:
+      summary: Create a new cluster configuration
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/Cluster"
+      responses:
+        "201":
+          description: The cluster configuration was created
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ClusterWithId"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - clusters
+  /clusters/{cluster_id}:
+    get:
+      summary: Get a cluster configuration
+      parameters:
+        - in: path
+          name: cluster_id
+          required: true
+          schema:
+            $ref: "#/components/schemas/Ulid"
+      responses:
+        "200":
+          description: The cluster configuration
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ClusterWithId"
+        "404":
+          description: The cluster configuration does not exist
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - clusters
+    put:
+      summary: Update an existing cluster configuration
+      parameters:
+        - in: path
+          name: cluster_id
+          required: true
+          schema:
+            $ref: "#/components/schemas/Ulid"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/Cluster"
+      responses:
+        "200":
+          description: The cluster configuration
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ClusterWithId"
+        "404":
+          description: The cluster configuration does not exist
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - clusters
+    patch:
+      summary: Update specific fields of an existing cluster configuration
+      parameters:
+        - in: path
+          name: cluster_id
+          required: true
+          schema:
+            $ref: "#/components/schemas/Ulid"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/ClusterPatch"
+      responses:
+        "200":
+          description: The cluster configuration
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ClusterWithId"
+        "404":
+          description: The cluster configuration does not exist
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - clusters
+    delete:
+      summary: Remove a cluster configuration
+      parameters:
+        - in: path
+          name: cluster_id
+          required: true
+          schema:
+            $ref: "#/components/schemas/Ulid"
+      responses:
+        "204":
+          description: The cluster configuration was removed or did not exist in the first place
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - clusters
+  /error:
+    get:
+      summary: Get a sample error response with status code 422
+      responses:
+        "422":
+          description: The error
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /resource_flavors:
+    get:
+      summary: Get all resource flavors
+      parameters:
+        - in: query
+          description: Filter for resource flavors based on the provided name as a prefix. Omitting this parameter returns all flavors.
+          name: resource_flavor_params
+          style: form
+          explode: true
+          schema:
+            type: object
+            additionalProperties: false
+            properties:
+              name:
+                $ref: "#/components/schemas/Name"
+      responses:
+        "200":
+          description: The list of resource flavors
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ResourceFlavorsList"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - resource_flavors
+    post:
+      summary: Create a new resource flavor
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/ResourceFlavorPost"
+      responses:
+        "201":
+          description: The resource flavor was created
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ResourceFlavor"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - resource_flavors
+  /resource_flavors/{resource_flavor_id}:
+    get:
+      summary: Get a specific resource flavor
+      parameters:
+        - in: path
+          name: resource_flavor_id
+          required: true
+          schema:
+            $ref: "#/components/schemas/Ulid"
+      responses:
+        "200":
+          description: The resource flavor that was requested
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ResourceFlavor"
+        "404":
+          description: The resource flavor does not exist
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - resource_flavors
+    patch:
+      summary: Partially update a resource flavor
+      description: |
+        The new values take effect on every linked resource class when it is read. They are not
+        copied onto the linked classes.
+      parameters:
+        - in: path
+          name: resource_flavor_id
+          required: true
+          schema:
+            $ref: "#/components/schemas/Ulid"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/ResourceFlavorPatch"
+      responses:
+        "200":
+          description: The updated resource flavor
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ResourceFlavor"
+        "404":
+          description: The resource flavor does not exist
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - resource_flavors
+    delete:
+      summary: Remove a resource flavor
+      description: Refused while any resource class is still linked to the flavor.
+      parameters:
+        - in: path
+          name: resource_flavor_id
+          required: true
+          schema:
+            $ref: "#/components/schemas/Ulid"
+      responses:
+        "204":
+          description: The resource flavor was removed or does not exist
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - resource_flavors
+  /resource_flavors/{resource_flavor_id}/resource_classes:
+    get:
+      summary: Get the resource classes linked to a resource flavor
+      description: |
+        Shows what an edit to the flavor will affect. A class is listed for as long as it is
+        linked, whether or not its own values still match the flavor.
+      parameters:
+        - in: path
+          name: resource_flavor_id
+          required: true
+          schema:
+            $ref: "#/components/schemas/Ulid"
+      responses:
+        "200":
+          description: The resource classes linked to the resource flavor
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/LinkedResourceClassesList"
+        "404":
+          description: The resource flavor does not exist
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - resource_flavors
+  /resource_pools:
+    get:
+      summary: Get all resource pool definitions
+      parameters:
+        - in: query
+          description: query parameters
+          name: resource_pools_params
+          style: form
+          explode: true
+          schema:
+            type: object
+            additionalProperties: false
+            properties:
+              cpu:
+                allOf:
+                  - $ref: "#/components/schemas/CpuFilter"
+                default: 0.0
+              gpu:
+                allOf:
+                  - $ref: "#/components/schemas/Gpu"
+                default: 0
+              memory:
+                allOf:
+                  - $ref: "#/components/schemas/MemoryFilter"
+                default: 0
+              max_storage:
+                allOf:
+                  - $ref: "#/components/schemas/StorageFilter"
+                default: 0
+      responses:
+        "200":
+          description: The resource pool definitions
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ResourcePoolsWithIdFiltered"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - resource_pools
+    post:
+      summary: Create a new resource pool
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/ResourcePool"
+      responses:
+        "201":
+          description: The resource pool was created
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ResourcePoolWithId"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - resource_pools
+  /resource_pools/{resource_pool_id}:
+    get:
+      summary: Get a resource pool definition
+      parameters:
+        - in: path
+          name: resource_pool_id
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 2147483647
+      responses:
+        "200":
+          description: The resource pool definition
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ResourcePoolWithId"
+        "404":
+          description: The resource pool does not exist
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - resource_pools
+    put:
+      summary: Update an existing resource pool
+      parameters:
+        - in: path
+          name: resource_pool_id
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 2147483647
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/ResourcePoolPut"
+      responses:
+        "200":
+          description: The resource pool definition
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ResourcePoolWithId"
+        "404":
+          description: The resource pool does not exist
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - resource_pools
+    patch:
+      summary: Update specific fields of an existing resource pool
+      description: |
+        Note that the quota cannot be removed using the PATCH method.
+        To remove the quota, use the PUT method and unset the quota field.
+      parameters:
+        - in: path
+          name: resource_pool_id
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 2147483647
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/ResourcePoolPatch"
+      responses:
+        "200":
+          description: The resource pool definition
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ResourcePoolWithId"
+        "404":
+          description: The resource pool does not exist
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - resource_pools
+    delete:
+      summary: Remove a resource pool
+      parameters:
+        - in: path
+          name: resource_pool_id
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 2147483647
+      responses:
+        "204":
+          description: The resource pool was removed or did not exist in the first place
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - resource_pools
+  /resource_pools/{resource_pool_id}/classes:
+    get:
+      summary: Get all resource classes in a resource pool
+      parameters:
+        - in: path
+          name: resource_pool_id
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 2147483647
+        - in: query
+          description: Filter for resource classes based on the provided name as a prefix. Omitting this parameter returns all classes.
+          name: resource_class_params
+          style: form
+          explode: true
+          schema:
+            type: object
+            additionalProperties: false
+            properties:
+              name:
+                $ref: "#/components/schemas/Name"
+      responses:
+        "200":
+          description: The resource class in the specific pool
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ResourceClassesWithIdResponse"
+        "404":
+          description: The resource pool does not exist
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - classes
+    post:
+      summary: Create a new resource class in the specific pool
+      parameters:
+        - in: path
+          name: resource_pool_id
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 2147483647
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/ResourceClass"
+      responses:
+        "201":
+          description: Created a class in the resource pool
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ResourceClassWithId"
+        "404":
+          description: The resource pool does not exist
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - classes
+  /resource_pools/{resource_pool_id}/classes/{class_id}:
+    get:
+      summary: Get a specific resource class in a specific resource pool
+      parameters:
+        - in: path
+          name: resource_pool_id
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 2147483647
+        - in: path
+          name: class_id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: The resource class that was requested
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ResourceClassWithId"
+        "404":
+          description: The resource class does not exist
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - classes
+    put:
+      summary: Update an existing resource class for a specific resource pool
+      parameters:
+        - in: path
+          name: resource_pool_id
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 2147483647
+        - in: path
+          name: class_id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/ResourceClass"
+      responses:
+        "200":
+          description: Updated the classes in the resource pool
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ResourceClassWithId"
+        "404":
+          description: The resource pool does not exist
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - classes
+    patch:
+      summary: Partially update an existing resource class for a specific resource pool
+      parameters:
+        - in: path
+          name: resource_pool_id
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 2147483647
+        - in: path
+          name: class_id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/ResourceClassPatch"
+      responses:
+        "200":
+          description: Updated the classes in the resource pool
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ResourceClassWithId"
+        "404":
+          description: The resource pool does not exist
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - classes
+    delete:
+      summary: Remove the specific resource class
+      parameters:
+        - in: path
+          name: resource_pool_id
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 2147483647
+        - in: path
+          name: class_id
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: The resource class was removed or did not exist in the first place
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - classes
+  /resource_pools/{resource_pool_id}/classes/{class_id}/tolerations:
+    get:
+      summary: Get the tolerations from a resource class
+      parameters:
+        - in: path
+          name: resource_pool_id
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 2147483647
+        - in: path
+          name: class_id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: All the tolerations for a resource class
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/K8sLabelList"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - classes
+    delete:
+      summary: Remove all tolerations from a resource class
+      parameters:
+        - in: path
+          name: resource_pool_id
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 2147483647
+        - in: path
+          name: class_id
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: The tolerations have been removed
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - classes
+  /resource_pools/{resource_pool_id}/classes/{class_id}/node_affinities:
+    get:
+      summary: Get the node affinities from a resource class
+      parameters:
+        - in: path
+          name: resource_pool_id
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 2147483647
+        - in: path
+          name: class_id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: All the affinities for a resource class
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/NodeAffinityListResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - classes
+    delete:
+      summary: Remove all node affinities from a resource class
+      parameters:
+        - in: path
+          name: resource_pool_id
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 2147483647
+        - in: path
+          name: class_id
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: The node affinities have been removed
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - classes
+  /resource_pools/{resource_pool_id}/users:
+    get:
+      summary: Get all users that have access to a resource pool
+      parameters:
+        - in: path
+          name: resource_pool_id
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 2147483647
+      responses:
+        "200":
+          description: The list of users
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/PoolUsersWithId"
+        "404":
+          description: The resource pool does not exist
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - resource_pools
+    post:
+      summary: Add users to the list of users that have access to the resource pool
+      parameters:
+        - in: path
+          name: resource_pool_id
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 2147483647
+      requestBody:
+        description: List of user Ids
+        required: true
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/PoolUsersWithId"
+            example:
+              - id: 543-user-id
+              - id: 123-some-user
+      responses:
+        "201":
+          description: The list of users was updated
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/PoolUsersWithId"
+              example:
+                - id: 123-user-id
+                - id: user-id
+                - id: 456-user-id
+        "404":
+          description: The resource pool does not exist
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - resource_pools
+    put:
+      summary: Set the list of users that has access to the resource pool
+      parameters:
+        - in: path
+          name: resource_pool_id
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 2147483647
+      requestBody:
+        description: List of user Ids
+        required: true
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/PoolUsersWithId"
+      responses:
+        "200":
+          description: The list of users was updated
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/PoolUsersWithId"
+        "404":
+          description: The resource pool does not exist
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - resource_pools
+  /resource_pools/{resource_pool_id}/users/{user_id}:
+    get:
+      summary: Check if a specific user belongs to a specific resource pool
+      parameters:
+        - in: path
+          name: resource_pool_id
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 2147483647
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: The user belongs to the resource pool
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/PoolUserWithId"
+        "404":
+          description: The user does not belong to the resource pool, or the resource pool or user do not exist
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - resource_pools
+    delete:
+      summary: Remove a specific user from a specific resource pool
+      parameters:
+        - in: path
+          name: resource_pool_id
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 2147483647
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: The user was removed, or it was not part of the pool
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - resource_pools
+  /resource_pools/{resource_pool_id}/members:
+    get:
+      summary: Get all members of a resource pool
+      parameters:
+        - in: path
+          name: resource_pool_id
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 2147483647
+      responses:
+        "200":
+          description: The list of members
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/PoolMembersResponse"
+        "404":
+          description: The resource pool does not exist
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - resource_pools
+    post:
+      summary: Add members to a resource pool
+      parameters:
+        - in: path
+          name: resource_pool_id
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 2147483647
+      requestBody:
+        description: List of members
+        required: true
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/PoolMembers"
+      responses:
+        "201":
+          description: The members were added
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/PoolMembersResponse"
+        "404":
+          description: The resource pool or a member does not exist
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - resource_pools
+    put:
+      summary: Set the members of a resource pool
+      parameters:
+        - in: path
+          name: resource_pool_id
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 2147483647
+      requestBody:
+        description: List of members
+        required: true
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/PoolMembers"
+      responses:
+        "200":
+          description: The members were set
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/PoolMembersResponse"
+        "404":
+          description: The resource pool or a member does not exist
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - resource_pools
+  /resource_pools/{resource_pool_id}/members/{member_type}/{member_id}:
+    get:
+      summary: Check if a specific member belongs to a resource pool
+      parameters:
+        - in: path
+          name: resource_pool_id
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 2147483647
+        - in: path
+          name: member_type
+          required: true
+          schema:
+            type: string
+            enum: [user, group, project]
+        - in: path
+          name: member_id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: The member belongs to the resource pool
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/PoolMemberResponse"
+        "404":
+          description: The member does not belong to the resource pool, or the resource pool or member do not exist
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - resource_pools
+    delete:
+      summary: Remove a specific member from a resource pool
+      parameters:
+        - in: path
+          name: resource_pool_id
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 2147483647
+        - in: path
+          name: member_type
+          required: true
+          schema:
+            type: string
+            enum: [user, group, project]
+        - in: path
+          name: member_id
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: The member was removed or it was not part of the pool
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - resource_pools
+  /resource_pools/{resource_pool_id}/quota:
+    get:
+      summary: Get the quota associated with the resource pool
+      parameters:
+        - in: path
+          name: resource_pool_id
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 2147483647
+      responses:
+        "200":
+          description: The resource quota for the resource pool
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/QuotaWithId"
+        "404":
+          description: The resource pool does not exist
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - quota
+    put:
+      summary: Set the quota associated with the resource pool
+      parameters:
+        - in: path
+          name: resource_pool_id
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 2147483647
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/QuotaWithId"
+      responses:
+        "200":
+          description: The quota has been updated
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/QuotaWithId"
+        "404":
+          description: The resource pool does not exist
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - quota
+    patch:
+      summary: Partially update the quota for a resource pool
+      parameters:
+        - in: path
+          name: resource_pool_id
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 2147483647
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/QuotaPatch"
+      responses:
+        "200":
+          description: The quota has been updated
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/QuotaWithId"
+        "404":
+          description: The resource pool does not exist
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - quota
+  /users/{user_id}/resource_pools:
+    get:
+      summary: Get all resource pools that the user has access to
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: string
+        - in: query
+          description: Filter for resource classes based on the provided name as a prefix. Omitting this parameter returns all classes.
+          name: user_resource_params
+          style: form
+          explode: true
+          schema:
+            type: object
+            additionalProperties: false
+            properties:
+              name:
+                $ref: "#/components/schemas/Name"
+      responses:
+        "200":
+          description: The resource pools that the user has access to
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ResourcePoolsWithId"
+        "404":
+          description: The user does not exist
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - users
+    post:
+      summary: Give the user access to the specified resource pools
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: List of resource pool IDs
+        required: true
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/IntegerIds"
+      responses:
+        "201":
+          description: The resource pools that the user has been given access to
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ResourcePoolsWithId"
+        "404":
+          description: The user or resource pool(s) do not exist
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - users
+    put:
+      summary: Set the list of resource pools that the user has access to
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: List of resource pool IDs
+        required: true
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/IntegerIds"
+      responses:
+        "200":
+          description: The resource pools that the user has been given access to
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ResourcePoolsWithId"
+        "404":
+          description: The user or resource pool(s) do not exist
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - users
+  /groups/{group_slug}/resource_pools:
+    get:
+      summary: Get all resource pools that the group has access to
+      parameters:
+        - in: path
+          name: group_slug
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: The resource pools that the group has access to
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ResourcePoolsWithIdFiltered"
+        "404":
+          description: The group does not exist or the user does not have access to the group
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - groups
+  /version:
+    get:
+      summary: Get the version of the service
+      responses:
+        "200":
+          description: The error
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/Version"
+
+components:
+  schemas:
+    Cluster:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          $ref: "#/components/schemas/Name"
+        config_name:
+          $ref: "#/components/schemas/ConfigName"
+        session_protocol:
+          $ref: "#/components/schemas/Protocol"
+        session_host:
+          $ref: "#/components/schemas/Host"
+        session_port:
+          $ref: "#/components/schemas/Port"
+        session_path:
+          type: string
+        session_ingress_class_name:
+          $ref: "#/components/schemas/IngressClassName"
+        session_ingress_annotations:
+          $ref: "#/components/schemas/IngressAnnotations"
+        session_tls_secret_name:
+          $ref: "#/components/schemas/TlsSecretName"
+        session_storage_class:
+          $ref: "#/components/schemas/StorageClassName"
+        service_account_name:
+          $ref: "#/components/schemas/K8sResourceName"
+        session_ingress_use_default_cluster_tls_cert:
+          type: boolean
+          default: false
+      required:
+        [
+          "name",
+          "config_name",
+          "session_protocol",
+          "session_host",
+          "session_port",
+          "session_path",
+          "session_ingress_annotations",
+        ]
+    ClusterPatch:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          $ref: "#/components/schemas/Name"
+        config_name:
+          $ref: "#/components/schemas/ConfigName"
+        session_protocol:
+          $ref: "#/components/schemas/Protocol"
+        session_host:
+          $ref: "#/components/schemas/Host"
+        session_port:
+          $ref: "#/components/schemas/Port"
+        session_path:
+          type: string
+        session_ingress_class_name:
+          $ref: "#/components/schemas/IngressClassName"
+        session_ingress_annotations:
+          $ref: "#/components/schemas/IngressAnnotations"
+        session_tls_secret_name:
+          allOf:
+            - $ref: "#/components/schemas/TlsSecretName"
+            - description: 'If you want to remove the secret name pass in an empty string ""'
+        session_storage_class:
+          $ref: "#/components/schemas/StorageClassName"
+        service_account_name:
+          $ref: "#/components/schemas/K8sResourceNamePatch"
+        session_ingress_use_default_cluster_tls_cert:
+          type: boolean
+    ClusterWithId:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          $ref: "#/components/schemas/Name"
+        config_name:
+          $ref: "#/components/schemas/ConfigName"
+        id:
+          $ref: "#/components/schemas/Ulid"
+        session_protocol:
+          $ref: "#/components/schemas/Protocol"
+        session_host:
+          $ref: "#/components/schemas/Host"
+        session_port:
+          $ref: "#/components/schemas/Port"
+        session_path:
+          type: string
+        session_ingress_class_name:
+          $ref: "#/components/schemas/IngressClassName"
+        session_ingress_annotations:
+          $ref: "#/components/schemas/IngressAnnotations"
+        session_tls_secret_name:
+          $ref: "#/components/schemas/TlsSecretName"
+        session_storage_class:
+          $ref: "#/components/schemas/StorageClassName"
+        service_account_name:
+          type: string
+        session_ingress_use_default_cluster_tls_cert:
+          type: boolean
+      required:
+        [
+          "name",
+          "config_name",
+          "session_protocol",
+          "session_host",
+          "session_port",
+          "session_path",
+          "session_ingress_annotations",
+          "id",
+          "session_ingress_use_default_cluster_tls_cert",
+        ]
+    ClustersWithId:
+      type: array
+      items:
+        $ref: "#/components/schemas/ClusterWithId"
+    ResourceFlavorPost:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          $ref: "#/components/schemas/ResourceFlavorName"
+        description:
+          $ref: "#/components/schemas/ResourceFlavorDescription"
+        cpu:
+          $ref: "#/components/schemas/Cpu"
+        memory:
+          $ref: "#/components/schemas/Memory"
+        gpu:
+          $ref: "#/components/schemas/Gpu"
+        max_storage:
+          $ref: "#/components/schemas/Storage"
+        default_storage:
+          $ref: "#/components/schemas/Storage"
+      required:
+        - name
+        - cpu
+        - memory
+        - gpu
+        - max_storage
+        - default_storage
+      example:
+        name: "small"
+        description: "Fits a standard node with room for the daemonset"
+        cpu: 1.5
+        memory: 2
+        gpu: 0
+        max_storage: 100
+        default_storage: 10
+    ResourceFlavor:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          $ref: "#/components/schemas/Ulid"
+        name:
+          type: string
+          description: The name of the resource flavor
+        description:
+          type: string
+          description: Why a resource flavor is sized the way it is
+        cpu:
+          $ref: "#/components/schemas/Cpu"
+        memory:
+          $ref: "#/components/schemas/Memory"
+        gpu:
+          $ref: "#/components/schemas/Gpu"
+        max_storage:
+          $ref: "#/components/schemas/Storage"
+        default_storage:
+          $ref: "#/components/schemas/Storage"
+      required:
+        - id
+        - name
+        - cpu
+        - memory
+        - gpu
+        - max_storage
+        - default_storage
+    ResourceFlavorPatch:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          $ref: "#/components/schemas/ResourceFlavorName"
+        description:
+          $ref: "#/components/schemas/ResourceFlavorDescription"
+        cpu:
+          $ref: "#/components/schemas/Cpu"
+        memory:
+          $ref: "#/components/schemas/Memory"
+        gpu:
+          $ref: "#/components/schemas/Gpu"
+        max_storage:
+          $ref: "#/components/schemas/Storage"
+        default_storage:
+          $ref: "#/components/schemas/Storage"
+      example:
+        cpu: 2.0
+    ResourceFlavorsList:
+      type: array
+      items:
+        $ref: "#/components/schemas/ResourceFlavor"
+      uniqueItems: true
+    LinkedResourceClass:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          $ref: "#/components/schemas/IntegerId"
+        name:
+          $ref: "#/components/schemas/Name"
+        resource_pool_id:
+          $ref: "#/components/schemas/IntegerId"
+        resource_pool_name:
+          $ref: "#/components/schemas/Name"
+      required:
+        - id
+        - name
+      example:
+        id: 1
+        name: "small"
+        resource_pool_id: 1
+        resource_pool_name: "default"
+    LinkedResourceClassesList:
+      type: array
+      items:
+        $ref: "#/components/schemas/LinkedResourceClass"
+      uniqueItems: true
+    ResourceClassProperties:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          $ref: "#/components/schemas/Name"
+        default:
+          $ref: "#/components/schemas/DefaultFlag"
+        cpu:
+          $ref: "#/components/schemas/Cpu"
+        memory:
+          $ref: "#/components/schemas/Memory"
+        gpu:
+          $ref: "#/components/schemas/Gpu"
+        max_storage:
+          $ref: "#/components/schemas/Storage"
+        default_storage:
+          $ref: "#/components/schemas/Storage"
+        tolerations:
+          $ref: "#/components/schemas/K8sLabelList"
+        node_affinities:
+          $ref: "#/components/schemas/NodeAffinityList"
+        quota_enforced:
+          $ref: "#/components/schemas/QuotaEnforced"
+        preemptible:
+          $ref: "#/components/schemas/Preemptible"
+        remote:
+          $ref: "#/components/schemas/RemoteClassConfigurationFirecrest"
+        resource_flavor_id:
+          $ref: "#/components/schemas/ResourceFlavorIdPatch"
+    ResourceClass:
+      type: object
+      description: A new resource class. Set `resource_flavor_id` to take cpu, memory, gpu and storage from a resource flavor, or set all of those values directly.
+      additionalProperties: false
+      properties:
+        name:
+          $ref: "#/components/schemas/Name"
+        default:
+          $ref: "#/components/schemas/DefaultFlag"
+        cpu:
+          $ref: "#/components/schemas/Cpu"
+        memory:
+          $ref: "#/components/schemas/Memory"
+        gpu:
+          $ref: "#/components/schemas/Gpu"
+        max_storage:
+          $ref: "#/components/schemas/Storage"
+        default_storage:
+          $ref: "#/components/schemas/Storage"
+        tolerations:
+          $ref: "#/components/schemas/K8sLabelList"
+        node_affinities:
+          $ref: "#/components/schemas/NodeAffinityList"
+        quota_enforced:
+          allOf:
+            - $ref: "#/components/schemas/QuotaEnforced"
+          default: false
+        preemptible:
+          allOf:
+            - $ref: "#/components/schemas/Preemptible"
+          default: false
+        remote:
+          $ref: "#/components/schemas/RemoteClassConfigurationFirecrest"
+        resource_flavor_id:
+          $ref: "#/components/schemas/ResourceFlavorId"
+      required:
+        - name
+        - default
+      example:
+        name: "resource class"
+        default: false
+        cpu: 1.5
+        memory: 2
+        gpu: 0
+        max_storage: 100
+        default_storage: 10
+        quota_enforced: false
+    ResourceClassPatch:
+      allOf:
+        - $ref: "#/components/schemas/ResourceClassProperties"
+      example:
+        name: "resource class"
+        cpu: 1.5
+    ResourceClassPatchWithId:
+      allOf:
+        - $ref: "#/components/schemas/ResourceClassProperties"
+        - type: object
+          properties:
+            id:
+              $ref: "#/components/schemas/IntegerId"
+      required:
+        - id
+      example:
+        id: 1
+        max_storage: 50
+    ResourceClassWithId:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          $ref: "#/components/schemas/Name"
+        default:
+          $ref: "#/components/schemas/DefaultFlag"
+        cpu:
+          $ref: "#/components/schemas/Cpu"
+        memory:
+          $ref: "#/components/schemas/Memory"
+        gpu:
+          $ref: "#/components/schemas/Gpu"
+        max_storage:
+          $ref: "#/components/schemas/Storage"
+        default_storage:
+          $ref: "#/components/schemas/Storage"
+        tolerations:
+          $ref: "#/components/schemas/K8sLabelList"
+        node_affinities:
+          $ref: "#/components/schemas/NodeAffinityList"
+        id:
+          $ref: "#/components/schemas/IntegerId"
+        quota_enforced:
+          allOf:
+            - $ref: "#/components/schemas/QuotaEnforced"
+          default: false
+        preemptible:
+          allOf:
+            - $ref: "#/components/schemas/Preemptible"
+          default: false
+        remote:
+          $ref: "#/components/schemas/RemoteClassConfigurationFirecrest"
+        resource_flavor_id:
+          $ref: "#/components/schemas/ResourceFlavorId"
+      required:
+        - name
+        - default
+        - cpu
+        - memory
+        - gpu
+        - max_storage
+        - default_storage
+        - id
+      example:
+        name: "resource class"
+        default: true
+        cpu: 1.5
+        memory: 2
+        gpu: 0
+        max_storage: 100
+        default_storage: 10
+        quota_enforced: false
+        id: 1
+    ResourceClassWithIdFiltered:
+      allOf:
+        - $ref: "#/components/schemas/ResourceClassWithId"
+        - type: object
+          properties:
+            matching:
+              type: boolean
+            usage_hours_remaining:
+              $ref: "#/components/schemas/UsageHoursRemaining"
+            usage_hours_total:
+              $ref: "#/components/schemas/UsageHoursTotal"
+      example:
+        name: "resource class"
+        default: true
+        cpu: 1.5
+        memory: 2
+        gpu: 0
+        max_storage: 100
+        default_storage: 10
+        id: 1
+        matching: true
+    ResourceClasses:
+      type: array
+      items:
+        $ref: "#/components/schemas/ResourceClass"
+    ResourceClassesWithId:
+      type: array
+      items:
+        $ref: "#/components/schemas/ResourceClassWithId"
+      uniqueItems: true
+      example:
+        - name: "resource class 1"
+          default: true
+          cpu: 1.5
+          memory: 2
+          gpu: 0
+          max_storage: 100
+          default_storage: 10
+          quota_enforced: true
+          id: 1
+        - name: "resource class 2"
+          default: false
+          cpu: 4.5
+          memory: 10
+          gpu: 2
+          max_storage: 10000
+          default_storage: 10
+          quota_enforced: true
+          id: 2
+    ResourceClassesWithIdResponse:
+      # Note: this needs to be separate from ResourceClassesWithId, or it doesn't get generated
+      type: array
+      items:
+        $ref: "#/components/schemas/ResourceClassWithId"
+      uniqueItems: true
+      example:
+        - name: "resource class 1"
+          default: true
+          cpu: 1.5
+          memory: 2
+          gpu: 0
+          max_storage: 100
+          default_storage: 10
+          quota_enforced: true
+          id: 1
+        - name: "resource class 2"
+          default: false
+          cpu: 4.5
+          memory: 10
+          gpu: 2
+          max_storage: 10000
+          default_storage: 10
+          quota_enforced: true
+          id: 2
+    ResourceClassesPatchWithId:
+      type: array
+      items:
+        $ref: "#/components/schemas/ResourceClassPatchWithId"
+      minItems: 1
+      uniqueItems: true
+      example:
+        - name: "resource class 1"
+          id: 1
+        - cpu: 4.5
+          max_storage: 10000
+          id: 2
+    ResourcePool:
+      type: object
+      additionalProperties: false
+      properties:
+        quota:
+          $ref: "#/components/schemas/QuotaWithOptionalId"
+        classes:
+          $ref: "#/components/schemas/ResourceClasses"
+        name:
+          $ref: "#/components/schemas/Name"
+        public:
+          $ref: "#/components/schemas/PublicFlag"
+        default:
+          $ref: "#/components/schemas/DefaultFlag"
+        remote:
+          $ref: "#/components/schemas/RemoteConfiguration"
+        idle_threshold:
+          $ref: "#/components/schemas/IdleThreshold"
+        hibernation_threshold:
+          $ref: "#/components/schemas/HibernationThreshold"
+        hibernation_warning_period:
+          $ref: "#/components/schemas/HibernationWarningPeriod"
+        cluster_id:
+          $ref: "#/components/schemas/Ulid"
+        platform:
+          $ref: "#/components/schemas/RuntimePlatform"
+        cpu_limit_factor:
+          $ref: "#/components/schemas/CpuLimitFactor"
+      required: ["classes", "name", "public", "default"]
+      example:
+        quota:
+          cpu: 50
+          memory: 250
+          gpu: 10
+        public: true
+        default: false
+        remote: false
+        classes:
+          - name: "resource class 1"
+            cpu: 1.5
+            memory: 2
+            gpu: 0
+            max_storage: 10
+            default_storage: 2
+            default: true
+          - name: "resource class 2"
+            cpu: 4.5
+            memory: 10
+            gpu: 2
+            max_storage: 10
+            default_storage: 2
+            default: false
+        name: "resource pool name"
+        cluster_id: "change-me"
+    ResourcePoolPatch:
+      type: object
+      additionalProperties: false
+      properties:
+        quota:
+          $ref: "#/components/schemas/QuotaPatch"
+        classes:
+          $ref: "#/components/schemas/ResourceClassesPatchWithId"
+        name:
+          $ref: "#/components/schemas/Name"
+        public:
+          $ref: "#/components/schemas/PublicFlag"
+        default:
+          $ref: "#/components/schemas/DefaultFlag"
+        remote:
+          $ref: "#/components/schemas/RemoteConfigurationPatch"
+        idle_threshold:
+          $ref: "#/components/schemas/IdleThreshold"
+        hibernation_threshold:
+          $ref: "#/components/schemas/HibernationThreshold"
+        hibernation_warning_period:
+          $ref: "#/components/schemas/HibernationWarningPeriod"
+        cluster_id:
+          $ref: "#/components/schemas/Ulid"
+        platform:
+          $ref: "#/components/schemas/RuntimePlatform"
+        cpu_limit_factor:
+          oneOf:
+            - $ref: "#/components/schemas/CpuLimitFactor"
+            - $ref: "#/components/schemas/RemoveCpuLimitFactor"
+      example:
+        quota:
+          cpu: 50
+          gpu: 10
+        classes:
+          - name: "resource class 2"
+            cpu: 4.5
+            max_storage: 10000
+        name: "resource pool name"
+        cluster_id: "4QZ886777NTN8GHQ551GSVAXSA"
+    ResourcePoolPut:
+      type: object
+      additionalProperties: false
+      properties:
+        quota:
+          $ref: "#/components/schemas/QuotaWithId"
+        classes:
+          $ref: "#/components/schemas/ResourceClassesWithId"
+        name:
+          $ref: "#/components/schemas/Name"
+        public:
+          $ref: "#/components/schemas/PublicFlag"
+        default:
+          $ref: "#/components/schemas/DefaultFlag"
+        remote:
+          $ref: "#/components/schemas/RemoteConfiguration"
+        idle_threshold:
+          $ref: "#/components/schemas/IdleThreshold"
+        hibernation_threshold:
+          $ref: "#/components/schemas/HibernationThreshold"
+        hibernation_warning_period:
+          $ref: "#/components/schemas/HibernationWarningPeriod"
+        cluster_id:
+          $ref: "#/components/schemas/Ulid"
+        platform:
+          $ref: "#/components/schemas/RuntimePlatform"
+        cpu_limit_factor:
+          oneOf:
+            - $ref: "#/components/schemas/CpuLimitFactor"
+            - $ref: "#/components/schemas/RemoveCpuLimitFactor"
+      required: ["classes", "name", "public", "default", "platform"]
+      example:
+        quota:
+          cpu: 50
+          memory: 250
+          gpu: 10
+          id: 518c7d27-b5db-4aee-855f-f4638aded2d4
+        public: true
+        default: false
+        remote: false
+        classes:
+          - name: "resource class 1"
+            cpu: 1.5
+            memory: 2
+            gpu: 0
+            max_storage: 100
+            id: 1
+          - name: "resource class 2"
+            cpu: 4.5
+            memory: 10
+            gpu: 2
+            max_storage: 10000
+            id: 2
+        name: "resource pool name"
+        cluster_id: "4QZ886777NTN8GHQ551GSVAXSA"
+    ResourcePoolWithId:
+      type: object
+      additionalProperties: false
+      properties:
+        quota:
+          $ref: "#/components/schemas/QuotaWithId"
+        classes:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResourceClassWithId"
+        name:
+          $ref: "#/components/schemas/Name"
+        id:
+          $ref: "#/components/schemas/IntegerId"
+        public:
+          $ref: "#/components/schemas/PublicFlag"
+        default:
+          $ref: "#/components/schemas/DefaultFlag"
+        remote:
+          $ref: "#/components/schemas/RemoteConfiguration"
+        idle_threshold:
+          $ref: "#/components/schemas/IdleThreshold"
+        hibernation_threshold:
+          $ref: "#/components/schemas/HibernationThreshold"
+        hibernation_warning_period:
+          $ref: "#/components/schemas/HibernationWarningPeriod"
+        cluster:
+          type: object
+          properties:
+            id:
+              $ref: "#/components/schemas/Ulid"
+          required: ["id"]
+        platform:
+          $ref: "#/components/schemas/RuntimePlatform"
+        cpu_limit_factor:
+          $ref: "#/components/schemas/CpuLimitFactor"
+      required: ["classes", "name", "id", "public", "default", "platform"]
+      example:
+        quota:
+          cpu: 50
+          memory: 250
+          gpu: 10
+          id: 518c7d27-b5db-4aee-855f-f4638aded2d4
+        public: false
+        default: false
+        remote: false
+        classes:
+          - name: "resource class 1"
+            cpu: 1.5
+            memory: 2
+            gpu: 0
+            max_storage: 100
+            id: 1
+          - name: "resource class 2"
+            cpu: 4.5
+            memory: 10
+            gpu: 2
+            max_storage: 10000
+            id: 2
+        name: "resource pool name"
+        id: 1
+        cluster_id: "4QZ886777NTN8GHQ551GSVAXSA"
+    ResourcePoolWithIdFiltered:
+      type: object
+      additionalProperties: false
+      properties:
+        quota:
+          $ref: "#/components/schemas/QuotaWithId"
+        classes:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResourceClassWithIdFiltered"
+        name:
+          $ref: "#/components/schemas/Name"
+        id:
+          $ref: "#/components/schemas/IntegerId"
+        public:
+          $ref: "#/components/schemas/PublicFlag"
+        default:
+          $ref: "#/components/schemas/DefaultFlag"
+        remote:
+          $ref: "#/components/schemas/RemoteConfiguration"
+        idle_threshold:
+          $ref: "#/components/schemas/IdleThreshold"
+        hibernation_threshold:
+          $ref: "#/components/schemas/HibernationThreshold"
+        hibernation_warning_period:
+          $ref: "#/components/schemas/HibernationWarningPeriod"
+        cluster_id:
+          $ref: "#/components/schemas/Ulid"
+        platform:
+          $ref: "#/components/schemas/RuntimePlatform"
+        credits_used:
+          $ref: "#/components/schemas/CreditsUsed"
+        cpu_limit_factor:
+          $ref: "#/components/schemas/CpuLimitFactor"
+      required: ["classes", "name", "id", "public", "default", "platform"]
+      example:
+        quota:
+          cpu: 50
+          memory: 250
+          gpu: 10
+          id: 518c7d27-b5db-4aee-855f-f4638aded2d4
+        public: false
+        default: false
+        remote: false
+        classes:
+          - name: "resource class 1"
+            cpu: 1.5
+            memory: 2
+            gpu: 0
+            max_storage: 100
+            default_storage: 10
+            id: 1
+            matching: false
+          - name: "resource class 2"
+            cpu: 4.5
+            memory: 10
+            gpu: 2
+            max_storage: 10000
+            default_storage: 10
+            id: 2
+            matching: true
+        name: "resource pool name"
+        cluster_id: "4QZ886777NTN8GHQ551GSVAXSA"
+    ResourcePoolsWithId:
+      type: array
+      items:
+        $ref: "#/components/schemas/ResourcePoolWithId"
+    ResourcePoolsWithIdFiltered:
+      type: array
+      items:
+        $ref: "#/components/schemas/ResourcePoolWithIdFiltered"
+    PoolUserWithId:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          $ref: "#/components/schemas/UserId"
+        no_default_access:
+          type: boolean
+          default: false
+          description: If set to true the user will not be able to use the default resource pool
+      required: ["id"]
+      example:
+        id: "some-random-keycloak-id"
+    PoolUsersWithId:
+      type: array
+      items:
+        $ref: "#/components/schemas/PoolUserWithId"
+      uniqueItems: true
+    PoolMemberUser:
+      type: object
+      additionalProperties: false
+      required:
+        - member_type
+        - id
+        - role
+      properties:
+        member_type:
+          type: string
+          enum: [user]
+        id:
+          $ref: "#/components/schemas/UserId"
+        role:
+          type: string
+          enum: [viewer, prohibited]
+      example:
+        member_type: user
+        id: "some-random-keycloak-id"
+        role: viewer
+    PoolMemberGroup:
+      type: object
+      additionalProperties: false
+      required:
+        - member_type
+        - id
+        - role
+      properties:
+        member_type:
+          type: string
+          enum: [group]
+        id:
+          $ref: "#/components/schemas/Ulid"
+        role:
+          type: string
+          enum: [group_viewer]
+      example:
+        member_type: group
+        id: "01ARZ3NDEKTSV4RRFFQ69G5FAV"
+        role: group_viewer
+    PoolMemberProject:
+      type: object
+      additionalProperties: false
+      required:
+        - member_type
+        - id
+        - role
+      properties:
+        member_type:
+          type: string
+          enum: [project]
+        id:
+          $ref: "#/components/schemas/Ulid"
+        role:
+          type: string
+          enum: [project_viewer]
+      example:
+        member_type: project
+        id: "01ARZ3NDEKTSV4RRFFQ69G5FAW"
+        role: project_viewer
+    PoolMember:
+      oneOf:
+        - $ref: "#/components/schemas/PoolMemberUser"
+        - $ref: "#/components/schemas/PoolMemberGroup"
+        - $ref: "#/components/schemas/PoolMemberProject"
+      discriminator:
+        propertyName: member_type
+        mapping:
+          user: "#/components/schemas/PoolMemberUser"
+          group: "#/components/schemas/PoolMemberGroup"
+          project: "#/components/schemas/PoolMemberProject"
+    PoolMembers:
+      type: array
+      items:
+        $ref: "#/components/schemas/PoolMember"
+      uniqueItems: true
+    PoolMemberUserResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - member_type
+        - id
+        - role
+        - email
+      properties:
+        member_type:
+          type: string
+          enum: [user]
+        id:
+          $ref: "#/components/schemas/UserId"
+        role:
+          type: string
+          enum: [viewer, prohibited]
+        email:
+          type: string
+      example:
+        member_type: user
+        id: "some-random-keycloak-id"
+        role: viewer
+        email: "user@example.com"
+    PoolMemberGroupResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - member_type
+        - id
+        - role
+        - slug
+        - name
+      properties:
+        member_type:
+          type: string
+          enum: [group]
+        id:
+          $ref: "#/components/schemas/Ulid"
+        role:
+          type: string
+          enum: [group_viewer]
+        slug:
+          type: string
+        name:
+          type: string
+      example:
+        member_type: group
+        id: "01ARZ3NDEKTSV4RRFFQ69G5FAV"
+        role: group_viewer
+        slug: "my-group"
+        name: "My Group"
+    PoolMemberProjectResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - member_type
+        - id
+        - role
+        - namespace
+        - name
+      properties:
+        member_type:
+          type: string
+          enum: [project]
+        id:
+          $ref: "#/components/schemas/Ulid"
+        role:
+          type: string
+          enum: [project_viewer]
+        namespace:
+          type: string
+          description: Full project namespace path (e.g. user/project)
+        name:
+          type: string
+      example:
+        member_type: project
+        id: "01ARZ3NDEKTSV4RRFFQ69G5FAW"
+        role: project_viewer
+        namespace: "user.doe/my-project"
+        name: "My Project"
+    PoolMemberResponse:
+      oneOf:
+        - $ref: "#/components/schemas/PoolMemberUserResponse"
+        - $ref: "#/components/schemas/PoolMemberGroupResponse"
+        - $ref: "#/components/schemas/PoolMemberProjectResponse"
+      discriminator:
+        propertyName: member_type
+        mapping:
+          user: "#/components/schemas/PoolMemberUserResponse"
+          group: "#/components/schemas/PoolMemberGroupResponse"
+          project: "#/components/schemas/PoolMemberProjectResponse"
+    PoolMembersResponse:
+      type: array
+      items:
+        $ref: "#/components/schemas/PoolMemberResponse"
+      uniqueItems: true
+    QuotaPatch:
+      type: object
+      additionalProperties: false
+      properties:
+        cpu:
+          $ref: "#/components/schemas/Cpu"
+        memory:
+          $ref: "#/components/schemas/Memory"
+        gpu:
+          $ref: "#/components/schemas/Gpu"
+      example:
+        gpu: 0
+        cpu: 100
+    QuotaWithId:
+      type: object
+      additionalProperties: false
+      properties:
+        cpu:
+          $ref: "#/components/schemas/Cpu"
+        memory:
+          $ref: "#/components/schemas/Memory"
+        gpu:
+          $ref: "#/components/schemas/Gpu"
+        id:
+          $ref: "#/components/schemas/Name"
+      example:
+        gpu: 0
+        cpu: 100
+        memory: 1000
+        id: 518c7d27-b5db-4aee-855f-f4638aded2d4
+      required: ["cpu", "memory", "gpu", "id"]
+    QuotaWithOptionalId:
+      type: object
+      additionalProperties: false
+      properties:
+        cpu:
+          $ref: "#/components/schemas/Cpu"
+        memory:
+          $ref: "#/components/schemas/Memory"
+        gpu:
+          $ref: "#/components/schemas/Gpu"
+        id:
+          $ref: "#/components/schemas/Name"
+      example:
+        gpu: 0
+        cpu: 100
+        memory: 1000
+        id: 518c7d27-b5db-4aee-855f-f4638aded2d4
+      required: ["cpu", "memory", "gpu"]
+    Version:
+      type: object
+      properties:
+        version:
+          type: string
+      required: ["version"]
+    Cpu:
+      type: number
+      format: float
+      description: Number of cpu cores
+      example: 10
+      exclusiveMinimum: true
+      minimum: 0
+    CpuFilter:
+      type: number
+      format: float
+      description: Number of cpu cores
+      example: 10
+      minimum: 0
+    Memory:
+      type: integer
+      description: Number of gigabytes of memory
+      example: 4
+      exclusiveMinimum: true
+      minimum: 0
+      # Max value for int64 in postgres
+      maximum: 9223372036854775807
+    MemoryFilter:
+      type: integer
+      description: Number of gigabytes of memory
+      example: 4
+      minimum: 0
+      # Max value for int64 in postgres
+      maximum: 9223372036854775807
+    Gpu:
+      type: integer
+      description: Number of GPUs
+      example: 8
+      minimum: 0
+      # Max value for int64 in postgres
+      maximum: 9223372036854775807
+    UsageHoursRemaining:
+      type: number
+      format: double
+      description: Number of resource hours remaining for the user
+      example: 3.141
+      minimum: 0
+    UsageHoursTotal:
+      type: number
+      format: double
+      description: Total number of resource hours available to the user
+      example: 10
+      minimum: 0
+      default: null
+    CreditsUsed:
+      type: integer
+      description: Amount of the resource credits used so far
+      example: 300
+      minimum: 0
+    Storage:
+      type: integer
+      description: Number of gigabytes of storage
+      example: 100
+      exclusiveMinimum: true
+      minimum: 0
+      # Max value for int64 in postgres
+      maximum: 9223372036854775807
+    StorageFilter:
+      type: integer
+      description: Number of gigabytes of storage
+      example: 100
+      minimum: 0
+      # Max value for int64 in postgres
+      maximum: 9223372036854775807
+    UserId:
+      type: string
+      description: Keycloak user ID
+      example: f74a228b-1790-4276-af5f-25c2424e9b0c
+      pattern: "^[A-Za-z0-9]{1}[A-Za-z0-9-]+$"
+    IntegerId:
+      type: integer
+      description: An integer ID used to identify different resources
+      minimum: 0
+      example: 1
+    IntegerIds:
+      type: array
+      items:
+        $ref: "#/components/schemas/IntegerId"
+      minItems: 1
+      uniqueItems: true
+      example: [1, 3, 5]
+    Name:
+      type: string
+      description: A name for a specific resource
+      minLength: 5
+      example: "the name of a resource"
+    ResourceFlavorName:
+      type: string
+      description: A name for a resource flavor
+      minLength: 5
+      maxLength: 40
+      example: "standard"
+    ResourceFlavorDescription:
+      type: string
+      description: Why a resource flavor is sized the way it is
+      maxLength: 500
+      example: "Fits a standard node with room for the daemonset"
+    ResourceFlavorId:
+      description: The resource flavor this resource class is linked to
+      type: string
+      minLength: 26
+      maxLength: 26
+      pattern: "^[0-7][0-9A-HJKMNP-TV-Z]{25}$"
+    ResourceFlavorIdPatch:
+      description: The resource flavor to link this resource class to. An empty string unlinks the class from its resource flavor, and the class keeps its current values.
+      type: string
+      minLength: 0
+      maxLength: 26
+      pattern: "^([0-7][0-9A-HJKMNP-TV-Z]{25})?$"
+    ConfigName:
+      type: string
+      description: |
+        The name of the Kubernetes configuration to use to connect to the remote cluster. This is currently used to find a file named `<KubeConfigRoot>/<config_name>`.
+
+        This configuration is expected to have a default namespace defined. It will be used for all remote operations requiring a namespace, as well for namespaced objects.
+      pattern: "^[a-zA-Z0-9._-]+[.]yaml$"
+      example: "a-remote-cluster.yaml"
+    DefaultFlag:
+      type: boolean
+      description: A default selection for resource classes or resource pools
+      example: false
+    QuotaEnforced:
+      type: boolean
+      description: Whether sessions in this resource class should be hibernated when quota is exhausted
+      example: true
+    Preemptible:
+      type: boolean
+      description: Whether sessions and jobs in this resource class can be preempted by other workloads. The resource pool must have a quota
+      example: false
+    PublicFlag:
+      type: boolean
+      description: A resource pool whose classes can be accessed by anyone
+      example: false
+    RemoteConfiguration:
+      type: object
+      description: |
+        The configuration used by Renku to start sessions remotely.
+        If this field is present, the corresponding resource pool starts remote sessions.
+      # NOTE: Using oneOf here allows to describe more types of remote sessions
+      oneOf:
+        - $ref: "#/components/schemas/RemoteConfigurationFirecrest"
+        - $ref: "#/components/schemas/RemoteConfigurationRunai"
+    RemoteConfigurationFirecrest:
+      type: object
+      description: |
+        The configuration for starting sessions remotely using
+        the FirecREST API
+      additionalProperties: false
+      properties:
+        kind:
+          type: string
+          enum: ["firecrest"]
+          description: Kind of remote resource pool
+          example: "firecrest"
+        provider_id:
+          $ref: "#/components/schemas/RemoteConfigurationFirecrestProviderId"
+        api_url:
+          $ref: "#/components/schemas/RemoteConfigurationFirecrestApiUrl"
+        system_name:
+          $ref: "#/components/schemas/RemoteConfigurationFirecrestSystemName"
+        partition:
+          $ref: "#/components/schemas/RemoteConfigurationFirecrestPartition"
+      required:
+        - kind
+        - api_url
+        - system_name
+    RemoteClassConfigurationFirecrest:
+      type: object
+      additionalProperties: false
+      properties:
+        system_name:
+          $ref: "#/components/schemas/RemoteConfigurationFirecrestSystemName"
+        partition:
+          $ref: "#/components/schemas/RemoteConfigurationFirecrestPartition"
+        forward_resource_values:
+          type: boolean
+          default: false
+          description: >
+            When true, Amalthea forwards the resource class CPU, memory, and GPU values to FirecREST.
+            When false (the default), the HPC grid selects the resources; the class values are still
+            used for display and quota matching.
+    RemoteConfigurationFirecrestProviderId:
+      type: string
+      description: |
+        The ID of a provider (see oauth2 section).
+        This is used to allow seamless authentication using Renku integrations.
+      example: "my-provider"
+    RemoteConfigurationFirecrestApiUrl:
+      type: string
+      description: The base URL of the FirecREST API
+      example: "https://api.cscs.ch/hpc/firecrest/v2"
+    RemoteConfigurationFirecrestSystemName:
+      type: string
+      description: The name of the system to use with the FirecREST API
+      example: "eiger"
+    RemoteConfigurationFirecrestPartition:
+      type: string
+      description: The partition to use when submitting jobs
+      example: "normal"
+    RemoteConfigurationRunai:
+      type: object
+      description: |
+        The configuration for starting sessions remotely using Runai
+      additionalProperties: false
+      properties:
+        kind:
+          type: string
+          enum: ["runai"]
+          description: Kind of remote resource pool
+          example: "runai"
+        base_url:
+          $ref: "#/components/schemas/RemoteConfigurationRunaiApiUrl"
+        provider_id:
+          $ref: "#/components/schemas/RemoteConfigurationFirecrestProviderId"
+      required:
+        - kind
+        - base_url
+    RemoteConfigurationRunaiApiUrl:
+      type: string
+      description: The base URL of the Runai server
+      example: "https://sdsc.run.ai"
+    RemoteConfigurationPatch:
+      type: object
+      description: |
+        Patch for the configuration used by to start sessions remotely
+      oneOf:
+        - $ref: "#/components/schemas/RemoteConfigurationPatchReset"
+        - $ref: "#/components/schemas/RemoteConfigurationFirecrestPatch"
+        - $ref: "#/components/schemas/RemoteConfigurationRunaiPatch"
+    RemoteConfigurationPatchReset:
+      type: object
+      description: Value used to unset the remote field (empty object).
+      additionalProperties: false
+    RemoteConfigurationFirecrestPatch:
+      type: object
+      description: |
+        The configuration for starting sessions remotely using
+        the FirecREST API
+      additionalProperties: false
+      properties:
+        kind:
+          type: string
+          enum: ["firecrest"]
+          description: Kind of remote resource pool
+          example: "firecrest"
+        provider_id:
+          $ref: "#/components/schemas/RemoteConfigurationFirecrestProviderId"
+        api_url:
+          $ref: "#/components/schemas/RemoteConfigurationFirecrestApiUrl"
+        system_name:
+          $ref: "#/components/schemas/RemoteConfigurationFirecrestSystemName"
+        partition:
+          $ref: "#/components/schemas/RemoteConfigurationFirecrestPartition"
+    RemoteConfigurationRunaiPatch:
+      type: object
+      description: |
+        The configuration for starting sessions remotely using Runai
+      additionalProperties: false
+      properties:
+        kind:
+          type: string
+          enum: ["runai"]
+          description: Kind of remote resource pool
+          example: "runai"
+        base_url:
+          $ref: "#/components/schemas/RemoteConfigurationRunaiApiUrl"
+        provider_id:
+          $ref: "#/components/schemas/RemoteConfigurationFirecrestProviderId"
+    IdleThreshold:
+      type: integer
+      description: A threshold in seconds after which a session gets hibernated (0 means no threshold)
+      minimum: 0
+      maximum: 2147483647
+    HibernationThreshold:
+      type: integer
+      description: A threshold in seconds after which a session gets culled/deleted (0 means no threshold)
+      minimum: 0
+      maximum: 2147483647
+    HibernationWarningPeriod:
+      type: integer
+      description: |
+        A duration in seconds, lower than `HibernationThreshold`,
+        which indicates when to let the user know about a session that
+        is going to be hibernated. If `0` is specified, some default
+        value will be chosen. If no `HibernationThreshold` is defined,
+        this value is ignored.
+      minimum: 0
+      maximum: 2147483647
+    K8sLabelList:
+      type: array
+      description: A list of k8s labels used for tolerations
+      items:
+        $ref: "#/components/schemas/K8sLabel"
+      example: ["test-label-1"]
+      uniqueItems: true
+      default: []
+      minItems: 0
+    K8sLabel:
+      type: string
+      description: A valid K8s label
+      example: some-label-1
+      pattern: "^[a-z0-9A-Z][a-z0-9A-Z-_./]*[a-z0-9A-Z]$"
+      minLength: 3
+      maxLength: 63
+    K8sResourceName:
+      type: string
+      description: |
+        A name of any K8s resource (i.e. Pod, Service, Secret, etc.).
+        This is pattern imposes the stricter rules applied to some resource type names
+        that need to follow DNS label standard and therefore can be used for all types.
+        Looser rules can be applied to a smaller subset of resource types.
+      example: some-k8s-resource
+      pattern: "^[a-z0-9][a-z0-9-]*[a-z0-9]$"
+      minLength: 1
+      maxLength: 63
+    K8sResourceNamePatch:
+      type: string
+      description: |
+        A name of any K8s resource (i.e. Pod, Service, Secret, etc.).
+        This is pattern imposes the stricter rules applied to some resource type names
+        that need to follow DNS label standard and therefore can be used for all types.
+        Looser rules can be applied to a smaller subset of resource types. An empty
+        string indicates that the value should be removed if present in the DB.
+      example: some-k8s-resource
+      pattern: "^[a-z0-9][a-z0-9-]*[a-z0-9]$"
+      minLength: 0
+      maxLength: 63
+    NodeAffinity:
+      type: object
+      additionalProperties: false
+      description: A minimal representation of a node affinity label
+      properties:
+        key:
+          $ref: "#/components/schemas/K8sLabel"
+        required_during_scheduling:
+          type: boolean
+          default: false
+      required: ["key"]
+      example:
+        key: some-label-32
+        required_during_scheduling: true
+    NodeAffinityListResponse:
+      type: array
+      description: A list of k8s labels used for tolerations and/or node affinity
+      items:
+        $ref: "#/components/schemas/NodeAffinity"
+      example: [{ "key": "test-label-1", "required_during_scheduling": false }]
+      uniqueItems: true
+      default: []
+      minItems: 0
+    NodeAffinityList:
+      type: array
+      description: A list of k8s labels used for tolerations and/or node affinity
+      items:
+        $ref: "#/components/schemas/NodeAffinity"
+      example: [{ "key": "test-label-1", "required_during_scheduling": false }]
+      uniqueItems: true
+      default: []
+      minItems: 0
+    RuntimePlatform:
+      type: string
+      description: |
+        A runtime platform, e.g. "linux/amd64" or "linux/arm64".
+      enum: ["linux/amd64", "linux/arm64"]
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+              minimum: 0
+              exclusiveMinimum: true
+              example: 1404
+            detail:
+              type: string
+              example: "A more detailed optional message showing what the problem was"
+            message:
+              type: string
+              example: "Something went wrong - please try again later"
+            trace_id:
+              type: string
+              example: "ac93950e9e114a55c67fb8e5ef519bbe"
+              description: Sentry trace ID for linking to corresponding log entries
+          required: ["code", "message"]
+      required: ["error"]
+    Ulid:
+      description: ULID identifier
+      type: string
+      minLength: 26
+      maxLength: 26
+      pattern: "^[0-7][0-9A-HJKMNP-TV-Z]{25}$" # This is case-insensitive
+    Protocol:
+      description: Allowed Protocol strings
+      type: string
+      enum: ["http", "https"]
+    Port:
+      type: integer
+      minimum: 0
+      maximum: 65536
+    Host:
+      type: string
+      maxLength: 256
+      # The following pattern accept things it should not, but this is better than no validation at all.
+      pattern: "^([0-9a-zA-Z:_-]+[.])*[0-9a-zA-Z:_-]+$"
+    TlsSecretName:
+      type: string
+      maxLength: 256
+    StorageClassName:
+      type: string
+      maxLength: 256
+    IngressClassName:
+      type: string
+      maxLength: 256
+    IngressAnnotations:
+      type: object
+      additionalProperties: true
+    CpuLimitFactor:
+      type: number
+      format: float
+      minimum: 1
+      maximum: 100
+      description: The value used to multiply cpu requests to get the limit. If unset there will be no cpu limits.
+    RemoveCpuLimitFactor:
+      type: number
+      minimum: 0
+      maximum: 0
+      description: Indicates that the cpu limits should not be set and if a limit is set it should be removed
+      format: float
+  responses:
+    Error:
+      description: The schema for all 4xx and 5xx responses
+      content:
+        "application/json":
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"

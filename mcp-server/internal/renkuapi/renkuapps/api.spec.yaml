@@ -1,0 +1,229 @@
+openapi: 3.0.2
+info:
+  title: Renku Data Services API
+  description: |
+    A service that allows users to manage apps on Renku.
+  version: v1
+servers:
+  - url: /api/data
+paths:
+  /apps:
+    get:
+      summary: List apps
+      parameters:
+        - in: query
+          name: project_id
+          required: false
+          schema:
+            $ref: "#/components/schemas/Ulid"
+          description: If set, only return apps belonging to this project
+      responses:
+        "200":
+          description: The list of apps the caller can see
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppListResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - apps
+    post:
+      summary: Launch a new app
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AppPostRequest"
+      responses:
+        "201":
+          description: The app was created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - apps
+  /apps/{app_name}:
+    get:
+      summary: Retrieve an app
+      parameters:
+        - in: path
+          name: app_name
+          required: true
+          schema:
+            $ref: "#/components/schemas/AppName"
+          description: The name of the app to retrieve
+      responses:
+        "200":
+          description: The app for the given name
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - apps
+    delete:
+      summary: Delete an app
+      parameters:
+        - in: path
+          name: app_name
+          required: true
+          schema:
+            $ref: "#/components/schemas/AppName"
+          description: The name of the app to delete
+      responses:
+        "204":
+          description: The app was successfully deleted or did not exist
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - apps
+  /apps/{app_name}/logs:
+    get:
+      summary: Get all logs from a specific app
+      parameters:
+        - in: path
+          name: app_name
+          required: true
+          schema:
+            $ref: "#/components/schemas/AppName"
+          description: The name of the app to get the logs of
+        - in: query
+          name: max_lines
+          required: false
+          schema:
+            type: integer
+            default: 250
+          description: The maximum number of most-recent lines to return for each container
+      responses:
+        "200":
+          description: The app logs
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppLogsResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - apps
+components:
+  schemas:
+    Ulid:
+      description: ULID identifier
+      type: string
+      minLength: 26
+      maxLength: 26
+      pattern: "^[0-7][0-9A-HJKMNP-TV-Z]{25}$"
+
+    AppStatus:
+      type: string
+      enum:
+        - pending
+        - ready
+        - failed
+
+    AppName:
+      type: string
+      description: |
+        The name of an app, which is also a DNS label in the app's public hostname.
+        The Kubernetes limit is 63 characters, but names are capped at 50 to leave
+        leeway. This must match APP_NAME_MAX_LENGTH in renku_apps/core.py, which is
+        the length generate_app_name() truncates to.
+      minLength: 5
+      maxLength: 50
+      pattern: "^[a-z]([-a-z0-9]*[a-z0-9])?$"
+      example: my-data-dashboard-0h8kq2zt
+
+    AppResponse:
+      type: object
+      properties:
+        name:
+          $ref: "#/components/schemas/AppName"
+        launcher_id:
+          $ref: "#/components/schemas/Ulid"
+        status:
+          $ref: "#/components/schemas/AppStatus"
+        url:
+          type: string
+          nullable: true
+        project_id:
+          $ref: "#/components/schemas/Ulid"
+        started:
+          type: string
+          format: date-time
+          nullable: true
+        image:
+          type: string
+          nullable: true
+      required:
+        - name
+        - launcher_id
+        - status
+        - project_id
+
+    AppListResponse:
+      type: array
+      items:
+        $ref: "#/components/schemas/AppResponse"
+
+    AppLogsResponse:
+      description: |
+        The logs of the app container of every pod currently backing the app, keyed by
+        "<pod name>/<container name>". Unlike a session, an app can be served by more
+        than one pod, so the pod name is part of the key. Only the app's own container
+        is included; the platform sidecars that share the pod are not. An app that has
+        scaled to zero has no pods and therefore no logs.
+      type: object
+      additionalProperties:
+        type: string
+      example:
+        "my-app-00001-deployment-6b9f7-2xqzt/user-container": "Log line 1\nLog line 2"
+
+    AppPostRequest:
+      type: object
+      properties:
+        launcher_id:
+          $ref: "#/components/schemas/Ulid"
+      required:
+        - launcher_id
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+              minimum: 0
+              exclusiveMinimum: true
+              example: 1404
+            detail:
+              type: string
+              example: A more detailed optional message showing what the problem was
+            message:
+              type: string
+              example: Something went wrong - please try again later
+            trace_id:
+              description: Sentry trace ID for linking to corresponding log entries
+              example: ac93950e9e114a55c67fb8e5ef519bbe
+              type: string
+          required:
+            - code
+            - message
+      required:
+        - error
+
+  responses:
+    Error:
+      description: The schema for all 4xx and 5xx responses
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"

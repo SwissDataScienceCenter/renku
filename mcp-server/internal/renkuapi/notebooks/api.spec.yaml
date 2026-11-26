@@ -1,0 +1,551 @@
+openapi: 3.0.2
+info:
+  title: Renku Data Services API
+  description: |
+    Service that allows creating, updating, deleting, and managing Renku user sessions.
+    All errors have the same format as the schema called ErrorResponse.
+  version: v1
+servers:
+  - url: /api/data
+paths:
+  "/sessions":
+    post:
+      summary: Launch a new session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SessionPostRequest"
+      responses:
+        "201":
+          description: The session was created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionResponse"
+        "200":
+          description: The session already exists
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - sessions
+    get:
+      summary: Get a list of all sessions for a user
+      parameters:
+        - description: Filter by session mode.
+          in: query
+          name: session_type
+          required: false
+          default: interactive
+          schema:
+            $ref: "#/components/schemas/SessionType"
+      responses:
+        "200":
+          description: Information about the sessions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionListResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - sessions
+  "/sessions/{session_id}":
+    get:
+      summary: Get information about a specific session
+      parameters:
+        - description: The id of the session
+          in: path
+          name: session_id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Information about the session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - sessions
+    delete:
+      parameters:
+        - description: The id of the session that should be deleted
+          in: path
+          name: session_id
+          required: true
+          schema:
+            type: string
+      summary: Fully remove a session
+      responses:
+        "204":
+          description: The session was deleted or it never existed in the first place
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - sessions
+    patch:
+      summary: Patch a session
+      parameters:
+        - description: The id of the session
+          in: path
+          name: session_id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SessionPatchRequest"
+      responses:
+        "200":
+          description: The session was patched
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - sessions
+  "/sessions/{session_id}/logs":
+    get:
+      summary: Get all logs from a specific session
+      parameters:
+        - description: The id of the session
+          in: path
+          name: session_id
+          required: true
+          schema:
+            type: string
+        - description: The maximum number of most-recent lines to return for each container
+          in: query
+          name: max_lines
+          required: false
+          schema:
+            type: integer
+            default: 250
+      responses:
+        "200":
+          description: The session logs
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionLogsResponse"
+        default:
+          $ref: "#/components/responses/Error"
+      tags:
+        - sessions
+  "/sessions/images":
+    get:
+      summary: Check if a session image exists
+      parameters:
+        - description: The Docker image URL (tag included) that should be fetched.
+          in: query
+          name: image_url
+          required: true
+          schema:
+            type: string
+            minLength: 1
+      responses:
+        "200":
+          description: Information about the accessibility of the image
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ImageCheckResponse"
+        "422":
+          description: The image url is malformed.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorResponse"
+      tags:
+        - sessions
+components:
+  schemas:
+    EnvVariableOverrides:
+      description: Environment variable overrides for the session pod
+      type: array
+      items:
+        $ref: "#/components/schemas/EnvVarOverride"
+    EnvVarOverride:
+      description: Override an env variable defined in the session launcher
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 256
+          # based on https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap03.html#tag_03_235
+          pattern: "^[a-zA-Z_][a-zA-Z0-9_]*$"
+          example: MY_VAR
+        value:
+          type: string
+          maxLength: 500
+      required:
+        - name
+        - value
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+              minimum: 0
+              exclusiveMinimum: true
+              example: 1404
+            detail:
+              type: string
+              example: "A more detailed optional message showing what the problem was"
+            message:
+              type: string
+              example: "Something went wrong - please try again later"
+            trace_id:
+              type: string
+              example: "ac93950e9e114a55c67fb8e5ef519bbe"
+              description: Sentry trace ID for linking to corresponding log entries
+          required: ["code", "message"]
+      required: ["error"]
+    SessionType:
+      type: string
+      enum:
+        - interactive
+        - non-interactive
+    SessionPostRequest:
+      properties:
+        launcher_id:
+          $ref: "#/components/schemas/Ulid"
+        disk_storage:
+          type: integer
+          description: The size of disk storage for the session, in gigabytes
+        resource_class_id:
+          nullable: true
+          type: integer
+        submission_id:
+          $ref: "#/components/schemas/SubmissionId"
+        data_connectors_overrides:
+          $ref: "#/components/schemas/SessionDataConnectorsOverrideList"
+        env_variable_overrides:
+          $ref: "#/components/schemas/EnvVariableOverrides"
+        job_command_override:
+          nullable: true
+          type: array
+          items:
+            type: string
+        job_args_override:
+          nullable: true
+          type: array
+          items:
+            type: string
+      required:
+        - launcher_id
+      type: object
+    SessionResponse:
+      properties:
+        image:
+          type: string
+        name:
+          "$ref": "#/components/schemas/ServerName"
+        resources:
+          "$ref": "#/components/schemas/SessionResources"
+        started:
+          format: date-time
+          nullable: true
+          type: string
+        job_completed_at:
+          type: string
+          format: date-time
+          nullable: true
+        lastInteraction:
+          type: string
+          format: date-time
+          nullable: true
+        status:
+          "$ref": "#/components/schemas/SessionStatus"
+        url:
+          type: string
+          description: The direct URL of a session
+        external_url:
+          type: string
+          nullable: true
+          description: The URL to use for external access to a session (usually the UI page)
+        project_id:
+          $ref: "#/components/schemas/Ulid"
+        launcher_id:
+          $ref: "#/components/schemas/Ulid"
+        resource_class_id:
+          type: integer
+        session_type:
+          $ref: "#/components/schemas/SessionType"
+        frontend_variant:
+          $ref: "#/components/schemas/FrontendVariant"
+        submission_id:
+          $ref: "#/components/schemas/SubmissionId"
+          nullable: true
+        command_args:
+          type: array
+          items:
+            type: string
+          nullable: true
+      required:
+        - image
+        - name
+        - resources
+        - started
+        - status
+        - url
+        - project_id
+        - launcher_id
+        - resource_class_id
+        - session_type
+      type: object
+    SessionListResponse:
+      items:
+        "$ref": "#/components/schemas/SessionResponse"
+      type: array
+    SessionPatchRequest:
+      properties:
+        resource_class_id:
+          type: integer
+        state:
+          enum:
+            - running
+            - hibernated
+          type: string
+        lastInteraction:
+          oneOf:
+            - type: string
+              format: date-time
+            - "$ref": "#/components/schemas/CurrentTime"
+    CurrentTime:
+      type: string
+      enum: ["now"]
+    SessionStatus:
+      properties:
+        message:
+          type: string
+        state:
+          enum:
+            - running
+            - starting
+            - stopping
+            - failed
+            - hibernated
+            - succeeded
+          type: string
+        will_hibernate_at:
+          format: date-time
+          nullable: true
+          type: string
+        will_delete_at:
+          format: date-time
+          nullable: true
+          type: string
+        ready_containers:
+          type: integer
+          minimum: 0
+        total_containers:
+          type: integer
+          minimum: 0
+      required:
+        - state
+        - ready_containers
+        - total_containers
+      type: object
+    SessionResources:
+      properties:
+        requests:
+          "$ref": "#/components/schemas/SessionResourcesRequests"
+      type: object
+    SessionResourcesRequests:
+      properties:
+        cpu:
+          type: number
+          description: Fractional CPUs
+        gpu:
+          type: integer
+          description: Number of GPUs used
+        memory:
+          type: integer
+          description: Ammount of RAM for the session, in gigabytes
+        storage:
+          type: integer
+          description: The size of disk storage for the session, in gigabytes
+      example:
+        cpu: 1.5
+        memory: 1
+        storage: 40
+        gpu: 0
+      type: object
+    SessionLogsResponse:
+      type: object
+      additionalProperties:
+        type: string
+      example:
+        "container-A": "Log line 1\nLog line 2"
+        "container-B": "Log line 1\nLog line 2"
+    Ulid:
+      description: ULID identifier
+      type: string
+      minLength: 26
+      maxLength: 26
+      pattern: "^[0-7][0-9A-HJKMNP-TV-Z]{25}$"
+    SessionDataConnectorsOverrideList:
+      type: array
+      items:
+        $ref: "#/components/schemas/SessionDataConnectorOverride"
+    SessionDataConnectorOverride:
+      type: object
+      properties:
+        skip:
+          type: boolean
+          description: The corresponding data connector will not be mounted if `skip` is set to `true`.
+          default: false
+        data_connector_id:
+          allOf:
+            - $ref: "#/components/schemas/Ulid"
+            - description: |
+                The `data_connector_id` must match an existing data connector from the session launcher's project.
+        configuration:
+          $ref: "#/components/schemas/RCloneConfig"
+        source_path:
+          $ref: "#/components/schemas/SourcePath"
+        target_path:
+          $ref: "#/components/schemas/TargetPath"
+        readonly:
+          $ref: "#/components/schemas/StorageReadOnly"
+      required:
+        - data_connector_id
+    RCloneConfig:
+      type: object
+      description: Dictionary of rclone key:value pairs (based on schema from '/storage_schema')
+      additionalProperties:
+        oneOf:
+          - type: integer
+          - type: string
+            nullable: true
+          - type: boolean
+          - type: object
+    SourcePath:
+      description: the source path to mount, usually starts with bucket/container name
+      type: string
+      example: bucket/my/storage/folder/
+    TargetPath:
+      description: the target path relative to the working directory where the storage should be mounted
+      type: string
+      example: my/project/folder
+    StorageReadOnly:
+      description: Whether this storage should be mounted readonly or not
+      type: boolean
+      default: true
+    ServerName:
+      type: string
+      minLength: 5
+      # The actual limit from k8s is 63 characters but we leave some leeway in case we need to make changes
+      # Note that changing this should be compatible with the methods that generate server names in the code
+      maxLength: 50
+      pattern: "^[a-z]([-a-z0-9]*[a-z0-9])?$"
+      example: d185e68d-d43-renku-2-b9ac279a4e8a85ac28d08
+    SubmissionId:
+      type: string
+      pattern: "^[a-z][-0-9a-z]{3,19}$"
+      description: |
+        When submitting a job, i.e. the launcher used is a job
+        launcher, the submission id is required to deduplicate
+        same job submissions and allows retries.
+    ImageCheckResponse:
+      type: object
+      properties:
+        accessible:
+          type: boolean
+          description: Whether the image is accessible or not.
+        platforms:
+          $ref: "#/components/schemas/ImagePlatforms"
+        connection:
+          "$ref": "#/components/schemas/ImageConnection"
+        provider:
+          "$ref": "#/components/schemas/ImageProvider"
+      required:
+        - accessible
+    ImageConnection:
+      type: object
+      properties:
+        id:
+          type: string
+        provider_id:
+          type: string
+        status:
+          "$ref": "#/components/schemas/ImageConnectionStatus"
+      required:
+        - id
+        - provider_id
+        - status
+    ImageConnectionStatus:
+      type: string
+      enum:
+        - connected
+        - pending
+        - invalid_credentials
+    ImageProvider:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        url:
+          type: string
+      required:
+        - id
+        - name
+        - url
+    ImagePlatforms:
+      type: array
+      description: The list of platforms an image can run on.
+      items:
+        $ref: "#/components/schemas/ImagePlatform"
+    ImagePlatform:
+      type: object
+      description: A runtime platform.
+      properties:
+        architecture:
+          type: string
+        os:
+          type: string
+        os.version:
+          type: string
+        os.features:
+          type: array
+          items:
+            type: string
+        variant:
+          type: string
+      required:
+        - architecture
+        - os
+    FrontendVariant:
+      description: User's Frontend Choice.
+      type: string
+      minLength: 1
+      maxLength: 99
+  responses:
+    ImageCheckResponse:
+      description: Information about whether a docker image is available or not and if there is a connected service then which connected service can be used to access the image.
+    Error:
+      description: The schema for all 4xx and 5xx responses
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
