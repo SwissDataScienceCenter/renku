@@ -58,6 +58,7 @@ spec:
               containerPort: 2222
               protocol: TCP
           env:
+            {{- with include "renku.proxy.env" . }}{{ . | nindent 12 }}{{ end }}
             - name: RUST_LOG
               value: "info,renku_ssh_proxy=debug"
             - name: RENKU_SSH_PROXY_HOST_KEY

@@ -42,6 +42,7 @@ spec:
               protocol: TCP
             {{- end }}
           env:
+            {{- with include "renku.proxy.env" . }}{{ . | nindent 12 }}{{ end }}
             - name: BASE_URL
               value: {{ (include "renku.baseUrl" .) | quote }}
             - name: GATEWAY_URL
