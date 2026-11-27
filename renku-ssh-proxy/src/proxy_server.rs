@@ -60,11 +60,12 @@ impl client::Handler for TargetHandler {
         &mut self,
         server_public_key: &russh::keys::PublicKeyOrCertificate,
     ) -> Result<bool, Self::Error> {
-        match &self.expected_host_key {
+        use russh::keys::PublicKeyOrCertificate as K;
+        match (&self.expected_host_key, server_public_key) {
             // compare key data only: the wire key carries no comment and the pinned key may
-            // A certificate authenticates its embedded key, so pinning compares that key.
-            Some(pk) => Ok(server_public_key.public_key().key_data() == pk.key_data()),
-            None => Ok(false),
+            (Some(pk), K::PublicKey { key, .. }) => Ok(key.key_data() == pk.key_data()),
+            // host certificates are not expected; only a pinned plain key is accepted
+            _ => Ok(false),
         }
     }
 }
@@ -321,9 +322,9 @@ impl server::Handler for ProxyHandler {
     async fn auth_publickey(
         &mut self,
         user: &str,
-        key: server::VerifiedPublicKey<'_>,
+        verified: server::VerifiedPublicKey<'_>,
     ) -> Result<server::Auth> {
-        let public_key = key.public_key;
+        let public_key = verified.public_key;
         if self.target.is_none() || user.trim().is_empty() {
             log::warn!("No target host set!");
             return Ok(server::Auth::reject());
@@ -747,10 +748,8 @@ async fn test_check_server_key_pins_expected_and_rejects_other() {
     let mut handler = TargetHandler {
         expected_host_key: Some(pinned),
     };
-    let presented = russh::keys::PublicKeyOrCertificate::from(presented);
-    let other = russh::keys::PublicKeyOrCertificate::from(other);
-    assert!(handler.check_server_key(&presented).await.unwrap());
-    assert!(!handler.check_server_key(&other).await.unwrap());
+    assert!(handler.check_server_key(&presented.into()).await.unwrap());
+    assert!(!handler.check_server_key(&other.into()).await.unwrap());
 }
 
 #[tokio::test]
@@ -764,8 +763,7 @@ async fn test_check_server_key_fails_closed_without_pin() {
     let mut handler = TargetHandler {
         expected_host_key: None,
     };
-    let key = russh::keys::PublicKeyOrCertificate::from(key);
-    assert!(!handler.check_server_key(&key).await.unwrap());
+    assert!(!handler.check_server_key(&key.into()).await.unwrap());
 }
 
 #[cfg(test)]
