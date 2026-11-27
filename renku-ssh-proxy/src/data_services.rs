@@ -1,5 +1,7 @@
 //! Module for interacting with the secret service.
 
+use crate::key_source::KeySource;
+use crate::secret_name::SecretName;
 use color_eyre::Result;
 use color_eyre::eyre::eyre;
 use reqwest::Url;
@@ -7,8 +9,14 @@ use ssh_key::PublicKey;
 use std::time::Duration;
 
 pub struct Client {
-    base_url: Url,
+    base_url: UrlType,
     client: reqwest::Client,
+}
+
+#[derive(Clone, Debug)]
+enum UrlType {
+    Base(Url),
+    Pattern(String),
 }
 
 #[derive(serde::Serialize, Clone, Debug)]
@@ -17,9 +25,43 @@ struct SessionAuthorizeRequest {
     pub public_key: String,
 }
 
+#[derive(serde::Serialize, serde::Deserialize, Clone, Debug)]
+pub struct SessionAuthorizeResponse {
+    pub target_host: String,
+    pub target_port: u16,
+    pub target_user: String,
+    pub host_key_pub: Option<KeySource>,
+    pub auth_key_priv: Option<SecretName>,
+}
+
+fn extend_url<I>(base_url: &Url, items: I) -> Result<Url>
+where
+    I: IntoIterator,
+    I::Item: AsRef<str>,
+{
+    let mut url = base_url.clone();
+    {
+        let mut path = url
+            .path_segments_mut()
+            .map_err(|_| eyre!("Cannot extend base url: {}", base_url))?;
+        path.extend(items);
+    }
+    Ok(url)
+}
+
+#[derive(Clone, Debug)]
+pub struct AuthResult {
+    pub success: bool,
+    pub target_data: Option<SessionAuthorizeResponse>,
+}
+
 impl Client {
     pub fn new(base_url: &str, timeout: &Duration) -> Result<Client> {
-        let uri = Url::parse(base_url)?;
+        let uri = if base_url.contains("{session_name}") {
+            UrlType::Pattern(base_url.to_string())
+        } else {
+            UrlType::Base(Url::parse(base_url)?)
+        };
         let client = reqwest::Client::builder().timeout(*timeout).build()?;
         Ok(Client {
             base_url: uri,
@@ -27,27 +69,24 @@ impl Client {
         })
     }
 
-    fn make_url<I>(&self, items: I) -> Result<Url>
-    where
-        I: IntoIterator,
-        I::Item: AsRef<str>,
-    {
-        let mut url = self.base_url.clone();
-        {
-            let mut path = url
-                .path_segments_mut()
-                .map_err(|_| eyre!("Cannot extends base url: {}", self.base_url))?;
-            path.extend(items);
+    fn make_authorize_url(&self, session_name: &str) -> Result<Url> {
+        match &self.base_url {
+            UrlType::Base(base) => {
+                extend_url(base, &["internal", "sessions", session_name, "authorize"])
+            }
+            UrlType::Pattern(patt) => {
+                let full_url = patt.replace("{session_name}", session_name);
+                Ok(Url::parse(&full_url)?)
+            }
         }
-        Ok(url)
     }
 
     pub async fn authorize_session(
         &self,
         public_key: &PublicKey,
         session_name: &str,
-    ) -> Result<bool> {
-        let url = self.make_url(&["internal", "sessions", session_name, "authorize"])?;
+    ) -> Result<AuthResult> {
+        let url = self.make_authorize_url(session_name)?;
         log::debug!("Call to: {}", url);
         let openssh_key = public_key.to_openssh()?;
         let payload = SessionAuthorizeRequest {
@@ -55,17 +94,25 @@ impl Client {
         };
         let resp = self.client.post(url).json(&payload).send().await?;
         let success = resp.status().is_success();
+        let mut target_data: Option<SessionAuthorizeResponse> = None;
         if success {
             log::debug!("Authorized session {session_name} via public-key");
+            if resp.status() == 200 {
+                let session_resp: SessionAuthorizeResponse = resp.json().await?;
+                target_data = Some(session_resp);
+            }
         } else {
             log::debug!("Failed to authorize public key: {}", payload.public_key);
             log::info!(
-                "Call to {} denied access to session {session_name}: {}",
+                "Call to {:?} denied access to session {session_name}: {}",
                 self.base_url,
                 resp.status()
             );
         }
-        Ok(success)
+        Ok(AuthResult {
+            success,
+            target_data,
+        })
     }
 }
 

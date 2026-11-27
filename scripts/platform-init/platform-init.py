@@ -9,7 +9,10 @@ import os
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives import serialization
 from cryptography.fernet import Fernet
-from ssh_proxy_session_keys import ensure_ssh_proxy_session_keys
+from ssh_proxy_session_keys import (
+    ensure_ssh_identities_secret,
+    ensure_ssh_proxy_session_keys,
+)
 
 PRIVATE_KEY_ENTRY_NAME = "privateKey"
 PUBLIC_KEY_ENTRY_NAME = "publicKey"
@@ -314,6 +317,7 @@ def main():
     set_secret_service_secrets(config)
     init_secret_and_data_service_encryption(config)
     init_data_service_internal_authentication_secret_key(config)
+    ensure_ssh_identities_secret(k8s_client.CoreV1Api(), config.k8s_namespace)
     if os.environ.get("SSH_PROXY_ENABLED", "false").lower() == "true":
         ensure_ssh_proxy_session_keys(
             k8s_client.CoreV1Api(), config.k8s_namespace, config.renku_fullname

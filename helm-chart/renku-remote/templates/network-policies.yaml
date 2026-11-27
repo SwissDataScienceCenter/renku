@@ -35,6 +35,13 @@ spec:
     - from:
         - ipBlock:
             cidr: 0.0.0.0/0
+        # The main Renku SSH proxy, when it runs in this same cluster. In-cluster traffic
+        # to the LoadBalancer IP arrives from the pod's private IP, which some CNIs (e.g.
+        # Cilium) do not match with the ipBlock above.
+        - namespaceSelector: {}
+          podSelector:
+            matchLabels:
+              renku.io/ssh-proxy: main
       ports:
         - protocol: TCP
           # The proxy container port, not the Service port.

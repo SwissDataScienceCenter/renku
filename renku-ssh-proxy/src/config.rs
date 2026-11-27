@@ -2,6 +2,8 @@
 // options and environment variables
 
 use crate::proxy_server::Target;
+use crate::ssh_key;
+use crate::ssh_key::SessionAuthKey;
 use clap::CommandFactory;
 use clap::Parser;
 use clap_complete::CompleteEnv;
@@ -19,32 +21,6 @@ use std::time::Duration;
 /// Generates the cli completions and exits.
 pub fn generate_completions() {
     CompleteEnv::with_factory(Cli::command).complete();
-}
-
-fn load_private_key_from_file<P>(file: P) -> Result<russh::keys::PrivateKey>
-where
-    P: AsRef<Path>,
-{
-    russh::keys::load_secret_key(&file, None)
-        .with_context(|| format!("reading private key {}", file.as_ref().display()))
-}
-
-fn load_public_key_from_file<P>(file: P) -> Result<russh::keys::PublicKey>
-where
-    P: AsRef<Path>,
-{
-    russh::keys::load_public_key(&file)
-        .with_context(|| format!("reading public key {}", file.as_ref().display()))
-}
-
-/// The private key the proxy uses to authenticate to session hosts.
-/// Its `Debug` redacts the key material.
-pub struct SessionAuthKey(pub Arc<russh::keys::PrivateKey>);
-
-impl std::fmt::Debug for SessionAuthKey {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.write_str("SessionAuthKey(***)")
-    }
 }
 
 /// Renku SSH proxy service.
@@ -83,7 +59,7 @@ struct Cli {
     secret_service_url: Option<String>,
 
     #[arg(long)]
-    data_services_timeout: Option<humantime::Duration>,
+    data_services_timeout: Option<HumanDuration>,
 
     /// Be more verbose when logging. Verbosity increases with each occurrence.
     #[command(flatten)]
@@ -91,7 +67,7 @@ struct Cli {
 
     /// Client inactivity timeout.
     #[arg(long)]
-    inactivity_timeout: Option<humantime::Duration>,
+    inactivity_timeout: Option<HumanDuration>,
 }
 
 /// Config-file schema. Every field is optional so partial files work.
@@ -107,10 +83,9 @@ struct FileConfig {
     log_level: Option<Verbosity>,
     target_port: Option<u16>,
     target_user: Option<String>,
-    #[serde(with = "humantime_serde")]
-    inactivity_timeout: Option<Duration>,
+    inactivity_timeout: Option<HumanDuration>,
     secret_service_url: Option<String>,
-    data_services_timeout: Option<Duration>,
+    data_services_timeout: Option<HumanDuration>,
 }
 
 impl Default for FileConfig {
@@ -123,9 +98,9 @@ impl Default for FileConfig {
             log_level: Some(Verbosity::from(VerbosityFilter::Warn)),
             target_port: Some(80),
             target_user: Some("renku".to_string()),
-            inactivity_timeout: Some(Duration::from_mins(30)),
+            inactivity_timeout: Some(HumanDuration(Duration::from_mins(30))),
             secret_service_url: None,
-            data_services_timeout: Some(Duration::from_mins(1)),
+            data_services_timeout: Some(HumanDuration(Duration::from_mins(1))),
         }
     }
 }
@@ -145,6 +120,33 @@ where
         "debug" => Ok(Some(Verbosity::from(VerbosityFilter::Debug))),
         "trace" => Ok(Some(Verbosity::from(VerbosityFilter::Trace))),
         _ => Ok(None),
+    }
+}
+
+/// A non-negative duration parsed from a human-friendly string such as
+/// `30m`, `1h 30m`, `90s`, `2 minutes` or ISO 8601 (`PT30M`).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+struct HumanDuration(Duration);
+
+impl std::str::FromStr for HumanDuration {
+    type Err = String;
+
+    fn from_str(s: &str) -> core::result::Result<Self, Self::Err> {
+        let sd: jiff::SignedDuration = s
+            .trim()
+            .parse()
+            .map_err(|e| format!("invalid duration `{s}`: {e}"))?;
+        Duration::try_from(sd)
+            .map(HumanDuration)
+            .map_err(|_| format!("duration `{s}` must not be negative"))
+    }
+}
+
+impl<'de> Deserialize<'de> for HumanDuration {
+    fn deserialize<D: Deserializer<'de>>(deserializer: D) -> core::result::Result<Self, D::Error> {
+        String::deserialize(deserializer)?
+            .parse()
+            .map_err(serde::de::Error::custom)
     }
 }
 
@@ -193,16 +195,14 @@ impl Settings {
             .or(file.session_auth_key)
             .ok_or_eyre("missing `session_auth_key`")
             .suggestion("pass --session-auth-key or set `session_auth_key` in the config file")?;
-        let session_host_key = load_public_key_from_file(&session_host_key_file)?;
-        let session_auth_key = SessionAuthKey(Arc::new(load_private_key_from_file(
-            &session_auth_key_file,
-        )?));
+        let session_host_key = ssh_key::load_public_key_from_file(&session_host_key_file)?;
+        let session_auth_key = SessionAuthKey::load_from_file(&session_auth_key_file)?;
 
         let inactivity_timeout = cli
             .inactivity_timeout
-            .map(|e| e.into())
             .or(file.inactivity_timeout)
-            .unwrap();
+            .unwrap()
+            .0;
 
         // expose as config if ops ever need tuning.
         // Keepalives reap half-open clients and keep NAT/LB idle-timeouts from
@@ -218,7 +218,7 @@ impl Settings {
             max_auth_attempts: MAX_AUTH_ATTEMPTS,
             keepalive_interval: Some(KEEPALIVE_INTERVAL),
             keepalive_max: KEEPALIVE_MAX,
-            keys: vec![load_private_key_from_file(&host_key_file)?],
+            keys: vec![ssh_key::load_private_key_from_file(&host_key_file)?],
             preferred: Preferred::default(),
             ..Default::default()
         };
@@ -231,6 +231,7 @@ impl Settings {
             port: target_port,
             user: target_user,
             expected_host_key: Some(session_host_key),
+            auth_key: None,
         };
         let secret_service_url = cli
             .secret_service_url
@@ -242,9 +243,9 @@ impl Settings {
 
         let data_services_timeout = cli
             .data_services_timeout
-            .map(|e| e.into())
             .or(file.data_services_timeout)
-            .unwrap();
+            .unwrap()
+            .0;
 
         Ok(Settings {
             listen,
@@ -279,17 +280,40 @@ fn default_config_path() -> Option<PathBuf> {
 mod tests {
     use super::*;
 
+    fn d(s: &str) -> Duration {
+        s.parse::<HumanDuration>().unwrap().0
+    }
+
     #[test]
-    fn test_load_public_key_from_file() {
-        let path =
-            std::env::temp_dir().join(format!("session-host-pub-{}.pub", std::process::id()));
-        std::fs::write(
-            &path,
-            "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHSWqeaS0b8NVxqu8dzb3fXmQzH/Kd5ClsYNMrXA9E+I t1\n",
-        )
-        .unwrap();
-        let key = load_public_key_from_file(&path).unwrap();
-        std::fs::remove_file(&path).ok();
-        assert_eq!(key.algorithm(), russh::keys::Algorithm::Ed25519);
+    fn parses_human_durations() {
+        assert_eq!(d("30m"), Duration::from_mins(30));
+        assert_eq!(d("1h 30m"), Duration::from_mins(90));
+        assert_eq!(d("1h30m"), Duration::from_mins(90));
+        assert_eq!(d("90s"), Duration::from_secs(90));
+        assert_eq!(d("500ms"), Duration::from_millis(500));
+        assert_eq!(d("2 minutes"), Duration::from_mins(2));
+        assert_eq!(d("PT30M"), Duration::from_mins(30));
+    }
+
+    #[test]
+    fn rejects_bad_durations() {
+        assert!("-5s".parse::<HumanDuration>().is_err());
+        assert!("soon".parse::<HumanDuration>().is_err());
+        assert!("".parse::<HumanDuration>().is_err());
+    }
+
+    #[test]
+    fn file_config_reads_duration_strings() {
+        let cfg: FileConfig =
+            toml::from_str("inactivity_timeout = \"45m\"\ndata_services_timeout = \"10s\"")
+                .unwrap();
+        assert_eq!(
+            cfg.inactivity_timeout,
+            Some(HumanDuration(Duration::from_mins(45)))
+        );
+        assert_eq!(
+            cfg.data_services_timeout,
+            Some(HumanDuration(Duration::from_secs(10)))
+        );
     }
 }

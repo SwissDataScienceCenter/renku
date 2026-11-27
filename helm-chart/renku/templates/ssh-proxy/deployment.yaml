@@ -28,6 +28,9 @@ spec:
         app: renku-ssh-proxy
         release: {{ .Release.Name }}
         renku.io/secrets-storage-access: "true"
+        # Stable label the renku-remote chart's network policy selects on when the main
+        # and remote proxies run in the same cluster. Not part of the selector on purpose.
+        renku.io/ssh-proxy: main
         app.kubernetes.io/name: renku-ssh-proxy
         app.kubernetes.io/instance: {{ .Release.Name }}
         app.kubernetes.io/managed-by: {{ .Release.Service }}
@@ -81,6 +84,9 @@ spec:
             - name: RENKU_SSH_PROXY_SECRET_SERVICE_URL
               value: {{ printf "http://%s-secrets-storage/api/secrets" (include "renku.fullname" .) | quote }}
           volumeMounts:
+            - mountPath: "/secrets/renku-ssh-identities"
+              name: renku-ssh-identities
+              readOnly: true
             - mountPath: "/secrets/openSshHostKey"
               name: open-ssh-host-key
               readOnly: true
@@ -134,6 +140,9 @@ spec:
         {{ toYaml . | nindent 8 }}
     {{- end }}
       volumes:
+        - name: renku-ssh-identities
+          secret:
+            secretName: renku-ssh-identities
         - name: open-ssh-host-key
           secret:
             secretName: {{ template "renku.fullname" . }}-ssh-proxy
