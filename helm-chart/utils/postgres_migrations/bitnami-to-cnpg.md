@@ -1,5 +1,9 @@
 # Migration from Bitnami postgresql to CloudNativePG
 
+> [!NOTE]
+> Run this migration **while on chart version 2.23.x**. That is the last version that deploys the
+> bitnami instance. Later versions removed the `postgresql` section along with `cnpg.autoMigration`.
+
 > [!IMPORTANT]
 > You MUST create a full, fresh backup of your database before you start the migration.
 

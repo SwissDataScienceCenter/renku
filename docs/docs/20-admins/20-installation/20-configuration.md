@@ -140,13 +140,14 @@ and/or with node autoscaling.
 These services are not developed by Renku but are used by the services we develop and maintain.
 
 ```yaml
-postgresql:
-  resources:
-    requests:
-      cpu: 3
-      memory: 6000Mi
-    limits:
-      memory: 6000Mi
+cnpg:
+  extraSpec:
+    resources:
+      requests:
+        cpu: 3
+        memory: 6000Mi
+      limits:
+        memory: 6000Mi
 keycloak:
   extraSpec:
     resources:

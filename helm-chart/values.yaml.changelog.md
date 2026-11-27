@@ -24,6 +24,13 @@ the chart-wide `securityContext`.
 Keycloak. Set it alongside `global.keycloak.url` and the realm job creates the Renku realm and
 its clients there, on every upgrade. Leave it empty to manage the realm yourself.
 
+The legacy bitnami `postgresql` subchart is removed. Finish the migration described in
+[Upgrading to Renku 2.23.0](#upgrading-to-renku-2230) while still on that version: this release cannot
+deploy the old instance any more.
+
+* DELETE `postgresql`, the whole section. The chart refuses to render while it is present.
+* DELETE `cnpg.autoMigration`. It imported from the bitnami instance which is not deployed anymore.
+
 ## Upgrading to Renku 2.23.0
 
 > [!WARNING]
