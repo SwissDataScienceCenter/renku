@@ -190,8 +190,12 @@ networkPolicies:
   ## List of namespaces that should be allowed all ingress to all services
   allowAllIngressFromNamespaces: []
   sshProxy:
-    ## Egress rules for the SSH proxy. The proxy additionally reaches Keycloak,
-    ## data-services and sessions (same namespace) via rules hardcoded in the chart.
+    ## Egress rules for the SSH proxy. The default allows DNS and traffic leaving the
+    ## cluster, which is needed to forward connections to the SSH proxies of remote
+    ## clusters, while blocking access to private IP ranges. If a remote cluster's SSH
+    ## proxy is reachable only on a private address, add a rule for it here.
+    ## The proxy additionally reaches Keycloak, data-services , secrets-storage and
+    ## sessions (same namespace) via rules hardcoded in the chart.
     egress:
       - to:
           # DNS resolution
@@ -206,6 +210,14 @@ networkPolicies:
             protocol: UDP
           - port: 53
             protocol: TCP
+      - to:
+          # SSH proxies of remote clusters, reached via their public address
+          - ipBlock:
+              cidr: 0.0.0.0/0
+              except:
+                - 10.0.0.0/8
+                - 172.16.0.0/12
+                - 192.168.0.0/16
   sessions:
     egress:
       # NOTE: These prevent user sessions from accessing other services running in your cluster.

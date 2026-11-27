@@ -21,6 +21,9 @@ spec:
         app: {{ template "renku-remote.name" $ }}
         {{- include "renku-remote.labels" . | nindent 8 }}
         {{- include "renku-remote.sshProxySelectorLabels" . | nindent 8 }}
+        # Stable label the main Renku chart's network policy selects on when the main
+        # and remote proxies run in the same cluster. Not part of the selector on purpose.
+        renku.io/ssh-proxy: remote
       annotations:
       {{- with .Values.sshProxy.podAnnotations }}
         {{- toYaml . | nindent 8 }}

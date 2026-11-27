@@ -64,6 +64,22 @@ networkPolicies:
                 - 10.0.0.0/8
                 - 172.16.0.0/12
                 - 192.168.0.0/16
+      # # If this remote cluster is the same cluster as the main Renku deployment, you will
+      # # need an additional network policy like the one below, depending on the ingress
+      # # controller in your cluster. The example below is for ingress nginx.
+      # # This resolves issues with hairpinning where the SSH proxy calls the main Renku
+      # # deployment (`sshProxy.authorizeConnectionUrl`) through its public URL.
+      # # Without this the SSH proxy cannot authorize connections and they will time out.
+      # - to:
+      #     - namespaceSelector:
+      #         matchLabels:
+      #           kubernetes.io/metadata.name: app-routing-system
+      #       podSelector:
+      #         matchLabels:
+      #           app: nginx
+      #   ports:
+      #     - port: 443
+      #       protocol: TCP
   sessions:
     ## Egress rules for user sessions. The default allows DNS and traffic leaving the
     ## cluster, while blocking access to private IP ranges (i.e. other services in the cluster).
