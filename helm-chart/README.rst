@@ -67,7 +67,7 @@ Removed legacy bitnami ``postgresql`` subchart. The chart refuses to render with
 **Migrate the data before upgrading to this version.** Follow the
 `2.23.0 instructions <#upgrading-to-2-23-0>`_, verify the new database, and only then upgrade.
 
-Upgrading removes the old StatefulSet, Service and the ``<release>-postgresql`` secret.
+Upgrading removes the old StatefulSet, Service and the ``<release>-postgresql`` secret. The PVC holding the legacy postgresql is untouched. The cleanup is left responsibility of the administrators.
 
 Upgrading to 2.23.0
 *************************
