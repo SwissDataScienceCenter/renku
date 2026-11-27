@@ -30,10 +30,17 @@ data connectors, or send what it reads to its model provider.
 Before you use an agent, restrict the launcher to what the task needs:
 
 1. Click the launcher to open the launcher right-side panel.
-2. In the **Secrets** section, click on the top button and restrict access so that only the secrets this launcher needs are
+2. In the **Secrets** section, click on the button ![Limit agent access button](./limit-agent-access.png)
+   and restrict access so that only the secrets this launcher needs are
    available. For example, keep the agent’s own key (e.g. `ANTHROPIC_API_KEY`) if you use one.
-3. In the **Data connectors** section, click on the top button and restrict access so that only the data connectors this
-   launcher needs are mounted.
+   
+   ![image.png](./limit-secrets-access.png)
+   
+3. In the **Data connectors** section, click on the button ![Limit agent access button](./limit-agent-access.png)
+   and restrict access so that only the data connectors this launcher needs are mounted.
+
+   ![image.png](./limit-data-connector-access.png)
+   
 4. Restart any running session from this launcher so that the change applies.
 
 :::tip
