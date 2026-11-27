@@ -358,14 +358,18 @@ impl server::Handler for ProxyHandler {
         data: &[u8],
         _session: &mut server::Session,
     ) -> Result<()> {
-        self.touch();
+        let reply = crate::activity::is_terminal_reply(data);
+        if !reply {
+            self.touch();
+        }
         // Eight bytes are enough to tell a terminal reply (device attributes, cursor report,
         // OSC answer) from a keystroke. A reply is not presence; see the 2026-11-27 run.
         let head: Vec<String> = data.iter().take(8).map(|b| format!("{b:02x}")).collect();
         log::debug!(
-            "Sending data... {} bytes, head=[{}]",
+            "Sending data... {} bytes, head=[{}], reply={}",
             data.len(),
-            head.join(" ")
+            head.join(" "),
+            reply
         );
         self.forward(&channel, SshMsg::Data(data.to_vec())).await
     }
