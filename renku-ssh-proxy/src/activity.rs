@@ -26,6 +26,28 @@ impl Activity {
     }
 }
 
+/// Whether a client data chunk is a terminal answering a query rather than a keystroke.
+///
+/// A resize or an attach makes the client ask the terminal what it is, where the cursor is and
+/// what colours it uses; the answers arrive as ordinary channel data. Counting them keeps a
+/// session alive forever on a tiling window manager, so they are not presence. Keys and pasted
+/// text share the same ESC prefix and do count.
+pub(crate) fn is_terminal_reply(data: &[u8]) -> bool {
+    let Some(rest) = data.strip_prefix(b"\x1b[") else {
+        return data.starts_with(b"\x1b]");
+    };
+    match rest {
+        // Primary and secondary device attributes: ESC [ ? ... c, ESC [ > ... c
+        [b'?', .., b'c'] | [b'>', .., b'c'] => true,
+        // Cursor position report: ESC [ row ; col R. A modified F3 sends the same shape, which is
+        // rare enough to accept losing.
+        [.., b'R'] => rest[..rest.len() - 1]
+            .iter()
+            .all(|b| b.is_ascii_digit() || *b == b';'),
+        _ => false,
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -59,5 +81,32 @@ mod tests {
             activity.touch(REFRESH_WINDOW),
             "input after the window is an edge again"
         );
+    }
+
+    #[test]
+    fn test_terminal_replies_are_not_input() {
+        assert!(
+            is_terminal_reply(b"\x1b[?62;22c"),
+            "primary device attributes"
+        );
+        assert!(
+            is_terminal_reply(b"\x1b[>1;10;0c"),
+            "secondary device attributes"
+        );
+        assert!(
+            is_terminal_reply(b"\x1b]10;rgb:ffff/ffff/ffff\x07"),
+            "OSC colour answer"
+        );
+        assert!(is_terminal_reply(b"\x1b[24;80R"), "cursor position report");
+    }
+
+    #[test]
+    fn test_keys_and_payloads_stay_input() {
+        assert!(!is_terminal_reply(b"\x1b[A"), "up arrow");
+        assert!(!is_terminal_reply(b"\x1bOP"), "F1");
+        assert!(!is_terminal_reply(b"\x1b[200~"), "paste start");
+        assert!(!is_terminal_reply(b"\x1b[201~"), "paste end");
+        assert!(!is_terminal_reply(b"ls -la\r"), "typed text");
+        assert!(!is_terminal_reply(b"\r"), "enter");
     }
 }
