@@ -2,12 +2,13 @@
 
 You can install coding agents when you [create an environment from
 code](/docs/users/compute/environment/guides/create-environment-with-custom-packages-installed)
-for a session launcher or a job launcher. **Coding agents** is optional.
+for a session launcher or a job launcher. **Coding agents** are optional.
+   ![image.png](./select-coding-agents.png)
 
 ## Choose which agents to install
 
-- Leave **Coding agents** empty to use the repository’s `project.toml`. Renku installs the
-  agents that file requests. The launcher panel shows **Coding agents** as `project.toml`.
+- Leave **Coding agents** section empty to use the repository’s `project.toml` and Renku installs the
+  agents specified in that file. The launcher panel shows **Coding agents** as `project.toml`.
 - Select one or more of Claude Code, Pi, and Codex to install only those agents. The
   selection replaces `project.toml`.
 
