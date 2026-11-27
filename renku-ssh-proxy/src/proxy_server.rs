@@ -91,6 +91,41 @@ pub enum SshMsg {
     Subsystem(String),
 }
 
+/// Delivers the timer's warning and close to the client's interactive shells.
+struct ClientAlerts {
+    handle: server::Handle,
+    channels: Arc<Mutex<Vec<ChannelId>>>,
+}
+
+impl crate::timer::SessionAlerts for ClientAlerts {
+    async fn warn(&self, text: &str) {
+        let ids = self
+            .channels
+            .lock()
+            .expect("shell channels mutex poisoned")
+            .clone();
+        let count = ids.len();
+        for id in ids {
+            // A channel that closed between the snapshot and the write is not worth failing over.
+            if let Err(err) = self.handle.data(id, format!("\r\n{text}\r\n")).await {
+                log::warn!("Could not write the idle warning to {id}: {err:?}");
+            }
+        }
+        log::debug!("Idle warning handed to {count} shell channel(s)");
+    }
+
+    async fn disconnect(&self, reason: &str) {
+        let _ = self
+            .handle
+            .disconnect(
+                russh::Disconnect::ByApplication,
+                reason.to_string(),
+                String::new(),
+            )
+            .await;
+    }
+}
+
 #[derive(Clone)]
 pub struct ProxyHandler {
     pub target: Option<Target>,
@@ -102,6 +137,8 @@ pub struct ProxyHandler {
     activity_notify: Arc<Notify>,
     alive: Arc<AtomicBool>,
     timer_started: Arc<AtomicBool>,
+    /// Only `shell_request` and `pty_request` record here; a `ChannelId` cannot be built in a test, so this is review-checked.
+    shell_channels: Arc<Mutex<Vec<ChannelId>>>,
 }
 
 impl ProxyHandler {
@@ -116,6 +153,7 @@ impl ProxyHandler {
             activity_notify: Arc::new(Notify::new()),
             alive: Arc::new(AtomicBool::new(true)),
             timer_started: Arc::new(AtomicBool::new(false)),
+            shell_channels: Arc::new(Mutex::new(Vec::new())),
         }
     }
 
@@ -127,6 +165,27 @@ impl ProxyHandler {
     pub fn with_auth_key(mut self, key: Arc<PrivateKey>) -> Self {
         self.auth_key = Some(key);
         self
+    }
+
+    fn shell_channels(&self) -> Arc<Mutex<Vec<ChannelId>>> {
+        self.shell_channels.clone()
+    }
+
+    fn remember_shell(&self, channel: ChannelId) {
+        let mut channels = self
+            .shell_channels
+            .lock()
+            .expect("shell channels mutex poisoned");
+        if !channels.contains(&channel) {
+            channels.push(channel);
+        }
+    }
+
+    fn forget_shell(&self, channel: ChannelId) {
+        self.shell_channels
+            .lock()
+            .expect("shell channels mutex poisoned")
+            .retain(|id| *id != channel);
     }
 
     fn set_target_host<T: AsRef<str>>(&mut self, host: T) {
@@ -199,6 +258,30 @@ impl ProxyHandler {
         reopened
     }
 
+    /// Starts the per-connection timer exactly once.
+    ///
+    /// A tunnel-only connection (`ssh -N -L`) never opens a session channel, so a start tied to
+    /// `channel_open_session` left it without keepalive, warning or close.
+    fn start_timer(&mut self, session: &mut server::Session) {
+        if self.timer_started.swap(true, Ordering::Relaxed) {
+            return;
+        }
+        let Some(target) = &self.target else {
+            return;
+        };
+        crate::timer::spawn_timer(
+            self.client.clone(),
+            target.host.clone(),
+            self.activity.clone(),
+            self.activity_notify.clone(),
+            self.alive.clone(),
+            Arc::new(ClientAlerts {
+                handle: session.handle(),
+                channels: self.shell_channels(),
+            }),
+        );
+    }
+
     fn is_allowed_forward_target(host: &str) -> bool {
         host.eq_ignore_ascii_case("localhost")
             || host
@@ -249,21 +332,10 @@ impl server::Handler for ProxyHandler {
         session: &mut server::Session,
     ) -> Result<()> {
         self.touch();
+        self.start_timer(session);
         log::debug!("Entering channel_open_session");
         let client_id = channel.id();
         let upstream = self.connect_target().await?;
-        // One timer task per connection: the first channel starts it, later channels reuse it.
-        if !self.timer_started.swap(true, Ordering::Relaxed)
-            && let Some(target) = &self.target
-        {
-            crate::timer::spawn_timer(
-                self.client.clone(),
-                target.host.clone(),
-                self.activity.clone(),
-                self.activity_notify.clone(),
-                self.alive.clone(),
-            );
-        }
         let up_channel = upstream.channel_open_session().await?;
         let (tx, rx) = mpsc::channel::<SshMsg>(64);
         self.channels.insert(client_id, tx);
@@ -286,8 +358,19 @@ impl server::Handler for ProxyHandler {
         data: &[u8],
         _session: &mut server::Session,
     ) -> Result<()> {
-        self.touch();
-        log::debug!("Sending data...");
+        let reply = crate::activity::is_terminal_reply(data);
+        if !reply {
+            self.touch();
+        }
+        // Eight bytes are enough to tell a terminal reply (device attributes, cursor report,
+        // OSC answer) from a keystroke. A reply is not presence; see the 2026-11-27 run.
+        let head: Vec<String> = data.iter().take(8).map(|b| format!("{b:02x}")).collect();
+        log::debug!(
+            "Sending data... {} bytes, head=[{}], reply={}",
+            data.len(),
+            head.join(" "),
+            reply
+        );
         self.forward(&channel, SshMsg::Data(data.to_vec())).await
     }
 
@@ -298,6 +381,7 @@ impl server::Handler for ProxyHandler {
     ) -> Result<(), Self::Error> {
         self.touch();
         log::debug!("Requesting shell...");
+        self.remember_shell(channel);
         let _ = self.forward(&channel, SshMsg::Shell).await;
         session.channel_success(channel)?;
         Ok(())
@@ -309,6 +393,7 @@ impl server::Handler for ProxyHandler {
         _session: &mut server::Session,
     ) -> Result<()> {
         log::debug!("Sending eof...");
+        self.forget_shell(channel);
         self.forward(&channel, SshMsg::Eof).await
     }
 
@@ -319,6 +404,7 @@ impl server::Handler for ProxyHandler {
     ) -> Result<()> {
         log::debug!("Remove channel {} on channel_close...", channel);
         self.channels.remove(&channel);
+        self.forget_shell(channel);
         Ok(())
     }
 
@@ -359,6 +445,7 @@ impl server::Handler for ProxyHandler {
     ) -> Result<()> {
         self.touch();
         log::debug!("Sending pty request...");
+        self.remember_shell(channel);
         self.forward(
             &channel,
             SshMsg::Pty {
@@ -422,6 +509,7 @@ impl server::Handler for ProxyHandler {
         session: &mut server::Session,
     ) -> Result<()> {
         self.touch();
+        self.start_timer(session);
         if ProxyHandler::is_allowed_forward_target(host_to_connect) {
             let client_id = channel.id();
             log::debug!(
@@ -563,14 +651,19 @@ impl server::Server for ProxyHandler {
         client.activity_notify = Arc::new(Notify::new());
         client.alive = Arc::new(AtomicBool::new(true));
         client.timer_started = Arc::new(AtomicBool::new(false));
+        client.shell_channels = Arc::new(Mutex::new(Vec::new()));
         client
     }
     fn handle_session_error(&mut self, error: <Self::Handler as russh::server::Handler>::Error) {
         let cause = error.downcast_ref::<russh::Error>();
-        if let Some(russh::Error::Disconnect) = cause {
-            log::debug!("Client disconnected: {error:#?}");
-        } else {
-            log::error!("Session error: {error:#?}");
+        match cause {
+            Some(russh::Error::Disconnect) => log::debug!("Client disconnected: {error:#?}"),
+            Some(russh::Error::IO(err)) if err.kind() == std::io::ErrorKind::UnexpectedEof => {
+                log::debug!(
+                    "Connection closed without a disconnect message (probe or dropped client): {error:#?}"
+                );
+            }
+            _ => log::error!("Session error: {error:#?}"),
         }
     }
 }

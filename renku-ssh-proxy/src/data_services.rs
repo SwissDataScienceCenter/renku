@@ -20,7 +20,6 @@ pub struct Client {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SessionDeadline {
     pub remaining: Option<Duration>,
-    pub since_input: Option<Duration>,
     pub alive: bool,
 }
 
@@ -46,8 +45,6 @@ pub(crate) trait SessionClient: Send + Sync {
 
 #[derive(serde::Deserialize)]
 struct SessionResponse {
-    #[serde(rename = "lastInteraction")]
-    last_interaction: Option<String>,
     status: SessionStatus,
 }
 
@@ -184,10 +181,8 @@ impl Client {
         })?;
         let now = jiff::Timestamp::now();
         let deadline = parse_timestamp(body.status.will_hibernate_at);
-        let interaction = parse_timestamp(body.last_interaction);
         Ok(SessionDeadline {
             remaining: deadline.map(|t| non_negative_seconds(t.as_second() - now.as_second())),
-            since_input: interaction.map(|t| non_negative_seconds(now.as_second() - t.as_second())),
             // Only a terminal session is not alive: a readiness blip or a future
             // Amalthea state must not stop the proxy's per-connection timer.
             alive: !matches!(
@@ -344,7 +339,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_deadline_computes_remaining_and_since_input() {
+    async fn test_deadline_computes_remaining() {
         let now = jiff::Timestamp::now();
         let interaction = now - jiff::SignedDuration::from_secs(300);
         let hibernate = now + jiff::SignedDuration::from_secs(600);
@@ -355,11 +350,6 @@ mod tests {
         let deadline = deadline_response(body, 200).await.unwrap();
         let remaining = deadline.remaining.unwrap().as_secs();
         assert!((595..=605).contains(&remaining), "remaining={remaining}");
-        let since_input = deadline.since_input.unwrap().as_secs();
-        assert!(
-            (295..=305).contains(&since_input),
-            "since_input={since_input}"
-        );
         assert!(deadline.alive);
     }
 
@@ -370,7 +360,6 @@ mod tests {
                 .to_string();
         let deadline = deadline_response(body, 200).await.unwrap();
         assert_eq!(deadline.remaining, None);
-        assert_eq!(deadline.since_input, None);
         assert!(deadline.alive);
     }
 
@@ -380,7 +369,6 @@ mod tests {
             .to_string();
         let deadline = deadline_response(body, 200).await.unwrap();
         assert_eq!(deadline.remaining, None);
-        assert_eq!(deadline.since_input, None);
         assert!(deadline.alive);
     }
 
