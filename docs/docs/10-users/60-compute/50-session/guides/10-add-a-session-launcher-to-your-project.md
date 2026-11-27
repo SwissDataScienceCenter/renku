@@ -5,8 +5,10 @@ The basic steps for creating a launcher are:
 
 1. In the **Launchers** section of the project page, click on ➕ to add a new launcher.
 2. Choose **Session** in the type selector.
-3. Choose and configure an **environment** (see [Creating an environment for your session](#creating-an-environment-for-your-session))
-4. Select the **Resource class** that best fits your expected computational needs. (see [Resource Pool and Classes](/docs/users/compute/resource-pools-and-classes))
+3. Choose and configure an **environment** (see [Choosing an environment for your
+   session](#choosing-an-environment-for-your-session)).
+4. Select the **Resource class** that best fits your expected computational needs (see [Resource
+   Pool and Classes](/docs/users/compute/resource-pools-and-classes)).
 
    :::tip
 
@@ -15,67 +17,59 @@ The basic steps for creating a launcher are:
 
    :::
 
-## Creating an environment for your session
+## Choosing an environment for your session
 
-Renku supports a variety of ways of working with sessions. To determine what kind of Renku session
-environment is right for you, answer the following questions:
+There are three kinds of environments. Pick the first one that fits your needs:
 
-### 1. What language are you working in?
+| You want… | Use | Packages persist? |
+|-----------|-----|-------------------|
+| To start right away, without installing anything up front | A [global environment](#global-environment) | No, reinstall them after each restart |
+| Your packages pre-installed for you and everyone using the launcher | An [environment built from code](#environment-built-from-code) | Yes, they are part of the environment |
+| Full control, or a language other than Python or R | [Your own Docker image](#your-own-docker-image) | Yes, they are part of the image |
 
-#### → I’m working in Python
+### Global environment
 
-We have multiple ways of working in Python in Renku sessions! Please continue to the next question
-[2. Would you like packages to be pre-installed and ready to go when you (or anyone else) launches
-the
-session?](#2-would-you-like-packages-to-be-pre-installed-and-ready-to-go-when-you-or-anyone-else-launches-the-session).
+Renku provides pre-made **global environments**, for example for Python and for R. When you
+create the launcher, select **Global environment** and choose one of them.
 
-#### → I’m working in R
+You can still install packages on the fly in the session (see [How to install packages on-the-fly
+in your session](/docs/users/compute/session/guides/install-packages-on-the-fly-in-your-session)).
+However, these packages are lost when you shut down the session, and they are not available to
+anyone else who launches a session from the launcher.
 
-If your project uses [`renv`](https://rstudio.github.io/renv/) and has an `renv.lock` file,
-Renku can build a code-based environment with your packages pre-installed. See [How to create an
-environment with custom packages
-installed](/docs/users/compute/environment/guides/create-environment-with-custom-packages-installed#defining-an-r-environment-with-renv).
+### Environment built from code
 
-If you do not need packages pre-installed, create a session launcher with a **global environment**
-and select the **R** global environment. If you need to install additional packages temporarily, see
-[How to install packages on-the-fly in your
-session](/docs/users/compute/session/guides/install-packages-on-the-fly-in-your-session).
+Renku builds an environment for you from a code repository that describes your packages. Add the
+repository to your project, select **Create from code** when you create the launcher, and Renku
+builds the image.
 
-#### → I’m working in another language
+- **Python**: `environment.yml` (Conda), `requirements.txt` (pip), `pyproject.toml` (Poetry),
+  `uv.lock` (uv) or `pixi.toml` (pixi). Choose VSCodium or JupyterLab as the user interface.
+- **R**: `renv.lock` (renv) or `environment.yml` (Conda), both including Bioconductor support.
+  Choose RStudio as the user interface.
+- **Extras**, for any language: system packages, command-line tools (Homebrew), startup scripts,
+  VSCodium extensions and [coding
+  agents](/docs/users/compute/environment/guides/configure-ai-agents-for-a-session-environment).
 
-Working in some other language? That’s ok! You can run a wide variety of Docker images in Renku
-sessions! See [How to use your own docker image for a Renku
-session](/docs/users/compute/environment/guides/use-your-own-docker-image-for-renku-session)
+:::warning
 
-### 2. Would you like packages to be pre-installed and ready to go when you (or anyone else) launches the session?
+Coding agents can read the secrets and data connectors available to the launcher. [Limit what they
+can access](/docs/users/compute/environment/guides/configure-ai-agents-for-a-session-environment#limit-what-agents-can-access)
+before you use them.
 
-#### → Yes please!
+:::
 
-If you’d like a set of custom packages to be installed and ready to go when you (or anyone else)
-launches a session in your project, you can take advantage of Renku’s code based environments.
+Next steps:
 
-With Renku code based environments, you can point Renku to a code repository that contains an
-environment definition file, such as `environment.yml`, `requirements.txt`, `pyproject.toml`, or
-`renv.lock`, and Renku will build a custom environment for your session for you!
+- Which files to add and how to write them: [Building environments from
+  code](/docs/users/compute/environment/build-environment-from-code).
+- **Public** repository: [How to create an environment with custom packages
+  installed](/docs/users/compute/environment/guides/create-environment-with-custom-packages-installed).
+- **Private** repository: [How to create an environment with custom packages from a private code
+  repository](/docs/users/compute/environment/guides/create-environment-with-custom-packages-private-code-repository).
 
-→ If your code repository is **public**, see [How to create an environment with custom packages
-installed](../../../environment/guides/create-environment-with-custom-packages-installed).
+### Your own Docker image
 
-→ If your code repository is **private**, see [How to create an environment with custom packages from
-a private code
-repository](/docs/users/compute/environment/guides/create-environment-with-custom-packages-private-code-repository).
-
-#### → Having packages pre-installed is not so important to me right now.
-
-If you don’t need custom packages installed, you can get started quickly by simply selecting one or
-Renku’s pre-made **global environments**. When you create a session launcher, select **global
-environment** and choose one of the pre-made environments.
-
-When you launch a session with a global environment, you can still install packages on the fly.
-Please note, however, that these packages will not persist once you shut down your session. You will
-have to re-install them after you shut down and re-launch your session. In addition, the packages
-you install won’t be available for anyone else who launches a session from the launcher.
-
-If you’d like to permanently add the packages you need to your session environment, see [How to
-create an environment with custom packages
-installed](../../../environment/guides/create-environment-with-custom-packages-installed).
+Working in another language, or need something the options above don’t cover? You can run a wide
+variety of Docker images in Renku sessions. See [How to use your own docker image for a Renku
+session](/docs/users/compute/environment/guides/use-your-own-docker-image-for-renku-session).
