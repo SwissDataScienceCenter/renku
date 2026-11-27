@@ -359,10 +359,13 @@ impl server::Handler for ProxyHandler {
         _session: &mut server::Session,
     ) -> Result<()> {
         self.touch();
+        // Eight bytes are enough to tell a terminal reply (device attributes, cursor report,
+        // OSC answer) from a keystroke. A reply is not presence; see the 2026-11-27 run.
+        let head: Vec<String> = data.iter().take(8).map(|b| format!("{b:02x}")).collect();
         log::debug!(
-            "Sending data... {} bytes, escape={}",
+            "Sending data... {} bytes, head=[{}]",
             data.len(),
-            data.first().copied() == Some(0x1b)
+            head.join(" ")
         );
         self.forward(&channel, SshMsg::Data(data.to_vec())).await
     }
