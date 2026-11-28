@@ -1,0 +1,20 @@
+apiVersion: v2
+name: renku-remote
+description: >-
+  Components needed on a remote Kubernetes cluster so that a Renku deployment
+  running on another cluster can launch sessions on it (Amalthea operator,
+  optionally CSI-rClone, RBAC, priority classes and network policies).
+type: application
+icon: https://github.com/SwissDataScienceCenter/renku-sphinx-theme/raw/master/renku_sphinx_theme/static/favicon.png
+version: 0.0.1-set.by.chartpress
+appVersion: "1.0"
+# The versions below must be identical to the ones used by the main Renku chart
+# (see ../renku/requirements.yaml) of the Renku deployment this cluster connects to.
+dependencies:
+  - name: amalthea-sessions
+    repository: "https://swissdatasciencecenter.github.io/helm-charts/"
+    version: "0.31.0"
+  - name: csi-rclone
+    repository: "https://swissdatasciencecenter.github.io/helm-charts/"
+    version: "0.7.0"
+    condition: csi-rclone.enabled

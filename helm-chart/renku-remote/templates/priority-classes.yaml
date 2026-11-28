@@ -1,0 +1,19 @@
+{{- /*
+Renku enforces resource pool quotas with priority classes. Create one for every
+resource pool that points to this cluster and has a quota. The name must match
+the `quota.id` of the resource pool in the main Renku deployment.
+*/ -}}
+{{- range .Values.priorityClasses }}
+---
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: {{ required "priorityClasses[].name is required" .name }}
+  labels:
+    app: {{ template "renku-remote.name" $ }}
+    {{- include "renku-remote.labels" $ | nindent 4 }}
+description: {{ .description | default "Used to enforce resource quotas for Renku" | quote }}
+preemptionPolicy: {{ .preemptionPolicy | default "Never" }}
+value: {{ .value | default 100 }}
+globalDefault: false
+{{- end }}

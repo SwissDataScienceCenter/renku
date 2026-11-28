@@ -1,0 +1,80 @@
+{{- if .Values.crossClusterAccess.enabled }}
+{{- $saName := include "renku-remote.crossClusterServiceAccountName" . }}
+# The main Renku deployment (data-service, k8s-watcher, data-tasks, secrets-storage)
+# uses this service account, via a kubeconfig, to manage sessions on this cluster.
+# The permissions mirror the data-service Role in the main Renku chart.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ $saName }}
+  labels:
+    app: {{ template "renku-remote.name" $ }}
+    {{- include "renku-remote.labels" . | nindent 4 }}
+    app.kubernetes.io/component: cross-cluster-access
+automountServiceAccountToken: false
+---
+# Long-lived token for the service account above. Kubernetes populates the
+# `ca.crt`, `namespace` and `token` keys automatically.
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ $saName }}-token
+  labels:
+    app: {{ template "renku-remote.name" $ }}
+    {{- include "renku-remote.labels" . | nindent 4 }}
+    app.kubernetes.io/component: cross-cluster-access
+  annotations:
+    kubernetes.io/service-account.name: {{ $saName }}
+type: kubernetes.io/service-account-token
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ $saName }}
+  labels:
+    app: {{ template "renku-remote.name" $ }}
+    {{- include "renku-remote.labels" . | nindent 4 }}
+    app.kubernetes.io/component: cross-cluster-access
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "pods/log", "services", "endpoints", "secrets", "persistentvolumeclaims", "configmaps"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["pods", "secrets"]
+    verbs: ["delete"]
+  - apiGroups: [""]
+    resources: ["secrets", "persistentvolumeclaims", "configmaps"]
+    verbs: ["create", "update", "delete", "patch"]
+  - apiGroups: [""]
+    resources: ["resourcequotas"]
+    verbs: ["create", "update", "delete", "patch", "list", "get", "watch"]
+  - apiGroups: ["apps"]
+    resources: ["statefulsets"]
+    verbs: ["get", "list", "watch", "patch"]
+  - apiGroups: ["batch"]
+    resources: ["jobs"]
+    verbs: ["create", "update", "delete", "patch", "list", "get", "watch"]
+  - apiGroups: ["amalthea.dev"]
+    resources: ["amaltheasessions"]
+    verbs: ["create", "update", "delete", "patch", "list", "get", "watch"]
+  {{- with .Values.crossClusterAccess.extraRules }}
+  {{- toYaml . | nindent 2 }}
+  {{- end }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ $saName }}
+  labels:
+    app: {{ template "renku-remote.name" $ }}
+    {{- include "renku-remote.labels" . | nindent 4 }}
+    app.kubernetes.io/component: cross-cluster-access
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ $saName }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ $saName }}
+    namespace: {{ .Release.Namespace }}
+{{- end }}

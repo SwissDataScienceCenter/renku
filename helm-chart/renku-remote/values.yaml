@@ -1,0 +1,218 @@
+# Values for the renku-remote chart.
+#
+# This chart installs what a remote Kubernetes cluster needs so that an existing
+# Renku deployment (running on another, "local", cluster) can launch sessions on it.
+# Install it in the namespace where the remote sessions should run, e.g.:
+#
+#   helm dependency build helm-chart/renku-remote
+#   helm upgrade --install renku-remote helm-chart/renku-remote \
+#     --namespace renku-user-sessions --create-namespace -f my-values.yaml
+#
+# See docs/docs/20-admins/30-operation/50-remote.md for the full procedure.
+
+nameOverride: ""
+fullnameOverride: ""
+
+## Service account, token secret, Role and RoleBinding that the main Renku deployment
+## uses (through a kubeconfig) to manage sessions in this namespace.
+crossClusterAccess:
+  enabled: true
+  ## Defaults to "<fullname>-cross-cluster" when empty.
+  ## The token for accessing the cluster outside via the Kubernetes API will be in the
+  ## secret named by the `serviceAccountName` +  `-token`
+  serviceAccountName: ""
+  ## Additional RBAC rules to add to the Role.
+  extraRules: []
+
+## Renku enforces resource pool quotas with priority classes. Add one entry for every
+## resource pool that points to this cluster and has a quota. The name must match the
+## `quota.id` of the resource pool in the main Renku deployment.
+## Priority classes are cluster-scoped, so make sure names do not clash with other releases.
+priorityClasses: []
+  # - name: renku-resource-pool-1-priority-class
+  #   value: 100
+  #   preemptionPolicy: Never
+  #   description: Used to enforce resource quotas for Renku
+
+networkPolicies:
+  ## Create network policies for sessions.
+  ## Requires a CNI that enforces network policies.
+  enabled: true
+  sshProxy:
+    ## Egress rules for the SSH proxy. The default allows DNS and traffic leaving the
+    ## cluster (the proxy needs to reach the main deployment's public API over the
+    ## internet), while blocking access to private IP ranges. Egress to sessions in this
+    ## namespace is added by the chart automatically.
+    egress:
+      - to:
+          # DNS resolution
+          - namespaceSelector:
+              matchLabels:
+                kubernetes.io/metadata.name: kube-system
+            podSelector:
+              matchLabels:
+                k8s-app: kube-dns
+        ports:
+          - port: 53
+            protocol: UDP
+          - port: 53
+            protocol: TCP
+      - to:
+          - ipBlock:
+              cidr: 0.0.0.0/0
+              except:
+                - 10.0.0.0/8
+                - 172.16.0.0/12
+                - 192.168.0.0/16
+  sessions:
+    ## Egress rules for user sessions. The default allows DNS and traffic leaving the
+    ## cluster, while blocking access to private IP ranges (i.e. other services in the cluster).
+    egress:
+      - to:
+          # DNS resolution
+          - namespaceSelector:
+              matchLabels:
+                kubernetes.io/metadata.name: kube-system
+            podSelector:
+              matchLabels:
+                k8s-app: kube-dns
+        ports:
+          - port: 53
+            protocol: UDP
+          - port: 53
+            protocol: TCP
+      - to:
+          - ipBlock:
+              cidr: 0.0.0.0/0
+              except:
+                - 10.0.0.0/8
+                - 172.16.0.0/12
+                - 192.168.0.0/16
+
+## Values for the amalthea-sessions sub-chart (the session operator). Required.
+## The chart version (see Chart.yaml) must be identical to the one used by the main Renku deployment.
+## See https://github.com/SwissDataScienceCenter/amalthea/blob/main/helm-chart/amalthea-sessions/values.yaml
+amalthea-sessions:
+  ## Only watch the namespace of this release.
+  clusterScoped: false
+  deployCrd: true
+  ## Do not use the csi-rclone bundled with amalthea, use the `csi-rclone` section below.
+  deploy:
+    csiRclone: false
+  ## Must be "<csi-rclone.storageClassName>-secret-annotation".
+  rcloneStorageClass: csi-rclone-secret-annotation
+  ## Set to true only if remote sessions should be embedded in an iframe in the Renku UI.
+  ## This requires CORS and CSP annotations on the session ingress, see the remote cluster docs.
+  useNoneSameSiteSessionCookie: false
+  httpsSessionIngress: false
+  imageRewriteRules: []
+
+## Values for the csi-rclone sub-chart. Optional, needed to mount data connectors in sessions.
+## The chart version (see Chart.yaml) must be identical to the one used by the main Renku deployment.
+## csi-rclone is cluster-wide (CSI driver, storage classes, node plugin DaemonSet), so install it
+## only once per cluster.
+csi-rclone:
+  enabled: false
+  ## Name of the csi storage class. Should be unique per cluster.
+  storageClassName: csi-rclone
+  ## The node plugin has to run on every node where sessions may run, add
+  ## tolerations for any taints on the session nodes.
+  # csiNodepluginRclone:
+  #   nodeSelector: {}
+  #   tolerations: []
+  #   affinity: {}
+
+## Enables SSH access to sessions running on this remote cluster.
+## See docs/docs/20-admins/30-operation/50-remote.md and local/ssh-key-provisioning.notion.md
+## for the full key-exchange procedure between this cluster and the main Renku deployment.
+sshProxy:
+  enabled: false
+  image:
+    repository: renku/ssh-proxy
+    tag:
+    pullPolicy: IfNotPresent
+  ## The port where the SSH proxy will be accessible to from the outside.
+  ## If not 22 then users connecting to their session will have to specify the port.
+  port: 22
+  ## The domain where the the SSH server will run.
+  domain: ssh.example.local
+  service:
+    ## If true will create a LoadBalancer type service for ingress into the SSH proxy.
+    ## If disabled you have to create the ingress/service to get SSH connections from outside
+    ## the cluster to the proxy.
+    enabled: true
+    ## Additional annotations that can be added to the service.
+    annotations: {}
+  ## The SSH host key this proxy presents to the main proxy connecting to it (hostkey-R).
+  ## If not provided one is generated and kept stable across upgrades. The public part and its
+  ## fingerprint are printed in the post-install/upgrade notes; register it with the main Renku
+  ## deployment as `host_public_key` when adding this cluster.
+  openSshHostKey: ""
+  ## The public key (`auth_public_key`) that the main Renku deployment's SSH proxy uses to
+  ## authenticate itself to this remote proxy. Data-services generates and returns this value
+  ## when the main cluster administrator registers this cluster; leave empty until then and set
+  ## it via `helm upgrade` once you have it.
+  authorizedKey: ""
+  ## URL of the main Renku deployment's  endpoint (data-services), used to authorize incoming
+  ## connections from the main proxy and resolve session targets.
+  ## Obtain this from the main cluster administrator.
+  authorizeConnectionUrl: ""
+  ## Name of the Secret (created by this chart, in this namespace) holding the keys mounted into
+  ## every session so this remote proxy can reach it over SSH (`authorized_keys`, `ssh_host_ed25519_key`).
+  ## Must match `session_secret_name` used when registering this remote cluster with the main deployment.
+  sessionKeysSecretName: renku-ssh-session-keys
+  ## The ssh port/user of the session itself, once the proxy has connected to it.
+  target:
+    port: 8888
+    user: renku
+  sentry:
+    enabled: false
+    dsn:
+    environment:
+    sampleRate: 0.1
+  replicaCount: 1
+  podAnnotations: {}
+  ## Proxy-specific hardening, merged over the global podSecurityContext.
+  podSecurityContext:
+    seccompProfile:
+      type: RuntimeDefault
+  ## Proxy-specific hardening, merged over the global securityContext.
+  securityContext:
+    readOnlyRootFilesystem: true
+  resources: {}
+  updateStrategy: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+## Image used by the pre-install/pre-upgrade Job that generates the SSH keypairs used between
+## this cluster's proxy and its sessions (authkey-S, hostkey-S). Only used when sshProxy.enabled.
+sessionKeysInit:
+  image:
+    repository: renku/platform-init
+    tag: 1.set.by.chartpress
+    pullPolicy: IfNotPresent
+
+## CA trust for pods in this chart that make outbound HTTPS calls (currently just the
+## ssh-proxy, reaching the main Renku deployment's public secret-service endpoint over the
+## internet). The init container image always provides the standard public root CA bundle;
+## add customCAs only if that endpoint is served behind a self-signed or internal CA.
+certificates:
+  image:
+    repository: renku/certificates
+    tag: "0.0.3"
+  customCAs: []
+  # - secret: a-secret-name
+  # - configMap: a-configmap-name
+
+## Defaults for pods created directly by this chart (currently just the ssh-proxy Deployment
+## and its session-keys Job). Per-component values above are merged over these.
+podSecurityContext: {}
+securityContext:
+  runAsUser: 1000
+  runAsGroup: 1000
+  runAsNonRoot: true
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
